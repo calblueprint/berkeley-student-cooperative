@@ -15,6 +15,7 @@ import {
 } from "@firebase/firestore";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
@@ -87,7 +88,7 @@ const Home: NextPage = () => {
             <div className={styles.card}>
               <h2>No undone todos</h2>
               <p>
-                Consider adding a todo from <a href="/add-todo">here</a>
+                Consider adding a todo from <Link href="/add-todo">here</Link>
               </p>
             </div>
           ) : (
