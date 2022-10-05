@@ -2,10 +2,23 @@ import { doc, collection, addDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 
-export const addUser = async (email: string, house: string, name: string, pinNumber: number, role: string) => {
-    let user = createUserObject(email, house, name, pinNumber, role);
+export const addUser = async (email: string, houseID: string, name: string, pinNumber: number, role: string) => {
+    let user: User = {
+        email: email,
+        houseID: houseID,
+        name: name,
+        pinNumber: pinNumber,
+        role: role,
+        totalFines: 0,
+        totalHoursAssigned: 0,
+        hoursRemainingSemester: 5,
+        hoursRemainingWeek: 5,
+        availabilities: new Map<string, number[]>(),
+        preferences: new Array<string>(),
+        shiftsAssigned: new Array<string>()
+    }
     const userId = await addDoc(collection(firestore, "users"), {
-        availabilities: user.availabilities,
+        availabilities: mapToObject(user.availabilities),
         email: user.email,
         hoursRemainingSemester: user.hoursRemainingSemester,
         hoursRemainingWeek: user.hoursRemainingWeek,
@@ -21,33 +34,6 @@ export const addUser = async (email: string, house: string, name: string, pinNum
     // 
     //  addUserToHouse(user.house, userId);
     console.log(userId);
-}
-
-const createUserObject = (email: string, houseID: string, name: string, pinNumber: number, role: string) => {
-    let availabilitiesMap = {
-        "Monday": new Array<number>(),
-        "Tuesday": new Array<number>(),
-        "Wednesday": new Array<number>(),
-        "Thursday": new Array<number>(),
-        "Friday": new Array<number>(),
-        "Saturday": new Array<number>(), 
-        "Sunday": new Array<number>()
-    };
-    let user: User = {
-        email: email,
-        houseID: houseID,
-        name: name,
-        pinNumber: pinNumber,
-        role: role,
-        totalFines: 0,
-        totalHoursAssigned: 0,
-        hoursRemainingSemester: 5,
-        hoursRemainingWeek: 5,
-        availabilities: availabilitiesMap,
-        preferences: new Array<string>(),
-        shiftsAssigned: new Array<string>()
-    }
-    return user;
 }
 
 export const updateUser = async (userID: string, fieldName: string, newValue: any) => {
@@ -67,3 +53,20 @@ export const getUser = async (userID: string) => {
 export const deleteUser = async (userID: string) => {
     await deleteDoc(doc(firestore, "users", userID));
 }
+
+const mapToObject = (map: Map<any, any>): Object => {
+    return Object.fromEntries(
+      Array.from(map.entries(), ([k, v]) =>
+        v instanceof Map ? [k, mapToObject(v)] : [k, v]
+      )
+    );
+};
+
+const objectToMap = (obj: Object): Map<any, any> => {
+    return new Map(
+        Array.from(Object.entries(obj), ([k, v]) =>
+        v instanceof Object ? [k, objectToMap(v)] : [k, v]
+        )
+    );
+};
+  

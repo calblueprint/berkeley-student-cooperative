@@ -74,7 +74,7 @@ const Home: NextPage = () => {
   }
 
   const retrieveUser = async () => {
-    getUser("oBP9JM09iDIPufWeQJQ1");
+    getUser("urferxomVRlLApOCUcXX");
   }
 
   const removeUser = async () => {

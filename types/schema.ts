@@ -9,7 +9,7 @@ export type User = {
   hoursRemainingSemester: number;
   pinNumber: number;
   totalFines: number;
-  availabilities: {};
+  availabilities: Map<string, number[]>;
   preferences: string[];
 };
 
