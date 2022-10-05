@@ -1,4 +1,4 @@
-import { collection, addDoc } from "firebase/firestore";
+import { doc, collection, addDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 
@@ -24,6 +24,15 @@ export const addUser = async (email: string, house: string, name: string, pinNum
 }
 
 const createUserObject = (email: string, houseID: string, name: string, pinNumber: number, role: string) => {
+    let availabilitiesMap = {
+        "Monday": new Array<number>(),
+        "Tuesday": new Array<number>(),
+        "Wednesday": new Array<number>(),
+        "Thursday": new Array<number>(),
+        "Friday": new Array<number>(),
+        "Saturday": new Array<number>(), 
+        "Sunday": new Array<number>()
+    };
     let user: User = {
         email: email,
         houseID: houseID,
@@ -34,9 +43,27 @@ const createUserObject = (email: string, houseID: string, name: string, pinNumbe
         totalHoursAssigned: 0,
         hoursRemainingSemester: 5,
         hoursRemainingWeek: 5,
-        availabilities: new Map<any, any>(),
-        preferences: [],
-        shiftsAssigned: []
+        availabilities: availabilitiesMap,
+        preferences: new Array<string>(),
+        shiftsAssigned: new Array<string>()
     }
     return user;
+}
+
+export const updateUser = async (userID: string, fieldName: string, newValue: any) => {
+// update doc
+}
+
+export const getUser = async (userID: string) => {
+    const docRef = doc(firestore, "users", userID);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        console.log(docSnap.data());
+    } else {
+        console.log("No Document");
+    }
+}
+
+export const deleteUser = async (userID: string) => {
+    await deleteDoc(doc(firestore, "users", userID));
 }

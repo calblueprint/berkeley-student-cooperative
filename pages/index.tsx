@@ -16,7 +16,7 @@ import {
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {addUser} from "../firebase/firestore/userQueries";
+import {addUser, getUser, deleteUser} from "../firebase/firestore/userQueries";
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
@@ -73,6 +73,14 @@ const Home: NextPage = () => {
     addUser("bsc@berkeley.edu", "Euclid", "Sean", 12345, "Manager");
   }
 
+  const retrieveUser = async () => {
+    getUser("oBP9JM09iDIPufWeQJQ1");
+  }
+
+  const removeUser = async () => {
+    deleteUser("oBP9JM09iDIPufWeQJQ1");//naming conflicts of subfct is same name as overall fct
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -81,6 +89,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <button onClick = {createUser}>Create </button>
+      <button onClick = {retrieveUser}>Get </button>
+      <button onClick = {removeUser}>Delete</button>
       <main className={styles.main}>
         <h1 className={styles.title}>Todos app</h1>
 
