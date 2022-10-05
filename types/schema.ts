@@ -1,5 +1,4 @@
 export type User = {
-  userID: string;
   role: string;
   name: string;
   email: string;
@@ -15,7 +14,6 @@ export type User = {
 };
 
 export type House = {
-    houseID: string;
     members: string[] | null;
     address: string;
     schedule: Map<string, string[]>;
@@ -26,7 +24,6 @@ export type Task = {
 };
 
 export type Shift = {
-    shiftID: string;
     possibleDays: string[];
     timeWindow: number[];
     hours: number;

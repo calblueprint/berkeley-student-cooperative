@@ -16,6 +16,7 @@ import {
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import {addUser} from "../firebase/firestore/userQueries";
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
@@ -68,6 +69,10 @@ const Home: NextPage = () => {
     getTodos();
   };
 
+  const createUser = async () => {
+    addUser("bsc@berkeley.edu", "Euclid", "Sean", 12345, "Manager");
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -75,7 +80,7 @@ const Home: NextPage = () => {
         <meta name="description" content="Next.js firebase todos app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <button onClick = {createUser}>Create </button>
       <main className={styles.main}>
         <h1 className={styles.title}>Todos app</h1>
 
