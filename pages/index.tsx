@@ -70,15 +70,15 @@ const Home: NextPage = () => {
   };
 
   const createUser = async () => {
-    addUser("bsc@berkeley.edu", "Euclid", "Sean", 12345, "Manager");
+    addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager");
   }
 
   const retrieveUser = async () => {
-    getUser("urferxomVRlLApOCUcXX");
+    getUser("I5IOVorREZl1Fv81G3kq");
   }
 
   const removeUser = async () => {
-    deleteUser("oBP9JM09iDIPufWeQJQ1");//naming conflicts of subfct is same name as overall fct
+    deleteUser("I5IOVorREZl1Fv81G3kq");//naming conflicts of subfct is same name as overall fct
   }
 
   return (

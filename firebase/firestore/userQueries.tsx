@@ -2,34 +2,24 @@ import { doc, collection, addDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 
-export const addUser = async (email: string, houseID: string, name: string, pinNumber: number, role: string) => {
-    let user: User = {
+export const addUser = async (email: string, houseID: string, name: string, role: string) => {
+    const numDigitsInPin = 6
+    let pinNumber = Math.floor((Math.random() * (10 ** numDigitsInPin - 10 ** (numDigitsInPin - 1)) + 10 ** (numDigitsInPin - 1)));
+    // how to hold passwords?
+    // somehow check uniqueness of pin
+    const userId = await addDoc(collection(firestore, "users"), {
+        availabilities: mapToObject(new Map<string, number[]>()),
         email: email,
-        houseID: houseID,
-        name: name,
-        pinNumber: pinNumber,
-        role: role,
-        totalFines: 0,
-        totalHoursAssigned: 0,
         hoursRemainingSemester: 5,
         hoursRemainingWeek: 5,
-        availabilities: new Map<string, number[]>(),
+        house: houseID,
+        name: name,
+        pinNumber: pinNumber,
         preferences: new Array<string>(),
-        shiftsAssigned: new Array<string>()
-    }
-    const userId = await addDoc(collection(firestore, "users"), {
-        availabilities: mapToObject(user.availabilities),
-        email: user.email,
-        hoursRemainingSemester: user.hoursRemainingSemester,
-        hoursRemainingWeek: user.hoursRemainingWeek,
-        house: user.houseID,
-        name: user.name,
-        pinNumber: user.pinNumber,
-        preferences: user.preferences,
-        role: user.role,
-        shiftsAssigned: user.shiftsAssigned,
-        totalFines: user.totalFines,
-        totalHoursAssigned: user.totalHoursAssigned
+        role: role,
+        shiftsAssigned: new Array<string>(),
+        totalFines: 0,
+        totalHoursAssigned: 5
     });
     // 
     //  addUserToHouse(user.house, userId);
