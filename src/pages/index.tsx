@@ -16,6 +16,7 @@ import {
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { getHouses } from "../firebase/queries/exampleQuery";
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
