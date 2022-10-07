@@ -16,7 +16,8 @@ import {
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {addUser, getUser, deleteUser} from "../firebase/firestore/userQueries";
+import {addUser, getUser, deleteUser, updateUser} from "../firebase/firestore/userQueries";
+import { User } from "../types/schema";
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
@@ -74,11 +75,21 @@ const Home: NextPage = () => {
   }
 
   const retrieveUser = async () => {
-    getUser("I5IOVorREZl1Fv81G3kq");
+    let x = await getUser("GOYNvJXnXn2ZiR4kMYDi");
+    if (x != null) {
+      console.log(x.userID);
+    }
   }
 
   const removeUser = async () => {
-    deleteUser("I5IOVorREZl1Fv81G3kq");//naming conflicts of subfct is same name as overall fct
+    deleteUser("tdYghMLY2kA788ej6qIQ");//naming conflicts of subfct is same name as overall fct
+  }
+
+  const setUser = async () => {
+    let newData = {
+      preferences: ["q"]
+    }
+    updateUser("GOYNvJXnXn2ZiR4kMYDi", newData);
   }
 
   return (
@@ -91,6 +102,7 @@ const Home: NextPage = () => {
       <button onClick = {createUser}>Create </button>
       <button onClick = {retrieveUser}>Get </button>
       <button onClick = {removeUser}>Delete</button>
+      <button onClick = {setUser}>Set</button>
       <main className={styles.main}>
         <h1 className={styles.title}>Todos app</h1>
 
