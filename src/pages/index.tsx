@@ -17,6 +17,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getHouses } from "../firebase/queries/exampleQuery";
+import {addUser, deleteUser, updateUser, getUser} from '../firebase/queries/userQueries';
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
@@ -69,6 +70,40 @@ const Home: NextPage = () => {
     getTodos();
   };
 
+  const createUser = async () => {
+    addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());
+  }
+
+  const firestoreAutoId = (): string => {
+    const CHARS =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let autoId = "";
+    for (let i = 0; i < 20; i += 1) {
+      autoId += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+    }
+    return autoId;
+  };
+  
+
+
+  const retrieveUser = async () => {
+    let x = await getUser("SusGpEZUyQuCEdJ9vLbZ");
+    if (x != null) {
+      console.log(x.availabilities);
+    }
+  }
+
+  const removeUser = async () => {
+    deleteUser("pjmt00QzCNc0B9vD1ROZ");//naming conflicts of subfct is same name as overall fct
+  }
+
+  const setUser = async () => {
+    let newData = {
+      preferences: ["q"]
+    }
+    updateUser("pjmt00QzCNc0B9vD1ROZ", newData);
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -76,7 +111,10 @@ const Home: NextPage = () => {
         <meta name="description" content="Next.js firebase todos app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <button onClick = {createUser}>Create </button>
+      <button onClick = {retrieveUser}>Get </button>
+      <button onClick = {removeUser}>Delete</button>
+      <button onClick = {setUser}>Set</button>
       <main className={styles.main}>
         <h1 className={styles.title}>Todos app</h1>
 
