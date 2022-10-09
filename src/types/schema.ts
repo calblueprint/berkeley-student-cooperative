@@ -1,3 +1,5 @@
+import internal from "stream";
+
 export type User = {
   userID: string;
   role: string;
@@ -14,24 +16,16 @@ export type User = {
   preferences: string[];
 };
 
-export type House = {
-    houseID: string;
-    members: string[] | null;
-    address: string;
-    schedule: Map<string, string[]>;
-};
-
-export type Task = {
-
-};
-
 export type Shift = {
-    shiftID: string;
-    possibleDays: string[];
-    timeWindow: number[];
-    hours: number;
-    numOfPpl: number;
-    assignedDay: string | null;
-    verification: Map<string, string> | null;
-    description: string;
+  shiftID: string;
+  description: string;
+  possibleDays: string[];
+  // time window unsure if 48 or 24 / set or what
+  timeWindow: number[];
+  // assigned Days??
+  assignedDay: string;
+  hours: number;
+  // not sure about this representation
+  verificationWindow: number[];
+  usersAssigned: string[];
 };
