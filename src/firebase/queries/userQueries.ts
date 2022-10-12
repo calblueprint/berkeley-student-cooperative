@@ -22,7 +22,7 @@ export const addUser = async (email: string, houseID: string, name: string, role
         pinNumber: pinNumber,
         preferences: new Array<string>(),
         role: role,
-        shiftsAssigned: new Array<string>(),
+        shiftsAssigned: new Array<Array<string>>(),
         totalFines: 0,
         totalHoursAssigned: 5
     });
@@ -34,25 +34,6 @@ export const addUser = async (email: string, houseID: string, name: string, role
     //     pinUserMap: currHouseMap
     // }
     // updateHouse(currHouse.houseID, newData);
-
-    
-    // if auto id the user, this
-    // const userId = await addDoc(collection(firestore, "users"), {
-    //     availabilities: mapToObject(new Map<string, number[]>()),
-    //     email: email,
-    //     hoursRemainingSemester: 5,
-    //     hoursRemainingWeek: 5,
-    //     houseID: houseID,
-    //     name: name,
-    //     pinNumber: pinNumber,
-    //     preferences: new Array<string>(),
-    //     role: role,
-    //     shiftsAssigned: new Array<string>(),
-    //     totalFines: 0,
-    //     totalHoursAssigned: 5
-    // });
-    // 
-    //  addUserToHouse(user.house, userId);
 }
 
 const generatePinNumber = (numDigitsInPin: number) => {
@@ -60,7 +41,6 @@ const generatePinNumber = (numDigitsInPin: number) => {
 }
 // }
 
-// newData has updated fields
 export const updateUser = async (userID: string, newData: object) => {
     const userRef = doc(firestore, 'users', userID);
     await updateDoc(userRef, newData);

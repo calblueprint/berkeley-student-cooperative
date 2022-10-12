@@ -87,23 +87,47 @@ const Home: NextPage = () => {
 
 
   const retrieveUser = async () => {
-    let x = await getUser("SusGpEZUyQuCEdJ9vLbZ");
+    let x = await getUser("lV6qBqxPgOShk9lnj0gy");
     if (x != null) {
       console.log(x.availabilities);
     }
   }
 
   const removeUser = async () => {
-    deleteUser("pjmt00QzCNc0B9vD1ROZ");//naming conflicts of subfct is same name as overall fct
+    deleteUser("lV6qBqxPgOShk9lnj0gy");//naming conflicts of subfct is same name as overall fct
   }
 
   const setUser = async () => {
-    let newData = {
-      preferences: ["q"]
+    let availabilities = new Map<string, Array<number>>();
+    let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    for (let i = 0; i < days.length; i++) {
+      let newList = new Array<number>();
+      newList.push(0);
+      newList.push(2330);
+      availabilities.set(days[i], newList);
     }
-    updateUser("pjmt00QzCNc0B9vD1ROZ", newData);
+    let newData = {
+      availabilities: mapToObject(availabilities)
+    }
+    updateUser("lV6qBqxPgOShk9lnj0gy", newData);
   }
 
+
+  const mapToObject = (map: Map<any, any>): Object => {
+    return Object.fromEntries(
+      Array.from(map.entries(), ([k, v]) =>
+        v instanceof Map ? [k, mapToObject(v)] : [k, v]
+      )
+    );
+  };
+
+  const objectToMap = (obj: Object): Map<any, any> => {
+    return new Map(
+        Array.from(Object.entries(obj), ([k, v]) =>
+        v instanceof Object ? [k, objectToMap(v)] : [k, v]
+        )
+    );
+  };
   return (
     <div className={styles.container}>
       <Head>
