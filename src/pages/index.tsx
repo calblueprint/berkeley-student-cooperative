@@ -16,18 +16,36 @@ import {
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getHouses } from "../firebase/queries/exampleQuery";
+import { getAllHouses, getHouse } from "../firebase/queries/houseQueries";
+import { House } from "../types/schema";
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [houses, setHouses] = useState([] as House[]);
+
+  const [currHouse, setCurrHouse] = useState({})
 
   useEffect(() => {
     getTodos();
     setTimeout(() => {
       setLoading(false);
     }, 2000);
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
+  //gets all houses from firebase
+  const getAllHouseFB = async () =>{
+    var fireHouse = await getAllHouses();
+    setHouses(fireHouse);
+  }
+  //gets specific house from firebase, must specify certain house
+  const getHouseFB = async (houseID :string) =>{
+    var fireAHouse = await getHouse(houseID);
+    setCurrHouse(fireAHouse[0]);
+  }
 
   const todosCollection = collection(firestore, "todos");
 
