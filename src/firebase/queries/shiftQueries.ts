@@ -3,17 +3,18 @@ import {Shift} from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 //import {getUser, updateUser} from "userQueries";
 
-
-export const addShift = async (description: string, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verificationWindow: number[], usersAssigned: string[]) => {
+export const addShift = async (description: string, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verificationBuffer: number, usersAssigned: string[], category: string) => {
     const shiftID = await addDoc(collection(firestore, "shifts"), {
         description: description,
         possibleDays: possibleDays,
         timeWindow: timeWindow,
         assignedDay: assignedDay,
         hours: hours,
-        verificationWindow: verificationWindow,
-        usersAssigned: usersAssigned
+        verificationBuffer: verificationBuffer,
+        usersAssigned: usersAssigned,
+        category: category
     });
+
     // Add shift to user object
     // for (let i = 0; i < usersAssigned.length; i++) {
     //     let userID = usersAssigned[i];
@@ -29,6 +30,7 @@ export const addShift = async (description: string, possibleDays: string[], time
 
 export const updateShift = async (shiftID: string, newData: object) => {
     const docRef = doc(firestore, "shifts", shiftID);
+
     await updateDoc(docRef, newData);
 }
 
@@ -73,8 +75,9 @@ const parseShift = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         timeWindow: data.timeWindow,
         assignedDay: data.assignedDay,
         hours: data.hours,
-        verificationWindow: data.verificationWindow,
-        usersAssigned: data.usersAssigned
+        verificationBuffer: data.verificationBuffer,
+        usersAssigned: data.usersAssigned,
+        category: data.category
     }
     return shift as Shift;
 }

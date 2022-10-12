@@ -70,15 +70,15 @@ const Home: NextPage = () => {
   };
 
   const createShift = async () => {
-    await addShift("clean bathroom1", ["Monday", "Tuesday"], [0,1], "", 2, [5],[]);
+    await addShift("clean bathroom1", ["Monday", "Tuesday"], [0,1], "", 2.1, 5, [], "happy categ");
   }
 
   const removeShift = async () => {
-    await deleteShift("neZmdMSDdjdTeVXxGk2g");
+    await deleteShift("W3ZDJ30oYDz3peCdSsUI");
   }
 
   const retrieveShift = async () => {
-    let shift = await getShift("neZmdMSDdjdTeVXxGk2g");
+    let shift = await getShift("W3ZDJ30oYDz3peCdSsUI");
     console.log(shift?.usersAssigned);
   }
 
@@ -86,7 +86,7 @@ const Home: NextPage = () => {
     let newData = {
       usersAssigned: ["user 1 id"]
     }
-    await updateShift("neZmdMSDdjdTeVXxGk2g", newData);
+    await updateShift("W3ZDJ30oYDz3peCdSsUI", newData);
   }
   return (
     <div className={styles.container}>

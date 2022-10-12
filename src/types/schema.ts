@@ -20,11 +20,12 @@ export type Shift = {
   shiftID: string;
   description: string;
   possibleDays: string[];
-  // time window unsure if 48 or 24 / set or what
+  // time 
   timeWindow: number[];
   assignedDay: string;
   hours: number;
-  // not sure about this representation
-  verificationWindow: number[];
+  // number of hours since end time that you are allowed to verify
+  verificationBuffer: number;
   usersAssigned: string[];
+  category: string;
 };
