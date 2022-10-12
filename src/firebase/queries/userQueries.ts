@@ -77,6 +77,7 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
 }
 
 export const deleteUser = async (userID: string) => {
+    // delete user from all instances of shifts
     await deleteDoc(doc(firestore, "users", userID));
 }
 
