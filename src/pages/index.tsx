@@ -16,7 +16,7 @@ import {
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getHouses } from "../firebase/queries/exampleQuery";
+import {addShift, updateShift, getShift, deleteShift} from "../firebase/queries/shiftQueries";
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
@@ -69,6 +69,25 @@ const Home: NextPage = () => {
     getTodos();
   };
 
+  const createShift = async () => {
+    await addShift("clean bathroom1", ["Monday", "Tuesday"], [0,1], "", 2, [5],[]);
+  }
+
+  const removeShift = async () => {
+    await deleteShift("neZmdMSDdjdTeVXxGk2g");
+  }
+
+  const retrieveShift = async () => {
+    let shift = await getShift("neZmdMSDdjdTeVXxGk2g");
+    console.log(shift?.usersAssigned);
+  }
+
+  const changeShift = async () => {
+    let newData = {
+      usersAssigned: ["user 1 id"]
+    }
+    await updateShift("neZmdMSDdjdTeVXxGk2g", newData);
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -76,7 +95,10 @@ const Home: NextPage = () => {
         <meta name="description" content="Next.js firebase todos app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <button onClick = {createShift}>Create Shift</button>
+      <button onClick = {removeShift}>Delete Shift</button> 
+      <button onClick = {changeShift}>Update Shift</button>
+      <button onClick = {retrieveShift}>Get Shift</button>
       <main className={styles.main}>
         <h1 className={styles.title}>Todos app</h1>
 

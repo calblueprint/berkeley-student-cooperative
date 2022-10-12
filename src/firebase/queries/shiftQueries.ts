@@ -43,23 +43,23 @@ export const getShift = async (shiftID: string) => {
 
 export const deleteShift = async (shiftID: string) => {
     const docRef = doc(firestore, "shifts", shiftID);
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) {
-        return null;
-    }
-    let shift = await parseShift(docSnap);
-    let users = shift.usersAssigned;
-    for (let i = 0; i < users.length; i++) {
-        let currUserID = users[i];
-        let currUser = await getUser(currUserID);
-        const index = currUser.shiftsAssigned.indexOf(shiftID);
-        if (index > -1) {
-            currUser.shiftsAssigned.splice(index, 1);
-            await updateUser(currUserID, {
-                shiftsAssigned: currUser.shiftsAssigned
-            });
-        }
-    }
+    // const docSnap = await getDoc(docRef);
+    // if (!docSnap.exists()) {
+    //     return null;
+    // }
+    // let shift = await parseShift(docSnap);
+    // let users = shift.usersAssigned;
+    // for (let i = 0; i < users.length; i++) {
+    //     let currUserID = users[i];
+    //     let currUser = await getUser(currUserID);
+    //     const index = currUser.shiftsAssigned.indexOf(shiftID);
+    //     if (index > -1) {
+    //         currUser.shiftsAssigned.splice(index, 1);
+    //         await updateUser(currUserID, {
+    //             shiftsAssigned: currUser.shiftsAssigned
+    //         });
+    //     }
+    // }
     await deleteDoc(docRef);
 }
 

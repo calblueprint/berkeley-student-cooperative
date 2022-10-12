@@ -22,7 +22,6 @@ export type Shift = {
   possibleDays: string[];
   // time window unsure if 48 or 24 / set or what
   timeWindow: number[];
-  // assigned Days??
   assignedDay: string;
   hours: number;
   // not sure about this representation
