@@ -22,7 +22,7 @@ export const addUser = async (email: string, houseID: string, name: string, role
         pinNumber: pinNumber,
         preferences: new Array<string>(),
         role: role,
-        shiftsAssigned: new Array<Array<string>>(),
+        shiftsAssigned: new Array<string>(),
         totalFines: 0,
         totalHoursAssigned: 5
     });
@@ -39,7 +39,7 @@ export const addUser = async (email: string, houseID: string, name: string, role
 const generatePinNumber = (numDigitsInPin: number) => {
     return Math.floor((Math.random() * (10 ** numDigitsInPin - 10 ** (numDigitsInPin - 1)) + 10 ** (numDigitsInPin - 1)));
 }
-// }
+
 
 export const updateUser = async (userID: string, newData: object) => {
     const userRef = doc(firestore, 'users', userID);
@@ -79,6 +79,18 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
 export const deleteUser = async (userID: string) => {
     // delete user from all instances of shifts
     await deleteDoc(doc(firestore, "users", userID));
+}
+
+export const assignShiftToUser = async (userID: string, shiftID: string) => {
+    const currUser = await getUser(userID);
+    if (currUser === null) {
+        return;
+    }
+    currUser.shiftsAssigned.push(shiftID);
+    let newData = {
+        shiftsAssigned: currUser.shiftsAssigned
+    }
+    await updateUser(userID, newData);
 }
 
 const mapToObject = (map: Map<any, any>): Object => {

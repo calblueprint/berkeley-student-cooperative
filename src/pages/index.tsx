@@ -17,7 +17,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getHouses } from "../firebase/queries/exampleQuery";
-import {addUser, deleteUser, updateUser, getUser} from '../firebase/queries/userQueries';
+import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/userQueries';
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
@@ -87,14 +87,15 @@ const Home: NextPage = () => {
 
 
   const retrieveUser = async () => {
-    let x = await getUser("lV6qBqxPgOShk9lnj0gy");
+    let x = await getUser("mc8XQK7aiZW1dg8IC8v5");
     if (x != null) {
       console.log(x.availabilities);
+      console.log(x.shiftsAssigned);
     }
   }
 
   const removeUser = async () => {
-    deleteUser("lV6qBqxPgOShk9lnj0gy");//naming conflicts of subfct is same name as overall fct
+    deleteUser("mc8XQK7aiZW1dg8IC8v5");//naming conflicts of subfct is same name as overall fct
   }
 
   const setUser = async () => {
@@ -109,7 +110,12 @@ const Home: NextPage = () => {
     let newData = {
       availabilities: mapToObject(availabilities)
     }
-    updateUser("lV6qBqxPgOShk9lnj0gy", newData);
+    updateUser("mc8XQK7aiZW1dg8IC8v5", newData);
+  }
+
+  const addShiftToUser = async () => {
+    await assignShiftToUser("mc8XQK7aiZW1dg8IC8v5", "1");
+    await retrieveUser();
   }
 
 
@@ -139,6 +145,7 @@ const Home: NextPage = () => {
       <button onClick = {retrieveUser}>Get </button>
       <button onClick = {removeUser}>Delete</button>
       <button onClick = {setUser}>Set</button>
+      <button onClick = {addShiftToUser}>Assign Shift</button>
       <main className={styles.main}>
         <h1 className={styles.title}>Todos app</h1>
 
