@@ -17,6 +17,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getHouses } from "../firebase/queries/exampleQuery";
+import { register, signIn, signOutAuth} from '../firebase/queries/auth'
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
@@ -28,6 +29,27 @@ const Home: NextPage = () => {
       setLoading(false);
     }, 2000);
   }, []);
+
+  //Naive Version, similar func should be used l8r.
+  //Used for testing Auth rn.  Keep for l8r
+  const handleSignin = async (email: string, password: string) => {
+    try {
+      await signIn(email, password);
+    } catch (e) {
+      console.error("Incorrect email or password");
+    }
+  };
+
+  const handleRegister = async (email: string, password: string) => {
+    try {
+      alert("REGISTERED");
+      await signIn(email, password);
+      alert("REGISTERED");
+    } catch (e) {
+      console.error("Invalid email or password");
+    }
+  };
+
 
   const todosCollection = collection(firestore, "todos");
 
@@ -76,6 +98,17 @@ const Home: NextPage = () => {
         <meta name="description" content="Next.js firebase todos app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <button onClick={() => signIn("dummy@gmail.com", "birdsRFake22")}>
+        SIGN IN
+      </button>
+      <button onClick={() => register("dummy@gmail.com", "swagapino22", "birdsRFake22")}>
+        Register
+      </button>
+      <button onClick={() => signOutAuth()}>
+        Sign Out
+      </button>
+      
 
       <main className={styles.main}>
         <h1 className={styles.title}>Todos app</h1>
