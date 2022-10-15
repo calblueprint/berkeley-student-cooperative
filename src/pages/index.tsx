@@ -119,7 +119,7 @@ const Home: NextPage = () => {
   const removeUser = async () => {
     deleteUser("mc8XQK7aiZW1dg8IC8v5");//naming conflicts of subfct is same name as overall fct
   }
-
+  
   const setUser = async () => {
     let availabilities = new Map<string, Array<number>>();
     let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -164,17 +164,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <button onClick={() => signIn("dummy@gmail.com", "birdsRFake22")}>
-        SIGN IN
-      </button>
-      <button onClick={() => register("dummy@gmail.com", "swagapino22", "birdsRFake22")}>
-        Register
-      </button>
-      <button onClick={() => signOutAuth()}>
-        Sign Out
-      </button>
-      
-
+      <button onClick={() => signIn("dummy@gmail.com", "birdsRFake22")}>SIGN IN</button>
+      <button onClick={() => register("dummy@gmail.com", "swagapino22", "birdsRFake22")}>Register</button>
+      <button onClick={() => signOutAuth()}>Sign Out</button>
       <button onClick = {createUser}>Create </button>
       <button onClick = {retrieveUser}>Get </button>
       <button onClick = {removeUser}>Delete</button>
