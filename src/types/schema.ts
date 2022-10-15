@@ -15,10 +15,11 @@ export type User = {
 };
 
 export type House = {
-    houseID: string;
-    members: string[] | null;
-    address: string;
-    schedule: Map<string, string[]>;
+  houseID: string;
+  members: string[] | null;
+  address: string;
+  schedule: Map<string, string[]>;
+  pinUserMap: Map<string, string>;
 };
 
 export type Task = {
@@ -26,12 +27,12 @@ export type Task = {
 };
 
 export type Shift = {
-    shiftID: string;
-    possibleDays: string[];
-    timeWindow: number[];
-    hours: number;
-    numOfPpl: number;
-    assignedDay: string | null;
-    verification: Map<string, string> | null;
-    description: string;
+  shiftID: string;
+  possibleDays: string[];
+  timeWindow: number[];
+  hours: number;
+  numOfPpl: number;
+  assignedDay: string | null;
+  verification: Map<string, string> | null;
+  description: string;
 };
