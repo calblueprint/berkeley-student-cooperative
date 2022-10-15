@@ -1,5 +1,5 @@
-import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { addUser } from "./userQueries";
+import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth";
+import { addUser, getUser } from "./userQueries";
 
 
 
@@ -33,12 +33,18 @@ export const register = async (
             PENDING HouseID found in csv
             addUser(email, houseID, name, role, user.uid)
           */
-         addUser(email, "Euclid", name, "Member", user.uid);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-
+         addUser(email, "Euclid", name, "Member", user.uid).then(() => {
+          establishUserContext(user.uid);
+          getUser(user.uid).then((userFromDoc) => {
+            if (userFromDoc != null) {
+              console.log("USER FROM FIREBASE: ", userFromDoc);
+              /*
+              PLUG USER CONTEXT HERE:
+              Using userFromFirebase
+              */
+            }
+          })
+         });
         })
     } catch(e) {
       console.error(e);
@@ -49,7 +55,7 @@ export const register = async (
 export const signIn = async (
   email: string,
   password: string
-): Promise<void> => {
+) => {
   try {
     console.log("Email: ", email, " Password: ", password);
     signInWithEmailAndPassword(auth, email, password)
@@ -60,23 +66,51 @@ export const signIn = async (
       Will need something to checkRole i
       const role = await checkRole(userUid);
       */
-      const userUid = userCredential.user.uid;
-    }).catch ((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-  })
+      const userID= userCredential.user.uid;
+      establishUserContext(userID);
+    })
   } catch(e) {
     console.error(e);
     throw e;
   }
 };
 
+export const getCurrentUser = async(): Promise<void> => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uid = user.uid;
+      console.log("Signed in: ", uid);
+      // ...
+    } else {
+      console.log("Signed Out");
+      // User is signed out
+      // ...
+    }
+  });
+}
+
 
 export const signOutAuth= async (): Promise<void> => {
   try {
     await signOut(auth);
+    console.log("Signed Out!!");
   } catch (e) {
     console.error(e);
     throw e;
   }
 };
+
+const establishUserContext = async(uid: string): Promise<void> => {
+  try {
+    getUser(uid).then((userFromDoc) => {
+      if (userFromDoc != null) {
+        console.log("USER FROM FIREBASE: ", userFromDoc);
+        /*
+        PLUG USER CONTEXT HERE:
+        Using userFromFirebase
+        */
+      }
+    })
+  } catch (e) {
+  }
+}

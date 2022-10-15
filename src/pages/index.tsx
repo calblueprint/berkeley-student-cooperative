@@ -17,7 +17,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getHouses } from "../firebase/queries/exampleQuery";
-import { register, signIn, signOutAuth} from '../firebase/queries/auth'
+import { getCurrentUser, register, signIn, signOutAuth} from '../firebase/queries/auth'
 import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/userQueries';
 
 const Home: NextPage = () => {
@@ -97,6 +97,7 @@ const Home: NextPage = () => {
       <button onClick={() => signIn("dummy@gmail.com", "birdsRFake22")}>SIGN IN</button>
       <button onClick={() => register("dummy@gmail.com", "swagapino22", "birdsRFake22")}>Register</button>
       <button onClick={() => signOutAuth()}>Sign Out</button>
+      <button onClick={() => getCurrentUser()}>Current Signed-In User</button>
       <button onClick = {createUser}>Create </button>
       <button onClick = {retrieveUser}>Get </button>
       <button onClick = {removeUser}>Delete</button>
