@@ -17,7 +17,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getHouses } from "../firebase/queries/exampleQuery";
-import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/userQueries';
+import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/user';
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
