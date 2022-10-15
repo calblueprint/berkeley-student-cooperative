@@ -1,4 +1,5 @@
 import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { addUser } from "./userQueries";
 
 
 
@@ -19,11 +20,8 @@ export const register = async (
     name: string,
     password: string
 ): Promise<void> => {
-    console.log("Email: ", email, " Password: ", password, " Name: ", name);
-    console.log("AUTH", auth);
     try {
         //PENDING: Search for email in CSV once this func is available.
-        console.log("Email: ", email, " Password: ", password, " Name: ", name);
         createUserWithEmailAndPassword(auth, email, password )
         .then((userCredential) => {
           const user = userCredential.user;
@@ -35,6 +33,7 @@ export const register = async (
             PENDING HouseID found in csv
             addUser(email, houseID, name, role, user.uid)
           */
+         addUser(email, "Euclid", name, "Member", user.uid);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -55,7 +54,6 @@ export const signIn = async (
     console.log("Email: ", email, " Password: ", password);
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      console.log("SUCCESS");
       //signed in
       /*
       PENDING:  Unsure of need.  Get the role, pass it to userContext???

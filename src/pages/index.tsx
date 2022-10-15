@@ -21,76 +21,6 @@ import { register, signIn, signOutAuth} from '../firebase/queries/auth'
 import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/userQueries';
 
 const Home: NextPage = () => {
-  const [todos, setTodos] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    getTodos();
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
-
-  //Naive Version, similar func should be used l8r.
-  //Used for testing Auth rn.  Keep for l8r
-  const handleSignin = async (email: string, password: string) => {
-    try {
-      await signIn(email, password);
-    } catch (e) {
-      console.error("Incorrect email or password");
-    }
-  };
-
-  const handleRegister = async (email: string, password: string) => {
-    try {
-      alert("REGISTERED");
-      await signIn(email, password);
-      alert("REGISTERED");
-    } catch (e) {
-      console.error("Invalid email or password");
-    }
-  };
-
-
-  const todosCollection = collection(firestore, "todos");
-
-  const getTodos = async () => {
-    const todosQuery = query(
-      todosCollection,
-      where("done", "==", false),
-      limit(10)
-    );
-    const querySnapshot = await getDocs(todosQuery);
-    const result: QueryDocumentSnapshot<DocumentData>[] = [];
-    querySnapshot.forEach((snapshot) => {
-      result.push(snapshot);
-    });
-    setTodos(result);
-  };
-
-  const updateTodo = async (documentId: string) => {
-    // create a pointer to the document id
-    const _todo = doc(firestore, `todos/${documentId}`);
-
-    // update the doc by setting done to true
-    await updateDoc(_todo, {
-      done: true,
-    });
-
-    // retrieve todos
-    getTodos();
-  };
-
-  const deleteTodo = async (documentId: string) => {
-    // create a pointer to the document id
-    const _todo = doc(firestore, `todos/${documentId}`);
-
-    // delete the doc
-    await deleteDoc(_todo);
-
-    // retrieve todos
-    getTodos();
-  };
 
   const createUser = async () => {
     addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());
@@ -159,8 +89,8 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Todos app</title>
-        <meta name="description" content="Next.js firebase todos app" />
+        <title>Workshift App</title>
+        <meta name="description" content="Next.js firebase Workshift app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -173,46 +103,11 @@ const Home: NextPage = () => {
       <button onClick = {setUser}>Set</button>
       <button onClick = {addShiftToUser}>Assign Shift</button>
       <main className={styles.main}>
-        <h1 className={styles.title}>Todos app</h1>
-
-        <div className={styles.grid}>
-          {loading ? (
-            <div className={styles.card}>
-              <h2>Loading</h2>
-            </div>
-          ) : todos.length === 0 ? (
-            <div className={styles.card}>
-              <h2>No undone todos</h2>
-              <p>
-                Consider adding a todo from <Link href="/add-todo">here</Link>
-              </p>
-            </div>
-          ) : (
-            todos.map((todo, index) => {
-              return (
-                <div className={styles.card} key={index}>
-                  <h2>{todo.data().title}</h2>
-                  <p>{todo.data().description}</p>
-
-                  <div className={styles.cardActions}>
-                    <button type="button" onClick={() => updateTodo(todo.id)}>
-                      Mark as done
-                    </button>
-
-                    <button type="button" onClick={() => deleteTodo(todo.id)}>
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
+        <h1 className={styles.title}>Workshift App</h1>
       </main>
-
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
-          Todos app
+          Workshift App
         </a>
       </footer>
     </div>
