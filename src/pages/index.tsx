@@ -70,7 +70,7 @@ const Home: NextPage = () => {
   };
 
   const createShift = async () => {
-    await addShift("clean bathroom1", ["Monday", "Tuesday"], [0,1], "", 2.1, 5, [], "happy categ");
+    await addShift("clean bathroom1", ["Monday", "Tuesday"], [0,1], "", 2.1, 5, "happy categ");
   }
 
   const removeShift = async () => {

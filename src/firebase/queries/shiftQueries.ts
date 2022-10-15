@@ -3,7 +3,7 @@ import {Shift} from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 //import {getUser, updateUser} from "userQueries";
 
-export const addShift = async (description: string, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verificationBuffer: number, usersAssigned: string[], category: string) => {
+export const addShift = async (description: string, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verificationBuffer: number, category: string) => {
     const shiftID = await addDoc(collection(firestore, "shifts"), {
         description: description,
         possibleDays: possibleDays,
@@ -11,21 +11,9 @@ export const addShift = async (description: string, possibleDays: string[], time
         assignedDay: assignedDay,
         hours: hours,
         verificationBuffer: verificationBuffer,
-        usersAssigned: usersAssigned,
+        usersAssigned: new Array<string>(),
         category: category
     });
-
-    // Add shift to user object
-    // for (let i = 0; i < usersAssigned.length; i++) {
-    //     let userID = usersAssigned[i];
-    //     let userObject = await getUser(userID);
-    //     if (!userObject.shiftsAssigned.includes(shiftID)) {
-    //         let newData = {
-    //             shiftsAssigned: userObject.shiftsAssigned.concat([shiftID]);
-    //         }
-    //         await updateUser(userID, newData);
-    //     }
-    // }
 }
 
 export const updateShift = async (shiftID: string, newData: object) => {
