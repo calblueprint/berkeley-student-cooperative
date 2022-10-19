@@ -1,8 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-
+import ShiftAssignmentComponentCard from "./shiftAssignmentComponentCard";
 const Home: NextPage = () => {
+  const shiftID = "X9uW6xyxhDECkANuV38u";
+  const houseID = "Euclid";
+  const day = "Monday";
   return (
     <div className={styles.container}>
       <Head>
@@ -13,6 +16,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
       </main>
+      <ShiftAssignmentComponentCard day = {day} houseID = {houseID} shiftID = { shiftID }/>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
           Workshift App
