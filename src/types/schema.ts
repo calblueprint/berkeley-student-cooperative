@@ -30,8 +30,8 @@ export type Shift = {
   verificationBuffer: number;
   usersAssigned: string[];
   category: string;
-
 }
+
 export type House = {
   houseID: string;
   members: string[] | null;
