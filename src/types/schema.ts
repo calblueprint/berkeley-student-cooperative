@@ -17,6 +17,7 @@ export type User = {
 };
 
 export type Shift = {
+  name: string;
   shiftID: string;
   description: string;
   possibleDays: string[];
