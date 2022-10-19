@@ -88,6 +88,7 @@ const Home: NextPage = () => {
     }
     await updateShift("d", newData);
   }
+  
   return (
     <div className={styles.container}>
       <Head>

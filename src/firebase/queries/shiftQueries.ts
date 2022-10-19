@@ -4,7 +4,7 @@ import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, Query
 //import {getUser, updateUser} from "userQueries";
 
 export const addShift = async (description: string, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verificationBuffer: number, category: string) => {
-    const shiftID = await addDoc(collection(firestore, "shifts"), {
+    await addDoc(collection(firestore, "shifts"), {
         description: description,
         possibleDays: possibleDays,
         timeWindow: timeWindow,
