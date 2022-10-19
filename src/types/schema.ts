@@ -21,6 +21,7 @@ export type Shift = {
   shiftID: string;
   description: string;
   possibleDays: string[];
+  numOfPeople: number;
   // time 
   timeWindow: number[];
   assignedDay: string;
@@ -30,6 +31,7 @@ export type Shift = {
   usersAssigned: string[];
   category: string;
 
+}
 export type House = {
   houseID: string;
   members: string[] | null;
