@@ -29,4 +29,11 @@ export type Shift = {
   verificationBuffer: number;
   usersAssigned: string[];
   category: string;
+
+export type House = {
+  houseID: string;
+  members: string[] | null;
+  address: string;
+  schedule: Map<string, string[]>;
+  pinUserMap: Map<string, string>;
 };
