@@ -17,8 +17,12 @@ export const addShift = async (description: string, possibleDays: string[], time
 }
 
 export const updateShift = async (shiftID: string, newData: object) => {
+    const currShift = await getShift(shiftID);
+    if (currShift == null) {
+        console.log("Invalid Shift ID");
+        return;
+    }
     const docRef = doc(firestore, "shifts", shiftID);
-
     await updateDoc(docRef, newData);
 }
 

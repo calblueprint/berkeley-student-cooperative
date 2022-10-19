@@ -86,7 +86,7 @@ const Home: NextPage = () => {
     let newData = {
       usersAssigned: ["user 1 id"]
     }
-    await updateShift("W3ZDJ30oYDz3peCdSsUI", newData);
+    await updateShift("d", newData);
   }
   return (
     <div className={styles.container}>
