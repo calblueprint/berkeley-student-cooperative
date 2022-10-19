@@ -74,7 +74,7 @@ const Home: NextPage = () => {
   }
 
   const removeShift = async () => {
-    await deleteShift("W3ZDJ30oYDz3peCdSsUI");
+    await deleteShift("W3ZDJ30oYDzCdSsUI");
   }
 
   const retrieveShift = async () => {
@@ -88,7 +88,7 @@ const Home: NextPage = () => {
     }
     await updateShift("d", newData);
   }
-  
+
   return (
     <div className={styles.container}>
       <Head>

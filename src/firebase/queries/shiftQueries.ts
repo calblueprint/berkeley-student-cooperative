@@ -19,7 +19,6 @@ export const addShift = async (description: string, possibleDays: string[], time
 export const updateShift = async (shiftID: string, newData: object) => {
     const currShift = await getShift(shiftID);
     if (currShift == null) {
-        console.log("Invalid Shift ID");
         return;
     }
     const docRef = doc(firestore, "shifts", shiftID);
@@ -32,10 +31,16 @@ export const getShift = async (shiftID: string) => {
     if (docSnap.exists()) {
         return await parseShift(docSnap);
     }
+    // probably replace with modal
+    console.log("Invalid Shift ID");
     return null;
 }
 
 export const deleteShift = async (shiftID: string) => {
+    const currShift = await getShift(shiftID);
+    if (currShift == null) {
+        return;
+    }
     const docRef = doc(firestore, "shifts", shiftID);
     // const docSnap = await getDoc(docRef);
     // if (!docSnap.exists()) {
