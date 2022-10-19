@@ -2,16 +2,16 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
-import { getAllHouses, getHouse } from "../firebase/queries/houseQueries";
+import { getAllHouses, getHouse, updateAddress} from "../firebase/queries/houseQueries";
 import { House } from "../types/schema";
 
 
 const Home: NextPage = () => {
   const [houses, setHouses] = useState([] as House[]);
-  const [currHouse, setCurrHouse] = useState({})
+  const [currHouse, setCurrHouse] = useState({} as House);
   useEffect(() => {
-    getAllHouseFB();
-    getHouseFB('euclid');
+    
+
   }, []);
 
   //gets all houses from firebase
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   //gets specific house from firebase, must specify certain house
   const getHouseFB = async (houseID :string) =>{
     var fireAHouse = await getHouse(houseID);
-    setCurrHouse(fireAHouse[0]);
+    setCurrHouse(fireAHouse);
   }
 
 
