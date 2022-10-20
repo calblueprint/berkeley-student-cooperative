@@ -3,13 +3,12 @@ import {Shift} from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 //import {getUser, updateUser} from "userQueries";
 
-export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
-    await addDoc(collection(firestore, "houses", houseID, "shifts"), {
+export const addShift = async (name: string, description: string, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
+    await addDoc(collection(firestore, "shifts"), {
         name: name,
         description: description,
         possibleDays: possibleDays,
         timeWindow: timeWindow,
-        numOfPeople: numOfPeople,
         assignedDay: assignedDay,
         hours: hours,
         verification: verification,
@@ -19,17 +18,17 @@ export const addShift = async (houseID: string, name: string, description: strin
     });
 }
 
-export const updateShift = async (houseID: string, shiftID: string, newData: object) => {
-    const currShift = await getShift(houseID, shiftID);
+export const updateShift = async (shiftID: string, newData: object) => {
+    const currShift = await getShift(shiftID);
     if (currShift == null) {
         return;
     }
-    const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
+    const docRef = doc(firestore, "shifts", shiftID);
     await updateDoc(docRef, newData);
 }
 
-export const getShift = async (houseID: string, shiftID: string) => {
-    const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
+export const getShift = async (shiftID: string) => {
+    const docRef = doc(firestore, "shifts", shiftID);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         return await parseShift(docSnap);
@@ -39,12 +38,12 @@ export const getShift = async (houseID: string, shiftID: string) => {
     return null;
 }
 
-export const deleteShift = async (houseID: string, shiftID: string) => {
-    const currShift = await getShift(houseID, shiftID);
+export const deleteShift = async (shiftID: string) => {
+    const currShift = await getShift(shiftID);
     if (currShift == null) {
         return;
     }
-    const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
+    const docRef = doc(firestore, "shifts", shiftID);
     // const docSnap = await getDoc(docRef);
     // if (!docSnap.exists()) {
     //     return null;
@@ -73,7 +72,6 @@ const parseShift = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         name: data.name,
         description: data.description,
         possibleDays: data.possibleDays,
-        numOfPeople: data.numOfPeople,
         timeWindow: data.timeWindow,
         assignedDay: data.assignedDay,
         hours: data.hours,

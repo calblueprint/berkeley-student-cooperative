@@ -33,8 +33,10 @@
 
 .submit {
     float: right;
+    margin-bottom: 10px;
 }
 
 .clear {
     float: left;
+    margin-bottom: 10px;
 }

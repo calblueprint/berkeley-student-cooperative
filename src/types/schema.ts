@@ -17,11 +17,11 @@ export type User = {
 };
 
 export type Shift = {
-  shiftID: string;
   name: string;
+  shiftID: string;
   description: string;
-  numOfPpl: number;
   possibleDays: string[];
+  numOfPeople: number;
   // time 
   timeWindow: number[];
   assignedDay: string;
@@ -31,4 +31,12 @@ export type Shift = {
   verificationBuffer: number;
   usersAssigned: string[];
   category: string;
+}
+
+export type House = {
+  houseID: string;
+  members: string[] | null;
+  address: string;
+  schedule: Map<string, string[]>;
+  pinUserMap: Map<string, string>;
 };

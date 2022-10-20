@@ -66,6 +66,7 @@ const ShiftCard = () => {
       category
     ) {
       await addShift(
+        "Euclid",
         name,
         description,
         members,
