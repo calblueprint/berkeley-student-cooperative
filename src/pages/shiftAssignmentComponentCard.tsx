@@ -47,16 +47,16 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     let numHours = tempShiftObject.hours;
     // hours * 100 -> add to userstart time and see if within
     let potentialUsers = [];
-    const house = await getHouse(houseID);
-    const totalUsersInHouse = house.users;
-    for (let i = 0; i < totalUsersInHouse.length; i++) {
-      const currUser = totalUsersInHouse[i];
-      const currAvailabilities = currUser.availabilities;
-      if (currAvailabilities.has(day)) {
-        const perDayAvailability = currAvailabilities.get(day);
-        // compare time windows
-      }
-    }
+    // const house = await getHouse(houseID);
+    // const totalUsersInHouse = house.users;
+    // for (let i = 0; i < totalUsersInHouse.length; i++) {
+    //   const currUser = totalUsersInHouse[i];
+    //   const currAvailabilities = currUser.availabilities;
+    //   if (currAvailabilities.has(day)) {
+    //     const perDayAvailability = currAvailabilities.get(day);
+    //     // compare time windows
+    //   }
+    // }
   }
 
   const [potentialWorkers, setPotentialWorkers] = useState<User[]>([]);

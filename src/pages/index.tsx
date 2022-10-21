@@ -3,8 +3,8 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import ShiftAssignmentComponentCard from "./shiftAssignmentComponentCard";
 const Home: NextPage = () => {
-  const shiftID = "X9uW6xyxhDECkANuV38u";
-  const houseID = "Euclid";
+  const shiftID = "dvIP6CZVL6CCYLVB0VPg";
+  const houseID = "euclid"; //capitalization
   const day = "Monday";
   return (
     <div className={styles.container}>
