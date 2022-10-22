@@ -6,7 +6,9 @@ export type User = {
   name: string;
   email: string;
   houseID: string;
-  totalHoursAssigned: number;
+  // update
+  hoursAssigned: number;
+  hoursRequired: number;
   shiftsAssigned: string[];
   hoursRemainingWeek: number;
   hoursRemainingSemester: number;
