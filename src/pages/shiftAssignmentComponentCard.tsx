@@ -6,23 +6,10 @@ import { getShift } from "../firebase/queries/shift";
 import { User, Shift, House } from "../types/schema";
 import { useEffect } from "react";
 import { getHouse } from "../firebase/queries/house";
-import { assignShiftToUser, getUser, unassignShiftToUser } from "../firebase/queries/user";
+import { updateUser, getUser} from "../firebase/queries/user";
 import ShiftAssignmentTable from "./shiftAssignmentTable";
 import Button from "@mui/material/Button";
-
-// name: string;
-//   shiftID: string;
-//   description: string;
-//   possibleDays: string[];
-//   numOfPeople: number;
-//   // time 
-//   timeWindow: number[];
-//   assignedDay: string;
-//   hours: number;
-//   // number of hours since end time that you are allowed to verify
-//   verificationBuffer: number;
-//   usersAssigned: string[];
-//   category: string;
+import { updateShift } from "../firebase/queries/shift";
 
 type ShiftAssignmentComponentCardProps = {
   day: string,
@@ -82,6 +69,14 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
       if (userObject === null) {
         continue;
       }
+      if (userObject.shiftsAssigned.includes(shiftID)) {
+        potentialUsers.push(userObject);
+        continue;
+      }
+      let assignableHours = userObject.hoursRequired - userObject.hoursAssigned;
+      if (assignableHours <= 0) {
+        continue;
+      }
       const currAvailabilities = userObject.availabilities;
       if (currAvailabilities.has(day)) {
         const perDayAvailability = currAvailabilities.get(day);
@@ -108,7 +103,9 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
 
     potentialUsers.sort((user1, user2) => {
       // First sort on hoursRemainingWeek, prioritizing people with higher hours remaining
-      let hoursWeekDiff: number = user2.hoursRemainingWeek - user1.hoursRemainingWeek;
+      let user1HoursLeft = user1.hoursRequired - user1.hoursAssigned;
+      let user2HoursLeft = user2.hoursRequired - user2.hoursAssigned;
+      let hoursWeekDiff: number = user2HoursLeft - user1HoursLeft;
       if (hoursWeekDiff != 0) {
         return hoursWeekDiff;
       }
@@ -156,23 +153,64 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     populatePotentialWorkersAndSelected();
   }, []);
 
-  const assignAndUnassignUserToShift = async () => {
+  const updateUserAndShiftObjects = async () => {
+    await updateUserObjects();
+    await updateShiftObject();
+  }
+
+  const updateUserObjects = async () => {
+    // hoursAssigned
+    // clear prior
     for (let i = 0; i < potentialWorkers.length; i++) {
       let user = potentialWorkers[i];
       if (user.shiftsAssigned.includes(shiftID) && !selectedRows.includes(user.userID)) {
-        await unassignShiftToUser(user.userID, shiftID);
+        let copy = [...user.shiftsAssigned];
+        let index = copy.indexOf(shiftID);
+        copy.splice(index, 1);
+        let newHours = user.hoursAssigned;
+        if (shiftObject !== undefined) {
+          newHours -= shiftObject.hours;
+        }
+        let newData = {
+            shiftsAssigned: copy,
+            hoursAssigned: newHours
+        }
+        await updateUser(user.userID, newData);
       }
     }
+
+    // add new
     for (let i = 0; i < selectedRows.length; i++) {
       let userID = selectedRows[i];
-      await assignShiftToUser(userID, shiftID);
+      const user = await getUser(userID);
+      if (user === null || user.shiftsAssigned.includes(shiftID)) {
+          return;
+      }
+      let copy = [...user.shiftsAssigned];
+      copy.push(shiftID);
+      let newHours = user.hoursAssigned;
+      if (shiftObject !== undefined) {
+        newHours += shiftObject.hours;
+      }
+      let newData = {
+          shiftsAssigned: copy,
+          hoursAssigned: newHours
+      }
+      await updateUser(userID, newData);
     }
   }
 
-
+  const updateShiftObject = async () => {
+    let newData = {
+      usersAssigned: selectedRows,
+      dayAssigned: day
+    }
+    await updateShift(houseID, shiftID, newData);
+  }
   
   return (
     <div className={styles.container}>
+      <h1>{shiftObject?.name}</h1>
       <div>
         Name: {shiftObject?.name}
       </div>
@@ -201,7 +239,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
         Users Assigned: {shiftObject?.usersAssigned}
       </div>
       <ShiftAssignmentTable users = {potentialWorkers} shiftID = {shiftID} selectedRows = {selectedRows} setSelectedRows = {setSelectedRows}/>
-      <Button onClick = {assignAndUnassignUserToShift}>Assign</Button>
+      <Button onClick = {updateUserAndShiftObjects}>Assign</Button>
     </div>
   );
 };

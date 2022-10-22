@@ -25,7 +25,8 @@ export const addUser = async (email: string, houseID: string, name: string, role
         role: role,
         shiftsAssigned: new Array<string>(),
         totalFines: 0,
-        totalHoursAssigned: 5
+        hoursRequired: 5,
+        hoursAssigned: 0
     });
     // PENDING COMPLETION OF HOUSE QUERIES
     // currHouse.members.push(userID);
@@ -72,7 +73,8 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         name: data.name,
         email: data.email,
         houseID: data.houseID,
-        totalHoursAssigned: data.totalHoursAssigned,
+        hoursAssigned: data.hoursAssigned,
+        hoursRequired: data.hoursRequired,
         shiftsAssigned: data.shiftsAssigned,
         hoursRemainingWeek: data.hoursRemainingWeek,
         hoursRemainingSemester: data.hoursRemainingSemester,
@@ -95,34 +97,4 @@ export const deleteUser = async (userID: string) => {
         return;
     }
     await deleteDoc(doc(firestore, "users", userID));
-}
-
-export const assignShiftToUser = async (userID: string, shiftID: string) => {
-    const currUser = await getUser(userID);
-    if (currUser === null || currUser.shiftsAssigned.includes(shiftID)) {
-        return;
-    }
-    currUser.shiftsAssigned.push(shiftID);
-    let newData = {
-        shiftsAssigned: currUser.shiftsAssigned
-    }
-    await updateUser(userID, newData);
-}
-
-export const unassignShiftToUser = async (userID: string, shiftID: string) => {
-    const currUser = await getUser(userID);
-    if (currUser === null) {
-        return;
-    }
-    let copy = [...currUser.shiftsAssigned];
-    let index = copy.indexOf(shiftID);
-    if (index == -1) {
-        return;
-    }
-    copy.splice(index, 1);
-    let newData = {
-        shiftsAssigned: copy
-    }
-    console.log(copy);
-    await updateUser(userID, newData);
 }
