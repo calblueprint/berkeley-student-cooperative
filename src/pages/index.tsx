@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import AssignShiftcard from "../components/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/Shiftcard/Shiftcard";
 import styles from "../styles/Home.module.css";
 
@@ -13,7 +14,8 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
-        <ShiftCard/>
+        <ShiftCard />
+        <AssignShiftcard shiftID={"tvaSrwpO4OOY6jGyMG8a"} houseID={"euclid"} />
       </main>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
