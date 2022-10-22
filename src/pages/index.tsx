@@ -1,8 +1,32 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
+import { useEffect, useState } from "react";
+import {
+  getAllHouses,
+  getHouse,
+  updateAddress,
+} from "../firebase/queries/houseQueries";
+import { House } from "../types/schema";
 
 const Home: NextPage = () => {
+  const [houses, setHouses] = useState([] as House[]);
+  const [currHouse, setCurrHouse] = useState({} as House);
+  useEffect(() => {}, []);
+
+  //gets all houses from firebase
+  const getAllHouseFB = async () => {
+    var fireHouse = await getAllHouses();
+    setHouses(fireHouse);
+  };
+  //gets specific house from firebase, must specify certain house
+  const getHouseFB = async (houseID: string) => {
+    var fireAHouse = await getHouse(houseID);
+    setCurrHouse(fireAHouse);
+  };
+
+  console.log(updateAddress("hoyt", "greg's house"));
+
   return (
     <div className={styles.container}>
       <Head>
