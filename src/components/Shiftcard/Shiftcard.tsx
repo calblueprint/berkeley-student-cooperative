@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { addShift } from "../../firebase/queries/shiftQueries";
+import { addShift } from "../../firebase/queries/shift";
 import Icon from "../../assets/Icon";
 
 const ShiftCard = () => {
@@ -42,7 +42,7 @@ const ShiftCard = () => {
     "Saturday",
     "Sunday",
   ];
-  let verificationOptions = ["Verification required", "No verificiation"];
+  let verificationOptions = ["Verification required", "No verification"];
 
   const handleOpen = () => {
     setOpen(true);
@@ -62,7 +62,6 @@ const ShiftCard = () => {
       endTime &&
       isValidNumber(hours) &&
       isValidNumber(buffer) &&
-      verification &&
       category
     ) {
       await addShift(
@@ -80,6 +79,8 @@ const ShiftCard = () => {
       );
       clearFields();
       handleClose();
+    }else {
+      console.log("fill in fields")
     }
     // error fields on submit?
   };

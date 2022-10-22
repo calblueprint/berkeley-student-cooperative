@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogContent, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import Icon from "../../assets/Icon";
-import { getShift } from "../../firebase/queries/shiftQueries";
+import { getShift } from "../../firebase/queries/shift";
 import { Shift } from "../../types/schema";
 import styles from "./AssignShiftcard.module.css";
 
@@ -11,17 +11,17 @@ type AssignShiftcardProps = {
 };
 
 const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
-  shiftID="euclid",
-  houseID="tvaSrwpO4OOY6jGyMG8a",
+  shiftID = "euclid",
+  houseID = "p1pAhOPFQLd9XtPuBtjh",
 }: AssignShiftcardProps) => {
   const [open, setOpen] = useState(false);
   const [shift, setShift] = useState<Shift | null>();
 
   useEffect(() => {
     const getShiftFB = async () => {
-    const currShift = await getShift(shiftID, houseID);
-    setShift(currShift);
-  };
+      const currShift = await getShift(houseID, shiftID);
+      setShift(currShift);
+    };
     getShiftFB();
   }, [houseID, shiftID]);
 
