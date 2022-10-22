@@ -12,10 +12,12 @@ import { User } from "../types/schema";
 
 type ShiftAssignmentTableProps = {
     users: User[],
-    shiftID: string
+    shiftID: string,
+    selectedRows: string[],
+    setSelectedRows: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shiftID} : ShiftAssignmentTableProps) => {
+const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shiftID, selectedRows, setSelectedRows} : ShiftAssignmentTableProps) => {
     type RowData = {
         id: string, 
         name: string,
@@ -70,19 +72,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
 
     const rows = initializeRows();
 
-    const initializeSelected = () => {
-        let ret = [];
-        for (let i = 0; i < users.length; i++) {
-            let user = users[i];
-            let assignedShifts = user.shiftsAssigned;
-            if (assignedShifts.includes(shiftID)) {
-                ret.push(user.userID);
-            }
-        }
-        return ret;
-    }
-    // list of userIDs
-    const [selectedRows, setSelectedRows] = useState(initializeSelected());
+   
 
     const columns: Column[] = [
         {
@@ -134,7 +124,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
                                             checked={ selectedRows.includes(row.id) }
                                             />
                                     </TableCell>
-                                    <TableCell padding = "none" align = "center"> {row.name}</TableCell>
+                                    <TableCell align = "center"> {row.name}</TableCell>
                                     <TableCell align = "center"> {row.hoursRemaining}</TableCell>
                                     <TableCell align = "center"> {row.preference}</TableCell>
                                 </TableRow>
