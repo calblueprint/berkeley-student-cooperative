@@ -66,7 +66,7 @@ const ShiftCard = () => {
       category
     ) {
       await addShift(
-        "Euclid",
+        "Euclid", // TODO: use context to get the correct houseID
         name,
         description,
         members,
@@ -80,8 +80,9 @@ const ShiftCard = () => {
       );
       clearFields();
       handleClose();
+    } else {
+      console.log("Submission Invalid.");
     }
-    // error fields on submit?
   };
 
   const clearFields = () => {
