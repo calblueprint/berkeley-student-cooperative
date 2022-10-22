@@ -1,6 +1,6 @@
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
-import { doc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
+import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 import { mapToObject, objectToMap } from "../helpers";
 
 export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
@@ -43,8 +43,8 @@ const generatePinNumber = (numDigitsInPin: number) => {
 
 
 export const updateUser = async (userID: string, newData: object) => {
-    const user = await getUser(userID);
-    if (user == null) {
+    const currUser = await getUser(userID);
+    if (currUser == null) {
         return;
     }
     const userRef = doc(firestore, 'users', userID);
@@ -57,7 +57,8 @@ export const getUser = async (userID: string) => {
     if (docSnap.exists()) {
         return await parseUser(docSnap);
     }
-    console.log("Invalid UserID");
+    //replace w modal
+    console.log("Invalid User ID");
     return null;
 }
 
@@ -83,6 +84,10 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
 }
 
 export const deleteUser = async (userID: string) => {
+    const currUser = await getUser(userID);
+    if (currUser == null) {
+        return;
+    }
     // delete user from all instances of shifts
     const user = await getUser(userID);
     if (user == null) {
