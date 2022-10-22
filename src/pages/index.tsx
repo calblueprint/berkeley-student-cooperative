@@ -7,10 +7,10 @@ import { mapToObject } from "../firebase/helpers";
 import { addShift } from "../firebase/queries/shift";
 
 const Home: NextPage = () => {
-  const shiftID = "NdqnJFJ6NjhmkvpednUG";
+  const shiftID = "iBVA4gOntEGFA4AxpqFU";
   const houseID = "EUC";
   const day = "Monday";
-  const id = "12345";
+  const id = "123";
 
   const createUser = async () => {
     await addUser("hello@gmail.com", houseID, "eligible", "member", id);
