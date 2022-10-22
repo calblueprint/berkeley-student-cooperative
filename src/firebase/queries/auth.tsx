@@ -3,6 +3,8 @@ import { addUser, getUser } from "./userQueries";
 import React, { createContext, useContext, useState } from "react";
 import { User} from "../../types/schema";
 import { defaultUser } from "./user";
+import { doc, deleteDoc } from "firebase/firestore";
+import { firestore } from "../clientApp";
 
 //managers don't have to register.  House will be matched to email
 //userID is going to get generated in register.
@@ -54,12 +56,6 @@ export const useFirebaseAuth = () => {
 			console.log("Email: ", email, " Password: ", password);
 			signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
-				//signed in
-				/*
-				PENDING:  Unsure of need.  Get the role, pass it to userContext???
-				Will need something to checkRole i
-				const role = await checkRole(userUid);
-				*/
 				const userID= userCredential.user.uid;
 				establishUserContext(userID);
 			})
@@ -80,8 +76,7 @@ const signOutAuth = async (): Promise<void> => {
 		}
 	};
 
-	// DELETE USER ??
-
+	
 	const establishUserContext = async(uid: string): Promise<void> => {
 		try {
 			getUser(uid).then((userFromDoc) => {
@@ -96,12 +91,17 @@ const signOutAuth = async (): Promise<void> => {
 		}
 	}
 
+	const deleteUser = async(uid: string): Promise<void> => {
+		await deleteDoc(doc(firestore, "users", uid ));
+	}
+	
 	return {
 		authUser, 
 		register, 
 		signIn, 
 		signOutAuth,
 		establishUserContext,
+		deleteUser, 
 	};
 }
 
@@ -111,6 +111,7 @@ const authUserContext = createContext({
   register: async (email: string, name: string, password: string) => {},
   signOutAuth: () => {},
 	establishUserContext: async (uid: string) => {},
+	deleteUser: async (uid: string) => {}
 });
 
 export const AuthUserProvider = ({children}: any) => {
