@@ -30,11 +30,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     }
   }
   
-  const populatePotentialWorkersAndSelected = async () => {
-    const tempShiftObject = await getShift(houseID, shiftID);
-    if (tempShiftObject === null || tempShiftObject === undefined) {
-      return;
-    }
+  const findAvailableUsers = async (tempShiftObject: Shift) => {
     const timeWindow = tempShiftObject.timeWindow;
     const shiftStart = timeWindow[0];
     const shiftEnd = timeWindow[1];
@@ -43,7 +39,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     const house = await getHouse(houseID);
     const totalUsersInHouse = house.members;
     if (totalUsersInHouse === null || totalUsersInHouse === undefined) {
-      return;
+      return [];
     }
     const mult100 = Math.floor(numHours) * 100;
     let thirtyMin = 0;
@@ -88,6 +84,14 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
         }
       }
     }
+    return potentialUsers;
+  }
+  const populatePotentialWorkersAndSelected = async () => {
+    const tempShiftObject = await getShift(houseID, shiftID);
+    if (tempShiftObject === null || tempShiftObject === undefined) {
+      return;
+    }
+    let potentialUsers = await findAvailableUsers(tempShiftObject);
 
     potentialUsers.sort((user1, user2) => {
       // First sort on hoursRemainingWeek, prioritizing people with higher hours remaining
@@ -149,58 +153,65 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
   const updateUserObjects = async () => {
     // hoursAssigned
     // clear prior
-    for (let i = 0; i < potentialWorkers.length; i++) {
-      let user = potentialWorkers[i];
-      if (user.shiftsAssigned.includes(shiftID) && !selectedRows.includes(user.userID)) {
+    if (shiftObject !== undefined && selectedRows.length <= shiftObject.numOfPeople) {
+      for (let i = 0; i < potentialWorkers.length; i++) {
+        let user = potentialWorkers[i];
+        if (user.shiftsAssigned.includes(shiftID) && !selectedRows.includes(user.userID)) {
+          let copy = [...user.shiftsAssigned];
+          let index = copy.indexOf(shiftID);
+          copy.splice(index, 1);
+          let newHours = user.hoursAssigned;
+          if (shiftObject !== undefined) {
+            newHours -= shiftObject.hours;
+          }
+          let newData = {
+              shiftsAssigned: copy,
+              hoursAssigned: newHours
+          }
+          await updateUser(user.userID, newData);
+        }
+      }
+
+      // add new
+      for (let i = 0; i < selectedRows.length; i++) {
+        let userID = selectedRows[i];
+        const user = await getUser(userID);
+        if (user === null || user.shiftsAssigned.includes(shiftID)) {
+            return;
+        }
         let copy = [...user.shiftsAssigned];
-        let index = copy.indexOf(shiftID);
-        copy.splice(index, 1);
+        copy.push(shiftID);
         let newHours = user.hoursAssigned;
         if (shiftObject !== undefined) {
-          newHours -= shiftObject.hours;
+          newHours += shiftObject.hours;
         }
         let newData = {
             shiftsAssigned: copy,
             hoursAssigned: newHours
         }
-        await updateUser(user.userID, newData);
+        await updateUser(userID, newData);
       }
-    }
-
-    // add new
-    for (let i = 0; i < selectedRows.length; i++) {
-      let userID = selectedRows[i];
-      const user = await getUser(userID);
-      if (user === null || user.shiftsAssigned.includes(shiftID)) {
-          return;
-      }
-      let copy = [...user.shiftsAssigned];
-      copy.push(shiftID);
-      let newHours = user.hoursAssigned;
-      if (shiftObject !== undefined) {
-        newHours += shiftObject.hours;
-      }
-      let newData = {
-          shiftsAssigned: copy,
-          hoursAssigned: newHours
-      }
-      await updateUser(userID, newData);
+    } else {
+      // replace w modal
+      console.log("Too many people selected");
     }
   }
 
   const updateShiftObject = async () => {
-    let newData = {
-      usersAssigned: selectedRows,
-      assignedDay: day
+    if (shiftObject !== undefined && selectedRows.length <= shiftObject.numOfPeople) {
+      let newData = {
+        usersAssigned: selectedRows,
+        assignedDay: day
+      }
+      await updateShift(houseID, shiftID, newData);
     }
-    await updateShift(houseID, shiftID, newData);
   }
   
   return (
     <div className={styles.container}>
       <h1>{shiftObject?.name}</h1>
       <div>
-        Name: {shiftObject?.name}
+        {day}
       </div>
       <div>
         Description: {shiftObject?.description}
