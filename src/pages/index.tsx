@@ -6,7 +6,7 @@ import { addUser, updateUser, getUser } from "../firebase/queries/user";
 import { mapToObject } from "../firebase/helpers";
 
 const Home: NextPage = () => {
-  const shiftID = "dvIP6CZVL6CCYLVB0VPg";
+  const shiftID = "tvaSrwpO4OOY6jGyMG8a";
   const houseID = "euclid"; //capitalization
   const day = "Monday";
 

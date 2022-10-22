@@ -1,4 +1,12 @@
 
+import Checkbox from "@mui/material/Checkbox";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import { useState } from "react";
 import { User } from "../types/schema";
 
 
@@ -6,13 +14,20 @@ type ShiftAssignmentTableProps = {
     users: User[],
     shiftID: string
 }
+
 const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shiftID} : ShiftAssignmentTableProps) => {
     type RowData = {
+        id: string, 
         name: string,
         hoursRemaining: number,
         preference: string
     }
     
+    type Column = {
+        id: "Available" | "Down Hours" | "Preference";
+        minWidth: number;
+
+    }
     const createRow = (user: User) : RowData => {
         let name = user.name;
         let hoursRemaining = user.hoursRemainingWeek;
@@ -32,17 +47,22 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
             }
         }
         let preference = stringPreference;
+        let id = user.userID;
         let newRow = {
+            id,
             name,
             hoursRemaining,
             preference
         };
         return newRow;
     }
-    
+
     const initializeRows = () => {
         let ret = [];
         for (let i = 0; i < users.length; i++) {
+            ret.push(createRow(users[i]));
+            ret.push(createRow(users[i]));
+            ret.push(createRow(users[i]));
             ret.push(createRow(users[i]));
         }
         return ret;
@@ -50,16 +70,79 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
 
     const rows = initializeRows();
 
+    const initializeSelected = () => {
+        let ret = [];
+        for (let i = 0; i < users.length; i++) {
+            let user = users[i];
+            let assignedShifts = user.shiftsAssigned;
+            if (assignedShifts.includes(shiftID)) {
+                ret.push(user.userID);
+            }
+        }
+        return ret;
+    }
+    // list of userIDs
+    const [selectedRows, setSelectedRows] = useState(initializeSelected());
+
+    const columns: Column[] = [
+        {
+            id: "Available",
+            minWidth: 170
+        }, 
+        {
+            id: "Down Hours",
+            minWidth: 170
+        },
+        {
+            id: "Preference",
+            minWidth: 170
+        }
+    ]
+
+    const handleClick = (userID: string) => {
+        let copy = [...selectedRows];
+        let index = copy.indexOf(userID);
+        if (index > -1) {
+            copy.splice(index, 1);
+        } else {
+            copy.push(userID);
+        }
+        setSelectedRows(copy);
+    }
+
     return (
         <div>
-            {rows.map((rowData, index) => (
-                <div key = {index}> 
-                    <div> {rowData.name}</div>
-                    <div> {rowData.hoursRemaining}</div>
-                    <div> {rowData.preference}</div>
-                </div>
-                
-            ))}
+            <TableContainer sx = {{maxHeight: 440}}>
+                <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell padding = "checkbox" />
+                            {
+                                columns.map((column) => (
+                                    <TableCell key = {column.id} align = "center" style = {{minWidth: column.minWidth}}>{ column.id }</TableCell>
+                                ))
+                            }
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            rows.map((row, index) => (
+                                <TableRow hover role = "checkbox" key = {index} onClick = {(event) => handleClick(row.id)}>
+                                    <TableCell padding = "none">
+                                        <Checkbox
+                                            color="primary"
+                                            checked={ selectedRows.includes(row.id) }
+                                            />
+                                    </TableCell>
+                                    <TableCell padding = "none" align = "center"> {row.name}</TableCell>
+                                    <TableCell align = "center"> {row.hoursRemaining}</TableCell>
+                                    <TableCell align = "center"> {row.preference}</TableCell>
+                                </TableRow>
+                            ))
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     )
 }
