@@ -6,10 +6,17 @@ import {
   getAllHouses,
   getHouse,
   updateAddress,
+  addCategory,
+  removeCategory,
+  getCategories,
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
 
 const Home: NextPage = () => {
+  useEffect(() => {
+
+  }, [])
+
   return (
     <div className={styles.container}>
       <Head>

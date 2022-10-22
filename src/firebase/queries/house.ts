@@ -49,6 +49,63 @@ export const updateAddress = async (houseID: string, newAddress: string): Promis
     await updateDoc(docRef, data)
 }
 
+//adds a value to the categories array
+export const addCategory = async (houseID: string, newCategory: string): Promise<void> => {
+    const docRef = doc(firestore, "houses", houseID);
+    const colSnap = await getDoc(docRef);
+  
+    const promise: Promise<House> = parseHouse(colSnap);
+    const house = await promise;
+    var newCategories = house.categories
+    
+    //checks if category already exists
+    const index = newCategories?.indexOf(newCategory);
+    if (index == -1 ){
+        if (!newCategories){
+            newCategories = [newCategory]
+        } else {
+            newCategories?.push(newCategory)
+        }
+        
+    }
+    
+    const data = {
+        categories: newCategories
+    }
+    await updateDoc(docRef, data)
+}
+
+export const removeCategory = async (houseID: string, oldCategory: string): Promise<void> => {
+    const docRef = doc(firestore, "houses", houseID);
+    const colSnap = await getDoc(docRef);
+  
+    const promise: Promise<House> = parseHouse(colSnap);
+    const house = await promise;
+    var newCategories = house.categories
+
+    const index = newCategories?.indexOf(oldCategory);
+    if (index !== -1 && index){
+        
+        newCategories?.splice(index, 1)
+    }
+    const data = {
+        categories: newCategories
+    }
+    await updateDoc(docRef, data)
+}
+
+
+export const getCategories = async (houseID: string): Promise<String[]> => {
+    const docRef = doc(firestore, "houses", houseID);
+
+    const colSnap = await getDoc(docRef);
+  
+    const promise: Promise<House> = parseHouse(colSnap);
+    const house = await promise;
+
+    return house.categories;
+}
+
 
 //address schedule field when shifts are all done
 
@@ -59,8 +116,9 @@ const parseHouse = async (doc : any) => {
     const houseID = doc.id;
     const members = doc.members;
     const address = data.address;
+    const categories = data.categories;
     const schedule = data.schedule;
-    const house = {houseID, members, address, schedule};
+    const house = {houseID, members, address, schedule, categories};
     return house as House;
 }
 
