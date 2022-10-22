@@ -40,6 +40,7 @@ export const getHouse = async(houseID: string): Promise<House>  => {
 
 //updating the fields of house, may not be useful ?
 export const updateAddress = async (houseID: string, newAddress: string): Promise<void> => {
+    // TODO: add null checking
     const docRef = doc(firestore, "houses", houseID);
 
     const data = {
