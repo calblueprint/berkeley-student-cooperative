@@ -99,7 +99,7 @@ export const deleteUser = async (userID: string) => {
 
 export const assignShiftToUser = async (userID: string, shiftID: string) => {
     const currUser = await getUser(userID);
-    if (currUser === null) {
+    if (currUser === null || currUser.shiftsAssigned.includes(shiftID)) {
         return;
     }
     currUser.shiftsAssigned.push(shiftID);
