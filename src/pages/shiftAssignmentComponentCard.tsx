@@ -7,6 +7,7 @@ import { User, Shift, House } from "../types/schema";
 import { useEffect } from "react";
 import { getHouse } from "../firebase/queries/house";
 import { getUser } from "../firebase/queries/user";
+import { diffieHellman } from "crypto";
 
 // name: string;
 //   shiftID: string;
@@ -89,6 +90,37 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
         }
       }
     }
+    potentialUsers.sort((user1, user2) => {
+      // First sort on hoursRemainingWeek, prioritizing people with higher hours remaining
+      let hoursWeekDiff = user2.hoursRemainingWeek - user1.hoursRemainingWeek;
+      if (hoursWeekDiff != 0) {
+        return hoursWeekDiff;
+      }
+
+      let user1Preferences = user1.preferences;
+      let user2Preferences = user2.preferences;
+      let user1Pref = 0;
+      let user2Pref = 0;
+      if (user1Preferences.has(shiftID)) {
+        let curr = user1Preferences.get(shiftID);
+        if (curr !== undefined) {
+          user1Pref = curr;
+        }
+      }
+      if (user2Preferences.has(shiftID)) {
+        let curr = user2Preferences.get(shiftID);
+        if (curr !== undefined) {
+          user2Pref = curr;
+        }
+      }
+      // Second sort on preferences, prioritizing people with higher preferences
+      let prefDiff = user2Pref - user1Pref;
+      if (prefDiff != 0) {
+        return prefDiff;
+      }
+      // Third sort on hoursRemainingSemester, prioritizing people with higher hoursRemaining
+      return user2.hoursRemainingSemester - user1.hoursRemainingSemester;
+    });
     setPotentialWorkers(potentialUsers);
   }
 

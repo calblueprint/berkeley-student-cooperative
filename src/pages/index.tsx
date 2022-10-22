@@ -12,7 +12,7 @@ const Home: NextPage = () => {
 
   const createUser = async () => {
     let id = "123";
-    await addUser("hello@gmail.com", "euclid", "eligible", "member", "123");
+    await addUser("hello@gmail.com", "euclid", "eligible", "member", id);
     let availabilities = new Map<string, number[]>();
     availabilities.set("Monday", [0, 300]);
     let newData = {
