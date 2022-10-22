@@ -2,12 +2,11 @@ import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 import { mapToObject, objectToMap } from "../helpers";
+import { getHouse, updateHouse } from "./house";
 
 export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
     // PENDING COMPLETION OF HOUSE QUERIES
-    // const houseDocRef = doc(firestore, "houses", houseID);
-    // const houseDocSnap = await getDoc(houseDocRef);
-    // const currHouse = await parseHouse(houseDocSnap);
+    const currHouse = await getHouse(houseID);
     // let currHouseMap = currHouse.pinUserMap;
     // do {
     //     var pinNumber = generatePinNumber(5);
@@ -29,13 +28,19 @@ export const addUser = async (email: string, houseID: string, name: string, role
         hoursAssigned: 0
     });
     // PENDING COMPLETION OF HOUSE QUERIES
-    // currHouse.members.push(userID);
+    let members = currHouse.members;
+    if (members == null) {
+        members = new Array<string>();
+    }
+    if (!members.includes(userID)) {
+        members.push(userID);
+    }
     // currHouseMap.set(pinNumber, userID);
-    // let newData = {
-    //     members: currHouse.members,
-    //     pinUserMap: currHouseMap
-    // }
-    // updateHouse(currHouse.houseID, newData);
+    let newData = {
+        members: currHouse.members
+        // pinUserMap: currHouseMap
+    }
+    updateHouse(houseID, newData);
 }
 
 const generatePinNumber = (numDigitsInPin: number) => {

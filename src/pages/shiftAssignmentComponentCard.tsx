@@ -21,18 +21,6 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
   const [shiftObject, setShiftObject] = useState<Shift>();
   const [potentialWorkers, setPotentialWorkers] = useState<User[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-
-  const initializeSelected = async () => {
-    let ret = [];
-    for (let i = 0; i < potentialWorkers.length; i++) {
-        let user = potentialWorkers[i];
-        let assignedShifts = user.shiftsAssigned;
-        if (assignedShifts.includes(shiftID)) {
-            ret.push(user.userID);
-        }
-    }
-    setSelectedRows(ret);
-  }
 // list of userIDs
 
   const retrieveShift = async () => {
@@ -203,7 +191,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
   const updateShiftObject = async () => {
     let newData = {
       usersAssigned: selectedRows,
-      dayAssigned: day
+      assignedDay: day
     }
     await updateShift(houseID, shiftID, newData);
   }
