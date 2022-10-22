@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import ShiftAssignmentComponentCard from "./shiftAssignmentComponentCard";
+
 const Home: NextPage = () => {
   const shiftID = "dvIP6CZVL6CCYLVB0VPg";
   const houseID = "euclid"; //capitalization
