@@ -3,9 +3,10 @@ import styles from "../styles/Home.module.css";
 // task information
 // query members and map info into table
 import { getShift } from "../firebase/queries/shift";
-import { User, Shift } from "../types/schema";
+import { User, Shift, House } from "../types/schema";
 import { useEffect } from "react";
-import { getHouses } from "../firebase/queries/exampleQuery";
+import { getHouse } from "../firebase/queries/house";
+import { getUser } from "../firebase/queries/user";
 
 // name: string;
 //   shiftID: string;
@@ -29,7 +30,8 @@ type ShiftAssignmentComponentCardProps = {
 
 const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> = ({day, houseID, shiftID}: ShiftAssignmentComponentCardProps) => {
   const [shiftObject, setShiftObject] = useState<Shift>();
-  
+  const [potentialWorkers, setPotentialWorkers] = useState<User[]>([]);
+
   const retrieveShift = async () => {
     const shift = await getShift(houseID, shiftID);
     if (shift != null) {
@@ -42,24 +44,53 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     if (tempShiftObject === null || tempShiftObject === undefined) {
       return;
     }
-
-    let timeWindow = tempShiftObject.timeWindow;
-    let numHours = tempShiftObject.hours;
-    // hours * 100 -> add to userstart time and see if within
-    let potentialUsers = [];
-    // const house = await getHouse(houseID);
-    // const totalUsersInHouse = house.users;
-    // for (let i = 0; i < totalUsersInHouse.length; i++) {
-    //   const currUser = totalUsersInHouse[i];
-    //   const currAvailabilities = currUser.availabilities;
-    //   if (currAvailabilities.has(day)) {
-    //     const perDayAvailability = currAvailabilities.get(day);
-    //     // compare time windows
-    //   }
-    // }
+    const timeWindow = tempShiftObject.timeWindow;
+    const shiftStart = timeWindow[0];
+    const shiftEnd = timeWindow[1];
+    const numHours = tempShiftObject.hours;
+    const potentialUsers = [];
+    const house = await getHouse(houseID);
+    const totalUsersInHouse = house.members;
+    if (totalUsersInHouse === null || totalUsersInHouse === undefined) {
+      return;
+    }
+    const mult100 = Math.floor(numHours) * 100;
+    let thirtyMin = 0;
+    if (mult100 != numHours * 100) {
+      thirtyMin = 30;
+    }
+    
+    for (let i = 0; i < totalUsersInHouse.length; i++) {
+      const userID = totalUsersInHouse[i];
+      const userObject = await getUser(userID);
+      if (userObject === null) {
+        continue;
+      }
+      const currAvailabilities = userObject.availabilities;
+      if (currAvailabilities.has(day)) {
+        const perDayAvailability = currAvailabilities.get(day);
+        if (perDayAvailability === undefined) {
+          continue;
+        }
+        for (let j = 0; j < perDayAvailability.length; j += 2) {
+          let currStart = perDayAvailability[j];
+          let permEnd = perDayAvailability[j + 1];
+          
+          if (permEnd < shiftStart) {
+            continue;
+          }
+          currStart = Math.max(currStart, shiftStart);
+          let newEnd = currStart + mult100 + thirtyMin;
+          let requiredEnd = Math.min(permEnd, shiftEnd);
+          if (newEnd <= requiredEnd) {
+            potentialUsers.push(userObject);
+            break;
+          }
+        }
+      }
+    }
+    setPotentialWorkers(potentialUsers);
   }
-
-  const [potentialWorkers, setPotentialWorkers] = useState<User[]>([]);
 
   useEffect(() => {
     retrieveShift();
@@ -95,8 +126,8 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
       <div>
         Users Assigned: {shiftObject?.usersAssigned}
       </div>
-      {potentialWorkers.map((element, index) => (
-        <div> {element.email}</div>
+      {potentialWorkers.map((user, index) => (
+        <div key = {index}> {user.name}</div>
       ))}
     </div>
   );

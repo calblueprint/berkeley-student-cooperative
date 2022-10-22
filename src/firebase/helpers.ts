@@ -9,7 +9,7 @@ export const mapToObject = (map: Map<any, any>): Object => {
 export const objectToMap = (obj: Object): Map<any, any> => {
     return new Map(
         Array.from(Object.entries(obj), ([k, v]) =>
-        v instanceof Object ? [k, objectToMap(v)] : [k, v]
+        v instanceof Map ? [k, objectToMap(v)] : [k, v]
         )
     );
 };
