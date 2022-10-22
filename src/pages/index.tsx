@@ -10,7 +10,6 @@ import {
   updateAddress,
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
-import Planner from "./manager/planner/Planner";
 
 const Home: NextPage = () => {
   return (
@@ -23,7 +22,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
         <ShiftCard />
-        <AssignShiftcard shiftID={"tvaSrwpO4OOY6jGyMG8a"} houseID={"euclid"} />
+        <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
       </main>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">

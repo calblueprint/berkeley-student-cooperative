@@ -20,8 +20,10 @@ const ShiftCard = () => {
   const [category, setCategory] = useState<string>("");
   const [members, setMembers] = useState<number>(0);
   const [hours, setHours] = useState<number>(0);
-  const [startTime, setStartTime] = useState<string>("00:00");
-  const [endTime, setEndTime] = useState<string>("00:00");
+  const [startTime, setStartTime] = useState<number>(12);
+  const [startAM, setStartAM] = useState<string>("AM");
+  const [endTime, setEndTime] = useState<number>(12);
+  const [endAM, setEndAM] = useState<string>("AM");
   const [buffer, setBuffer] = useState<number>(0);
   const [description, setDescription] = useState<string>("");
   const [possibleDays, setPossibleDays] = useState<string[]>([]);
@@ -33,6 +35,7 @@ const ShiftCard = () => {
     "wash dishes",
     "clean basement",
   ];
+  let hoursList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   let daysList = [
     "Monday",
     "Tuesday",
@@ -65,12 +68,12 @@ const ShiftCard = () => {
       category
     ) {
       await addShift(
-        "euclid",
+        "EUC",
         name,
         description,
         members,
         possibleDays,
-        [parseTime(startTime), parseTime(endTime)],
+        [parseTime(startTime, startAM), parseTime(endTime, endAM)],
         "",
         hours,
         verification,
@@ -90,8 +93,10 @@ const ShiftCard = () => {
     setCategory("");
     setMembers(0);
     setHours(0);
-    setStartTime("00:00");
-    setEndTime("00:00");
+    setStartTime(12);
+    setStartAM("AM");
+    setEndTime(12);
+    setEndAM("AM");
     setBuffer(0);
     setDescription("");
     setPossibleDays([]);
@@ -146,8 +151,8 @@ const ShiftCard = () => {
     return input > 0 && !isNaN(input);
   };
 
-  const parseTime = (input: string) => {
-    return parseInt(input.slice(0, 2) + input.slice(3, 5));
+  const parseTime = (hour: number, AM: string) => {
+    return AM == "AM" ? hour : hour + 12;
   };
 
   return (
@@ -246,25 +251,59 @@ const ShiftCard = () => {
             <div className={styles.flex}>
               <div className={styles.formField}>
                 <Typography>Start time</Typography>
-                <TextField
-                  fullWidth
-                  type="time"
+                <Select
                   value={startTime}
                   onChange={(event) => {
-                    setStartTime(event.target.value);
+                    setStartTime(event.target.value as number);
                   }}
-                />
+                >
+                  {hoursList.map((hour) => (
+                    <MenuItem key={hour} value={hour}>
+                      {hour}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Select
+                  value={startAM}
+                  onChange={(event) => {
+                    setStartAM(event.target.value);
+                  }}
+                >
+                  <MenuItem key={"AM"} value={"AM"}>
+                    AM
+                  </MenuItem>
+                  <MenuItem key={"PM"} value={"PM"}>
+                    PM
+                  </MenuItem>
+                </Select>
               </div>
               <div className={styles.formField}>
                 <Typography>End time</Typography>
-                <TextField
-                  fullWidth
-                  type="time"
+                <Select
                   value={endTime}
                   onChange={(event) => {
-                    setEndTime(event.target.value);
+                    setEndTime(event.target.value as number);
                   }}
-                />
+                >
+                  {hoursList.map((hour) => (
+                    <MenuItem key={hour} value={hour}>
+                      {hour}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Select
+                  value={endAM}
+                  onChange={(event) => {
+                    setEndAM(event.target.value);
+                  }}
+                >
+                  <MenuItem key={"AM"} value={"AM"}>
+                    AM
+                  </MenuItem>
+                  <MenuItem key={"PM"} value={"PM"}>
+                    PM
+                  </MenuItem>
+                </Select>
               </div>
               <div className={styles.formField}>
                 <Typography>Buffer hours</Typography>

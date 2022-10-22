@@ -11,11 +11,12 @@ type AssignShiftcardProps = {
 };
 
 const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
-  shiftID = "p1pAhOPFQLd9XtPuBtjh",
-  houseID = "euclid",
+  shiftID,
+  houseID,
 }: AssignShiftcardProps) => {
   const [open, setOpen] = useState(false);
   const [shift, setShift] = useState<Shift | null>();
+
 
   useEffect(() => {
     const getShiftFB = async () => {
@@ -26,14 +27,13 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
   }, [houseID, shiftID]);
 
   const parseHour = (timeWindow: number) => {
-    if (timeWindow == 1200) {
-      return 12;
-    } else if (timeWindow >= 1000) {
-      return Math.floor(timeWindow / 100) % 12;
-    } else return Math.floor(timeWindow / 10) % 12;
+    if (timeWindow > 12) {
+      return timeWindow - 12;
+    }
+    return timeWindow;
   };
   const parseAM = (timeWindow: number) => {
-    return timeWindow >= 1200 ? "PM" : "AM";
+    return timeWindow > 12 ? "PM" : "AM";
   };
 
   const handleOpen = () => {
