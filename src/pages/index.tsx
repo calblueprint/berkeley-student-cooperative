@@ -3,7 +3,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
-import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/userQueries';
+import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/user';
 import { User } from "../types/schema";
 import { useAuth } from "../firebase/queries/auth";
 import { defaultUser } from "../firebase/queries/user";
