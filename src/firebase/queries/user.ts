@@ -108,3 +108,21 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
     }
     await updateUser(userID, newData);
 }
+
+export const unassignShiftToUser = async (userID: string, shiftID: string) => {
+    const currUser = await getUser(userID);
+    if (currUser === null) {
+        return;
+    }
+    let copy = [...currUser.shiftsAssigned];
+    let index = copy.indexOf(shiftID);
+    if (index == -1) {
+        return;
+    }
+    copy.splice(index, 1);
+    let newData = {
+        shiftsAssigned: copy
+    }
+    console.log(copy);
+    await updateUser(userID, newData);
+}

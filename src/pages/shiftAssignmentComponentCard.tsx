@@ -6,7 +6,7 @@ import { getShift } from "../firebase/queries/shift";
 import { User, Shift, House } from "../types/schema";
 import { useEffect } from "react";
 import { getHouse } from "../firebase/queries/house";
-import { assignShiftToUser, getUser } from "../firebase/queries/user";
+import { assignShiftToUser, getUser, unassignShiftToUser } from "../firebase/queries/user";
 import ShiftAssignmentTable from "./shiftAssignmentTable";
 import Button from "@mui/material/Button";
 
@@ -108,7 +108,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
 
     potentialUsers.sort((user1, user2) => {
       // First sort on hoursRemainingWeek, prioritizing people with higher hours remaining
-      let hoursWeekDiff = user2.hoursRemainingWeek - user1.hoursRemainingWeek;
+      let hoursWeekDiff: number = user2.hoursRemainingWeek - user1.hoursRemainingWeek;
       if (hoursWeekDiff != 0) {
         return hoursWeekDiff;
       }
@@ -156,12 +156,20 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     populatePotentialWorkersAndSelected();
   }, []);
 
-  const assignUserToShift = async () => {
+  const assignAndUnassignUserToShift = async () => {
+    for (let i = 0; i < potentialWorkers.length; i++) {
+      let user = potentialWorkers[i];
+      if (user.shiftsAssigned.includes(shiftID) && !selectedRows.includes(user.userID)) {
+        await unassignShiftToUser(user.userID, shiftID);
+      }
+    }
     for (let i = 0; i < selectedRows.length; i++) {
       let userID = selectedRows[i];
       await assignShiftToUser(userID, shiftID);
     }
   }
+
+
   
   return (
     <div className={styles.container}>
@@ -193,7 +201,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
         Users Assigned: {shiftObject?.usersAssigned}
       </div>
       <ShiftAssignmentTable users = {potentialWorkers} shiftID = {shiftID} selectedRows = {selectedRows} setSelectedRows = {setSelectedRows}/>
-      <Button onClick = {assignUserToShift}>Assign</Button>
+      <Button onClick = {assignAndUnassignUserToShift}>Assign</Button>
     </div>
   );
 };
