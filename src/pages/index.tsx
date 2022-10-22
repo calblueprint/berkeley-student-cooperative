@@ -11,7 +11,7 @@ import { defaultUser } from "../firebase/queries/user";
 
 const Home: NextPage = () => {
 
-	const { authUser, register, signIn, signOutAuth } = useAuth();
+	const { authUser, register, signIn, signOutAuth, establishUserContext } = useAuth();
 
   const createUser = async () => {
     addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());

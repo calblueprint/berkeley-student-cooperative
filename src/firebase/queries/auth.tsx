@@ -101,7 +101,7 @@ const signOutAuth = async (): Promise<void> => {
 		register, 
 		signIn, 
 		signOutAuth,
-		updateUser: establishUserContext,
+		establishUserContext,
 	};
 }
 
@@ -110,7 +110,7 @@ const authUserContext = createContext({
   signIn: async (email: string, password: string) => {},
   register: async (email: string, name: string, password: string) => {},
   signOutAuth: () => {},
-	updateUser: async (uid: string) => {},
+	establishUserContext: async (uid: string) => {},
 });
 
 export const AuthUserProvider = ({children}: any) => {
