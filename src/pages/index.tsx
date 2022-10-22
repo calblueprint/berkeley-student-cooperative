@@ -8,6 +8,7 @@ import {
   updateAddress,
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
+import { MemberShiftView } from "../components/MemberShiftView/MemberShiftView";
 
 const Home: NextPage = () => {
   return (
@@ -19,6 +20,7 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
+				<MemberShiftView member=""></MemberShiftView>
       </main>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">

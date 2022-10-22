@@ -1,0 +1,15 @@
+.cards {
+	display: flex;
+	justify-content: space-between;
+	width: 45.2%;
+	gap: 20px;
+
+}
+
+.leftCard {
+	background-color: red;
+}
+
+.rightCard {
+	background-color: blue;
+}
