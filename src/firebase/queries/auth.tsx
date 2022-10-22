@@ -38,13 +38,6 @@ export const useFirebaseAuth = () => {
 						*/
 					addUser(email, "Euclid", name, "Member", user.uid).then(() => {
 						establishUserContext(user.uid);
-						getUser(user.uid).then((userFromDoc) => {
-							//do we need this if we alreadt establish context ^^
-							if (userFromDoc != null) {
-								console.log("REGISTER USER FROM FIREBASE: ", userFromDoc);
-								setUser(userFromDoc);
-							}
-						})
 					});
 					})
 			} catch(e) {
