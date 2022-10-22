@@ -36,6 +36,14 @@ export const getHouse = async(houseID: string): Promise<House>  => {
 
 }
 
+export const updateHouse = async (houseID: string, newData: object) => {
+    const currHouse = await getHouse(houseID);
+    if (currHouse == null) {
+        return;
+    }
+    const houseRef = doc(firestore, 'houses', houseID);
+    await updateDoc(houseRef, newData);
+}
 
 //updating the fields of house, may not be useful ?
 export const updateAddress = async (houseID: string, newAddress: string): Promise<void> => {

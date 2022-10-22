@@ -25,13 +25,13 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
     }
     
     type Column = {
-        id: "Available" | "Down Hours" | "Preference";
+        id: "Available" | "Unassigned Hours" | "Preference";
         minWidth: number;
 
     }
     const createRow = (user: User) : RowData => {
         let name = user.name;
-        let hoursRemaining = user.hoursRemainingWeek;
+        let hoursRemaining = user.hoursRequired - user.hoursAssigned;
         // convert number preference to string preference
         let numberToText = new Map<number, string>();
         numberToText.set(0, "dislikes");
@@ -62,9 +62,6 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
         let ret = [];
         for (let i = 0; i < users.length; i++) {
             ret.push(createRow(users[i]));
-            ret.push(createRow(users[i]));
-            ret.push(createRow(users[i]));
-            ret.push(createRow(users[i]));
         }
         return ret;
     }
@@ -79,7 +76,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
             minWidth: 170
         }, 
         {
-            id: "Down Hours",
+            id: "Unassigned Hours",
             minWidth: 170
         },
         {

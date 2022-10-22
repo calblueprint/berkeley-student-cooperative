@@ -4,15 +4,16 @@ import styles from "../styles/Home.module.css";
 import ShiftAssignmentComponentCard from "./shiftAssignmentComponentCard";
 import { addUser, updateUser, getUser } from "../firebase/queries/user";
 import { mapToObject } from "../firebase/helpers";
+import { addShift } from "../firebase/queries/shift";
 
 const Home: NextPage = () => {
-  const shiftID = "tvaSrwpO4OOY6jGyMG8a";
-  const houseID = "euclid"; //capitalization
+  const shiftID = "NdqnJFJ6NjhmkvpednUG";
+  const houseID = "EUC";
   const day = "Monday";
+  const id = "12345";
 
   const createUser = async () => {
-    let id = "123";
-    await addUser("hello@gmail.com", "euclid", "eligible", "member", id);
+    await addUser("hello@gmail.com", houseID, "eligible", "member", id);
     let availabilities = new Map<string, number[]>();
     availabilities.set("Monday", [0, 300]);
     let newData = {
@@ -22,14 +23,28 @@ const Home: NextPage = () => {
   }
 
   const retrieveUser = async () => {
-    let obj = await getUser("123");
+    let obj = await getUser(id);
     console.log(obj);
   }
 
+  const createShift = async () => {
+    await addShift(houseID, "Clean Basement", "Clean Basement 1", 3, ["Monday", "Tuesday"], [0, 300], "", 1, 48, "Clean");
+  }
+  const addUserPreference = async () => {
+    let map = new Map<string, number>();
+    map.set(shiftID, 2);
+    let newData = {
+      preferences: mapToObject(map)
+    }
+    await updateUser(id, newData);  
+  }
+  
   return (
     <div className={styles.container}>
       <button onClick = {createUser}>Create User</button>
       <button onClick = {retrieveUser}>Get User</button>
+      <button onClick = {createShift}>Create Shift</button>
+      <button onClick = {addUserPreference}>Add Pref</button>
       <Head>
         <title>Workshift App</title>
         <meta name="description" content="Next.js firebase Workshift app" />
