@@ -42,7 +42,7 @@ const ShiftCard = () => {
     "Saturday",
     "Sunday",
   ];
-  let verificationOptions = ["Verification required", "No verificiation"];
+  let verificationOptions = ["Verification required", "No verification"];
 
   const handleOpen = () => {
     setOpen(true);
@@ -104,9 +104,7 @@ const ShiftCard = () => {
 
   const handlePossibleDays = (event: SelectChangeEvent<string>) => {
     let input = event.target.value;
-    setPossibleDays(
-      typeof input === "string" ? input.split(",") : input
-    );
+    setPossibleDays(typeof input === "string" ? input.split(",") : input);
   };
 
   const handleMembers = (event: React.ChangeEvent<HTMLInputElement>) => {

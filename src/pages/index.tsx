@@ -13,7 +13,7 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
-        <ShiftCard/>
+        <ShiftCard />
       </main>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
