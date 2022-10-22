@@ -15,7 +15,7 @@ import { House } from "../types/schema";
 
 const Home: NextPage = () => {
 
-	const { user, register, signIn, signOutAuth } = useAuth();
+	const { authUser, register, signIn, signOutAuth } = useAuth();
 
   const createUser = async () => {
     addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());
@@ -115,12 +115,11 @@ const Home: NextPage = () => {
 			<button onClick={() => signIn("test1@gmail.com", "test123")}>SIGN IN</button>
 
 			<button onClick={() => register("dummy@gmail.com", "swagapino22", "birdsRFake22")}>Register</button>
-			<button onClick={() => register("test1@gmail.com", "test user", "test123")}>Test User Register</button>
+			<button onClick={() => register("test4@gmail.com", "test user", "test123")}>Test User Register</button>
 
 			<button onClick={() => signOutAuth()}>Sign Out</button>
-			{/* <button onClick={() => getCurrentUser()}>Current Signed-In User</button> */}
-			<button onClick={() => console.log(user)}>authUser</button>
-			<div>{user.name}</div>
+			<button onClick={() => console.log(authUser)}> log user</button>
+			<div>{authUser.name}</div>
 
 			<button onClick = {createUser}>Create </button>
 			<button onClick = {retrieveUser}>Get </button>
