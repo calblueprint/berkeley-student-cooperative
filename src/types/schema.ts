@@ -21,6 +21,7 @@ export type Shift = {
   shiftID: string;
   description: string;
   possibleDays: string[];
+  numOfPeople: number;
   // time 
   timeWindow: number[];
   assignedDay: string;
@@ -29,6 +30,7 @@ export type Shift = {
   verificationBuffer: number;
   usersAssigned: string[];
   category: string;
+};
 
 export type House = {
   houseID: string;
@@ -36,4 +38,14 @@ export type House = {
   address: string;
   schedule: Map<string, string[]>;
   pinUserMap: Map<string, string>;
+};
+
+export enum Day {
+  Mon = 'Monday',
+  Tue = 'Tuesday',
+  Wed = 'Wednesday',
+  Thu = 'Thursday',
+  Fri = 'Friday',
+  Sat = 'Saturday',
+  Sun = 'Sunday'
 };
