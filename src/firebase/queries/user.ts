@@ -42,6 +42,7 @@ const generatePinNumber = (numDigitsInPin: number) => {
 }
 
 
+// data must be passed in availabilities: mapToObject
 export const updateUser = async (userID: string, newData: object) => {
     const currUser = await getUser(userID);
     if (currUser == null) {
