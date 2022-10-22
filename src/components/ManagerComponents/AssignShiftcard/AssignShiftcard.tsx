@@ -1,8 +1,8 @@
 import { Button, Dialog, DialogContent, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
-import Icon from "../../assets/Icon";
-import { getShift } from "../../firebase/queries/shift";
-import { Shift } from "../../types/schema";
+import Icon from "../../../assets/Icon";
+import { getShift } from "../../../firebase/queries/shift";
+import { Shift } from "../../../types/schema";
 import styles from "./AssignShiftcard.module.css";
 
 type AssignShiftcardProps = {
@@ -11,8 +11,8 @@ type AssignShiftcardProps = {
 };
 
 const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
-  shiftID = "euclid",
-  houseID = "p1pAhOPFQLd9XtPuBtjh",
+  shiftID = "p1pAhOPFQLd9XtPuBtjh",
+  houseID = "euclid",
 }: AssignShiftcardProps) => {
   const [open, setOpen] = useState(false);
   const [shift, setShift] = useState<Shift | null>();

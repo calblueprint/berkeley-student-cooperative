@@ -11,8 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { addShift } from "../../firebase/queries/shift";
-import Icon from "../../assets/Icon";
+import { addShift } from "../../../firebase/queries/shift";
+import Icon from "../../../assets/Icon";
 
 const ShiftCard = () => {
   const [open, setOpen] = useState(false);
@@ -79,8 +79,8 @@ const ShiftCard = () => {
       );
       clearFields();
       handleClose();
-    }else {
-      console.log("fill in fields")
+    } else {
+      console.log("fill in fields");
     }
     // error fields on submit?
   };
@@ -105,9 +105,7 @@ const ShiftCard = () => {
 
   const handlePossibleDays = (event: SelectChangeEvent<string>) => {
     let input = event.target.value;
-    setPossibleDays(
-      typeof input === "string" ? input.split(",") : input
-    );
+    setPossibleDays(typeof input === "string" ? input.split(",") : input);
   };
 
   const handleMembers = (event: React.ChangeEvent<HTMLInputElement>) => {
