@@ -1,0 +1,11 @@
+.container {
+	display: flex;
+	width: 100%;
+	background-color: #F5F5F5;
+	flex-direction: column;
+}
+
+.page {
+	padding-left: 169px;
+}
+
