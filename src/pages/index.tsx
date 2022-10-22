@@ -3,11 +3,16 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
-import { getHouses } from "../firebase/queries/exampleQuery";
 import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/userQueries';
 import { User } from "../types/schema";
 import { useAuth } from "../firebase/queries/auth";
 import { defaultUser } from "../firebase/queries/user";
+import {
+  getAllHouses,
+  getHouse,
+  updateAddress,
+} from "../firebase/queries/house";
+import { House } from "../types/schema";
 
 const Home: NextPage = () => {
 
