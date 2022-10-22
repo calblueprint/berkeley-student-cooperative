@@ -6,9 +6,9 @@ import { getShift } from "../firebase/queries/shift";
 import { User, Shift, House } from "../types/schema";
 import { useEffect } from "react";
 import { getHouse } from "../firebase/queries/house";
-import { getUser } from "../firebase/queries/user";
-import DataGrid from '@mui/material/Button';
+import { assignShiftToUser, getUser } from "../firebase/queries/user";
 import ShiftAssignmentTable from "./shiftAssignmentTable";
+import Button from "@mui/material/Button";
 
 // name: string;
 //   shiftID: string;
@@ -105,7 +105,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
         }
       }
     }
-    
+
     potentialUsers.sort((user1, user2) => {
       // First sort on hoursRemainingWeek, prioritizing people with higher hours remaining
       let hoursWeekDiff = user2.hoursRemainingWeek - user1.hoursRemainingWeek;
@@ -155,6 +155,13 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     retrieveShift();
     populatePotentialWorkersAndSelected();
   }, []);
+
+  const assignUserToShift = async () => {
+    for (let i = 0; i < selectedRows.length; i++) {
+      let userID = selectedRows[i];
+      await assignShiftToUser(userID, shiftID);
+    }
+  }
   
   return (
     <div className={styles.container}>
@@ -186,7 +193,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
         Users Assigned: {shiftObject?.usersAssigned}
       </div>
       <ShiftAssignmentTable users = {potentialWorkers} shiftID = {shiftID} selectedRows = {selectedRows} setSelectedRows = {setSelectedRows}/>
-      
+      <Button onClick = {assignUserToShift}>Assign</Button>
     </div>
   );
 };
