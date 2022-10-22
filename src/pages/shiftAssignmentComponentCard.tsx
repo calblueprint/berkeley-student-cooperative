@@ -7,7 +7,8 @@ import { User, Shift, House } from "../types/schema";
 import { useEffect } from "react";
 import { getHouse } from "../firebase/queries/house";
 import { getUser } from "../firebase/queries/user";
-import { diffieHellman } from "crypto";
+import DataGrid from '@mui/material/Button';
+import ShiftAssignmentTable from "./shiftAssignmentTable";
 
 // name: string;
 //   shiftID: string;
@@ -99,8 +100,9 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
 
       let user1Preferences = user1.preferences;
       let user2Preferences = user2.preferences;
-      let user1Pref = 0;
-      let user2Pref = 0;
+      // 1 if 1 is average
+      let user1Pref = 1;
+      let user2Pref = 1;
       if (user1Preferences.has(shiftID)) {
         let curr = user1Preferences.get(shiftID);
         if (curr !== undefined) {
@@ -158,9 +160,10 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
       <div>
         Users Assigned: {shiftObject?.usersAssigned}
       </div>
-      {potentialWorkers.map((user, index) => (
+      <ShiftAssignmentTable users = {potentialWorkers} shiftID = {shiftID}/>
+      {/* {potentialWorkers.map((user, index) => (
         <div key = {index}> {user.name}</div>
-      ))}
+      ))} */}
     </div>
   );
 };
