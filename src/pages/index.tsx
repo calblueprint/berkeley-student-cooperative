@@ -2,6 +2,13 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import ShiftCard from "../components/Shiftcard/Shiftcard";
 import styles from "../styles/Home.module.css";
+import { useEffect, useState } from "react";
+import {
+  getAllHouses,
+  getHouse,
+  updateAddress,
+} from "../firebase/queries/house";
+import { House } from "../types/schema";
 
 const Home: NextPage = () => {
   return (
