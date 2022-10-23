@@ -20,9 +20,11 @@ const ShiftCard = () => {
   const [category, setCategory] = useState<string>("");
   const [members, setMembers] = useState<number>(0);
   const [hours, setHours] = useState<number>(0);
-  const [startTime, setStartTime] = useState<number>(12);
+  const [startHour, setStartHour] = useState<number>(12);
+  const [startMinute, setStartMinute] = useState<number>(0);
   const [startAM, setStartAM] = useState<string>("AM");
-  const [endTime, setEndTime] = useState<number>(12);
+  const [endHour, setEndHour] = useState<number>(12);
+  const [endMinute, setEndMinute] = useState<number>(0);
   const [endAM, setEndAM] = useState<string>("AM");
   const [buffer, setBuffer] = useState<number>(0);
   const [description, setDescription] = useState<string>("");
@@ -61,8 +63,6 @@ const ShiftCard = () => {
       description &&
       isValidNumber(members) &&
       possibleDays &&
-      startTime &&
-      endTime &&
       isValidNumber(hours) &&
       isValidNumber(buffer) &&
       category
@@ -73,7 +73,10 @@ const ShiftCard = () => {
         description,
         members,
         possibleDays,
-        [parseTime(startTime, startAM), parseTime(endTime, endAM)],
+        [
+          parseTime(startHour, startMinute, startAM),
+          parseTime(endHour, endMinute, endAM),
+        ],
         "",
         hours,
         verification,
@@ -91,9 +94,11 @@ const ShiftCard = () => {
     setCategory("");
     setMembers(0);
     setHours(0);
-    setStartTime(12);
+    setStartHour(12);
+    setStartMinute(0);
     setStartAM("AM");
-    setEndTime(12);
+    setEndHour(12);
+    setEndMinute(0);
     setEndAM("AM");
     setBuffer(0);
     setDescription("");
@@ -149,8 +154,8 @@ const ShiftCard = () => {
     return input > 0 && !isNaN(input);
   };
 
-  const parseTime = (hour: number, AM: string) => {
-    return AM == "AM" ? hour : hour + 12;
+  const parseTime = (hour: number, minute: number, AM: string) => {
+    return AM == "AM" ? hour * 100 + minute : (hour + 12) * 100 + minute;
   };
 
   return (
@@ -250,9 +255,9 @@ const ShiftCard = () => {
               <div className={styles.formField}>
                 <Typography>Start time</Typography>
                 <Select
-                  value={startTime}
+                  value={startHour}
                   onChange={(event) => {
-                    setStartTime(event.target.value as number);
+                    setStartHour(event.target.value as number);
                   }}
                 >
                   {hoursList.map((hour) => (
@@ -260,6 +265,19 @@ const ShiftCard = () => {
                       {hour}
                     </MenuItem>
                   ))}
+                </Select>
+                <Select
+                  value={startMinute}
+                  onChange={(event) => {
+                    setStartMinute(event.target.value as number);
+                  }}
+                >
+                  <MenuItem key={0} value={0}>
+                    00
+                  </MenuItem>
+                  <MenuItem key={30} value={30}>
+                    30
+                  </MenuItem>
                 </Select>
                 <Select
                   value={startAM}
@@ -278,9 +296,9 @@ const ShiftCard = () => {
               <div className={styles.formField}>
                 <Typography>End time</Typography>
                 <Select
-                  value={endTime}
+                  value={endHour}
                   onChange={(event) => {
-                    setEndTime(event.target.value as number);
+                    setEndHour(event.target.value as number);
                   }}
                 >
                   {hoursList.map((hour) => (
@@ -288,6 +306,19 @@ const ShiftCard = () => {
                       {hour}
                     </MenuItem>
                   ))}
+                </Select>
+                <Select
+                  value={endMinute}
+                  onChange={(event) => {
+                    setEndMinute(event.target.value as number);
+                  }}
+                >
+                  <MenuItem key={0} value={0}>
+                    00
+                  </MenuItem>
+                  <MenuItem key={30} value={30}>
+                    30
+                  </MenuItem>
                 </Select>
                 <Select
                   value={endAM}
