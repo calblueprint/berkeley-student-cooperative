@@ -21,7 +21,11 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
   const [shiftObject, setShiftObject] = useState<Shift>();
   const [potentialWorkers, setPotentialWorkers] = useState<User[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-// list of userIDs
+  
+  useEffect(() => {
+    retrieveShift();
+    populatePotentialWorkersAndSelected();
+  }, []);
 
   const retrieveShift = async () => {
     const shift = await getShift(houseID, shiftID);
@@ -86,6 +90,19 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     }
     return potentialUsers;
   }
+
+  const setSelectedUsers = (potentialUsers: User[]) => {
+    let selectedUsers = [];
+    for (let i = 0; i < potentialUsers.length; i++) {
+        let user = potentialUsers[i];
+        let assignedShifts = user.shiftsAssigned;
+        if (assignedShifts.includes(shiftID)) {
+            selectedUsers.push(user.userID);
+        }
+    }
+    setSelectedRows(selectedUsers);
+  }
+
   const populatePotentialWorkersAndSelected = async () => {
     const tempShiftObject = await getShift(houseID, shiftID);
     if (tempShiftObject === null || tempShiftObject === undefined) {
@@ -128,22 +145,9 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
       return user2.hoursRemainingSemester - user1.hoursRemainingSemester;
     });
     setPotentialWorkers(potentialUsers);
-
-    let selectedUsers = [];
-    for (let i = 0; i < potentialUsers.length; i++) {
-        let user = potentialUsers[i];
-        let assignedShifts = user.shiftsAssigned;
-        if (assignedShifts.includes(shiftID)) {
-            selectedUsers.push(user.userID);
-        }
-    }
-    setSelectedRows(selectedUsers);
+    setSelectedUsers(potentialUsers);
   }
 
-  useEffect(() => {
-    retrieveShift();
-    populatePotentialWorkersAndSelected();
-  }, []);
 
   const updateUserAndShiftObjects = async () => {
     await updateUserObjects();
