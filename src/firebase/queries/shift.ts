@@ -1,6 +1,6 @@
 import {firestore} from "../clientApp";
 import {Shift} from "../../types/schema";
-import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
+import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc, getDocs } from "firebase/firestore";
 //import {getUser, updateUser} from "userQueries";
 
 export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verificationBuffer: number, category: string) => {
@@ -36,6 +36,12 @@ export const getShift = async (houseID: string, shiftID: string) => {
     // probably replace with modal
     console.log("Invalid Shift ID");
     return null;
+}
+
+export const getNumVerified = async (houseID: string, shiftID: string): Promise<number> => {
+    const verShiftsRef = await collection(firestore, "houses", houseID, "shifts", shiftID, "verifiedShifts");
+    const snap = await getDocs(verShiftsRef);
+    return snap.size;
 }
 
 export const deleteShift = async (houseID: string, shiftID: string) => {
