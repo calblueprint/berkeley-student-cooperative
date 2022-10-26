@@ -62,7 +62,7 @@ const ShiftCard = () => {
       name &&
       description &&
       isValidNumber(members) &&
-      possibleDays &&
+      possibleDays.length > 0 &&
       isValidNumber(hours) &&
       isValidNumber(buffer) &&
       category
@@ -85,6 +85,8 @@ const ShiftCard = () => {
       );
       clearFields();
       handleClose();
+    } else {
+      console.log("Must fill out all the fields to create a shift.")
     }
     // error fields on submit?
   };
