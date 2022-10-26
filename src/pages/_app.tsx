@@ -1,10 +1,10 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { AuthUserProvider } from '../firebase/queries/auth' 
+import { AuthUserProvider } from '../context/UserContext'
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
-		<AuthUserProvider>
+	  <AuthUserProvider>
 			<Component {...pageProps} />
 	  </AuthUserProvider>
 	)

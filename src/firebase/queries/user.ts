@@ -105,18 +105,17 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
 }
 
 export const defaultUser: User = {
-  userID: "",
-  role: "",
-  name: "",
-  email: "",
-  houseID: "",
-  totalHoursAssigned: 0,
-  shiftsAssigned: new Array<string>(),
-  hoursRemainingWeek: 0,
-  hoursRemainingSemester: 0,
-  pinNumber: 0,
-  totalFines: 0,
-  availabilities: new Map<string, number[]>(),
-  preferences: new Array<string>(),
+	userID: "",
+	role: "",
+	name: "",
+	email: "",
+	houseID: "",
+	totalHoursAssigned: 0,
+	shiftsAssigned: new Array<string>(),
+	hoursRemainingWeek: 0,
+	hoursRemainingSemester: 0,
+	pinNumber: 0,
+	totalFines: 0,
+	availabilities: new Map<string, number[]>(),
+	preferences: new Array<string>(),
 };
-

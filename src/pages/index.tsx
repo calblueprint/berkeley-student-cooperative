@@ -5,8 +5,7 @@ import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
 import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/user';
 import { User } from "../types/schema";
-import { useAuth } from "../firebase/queries/auth";
-import { defaultUser } from "../firebase/queries/user";
+import { useUserContext } from "../context/UserContext";
 import {
   getAllHouses,
   getHouse,
@@ -16,7 +15,7 @@ import { House } from "../types/schema";
 
 const Home: NextPage = () => {
 
-	const { authUser, register, signIn, signOutAuth, establishUserContext } = useAuth();
+	const { authUser, house, register, signIn, signOutAuth, establishUserContext } = useUserContext();
 
   const createUser = async () => {
     addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());
@@ -99,7 +98,9 @@ const Home: NextPage = () => {
 
 			<button onClick={() => signOutAuth()}>Sign Out</button>
 			<button onClick={() => console.log(authUser)}> log user</button>
-			<div>{authUser.name}</div>
+
+			<div>{authUser.name}</div>		
+			<div>{house.houseID}</div>
 
 			<button onClick = {createUser}>Create </button>
 			<button onClick = {retrieveUser}>Get </button>

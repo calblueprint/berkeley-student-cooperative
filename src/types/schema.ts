@@ -34,8 +34,9 @@ export type Shift = {
 
 export type House = {
   houseID: string;
+	categories: string[]
   members: string[] | null;
   address: string;
   schedule: Map<string, string[]>;
-  pinUserMap: Map<string, string>;
+  userPINs: Map<string, string>;
 };
