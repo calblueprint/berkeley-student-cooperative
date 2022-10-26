@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import ShiftCard from "../components/Shiftcard/Shiftcard";
+import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
+import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import {
@@ -21,6 +23,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
         <ShiftCard />
+        <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
       </main>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
