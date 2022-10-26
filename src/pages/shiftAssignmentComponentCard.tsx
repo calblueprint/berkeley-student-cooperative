@@ -10,6 +10,7 @@ import { updateUser, getUser} from "../firebase/queries/user";
 import ShiftAssignmentTable from "./shiftAssignmentTable";
 import Button from "@mui/material/Button";
 import { updateShift } from "../firebase/queries/shift";
+import { convertTimeWindowToTime, pluralizeHours } from "../firebase/helpers";
 
 type ShiftAssignmentComponentCardProps = {
   day: string,
@@ -213,33 +214,24 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
   
   return (
     <div className={styles.container}>
+      {/* hours day time window buffer name description */}
       <h1>{shiftObject?.name}</h1>
-      <div>
-        {day}
-      </div>
-      <div>
-        Description: {shiftObject?.description}
-      </div>
-      <div>
-        Num People: {shiftObject?.numOfPeople}
-      </div>
-      <div>
-        Time Window: {shiftObject?.timeWindow}
-      </div>
-      <div>
-        Category: {shiftObject?.category}
-      </div>
-      <div>
-        Possible Days: {shiftObject?.possibleDays}
-      </div>
-      <div>
-        Hours: {shiftObject?.hours}
-      </div>
-      <div>
-        Verification Buffer: {shiftObject?.verificationBuffer}
-      </div>
-      <div>
-        Users Assigned: {shiftObject?.usersAssigned}
+      <div id = "shiftAssignmentHeaderFlex">
+        <div className = "shiftAssignmentHeaderEntry">
+          {shiftObject && pluralizeHours(shiftObject.hours)}
+        </div>
+        <div className = "shiftAssignmentHeaderEntry">
+          {day}
+        </div>
+        <div className = "shiftAssignmentHeaderEntry">
+          {shiftObject && convertTimeWindowToTime(shiftObject.timeWindow[0], shiftObject.timeWindow[1])}
+        </div>
+        <div className = "shiftAssignmentHeaderEntry">
+          {shiftObject && pluralizeHours(shiftObject.verificationBuffer)}
+        </div>
+        <div className = "shiftAssignmentHeaderEntry">
+          {shiftObject && shiftObject.category}
+        </div>
       </div>
       <ShiftAssignmentTable users = {potentialWorkers} shiftID = {shiftID} selectedRows = {selectedRows} setSelectedRows = {setSelectedRows}/>
       <Button onClick = {updateUserAndShiftObjects}>Assign</Button>
