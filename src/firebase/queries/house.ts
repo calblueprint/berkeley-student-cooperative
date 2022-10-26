@@ -11,7 +11,7 @@ const colRef = collection(firestore, "houses");
 
 
 //grabs all houses from database
-export const getAllHouses = async(): Promise<House[]>  => {
+export const getAllHouses = async()  => {
     
     const promises: Promise<House>[] = []; 
     const colSnap = await getDocs(colRef);
@@ -25,7 +25,7 @@ export const getAllHouses = async(): Promise<House[]>  => {
 
 
 //grabs a specific house from database
-export const getHouse = async(houseID: string): Promise<House>  => {
+export const getHouse = async(houseID: string)  => {
     const docRef = doc(firestore, "houses", houseID);
 
     const colSnap = await getDoc(docRef);
@@ -95,15 +95,16 @@ export const removeCategory = async (houseID: string, oldCategory: string): Prom
 }
 
 
-export const getCategories = async (houseID: string): Promise<String[]> => {
+export const getCategories = async (houseID: string) => {
     const docRef = doc(firestore, "houses", houseID);
 
     const colSnap = await getDoc(docRef);
-  
-    const promise: Promise<House> = parseHouse(colSnap);
-    const house = await promise;
-
-    return house.categories;
+ 
+        const house =  await parseHouse(colSnap);
+        return house.categories;
+    
+    // console.log("Invalid House ID")
+    // return null;
 }
 
 
