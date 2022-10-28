@@ -10,6 +10,7 @@ import {
   updateAddress,
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
+import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsInfo";
 
 const Home: NextPage = () => {
   return (
@@ -23,6 +24,7 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>Workshift App</h1>
         <ShiftCard />
         <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
+        <SettingsInfo userID={"1234"}/>
       </main>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
