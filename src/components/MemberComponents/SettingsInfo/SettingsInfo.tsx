@@ -14,21 +14,25 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
 }: SettingsInfoProps) => {
   const [user, setUser] = useState<User | null>();
   const [house, setHouse] = useState<House | null>();
+  let star = "*";
 
   useEffect(() => {
     const getData = async () => {
       const currUser = await getUser(userID);
       setUser(currUser);
+    };
+    getData();
+  }, [userID]);
+
+  useEffect(() => {
+    const getData = async () => {
       if (user) {
         const currHouse = await getHouse(user.houseID);
         setHouse(currHouse);
       }
     };
     getData();
-  }, [userID, user]);
-
-  console.log(user);
-  let star = "*";
+  }, [user]);
 
   return user && house ? (
     <Card sx={{ minWidth: 500 }}>
