@@ -1,9 +1,8 @@
 import {firestore} from "../clientApp";
 import {Shift} from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-//import {getUser, updateUser} from "userQueries";
 
-export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verificationBuffer: number, category: string) => {
+export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
     await addDoc(collection(firestore, "houses", houseID, "shifts"), {
         name: name,
         description: description,
@@ -12,6 +11,7 @@ export const addShift = async (houseID: string, name: string, description: strin
         numOfPeople: numOfPeople,
         assignedDay: assignedDay,
         hours: hours,
+        verification: verification,
         verificationBuffer: verificationBuffer,
         usersAssigned: new Array<string>(),
         category: category
@@ -76,6 +76,7 @@ const parseShift = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         timeWindow: data.timeWindow,
         assignedDay: data.assignedDay,
         hours: data.hours,
+        verification: data.verification,
         verificationBuffer: data.verificationBuffer,
         usersAssigned: data.usersAssigned,
         category: data.category

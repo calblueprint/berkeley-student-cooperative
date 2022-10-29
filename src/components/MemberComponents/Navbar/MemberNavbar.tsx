@@ -4,7 +4,7 @@ import { Drawer, List, ListItem, ListItemText } from "@mui/material"
 import styles from "./Navbar.module.css"
 import Icon from "../../../assets/Icon";
 
-const Navbar: React.FunctionComponent = () => {
+const MemberNavbar: React.FunctionComponent = () => {
 	const router = useRouter();
 
 	return (
@@ -106,4 +106,4 @@ const Navbar: React.FunctionComponent = () => {
 	)
 }
 
-export default Navbar;
+export default MemberNavbar;
