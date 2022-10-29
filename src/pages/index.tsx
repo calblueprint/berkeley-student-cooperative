@@ -11,6 +11,7 @@ import {
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
 import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsInfo";
+import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
 
 const Home: NextPage = () => {
   return (
@@ -23,8 +24,9 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
         <ShiftCard />
-        <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
+        <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
         <SettingsInfo userID={"1234"}/>
+        <AvailabilityInfo userID={"1234"}/>
       </main>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
