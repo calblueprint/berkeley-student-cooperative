@@ -10,10 +10,10 @@ const Home: NextPage = () => {
   const shiftID = "iBVA4gOntEGFA4AxpqFU";
   const houseID = "EUC";
   const day = "Monday";
-  const id = "123";
+  const id = "123456";
 
   const createUser = async () => {
-    await addUser("hello@gmail.com", houseID, "eligible", "member", id);
+    await addUser("hello@gmail.com", houseID, id, "member", id);
     let availabilities = new Map<string, number[]>();
     availabilities.set("Monday", [0, 300]);
     let newData = {

@@ -1,3 +1,5 @@
+import { User } from "../types/schema";
+
 export const mapToObject = (map: Map<any, any>): Object => {
     return Object.fromEntries(
       Array.from(map.entries(), ([k, v]) =>
@@ -48,4 +50,21 @@ export const pluralizeHours = (hours: number): string => {
     return hours + " hour";
   }
   return hours + " hours";
+}
+
+export const numericToStringPreference = (user: User, shiftID: string): string => {
+  let numberToText = new Map<number, string>();
+  numberToText.set(0, "dislikes");
+  numberToText.set(1, "");
+  numberToText.set(2, "prefers");
+  if (user.preferences.has(shiftID)) {
+      let numericalPreference = user.preferences.get(shiftID);
+      if (numericalPreference !== undefined && numberToText.has(numericalPreference)) {
+          let newPref = numberToText.get(numericalPreference);
+          if (newPref !== undefined) {
+              return newPref;
+          }
+      }
+  }
+  return ""
 }
