@@ -37,7 +37,9 @@ export const getShift = async (houseID: string, shiftID: string) => {
     console.log("Invalid Shift ID");
     return null;
 }
-export const getShiftForCategories = async (houseID: string, category: string): Promise<Shift[]> => {
+
+//gets all shifts for a particular hosue
+export const getAllShifts = async (houseID: string): Promise<Shift[]> => {
     const colRef = collection(firestore, "houses", houseID, "shifts");
     const promises: Promise<Shift>[] = []; 
     const docSnap = await getDocs(colRef);
@@ -47,8 +49,19 @@ export const getShiftForCategories = async (houseID: string, category: string): 
 
     const items = await Promise.all(promises);
     return items;
-    return [];
 }
+// export const getShiftForCategory = async (houseID: string, category: string): Promise<Shift[]> => {
+//     const colRef = collection(firestore, "houses", houseID, "shifts");
+//     const promises: Promise<Shift>[] = []; 
+//     const docSnap = await getDocs(colRef);
+//     docSnap.forEach((shift) => {
+//         promises.push(parseShift(shift));
+//     });
+    
+
+//     const items = await Promise.all(promises);
+//     return items;
+// }
 
 
 export const deleteShift = async (houseID: string, shiftID: string) => {

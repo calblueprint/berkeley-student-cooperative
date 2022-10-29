@@ -10,9 +10,17 @@ import {
   removeCategory,
   getCategories,
 } from "../firebase/queries/house";
+import { getAllShifts } from "../firebase/queries/shift";
 import { House } from "../types/schema";
 
 const Home: NextPage = () => {
+  useEffect(() => {
+    getAllShifts('EUC').then((shiftArr) => {
+      console.log("does get all shifts work", shiftArr);
+    })
+    
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
