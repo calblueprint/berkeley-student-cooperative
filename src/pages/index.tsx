@@ -16,9 +16,6 @@ import {
 import { House } from "../types/schema";
 
 const Home: NextPage = () => {
-  useEffect(() => {
-    getCategories('EUC')
-  }, [])
   return (
     <div className={styles.container}>
       <Head>
