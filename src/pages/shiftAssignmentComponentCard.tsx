@@ -201,7 +201,6 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
       for (let i = 0; i < selectedRows.length; i++) {
         let userID = selectedRows[i];
         const user = await getUser(userID);
-        console.log(user);
         if (user === null || user.shiftsAssigned.includes(shiftID)) {
           continue;
         }
