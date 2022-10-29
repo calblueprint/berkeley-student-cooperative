@@ -170,6 +170,9 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
   const updateUserAndShiftObjects = async () => {
     await updateUserObjects();
     await updateShiftObject();
+    // Refetch so not using stale data (may or may not remove, depending on use)
+    retrieveShift();
+    populatePotentialWorkersAndSelected();
   }
 
   // Updates the user objects by clearing all people assigned to the shift
@@ -197,7 +200,6 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
       }
       for (let i = 0; i < selectedRows.length; i++) {
         let userID = selectedRows[i];
-        console.log(userID);
         const user = await getUser(userID);
         console.log(user);
         if (user === null || user.shiftsAssigned.includes(shiftID)) {
@@ -220,7 +222,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
       console.log("Too many people selected");
     }
   }
-  
+
   // Updates the shiftObject with the assigned day and the people assigned to that shift
   // If 0 selected rows, reset day to ""
   const updateShiftObject = async () => {
@@ -239,7 +241,6 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
   
   return (
     <div className={styles.container}>
-      {/* hours day time window buffer name description */}
       <h3>{shiftObject?.name}</h3>
       <div id = "shiftAssignmentHeaderFlex">
         <div className = "shiftAssignmentHeaderEntry">
