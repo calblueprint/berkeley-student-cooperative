@@ -1,15 +1,24 @@
+/* .page {
+	padding-left: 3%;
+	padding-top: 2.5%;
+} */
+
 .cards {
 	display: flex;
 	justify-content: space-between;
 	width: 45.2%;
 	gap: 20px;
-
+	
 }
 
 .leftCard {
-	background-color: red;
+	background-color: white;
+	width: 100%;
+	height: 10.5%;
 }
 
 .rightCard {
-	background-color: blue;
+	background-color: white;
+	width: 100%;
+	height: 10.5%;
 }

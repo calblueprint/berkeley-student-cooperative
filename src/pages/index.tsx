@@ -8,26 +8,31 @@ import {
   updateAddress,
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
+import Layout from "../components/Layout/Layout";
 import { MemberShiftView } from "../components/MemberShiftView/MemberShiftView";
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Workshift App</title>
-        <meta name="description" content="Next.js firebase Workshift app" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className={styles.main}>
-        <h1 className={styles.title}>Workshift App</h1>
-				<MemberShiftView member=""></MemberShiftView>
-      </main>
-      <footer className={styles.footer}>
-        <a href="#" rel="noopener noreferrer">
-          Workshift App
-        </a>
-      </footer>
-    </div>
+		//title is the name that will show on the browser tab
+		//wrap each page in this layout tag
+		<Layout>
+			<div className={styles.container}>
+				<Head>
+					<title>Workshift App</title>
+					<meta name="description" content="Next.js firebase Workshift app" />
+					<link rel="icon" href="/favicon.ico" />
+				</Head>
+				<main className={styles.main}>
+					<h1 className={styles.title}>Workshift App</h1>
+				</main>
+				{/* <MemberShiftView member=""></MemberShiftView> */}
+				<footer className={styles.footer}>
+					<a href="#" rel="noopener noreferrer">
+						Workshift App
+					</a>
+				</footer>
+			</div>
+		</Layout>
   );
 };
 

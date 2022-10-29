@@ -1,0 +1,18 @@
+.container {
+	display: flex;
+	width: 100%;
+	background-color: #F5F5F5;
+	flex-direction: column;
+	min-height: 100vh;
+	height: 100vh;
+}
+
+
+.page {
+	padding-left: 169px; 
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	
+}
+

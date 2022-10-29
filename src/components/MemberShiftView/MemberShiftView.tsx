@@ -9,17 +9,16 @@ type MemberShiftViewProps = {
 
 export const MemberShiftView: React.FunctionComponent<MemberShiftViewProps> = ({member}) => {
 
-	const toVerifyCards = () => (
-		<div className={styles["cards"]}>
-			<div className={styles["leftCard"]}>left</div>
-			<div className={styles["rightCard"]}>right</div>
+	const verifyCards = () => (
+		<div className={styles.cards}>
+			<div className={styles.leftCard}>left</div>
+			<div className={styles.rightCard}>right</div>
 		</div>
 	);
 
 	return (
-		<div>
-			<Typography variant="h2"> My Schedule </Typography>
-			{toVerifyCards()}
+		<div className={styles.page}>
+			{verifyCards()}
 		</div>
 	)
 }
