@@ -1,3 +1,5 @@
+import internal from "stream";
+
 export type User = {
   userID: string;
   role: string;
@@ -14,25 +16,27 @@ export type User = {
   preferences: string[];
 };
 
+export type Shift = {
+  name: string;
+  shiftID: string;
+  description: string;
+  possibleDays: string[];
+  numOfPeople: number;
+  // time 
+  timeWindow: number[];
+  assignedDay: string;
+  hours: number;
+  // number of hours since end time that you are allowed to verify
+  verification: boolean;
+  verificationBuffer: number;
+  usersAssigned: string[];
+  category: string;
+}
+
 export type House = {
   houseID: string;
   members: string[] | null;
   address: string;
   schedule: Map<string, string[]>;
   pinUserMap: Map<string, string>;
-};
-
-export type Task = {
-
-};
-
-export type Shift = {
-  shiftID: string;
-  possibleDays: string[];
-  timeWindow: number[];
-  hours: number;
-  numOfPpl: number;
-  assignedDay: string | null;
-  verification: Map<string, string> | null;
-  description: string;
 };
