@@ -6,6 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { numericToStringPreference } from "../firebase/helpers";
 import { User } from "../types/schema";
 
 
@@ -17,37 +18,30 @@ type ShiftAssignmentTableProps = {
 }
 
 const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shiftID, selectedRows, setSelectedRows} : ShiftAssignmentTableProps) => {
+    // Row data type 
     type RowData = {
+        // id of the rows (userID)
         id: string, 
+        // name of the person
         name: string,
+        // hours this person has left to be assigned
         hoursRemaining: number,
+        // their preference in the form of a string
         preference: string
     }
     
+    // Columns of table
     type Column = {
         id: "Available" | "Unassigned Hours" | "Preference";
         minWidth: number;
 
     }
+
+    // Creates a row of the table given a user
     const createRow = (user: User) : RowData => {
         let name = user.name;
         let hoursRemaining = user.hoursRequired - user.hoursAssigned;
-        // convert number preference to string preference
-        let numberToText = new Map<number, string>();
-        numberToText.set(0, "dislikes");
-        numberToText.set(1, "");
-        numberToText.set(2, "prefers");
-        let stringPreference = "";
-        if (user.preferences.has(shiftID)) {
-            let numericalPreference = user.preferences.get(shiftID);
-            if (numericalPreference !== undefined && numberToText.has(numericalPreference)) {
-                let newPref = numberToText.get(numericalPreference);
-                if (newPref !== undefined) {
-                    stringPreference = newPref;
-                }
-            }
-        }
-        let preference = stringPreference;
+        let preference = numericToStringPreference(user, shiftID);
         let id = user.userID;
         let newRow = {
             id,
@@ -58,6 +52,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
         return newRow;
     }
 
+    // Initializes all of the rows of the table
     const initializeRows = () => {
         let ret = [];
         for (let i = 0; i < users.length; i++) {
@@ -68,8 +63,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
 
     const rows = initializeRows();
 
-   
-
+    // Initializes all of the columns of the table
     const columns: Column[] = [
         {
             id: "Available",
@@ -85,6 +79,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
         }
     ]
 
+    // Sets the selectedRows onClick
     const handleClick = (userID: string) => {
         let copy = [...selectedRows];
         let index = copy.indexOf(userID);
