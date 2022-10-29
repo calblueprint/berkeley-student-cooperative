@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Layout.module.css";
-import MemberNavbar from "../MemberComponents/Navbar/Navbar";
+import MemberNavbar from "../MemberComponents/Navbar/MemberNavbar";
 import Head from "next/head";
 
 const Layout = ({ children, title }: any) => {
