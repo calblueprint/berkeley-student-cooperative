@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import { Drawer, List, ListItem, ListItemText } from "@mui/material";
-import styles from "./MemberNavbar.module.css";
+import styles from "./ManagerNavbar.module.css";
 import Icon from "../../../assets/Icon";
 
-const MemberNavbar: React.FunctionComponent = () => {
+const ManagerNavbar: React.FunctionComponent = () => {
   const router = useRouter();
 
   return (
@@ -36,7 +36,6 @@ const MemberNavbar: React.FunctionComponent = () => {
             router.push("/dashboard");
           }}
           className={styles.active}
-          // className={router.pathname == "/dashboard" ? styles.active : styles.item}
         >
           <div className={styles.icon}>
             <Icon type="navDashboard" />
@@ -45,6 +44,24 @@ const MemberNavbar: React.FunctionComponent = () => {
             primaryTypographyProps={{ fontSize: "18px" }}
             className={styles.itemText}
             primary={"Dashboard"}
+          />
+        </ListItem>
+
+        <ListItem
+          button
+          key={"planner"}
+          onClick={() => {
+            router.push("/planner");
+          }}
+          className={router.pathname == "/planner" ? styles.active : styles.item}
+        >
+          <div className={styles.icon}>
+            <Icon type="navPlanner" />
+          </div>
+          <ListItemText
+            primaryTypographyProps={{ fontSize: "18px" }}
+            className={styles.itemText}
+            primary={"Planner"}
           />
         </ListItem>
 
@@ -110,4 +127,4 @@ const MemberNavbar: React.FunctionComponent = () => {
   );
 };
 
-export default MemberNavbar;
+export default ManagerNavbar;

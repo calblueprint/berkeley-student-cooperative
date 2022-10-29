@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./Layout.module.css";
-import MemberNavbar from "../MemberComponents/Navbar/Navbar";
+import MemberNavbar from "../MemberComponents/Navbar/MemberNavbar";
 import Head from "next/head";
+import ManagerNavbar from "../ManagerComponents/Navbar/ManagerNavbar";
 
 const Layout = ({ children, title }: any) => {
 
@@ -15,7 +16,7 @@ const Layout = ({ children, title }: any) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-			<MemberNavbar />
+			<ManagerNavbar />
 			<div className={styles.page}>
 				{children}
 			</div>
