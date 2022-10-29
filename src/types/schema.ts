@@ -27,6 +27,7 @@ export type Shift = {
   assignedDay: string;
   hours: number;
   // number of hours since end time that you are allowed to verify
+  verification: boolean;
   verificationBuffer: number;
   usersAssigned: string[];
   category: string;
