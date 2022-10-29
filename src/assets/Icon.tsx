@@ -54,4 +54,5 @@ const Icon: React.FC<Props> = ({ className, type }: Props) => {
     className,
   });
 };
+
 export default Icon;
