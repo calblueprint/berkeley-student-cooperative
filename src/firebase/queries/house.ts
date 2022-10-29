@@ -53,45 +53,61 @@ export const updateAddress = async (houseID: string, newAddress: string): Promis
 export const addCategory = async (houseID: string, newCategory: string): Promise<void> => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
-  
-    const promise: Promise<House> = parseHouse(colSnap);
-    const house = await promise;
-    var newCategories = house.categories
-    
-    //checks if category already exists
-    const index = newCategories?.indexOf(newCategory);
-    if (index == -1 ){
-        if (!newCategories){
-            newCategories = [newCategory]
+    if (colSnap.exists()) {
+        const promise: Promise<House> = parseHouse(colSnap);
+        const house = await promise;
+        var newCategories = house.categories
+        
+        //checks if category already exists
+        const index = newCategories?.indexOf(newCategory);
+        if (index == -1 ){
+            if (!newCategories){
+                newCategories = [newCategory]
+            } else {
+                newCategories?.push(newCategory)
+            }
+            const data = {
+                categories: newCategories
+            }
+            await updateDoc(docRef, data)
+            
         } else {
-            newCategories?.push(newCategory)
+            console.log(newCategory+ " category already exists")
         }
         
+    } else{
+        console.log("invalid house id for add category")
     }
+  
     
-    const data = {
-        categories: newCategories
-    }
-    await updateDoc(docRef, data)
+    
+    
 }
 
 export const removeCategory = async (houseID: string, oldCategory: string): Promise<void> => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
-  
-    const promise: Promise<House> = parseHouse(colSnap);
-    const house = await promise;
-    var newCategories = house.categories
+    if (colSnap.exists()) {
+        const promise: Promise<House> = parseHouse(colSnap);
+        const house = await promise;
+        var newCategories = house.categories
 
-    const index = newCategories?.indexOf(oldCategory);
-    if (index !== -1 && index){
-        
-        newCategories?.splice(index, 1)
+        const index = newCategories?.indexOf(oldCategory);
+        if (index !== -1 && index){
+            
+            newCategories?.splice(index, 1)
+            const data = {
+                categories: newCategories
+            }
+            await updateDoc(docRef, data)
+        } else {
+            console.log("category does not exist");
+        }
+    } else{
+        console.log("invalid house id for removeCategory")
     }
-    const data = {
-        categories: newCategories
-    }
-    await updateDoc(docRef, data)
+    
+    
 }
 
 
@@ -99,12 +115,17 @@ export const getCategories = async (houseID: string) => {
     const docRef = doc(firestore, "houses", houseID);
 
     const colSnap = await getDoc(docRef);
- 
+    if(colSnap.exists()){
         const house =  await parseHouse(colSnap);
         return house.categories;
+    } else{
+        console.log("invalid house id for getCategories")
+        return;
+    }
+
+   
     
-    // console.log("Invalid House ID")
-    // return null;
+
 }
 
 
@@ -187,3 +208,28 @@ const parseHouse = async (doc : any) => {
     //     var fireAHouse = await getHouse(houseID);
     //     setCurrHouse(fireAHouse);
     //   }
+
+//     //gets all shifts for a particular hosue
+// export const getAllShifts = async (houseID: string): Promise<Shift[]> => {
+//     const colRef = collection(firestore, "houses", houseID, "shifts");
+//     const promises: Promise<Shift>[] = []; 
+//     const docSnap = await getDocs(colRef);
+//     docSnap.forEach((shift) => {
+//         promises.push(parseShift(shift));
+//     })
+
+//     const items = await Promise.all(promises);
+//     return items;
+// }
+// export const getShiftForCategory = async (houseID: string, category: string): Promise<Shift[]> => {
+//     const colRef = collection(firestore, "houses", houseID, "shifts");
+//     const promises: Promise<Shift>[] = []; 
+//     const docSnap = await getDocs(colRef);
+//     docSnap.forEach((shift) => {
+//         promises.push(parseShift(shift));
+//     });
+    
+
+//     const items = await Promise.all(promises);
+//     return items;
+// }

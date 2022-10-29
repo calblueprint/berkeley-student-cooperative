@@ -38,30 +38,6 @@ export const getShift = async (houseID: string, shiftID: string) => {
     return null;
 }
 
-//gets all shifts for a particular hosue
-export const getAllShifts = async (houseID: string): Promise<Shift[]> => {
-    const colRef = collection(firestore, "houses", houseID, "shifts");
-    const promises: Promise<Shift>[] = []; 
-    const docSnap = await getDocs(colRef);
-    docSnap.forEach((shift) => {
-        promises.push(parseShift(shift));
-    })
-
-    const items = await Promise.all(promises);
-    return items;
-}
-// export const getShiftForCategory = async (houseID: string, category: string): Promise<Shift[]> => {
-//     const colRef = collection(firestore, "houses", houseID, "shifts");
-//     const promises: Promise<Shift>[] = []; 
-//     const docSnap = await getDocs(colRef);
-//     docSnap.forEach((shift) => {
-//         promises.push(parseShift(shift));
-//     });
-    
-
-//     const items = await Promise.all(promises);
-//     return items;
-// }
 
 
 export const deleteShift = async (houseID: string, shiftID: string) => {
