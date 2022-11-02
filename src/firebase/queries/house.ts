@@ -56,8 +56,8 @@ export const updateAddress = async (houseID: string, newAddress: string): Promis
 //parses house document passed in
 const parseHouse = async (doc : any) => {
     const data = doc.data();
-    const houseID = doc.id;
-    const members = doc.members;
+    const houseID = data.id;
+    const members = data.members;
     const address = data.address;
     const schedule = data.schedule;
     const house = {houseID, members, address, schedule};

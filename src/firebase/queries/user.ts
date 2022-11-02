@@ -1,6 +1,8 @@
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
+import { mapToObject, objectToMap } from "../helpers";
+import { getHouse } from "./house";
 
 export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
     // PENDING COMPLETION OF HOUSE QUERIES
@@ -93,22 +95,22 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
     await updateUser(userID, newData);
 }
 
-const mapToObject = (map: Map<any, any>): Object => {
-    return Object.fromEntries(
-      Array.from(map.entries(), ([k, v]) =>
-        v instanceof Map ? [k, mapToObject(v)] : [k, v]
-      )
-    );
-};
-
-const objectToMap = (obj: Object): Map<any, any> => {
-    return new Map(
-        Array.from(Object.entries(obj), ([k, v]) =>
-        v instanceof Object ? [k, objectToMap(v)] : [k, v]
-        )
-    );
-};
-  
-const mapToJSON = (map: Map<any, any>): string => {
-    return JSON.stringify(mapToObject(map));
+export const getAllUserObjectsFromHouse = async (houseID: string): Promise<User[]> => {
+    const currHouse = await getHouse(houseID);
+    if (currHouse === null) {
+        return [];
+    }
+    let userIDs = currHouse.members;
+    if (userIDs === null || userIDs === undefined) {
+        return [];
+    }
+    let retList: User[] = [];
+    for (let i = 0; i < userIDs.length; i++) {
+        let currUserID = userIDs[i];
+        let currUserObject = await getUser(currUserID);
+        if (currUserObject !== null) {
+            retList.push(currUserObject);
+        }
+    }
+    return retList;
 }
