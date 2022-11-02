@@ -49,9 +49,9 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
           ":" +
           parseMinute(availabilities[i + 1]) +
           parseAM(availabilities[i + 1]);
-          if (i + 2 < availabilities.length) {
-            parsedAvailabilities += ", "
-          }
+        if (i + 2 < availabilities.length) {
+          parsedAvailabilities += ", ";
+        }
       }
       return parsedAvailabilities;
     } else {
@@ -83,9 +83,9 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
       <CardContent className={styles.card}>
         <div className={styles.flex}>
           <Typography variant="h4">Availability</Typography>
-          <Typography variant="caption" className={styles.updated}>
+          {/* <Typography variant="caption" className={styles.updated}>
             Last updated 3 minutes ago
-          </Typography>
+          </Typography> */}
         </div>
         <hr className={styles.line} />
         <div className={styles.body}>
