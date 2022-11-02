@@ -9,6 +9,15 @@ import {
   signOutAuth,
 } from "../firebase/queries/auth";
 import styles from "../styles/Home.module.css";
+import { useEffect, useState } from "react";
+import {
+  getAllHouses,
+  getHouse,
+  updateAddress,
+} from "../firebase/queries/house";
+import { House } from "../types/schema";
+import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsInfo";
+import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
 
 const Home: NextPage = () => {
   return (
@@ -26,6 +35,8 @@ const Home: NextPage = () => {
       <button onClick={() => getCurrentUser()}>Current Signed-In User</button>
       <ShiftCard />
       <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
+      <SettingsInfo userID={"1234"} />
+      <AvailabilityInfo userID={"1234"} />
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
           Workshift App
