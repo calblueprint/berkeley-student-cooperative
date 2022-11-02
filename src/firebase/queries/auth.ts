@@ -1,5 +1,5 @@
 import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth";
-import { addUser, getUser } from "./userQueries";
+import { addUser, getUser } from "./user";
 
 
 
