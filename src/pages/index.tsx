@@ -1,7 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
-import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import {
