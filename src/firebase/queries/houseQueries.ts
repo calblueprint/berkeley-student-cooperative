@@ -26,15 +26,15 @@ export const getAllHouses = async(): Promise<House[]>  => {
 
 //grabs a specific house from database
 export const getHouse = async(houseID: string): Promise<House>  => {
-    const docRef = doc(firestore, "houses", houseID);
-
-    const colSnap = await getDoc(docRef);
-  
-    const promise: Promise<House> = parseHouse(colSnap);
-    const house = await promise;
-
-    return house;
-
+    try {
+        const docRef = await doc(firestore, "houses", houseID);
+        const colSnap = await getDoc(docRef);
+        const house = await parseHouse(colSnap);
+        return house;
+    } catch(e) {
+        console.warn(e);
+        throw e;
+    }
 }
 
 

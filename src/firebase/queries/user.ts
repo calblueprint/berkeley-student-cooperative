@@ -102,28 +102,8 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
         shiftsAssigned: currUser.shiftsAssigned
     }
     await updateUser(userID, newData);
-<<<<<<< HEAD
 }
 
-const mapToObject = (map: Map<any, any>): Object => {
-    return Object.fromEntries(
-      Array.from(map.entries(), ([k, v]) =>
-        v instanceof Map ? [k, mapToObject(v)] : [k, v]
-      )
-    );
-};
-
-const objectToMap = (obj: Object): Map<any, any> => {
-    return new Map(
-        Array.from(Object.entries(obj), ([k, v]) =>
-        v instanceof Object ? [k, objectToMap(v)] : [k, v]
-        )
-    );
-};
-  
-const mapToJSON = (map: Map<any, any>): string => {
-    return JSON.stringify(mapToObject(map));
-}
 
 export const defaultUser: User = {
   userID: "",
@@ -140,6 +120,3 @@ export const defaultUser: User = {
   availabilities: new Map<string, number[]>,
   preferences: [],
 };
-=======
-}
->>>>>>> 001353b744f0273c78c7cd941100434d164d9e30

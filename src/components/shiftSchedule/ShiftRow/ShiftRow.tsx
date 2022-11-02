@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { useAuth, } from "../../firebase/queries/auth";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
-import { getUser } from "../../firebase/queries/user";
-import { getHouse } from "../../../firebase/queries/houseQueries";
-import { Day } from "../../types/schema";
-import { getShift } from "../../firebase/queries/shift";
-import internal from "stream";
 
 /*
     1. Take in the stats of a shift, represents it as a row in overall table, ShiftSchedule.
@@ -41,6 +35,7 @@ export const ShiftRow = ({shiftName, timeWindow, numOfPpl, numVerified}: shiftRo
 
   const startTime = parseTime(timeWindow[0]);
   const endTime = parseTime(timeWindow[1]);
+  console.log("Vars", {shiftName: shiftName, time: startTime + " - " + endTime, status: status});
   return (
     <TableRow  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       <TableCell align="right">{shiftName}</TableCell>

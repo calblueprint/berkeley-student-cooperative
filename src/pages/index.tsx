@@ -3,14 +3,14 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
-import { getHouses } from "../firebase/queries/exampleQuery";
 import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/userQueries';
 import { User } from "../types/schema";
 import { useAuth } from "../firebase/queries/auth";
 import { defaultUser } from "../firebase/queries/user";
-import { useEffect, useState } from "react";
 import { getAllHouses, getHouse, updateAddress} from "../firebase/queries/houseQueries";
 import { House } from "../types/schema";
+import ShiftSchedule from "../components/shiftSchedule/ShiftSchedule";
+import { mapToObject } from "../firebase/helpers";
 
 
 const Home: NextPage = () => {
@@ -66,41 +66,6 @@ const Home: NextPage = () => {
   }
 
 
-  const mapToObject = (map: Map<any, any>): Object => {
-    return Object.fromEntries(
-      Array.from(map.entries(), ([k, v]) =>
-        v instanceof Map ? [k, mapToObject(v)] : [k, v]
-      )
-    );
-  };
-
-  const objectToMap = (obj: Object): Map<any, any> => {
-    return new Map(
-        Array.from(Object.entries(obj), ([k, v]) =>
-        v instanceof Object ? [k, objectToMap(v)] : [k, v]
-        )
-    );
-  };
-
-  const [houses, setHouses] = useState([] as House[]);
-  const [currHouse, setCurrHouse] = useState({} as House);
-  useEffect(() => {
-    
-
-  }, []);
-
-  //gets all houses from firebase
-  const getAllHouseFB = async () =>{
-    var fireHouse = await getAllHouses();
-    setHouses(fireHouse);
-  }
-  //gets specific house from firebase, must specify certain house
-  const getHouseFB = async (houseID :string) =>{
-    var fireAHouse = await getHouse(houseID);
-    setCurrHouse(fireAHouse);
-  }
-
-
 
 
   return (
@@ -126,7 +91,8 @@ const Home: NextPage = () => {
 			<button onClick = {removeUser}>Delete</button>
 			<button onClick = {setUser}>Set</button>
 			<button onClick = {addShiftToUser}>Assign Shift</button>
-			<main className={styles.main}>
+      <ShiftSchedule></ShiftSchedule>
+			<main className={styles.main}>xw
 				<h1 className={styles.title}>Workshift App</h1>
 			</main>
 			<footer className={styles.footer}>
