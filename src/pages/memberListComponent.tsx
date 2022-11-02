@@ -1,5 +1,6 @@
 import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import { useEffect, useState } from "react"
+import { convertNumberIntoMonetaryValue } from "../firebase/helpers"
 import { getAllUserObjectsFromHouse } from "../firebase/queries/user"
 import { User } from "../types/schema"
 
@@ -42,7 +43,7 @@ const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: Memb
         let name = user.name;
         let id = user.userID;
         let email = user.email;
-        let totalFines = "$" + user.totalFines;
+        let totalFines = convertNumberIntoMonetaryValue(user.totalFines);
         let newRow = {
             id, 
             name,
