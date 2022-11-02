@@ -30,8 +30,6 @@ const Home: NextPage = () => {
     }
     return autoId;
   };
-  
-
 
   const retrieveUser = async () => {
     let x = await getUser("mc8XQK7aiZW1dg8IC8v5");
@@ -64,7 +62,6 @@ const Home: NextPage = () => {
     await assignShiftToUser("mc8XQK7aiZW1dg8IC8v5", "1");
     await retrieveUser();
   }
-
 
   const mapToObject = (map: Map<any, any>): Object => {
     return Object.fromEntries(
