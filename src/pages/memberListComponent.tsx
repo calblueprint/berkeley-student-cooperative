@@ -1,8 +1,9 @@
-import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { Checkbox, Dialog, DialogTitle, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import { useEffect, useState } from "react"
 import { convertNumberIntoMonetaryValue } from "../firebase/helpers"
 import { getAllUserObjectsFromHouse } from "../firebase/queries/user"
 import { User } from "../types/schema"
+import MemberInformationComponentCard from "./memberInformationComponentCard"
 
 type MemberListComponentProps = {
     houseID: string
@@ -11,6 +12,8 @@ type MemberListComponentProps = {
 const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: MemberListComponentProps) => {
     const [users, setUsers] = useState<User[]>([]);
     const [userRows, setUserRows] = useState<RowData[]>([]);
+    const [isModalOpened, setIsModalOpened] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<User>();
 
     type RowData = {
         id: string,
@@ -58,6 +61,10 @@ const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: Memb
         retrieveUserObjects();
     }, []);
 
+    useEffect(() => {
+        retrieveUserObjects();
+    }, [isModalOpened]);
+
     const retrieveUserObjects = async () => {
         let userObjects: User[] = await getAllUserObjectsFromHouse(houseID);
         setUsers(userObjects);
@@ -70,7 +77,8 @@ const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: Memb
 
     const popUpUserModal = (row: RowData) => {
         let user = users.find(user => user.userID === row.id);
-        console.log(user);
+        setSelectedUser(user);
+        setIsModalOpened(true);
     }
 
     return (
@@ -99,6 +107,9 @@ const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: Memb
                     </TableBody>
                 </Table>
             </TableContainer>
+            {
+                isModalOpened && <MemberInformationComponentCard user = {selectedUser} isModalOpened = {isModalOpened} setIsModalOpened = {setIsModalOpened} setSelectedUser = {setSelectedUser}/>
+            }        
         </div>
     )
 }
