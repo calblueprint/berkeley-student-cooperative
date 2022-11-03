@@ -34,8 +34,7 @@ export const ShiftSchedule = () => {
 
   //User obj from FB
   const { authUser } = useAuth();
-  const [day, setDay] = useState(Day.Mon);
-  var schedule = new Map<string, JSX.Element[]>();  
+  const [schedule, setSchedule] = useState(new Map<string, JSX.Element[]>());
   const dayOptions = [
     { value: "Monday", label: "Monday"},
     { value: "Tuesday", label: "Tuesday"},
@@ -45,6 +44,14 @@ export const ShiftSchedule = () => {
     { value: "Saturday", label: "Saturday"},
     { value: "Sunday", label: "Sunday"}
   ];
+  const [selectedDay, setSelectedDay] = useState<ValueType<OptionType>>(dayOptions[0]);
+  const handleDayChange = (option: ValueType<any>) => {
+    console.log({option: option});
+    setSelectedDay(option);
+    setDailyRows(schedule.get(option.value));
+    console.log({optionvalue: option.value});
+    console.log({selectedDay: selectedDay});
+  };
   //Has additional data that could be useful in View task.
   type rowData = {
     name: string;
@@ -58,19 +65,20 @@ export const ShiftSchedule = () => {
 
   const loadScheduleComponents= async () => {
     let houseFB = await getHouse(authUser.houseID);
-    Object.entries((houseFB.schedule)).map(async (entry) => {
+    let tempSchedule = new Map<string, JSX.Element[]>();
+    Promise.all(Object.entries((houseFB.schedule)).map(async (entry) => {
       let day = entry[0], shiftIDs = entry[1];
       let dailyData: rowData[] = await getDailyData(day, shiftIDs);
-      console.log({dailyData: dailyData});
-      console.log({DailyData: dailyData, entry0: entry[0], entry1: entry[1]});
       let rowComponents: JSX.Element[] = [];
       convertDataToComponent(dailyData, rowComponents);
-      schedule.set(day, rowComponents);
-      if (day == Day.Mon) {
-        setDailyRows(schedule.get(day));
-      }
-      console.log({schedule: schedule, dailyRows: dailyRows});
+      tempSchedule.set(day, rowComponents);
+    })).then(() => {
+      setDailyRows(tempSchedule.get(Day.Mon));
+      setSchedule(tempSchedule);
     });
+
+    //Use set Schedule in this case.
+    console.log({schedule: schedule});
   }
 
   const getDailyData = async (day: string, shiftIDs: string[]): Promise<rowData[]> => {
@@ -83,12 +91,11 @@ export const ShiftSchedule = () => {
       })
       let shiftObjects = await Promise.all(shiftPromises);
       let numVerifiedPromises: Promise<number | undefined>[] = [];
-      shiftObjects.map((shift, index) => {
+      shiftObjects.map((shift) => {
         if (shift != undefined) {
-          numVerifiedPromises[index] = getNumVerified(authUser.houseID, shift.shiftID);
+          numVerifiedPromises.push(getNumVerified(authUser.houseID, shift.shiftID));
         }
       })
-      console.log({numVerifiedPromises: numVerifiedPromises});
       let numVerifiedList =  await Promise.all(numVerifiedPromises);
       let rowObjects: rowData[] = []; 
       console.log({DAY: day, shiftObjects: shiftObjects, numVerifiedList: numVerifiedList});
@@ -144,60 +151,22 @@ export const ShiftSchedule = () => {
         </TableRow>
       )
     ))
-    console.log({rowComp: rowComponents});
   }
 
   useEffect(()=> {
     loadScheduleComponents();
   }, [authUser])
- 
-
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-  ];
-
-  function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-  ) {
-    return { name, calories, fat, carbs, protein };
-  }
-
-
-  const loadRow = () => {
-    console.log({dailyRowsAtLoad: dailyRows });1
-    if (dailyRows != undefined) {
-      let dailyRow = dailyRows.at(0);
-      return (
-        <TableRow key={firestoreAutoId()}>
-          <TableCell component="th" scope="row">
-          </TableCell>
-          <TableCell align="right">hi</TableCell>
-          <TableCell align="right">bye</TableCell>
-        </TableRow>
-      )
-
-    }
-
-  } 
 
   if (dailyRows === undefined) {
     return <>Still loading...</>;
   } else {
     return (
       <div>
-        {/* <Select
+        <Select
+            value={selectedDay}
             options={dayOptions}
-            onChange={(e: Day) => {setDay(e);}}
-            defaultValue={String(day)}
-          /> */}
+            onChange={option => handleDayChange(option)}
+          />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
