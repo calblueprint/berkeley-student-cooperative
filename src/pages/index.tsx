@@ -3,23 +3,24 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
-import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/userQueries';
-import { User } from "../types/schema";
-import { useAuth } from "../firebase/queries/auth";
-import { defaultUser } from "../firebase/queries/user";
-import { getAllHouses, getHouse, updateAddress} from "../firebase/queries/houseQueries";
-import { House } from "../types/schema";
 import ShiftSchedule from "../components/ManagerComponents/shiftSchedule/ShiftSchedule";
 import { mapToObject } from "../firebase/helpers";
-
 import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsInfo";
 import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
 import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
-
+import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/user';
+import { User } from "../types/schema";
+import { useUserContext } from "../context/UserContext";
+import {
+  getAllHouses,
+  getHouse,
+  updateAddress,
+} from "../firebase/queries/house";
+import { House } from "../types/schema";
 const Home: NextPage = () => {
 
-	const { authUser, register, signIn, signOutAuth } = useAuth();
+	const { authUser, house, register, signIn, signOutAuth, establishUserContext } = useUserContext();
 
   const createUser = async () => {
     addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());
@@ -34,8 +35,6 @@ const Home: NextPage = () => {
     }
     return autoId;
   };
-  
-
 
   const retrieveUser = async () => {
     let x = await getUser("mc8XQK7aiZW1dg8IC8v5");
@@ -68,9 +67,6 @@ const Home: NextPage = () => {
     await assignShiftToUser("mc8XQK7aiZW1dg8IC8v5", "1");
     await retrieveUser();
   }
-
-
-
 
   return (
     <div className={styles.container}>

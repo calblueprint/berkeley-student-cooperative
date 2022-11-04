@@ -1,8 +1,12 @@
 import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth";
-import { addUser, getUser } from "./userQueries";
+import { addUser, getUser } from "./user";
 import React, { createContext, useContext, useState } from "react";
 import { User} from "../../types/schema";
 import { defaultUser } from "./user";
+import { defaultHouse } from "./house";
+import { doc, deleteDoc } from "firebase/firestore";
+import { firestore } from "../clientApp";
+import { getHouse } from "./house";
 
 //managers don't have to register.  House will be matched to email
 //userID is going to get generated in register.
@@ -17,6 +21,7 @@ import { defaultUser } from "./user";
 export const useFirebaseAuth = () => {
 	const auth = getAuth();
 	const [authUser, setAuthUser] = useState(defaultUser);
+	const [house, setHouse] = useState(defaultHouse)
 
 	const register = async (
 			email: string,
@@ -54,12 +59,6 @@ export const useFirebaseAuth = () => {
 			console.log("Email: ", email, " Password: ", password);
 			signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
-				//signed in
-				/*
-				PENDING:  Unsure of need.  Get the role, pass it to userContext???
-				Will need something to checkRole i
-				const role = await checkRole(userUid);
-				*/
 				const userID= userCredential.user.uid;
 				establishUserContext(userID);
 			})
@@ -69,7 +68,7 @@ export const useFirebaseAuth = () => {
 		}
 	};
 
-const signOutAuth = async (): Promise<void> => {
+	const signOutAuth = async (): Promise<void> => {
 		try {
 			await signOut(auth);
 			setAuthUser(defaultUser);
@@ -80,14 +79,17 @@ const signOutAuth = async (): Promise<void> => {
 		}
 	};
 
-	// DELETE USER ??
-
+	
 	const establishUserContext = async(uid: string): Promise<void> => {
 		try {
 			getUser(uid).then((userFromDoc) => {
 				if (userFromDoc != null) {
 					console.log("USER FROM FIREBASE: ", userFromDoc);
 					setAuthUser(userFromDoc);
+					getHouse(userFromDoc.houseID).then((houseFromDoc) => {
+						console.log("HOUSE FROM FIREBASE:", houseFromDoc)
+						setHouse(houseFromDoc)
+					})
 				} else {
 					console.log("user does not exist");
 				}
@@ -96,28 +98,18 @@ const signOutAuth = async (): Promise<void> => {
 		}
 	}
 
+
+	const deleteUser = async(uid: string): Promise<void> => {
+		await deleteDoc(doc(firestore, "users", uid ));
+	}
+	
 	return {
-		authUser, 
+		authUser,
+		house, 
 		register, 
 		signIn, 
 		signOutAuth,
-		updateUser: establishUserContext,
+		establishUserContext,
+		deleteUser, 
 	};
 }
-
-const authUserContext = createContext({
-	authUser: defaultUser,
-  signIn: async (email: string, password: string) => {},
-  register: async (email: string, name: string, password: string) => {},
-  signOutAuth: () => {},
-	updateUser: async (uid: string) => {},
-});
-
-export const AuthUserProvider = ({children}: any) => {
-	const auth = useFirebaseAuth();
-	return (
-		<authUserContext.Provider value = {auth}> {children} </authUserContext.Provider>
-	)
-}
-
-export const useAuth = () => useContext(authUserContext);

@@ -12,7 +12,6 @@
     Method 1:  get schedule, load in shifts when switching Days tab.
 */
 import React, {useEffect, useState} from "react";
-import { useAuth, } from "../../../firebase/queries/auth";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import { getUser } from "../../../firebase/queries/user";
 import { getHouse } from "../../../firebase/queries/houseQueries";
@@ -24,6 +23,7 @@ import { type } from "os";
 import Select from "react-select";
 import { firestoreAutoId, objectToMap } from "../../../firebase/helpers";
 import Paper from '@mui/material/Paper';
+import { useUserContext } from "../../../context/UserContext";
 
 
 
@@ -33,7 +33,7 @@ import Paper from '@mui/material/Paper';
 export const ShiftSchedule = () => {
 
   //User obj from FB
-  const { authUser } = useAuth();
+  const { authUser } = useUserContext();
   const [schedule, setSchedule] = useState(new Map<string, JSX.Element[]>());
   const dayOptions = [
     { value: "Monday", label: "Monday"},
