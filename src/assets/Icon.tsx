@@ -1,6 +1,6 @@
 import React from "react";
 import { SvgIcon } from "@mui/material";
-export type IconType = "close" | "search" | "navDashboard";
+export type IconType = "close" | "search" | "navDashboard" | "leftArrow" | "rightArrow";
 const IconSvgs: Record<IconType, React.ReactElement> = {
   close: (
     <svg
@@ -43,7 +43,18 @@ const IconSvgs: Record<IconType, React.ReactElement> = {
 				fill="#C2C2C2"
 			/>
     </svg>
+	),
+	leftArrow: (
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M7.03458 9.11416L6.36527 9.78348L11.7207 15.1389L13.0593 13.8003L9.04346 9.78348L13.0593 5.76666L11.7207 4.42804L7.03458 9.11416Z" fill="#969696"/>
+		</svg>
+	),
+	rightArrow: (
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M12.9659 10.4527L13.6352 9.78342L8.27978 4.42798L6.94116 5.76661L10.957 9.78342L6.94116 13.8002L8.27978 15.1389L12.9659 10.4527Z" fill="#969696"/>
+		</svg>
 	)
+
 };
 type Props = {
   className?: string;

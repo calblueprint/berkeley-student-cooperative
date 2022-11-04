@@ -1,7 +1,8 @@
 import { Typography } from "@mui/material";
 import React from "react";
 import Layout from "../../../components/Layout/Layout";
-import { MemberShiftView } from "../../../components/MemberShiftView/MemberShiftView";
+import { MemberScheduleHeader } from "../../../components/MemberComponents/MemberSchedule/MemberScheduleHeader/MemberScheduleHeader";
+import { MemberShiftSchedule } from "../../../components/MemberComponents/MemberSchedule/MemberShiftSchedule/MemberShiftSchedule";
 import { House, User } from "../../../types/schema";
 import styles from "./MemberSchedule.module.css";
 
@@ -10,16 +11,14 @@ type MemberSchedulePageProps = {
 	house: House,
 }
 
-const MemberSchedulePage: React.FunctionComponent<MemberSchedulePageProps> = ({
+const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
 	user,
 	house
 }) => {
 	return (
 		<Layout>
-			<div className={styles.container}>
-				<Typography variant="h2" className={styles.title}> My Schedule </Typography>
-				<MemberShiftView member=""/>
-			</div>
+			<MemberScheduleHeader/>
+			<MemberShiftSchedule member=""/>
 		</Layout>
 	)
 }

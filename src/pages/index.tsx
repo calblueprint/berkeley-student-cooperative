@@ -11,15 +11,12 @@ import {
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
 import Layout from "../components/Layout/Layout";
-import { MemberShiftView } from "../components/MemberShiftView/MemberShiftView";
+import { MemberShiftSchedule } from "../components/MemberComponents/MemberSchedule/MemberShiftSchedule/MemberShiftSchedule";
 
 const Home: NextPage = () => {
   return (
-<<<<<<< HEAD
 		//title is the name that will show on the browser tab
 		//wrap each page in this layout tag
-=======
->>>>>>> 5fa562b4a8180ee3f123d9baaf5cc9beab9781e1
 		<Layout>
 			<div className={styles.container}>
 				<Head>
@@ -32,7 +29,6 @@ const Home: NextPage = () => {
 					<ShiftCard />
 					<AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
 				</main>
-				{/* <MemberShiftView member=""></MemberShiftView> */}
 				<footer className={styles.footer}>
 					<a href="#" rel="noopener noreferrer">
 						Workshift App
