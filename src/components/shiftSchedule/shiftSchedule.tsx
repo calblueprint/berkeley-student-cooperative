@@ -102,7 +102,7 @@ export const ShiftSchedule = () => {
       shiftObjects.map((shift, index) => {
         let numVerified = numVerifiedList[index];
         if (shift != undefined && numVerified != undefined) {
-          let rowObject = createRowData(shift, numVerified);
+          let rowObject = createRowData(shift, 1);//temp
           rowObjects.push(rowObject);
         }
       })
@@ -119,15 +119,29 @@ export const ShiftSchedule = () => {
     //May be helpful in helper file.
     const parseTime = (time: number) => {
       let meridian = "AM";
+      if (time == 0) {
+        return "12AM";
+      }
+      if (time > 1130) {
+        meridian = "PM";
+      }
       if (time > 1230) {
         time = time - 1200;
-        meridian = "PM";
       } 
       let timeString = String(time);
-      if (timeString.slice(-2) == "30") {
-        return timeString.slice(0, 2) + ":" + timeString.slice(-2) + meridian; 
+      let hours;
+      if (timeString.length > 3) {
+        console.log({len3TString: timeString});
+        hours = timeString.slice(0, 2);
+      } else {
+        hours = timeString.slice(0, 1);
       }
-      return timeString.slice(0, 2) + meridian; 
+      let minutes = timeString.slice(-2);
+      console.log({timeString: timeString, hours: hours, minutes: minutes});
+      if (minutes == "30") {
+        return hours + ":" + minutes + meridian; 
+      }
+      return hours + meridian; 
     }
 
     let startTime = parseTime(shiftFB.timeWindow[0]);
