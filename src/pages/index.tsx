@@ -77,6 +77,9 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
+        <button onClick={() => signIn("dummy@gmail.com", "birdsRFake22")}>SIGN IN</button>
+        <button onClick={() => register("dummy@gmail.com", "swagapino22", "birdsRFake22")}>Register</button>
+        <button onClick={() => signOutAuth()}>Sign Out</button>
         <ShiftCard />
         <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
         <SettingsInfo userID={"1234"}/>
