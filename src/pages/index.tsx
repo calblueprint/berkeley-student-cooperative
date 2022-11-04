@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { signIn } from "../firebase/queries/auth";
 import styles from "../styles/Home.module.css";
 import MemberListComponent from "./memberListComponent";
 
@@ -12,6 +13,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MemberListComponent houseID = "EUC"/>
+      <button onClick={() => signIn("test1@gmail.com", "test123")}>SIGN IN</button>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
           Workshift App
