@@ -12,17 +12,17 @@
     Method 1:  get schedule, load in shifts when switching Days tab.
 */
 import React, {useEffect, useState} from "react";
-import { useAuth, } from "../../firebase/queries/auth";
+import { useAuth, } from "../../../firebase/queries/auth";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
-import { getUser } from "../../firebase/queries/user";
-import { getHouse } from "../../firebase/queries/houseQueries";
-import { Day } from "../../types/schema";
-import { getNumVerified, getShift } from "../../firebase/queries/shift";
+import { getUser } from "../../../firebase/queries/user";
+import { getHouse } from "../../../firebase/queries/houseQueries";
+import { Day } from "../../../types/schema";
+import { getNumVerified, getShift } from "../../../firebase/queries/shift";
 // import ShiftRow from "./ShiftRow/shiftRow";
-import { Shift } from "../../types/schema";
+import { Shift } from "../../../types/schema";
 import { type } from "os";
 import Select from "react-select";
-import { firestoreAutoId, objectToMap } from "../../firebase/helpers";
+import { firestoreAutoId, objectToMap } from "../../../firebase/helpers";
 import Paper from '@mui/material/Paper';
 
 
@@ -113,7 +113,7 @@ export const ShiftSchedule = () => {
     var status = "Missing";
     if (shiftFB.numOfPeople > numVerified){
       status = "Incomplete";
-    } else {
+    } else if (shiftFB.numOfPeople <= numVerified){
       status = "Complete";
     }
     //May be helpful in helper file.

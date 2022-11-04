@@ -11,7 +11,11 @@
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
+<<<<<<< HEAD
     "@mui/material": "^5.10.10",
+=======
+    "@mui/material": "^5.10.9",
+>>>>>>> 48c70921c8e4eb2caed5916309e5b07ddeb37263
     "firebase": "^9.10.0",
     "next": "12.3.0",
     "react": "18.2.0",
