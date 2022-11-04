@@ -1,11 +1,6 @@
 import {firestore} from "../clientApp";
 import {Shift} from "../../types/schema";
-<<<<<<< HEAD
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc, getDocs } from "firebase/firestore";
-//import {getUser, updateUser} from "userQueries";
-=======
-import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
->>>>>>> 48c70921c8e4eb2caed5916309e5b07ddeb37263
 
 export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
     await addDoc(collection(firestore, "houses", houseID, "shifts"), {

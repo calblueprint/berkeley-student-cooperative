@@ -1,7 +1,6 @@
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { mapToObject, objectToMap } from "../helpers";
 
 export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
     // PENDING COMPLETION OF HOUSE QUERIES
@@ -104,25 +103,6 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
     await updateUser(userID, newData);
 }
 
-<<<<<<< HEAD
-
-
-export const defaultUser: User = {
-  userID: "",
-  role: "",
-  name: "",
-  email: "",
-  houseID: "",
-  totalHoursAssigned: 0,
-  shiftsAssigned: [],
-  hoursRemainingWeek: 0,
-  hoursRemainingSemester: 0,
-  pinNumber: 0,
-  totalFines: 0,
-  availabilities: new Map<string, number[]>,
-  preferences: [],
-};
-=======
 export const defaultUser: User = {
 	userID: "",
 	role: "",
@@ -158,4 +138,3 @@ const objectToMap = (obj: Object): Map<any, any> => {
 const mapToJSON = (map: Map<any, any>): string => {
     return JSON.stringify(mapToObject(map));
 }
->>>>>>> fa275c2d4f60066309321f637d0c57eb791cbcc6
