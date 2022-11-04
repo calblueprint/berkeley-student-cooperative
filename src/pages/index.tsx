@@ -12,9 +12,14 @@ import {
   updateAddress,
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
+import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsInfo";
+import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
+import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
+import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 
 const Home: NextPage = () => {
 
+	//getting all possible fields from auth; authUSER is current signed in user, house is the house object
 	const { authUser, house, register, signIn, signOutAuth, establishUserContext } = useUserContext();
 
   const createUser = async () => {
@@ -83,39 +88,25 @@ const Home: NextPage = () => {
   };
 
   return (
-		<div className={styles.container}>
-			<Head>
-				<title>Workshift App</title>
-				<meta name="description" content="Next.js firebase Workshift app" />
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
-
-			<button onClick={() => signIn("dummy@gmail.com", "birdsRFake22")}>SIGN IN</button>
-			<button onClick={() => signIn("test1@gmail.com", "test123")}>SIGN IN</button>
-
-			<button onClick={() => register("dummy@gmail.com", "swagapino22", "birdsRFake22")}>Register</button>
-			<button onClick={() => register("test4@gmail.com", "test user", "test123")}>Test User Register</button>
-
-			<button onClick={() => signOutAuth()}>Sign Out</button>
-			<button onClick={() => console.log(authUser)}> log user</button>
-
-			<div>{authUser.name}</div>		
-			<div>{house.houseID}</div>
-
-			<button onClick = {createUser}>Create </button>
-			<button onClick = {retrieveUser}>Get </button>
-			<button onClick = {removeUser}>Delete</button>
-			<button onClick = {setUser}>Set</button>
-			<button onClick = {addShiftToUser}>Assign Shift</button>
-			<main className={styles.main}>
-				<h1 className={styles.title}>Workshift App</h1>
-			</main>
-			<footer className={styles.footer}>
-				<a href="#" rel="noopener noreferrer">
-					Workshift App
-				</a>
-			</footer>
-		</div>
+    <div className={styles.container}>
+      <Head>
+        <title>Workshift App</title>
+        <meta name="description" content="Next.js firebase Workshift app" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className={styles.main}>
+        <h1 className={styles.title}>Workshift App</h1>
+        <ShiftCard />
+        <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
+        <SettingsInfo userID={"1234"}/>
+        <AvailabilityInfo userID={"1234"}/>
+      </main>
+      <footer className={styles.footer}>
+        <a href="#" rel="noopener noreferrer">
+          Workshift App
+        </a>
+      </footer>
+    </div>
   );
 };
 
