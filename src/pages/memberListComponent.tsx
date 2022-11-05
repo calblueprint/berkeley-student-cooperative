@@ -10,11 +10,16 @@ type MemberListComponentProps = {
 }
 
 const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: MemberListComponentProps) => {
+    // Stores all of the users
     const [users, setUsers] = useState<User[]>([]);
+    // Stores the users translated into row objects
     const [userRows, setUserRows] = useState<RowData[]>([]);
+    // Boolean storing whether the modal has been opened or not
     const [isModalOpened, setIsModalOpened] = useState(false);
+    // Stores the selected user once clicked on
     const [selectedUser, setSelectedUser] = useState<User>();
 
+    // Data structure of a row
     type RowData = {
         id: string,
         name: string,
@@ -22,6 +27,7 @@ const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: Memb
         totalFines: string
     }
 
+    // Column headers
     type Column = {
         id: "Name" | "Email" | "Total Fines";
         minWidth: number;
@@ -42,6 +48,7 @@ const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: Memb
         }
     ]
 
+    // Creates an individual row given a user
     const createRow = (user: User): RowData => {
         let name = user.name;
         let id = user.userID;
@@ -56,11 +63,12 @@ const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: Memb
         return newRow;
     }
 
-
+    // Retrieves all user objects associated with a house on load
     useEffect(() => {
         retrieveUserObjects();
     }, []);
 
+    // Retrieves all user objects associated with a house whenever the modal is opened / closed (update if change info)
     useEffect(() => {
         retrieveUserObjects();
     }, [isModalOpened]);
@@ -75,6 +83,7 @@ const MemberListComponent: React.FC<MemberListComponentProps> = ({houseID}: Memb
         setUserRows(ret);
     }
 
+    // Pops up the user modal by setting the selected user and setting ismodalOpened to true
     const popUpUserModal = (row: RowData) => {
         let user = users.find(user => user.userID === row.id);
         setSelectedUser(user);

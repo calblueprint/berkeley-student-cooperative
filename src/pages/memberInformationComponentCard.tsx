@@ -13,7 +13,7 @@ type MemberInformationComponentCardProps = {
 
 const MemberInformationComponentCard: React.FC<MemberInformationComponentCardProps> = ({user, isModalOpened, setIsModalOpened, setSelectedUser}: MemberInformationComponentCardProps) => {
     const auth = getAuth();
-    auth.currentUser
+    
     // checks if the password contains a number and the length of the password is at least 6
     const satisfyPasswordConstraints = () => {
         return /\d/.test(newPassword) && newPassword.length >= 6;
@@ -45,6 +45,7 @@ const MemberInformationComponentCard: React.FC<MemberInformationComponentCardPro
             return;
         }
         if (name.length == 0 || email.length == 0) {
+            // Replace with modal
             console.log("Invalid Name or Email Length");
             return;
         }
@@ -53,7 +54,6 @@ const MemberInformationComponentCard: React.FC<MemberInformationComponentCardPro
             email: email
         }
         if (auth.currentUser !== null && satisfyPasswordConstraints()) {
-            console.log("success");
             await updatePassword(auth.currentUser, newPassword);
         } else {
             // Replace with modal
