@@ -17,7 +17,6 @@ import { getUser } from "../../../firebase/queries/user";
 import { getHouse } from "../../../firebase/queries/houseQueries";
 import { Day } from "../../../types/schema";
 import { getNumVerified, getShift } from "../../../firebase/queries/shift";
-// import ShiftRow from "./ShiftRow/shiftRow";
 import { Shift } from "../../../types/schema";
 import { type } from "os";
 import Select from "react-select";
@@ -65,6 +64,7 @@ export const ShiftSchedule = () => {
 
   const loadScheduleComponents= async () => {
     let houseFB = await getHouse(authUser.houseID);
+    console.log({houseFB: houseFB});
     let tempSchedule = new Map<string, JSX.Element[]>();
     Promise.all(Object.entries((houseFB.schedule)).map(async (entry) => {
       let day = entry[0], shiftIDs = entry[1];

@@ -81,7 +81,7 @@ const Home: NextPage = () => {
         <button onClick={() => signIn("dummy2@gmail.com", "birdsRFake22")}>SIGN IN</button>
         <button onClick={() => register("dummy2@gmail.com", "swagapino23", "birdsRFake22")}>Register</button>
         <button onClick={() => signOutAuth()}>Sign Out</button>
-        <ShiftCard />
+        <ShiftCard/>
         <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
         <SettingsInfo userID={"1234"}/>
         <AvailabilityInfo userID={"1234"}/>

@@ -41,7 +41,7 @@ export const useFirebaseAuth = () => {
 							PENDING HouseID found in csv
 							addUser(email, houseID, name, role, user.uid)
 						*/
-					addUser(email, "Euclid", name, "Member", user.uid).then(() => {
+					addUser(email, "EUC", name, "Member", user.uid).then(() => {
 						establishUserContext(user.uid);
 					});
 					})
@@ -63,6 +63,7 @@ export const useFirebaseAuth = () => {
 				establishUserContext(userID);
 			})
 		} catch(e) {
+			console.log("Error Logging In");
 			console.error(e);
 			throw e;
 		}
@@ -85,8 +86,10 @@ export const useFirebaseAuth = () => {
 			getUser(uid).then((userFromDoc) => {
 				if (userFromDoc != null) {
 					console.log("USER FROM FIREBASE: ", userFromDoc);
+					console.log({USER: "BLAH", uid: uid, userFromDoc: userFromDoc});
 					setAuthUser(userFromDoc);
 					getHouse(userFromDoc.houseID).then((houseFromDoc) => {
+						console.log({houseFromDoc: houseFromDoc});
 						console.log("HOUSE FROM FIREBASE:", houseFromDoc)
 						setHouse(houseFromDoc)
 					})
