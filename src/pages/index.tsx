@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { signIn } from "../firebase/queries/auth";
 import styles from "../styles/Home.module.css";
+import MemberListComponent from "./memberListComponent";
 import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
 import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/user';
@@ -91,13 +93,8 @@ const Home: NextPage = () => {
         <meta name="description" content="Next.js firebase Workshift app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <h1 className={styles.title}>Workshift App</h1>
-        <ShiftCard />
-        <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
-        <SettingsInfo userID={"1234"}/>
-        <AvailabilityInfo userID={"1234"}/>
-      </main>
+      <MemberListComponent houseID = "EUC"/>
+      <button onClick={() => signIn("test1@gmail.com", "test123")}>SIGN IN</button>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
           Workshift App

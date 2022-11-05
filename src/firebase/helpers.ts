@@ -17,3 +17,7 @@ export const objectToMap = (obj: Object): Map<any, any> => {
 export const mapToJSON = (map: Map<any, any>): string => {
     return JSON.stringify(mapToObject(map));
 }
+
+export const convertNumberIntoMonetaryValue = (fine: number): string => {
+  return "$" + fine.toFixed(2);
+}
