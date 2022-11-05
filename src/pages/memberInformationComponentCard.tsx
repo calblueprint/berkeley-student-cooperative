@@ -13,11 +13,7 @@ type MemberInformationComponentCardProps = {
 
 const MemberInformationComponentCard: React.FC<MemberInformationComponentCardProps> = ({user, isModalOpened, setIsModalOpened, setSelectedUser}: MemberInformationComponentCardProps) => {
     const auth = getAuth();
-    
-    // checks if the password contains a number and the length of the password is at least 6
-    const satisfyPasswordConstraints = () => {
-        return /\d/.test(newPassword) && newPassword.length >= 6;
-    }
+
 
     const initializeName = () => {
         if (user === undefined) {
@@ -27,7 +23,6 @@ const MemberInformationComponentCard: React.FC<MemberInformationComponentCardPro
     }
     
     const initializeEmail = () => {
-        console.log(auth.currentUser);
         if (user === undefined) {
             return "";
         }
@@ -37,8 +32,7 @@ const MemberInformationComponentCard: React.FC<MemberInformationComponentCardPro
     // Stores the input fields for the various changing fields
     const [name, setName] = useState(initializeName());
     const [email, setEmail] = useState(initializeEmail());
-    const [newPassword, setNewPassword] = useState("");
-    
+
     // Updates the user's name, email, and password
     const updateUserObject = async () => {
         if (user === undefined) {
@@ -52,12 +46,6 @@ const MemberInformationComponentCard: React.FC<MemberInformationComponentCardPro
         let newData = {
             name: name,
             email: email
-        }
-        if (auth.currentUser !== null && satisfyPasswordConstraints()) {
-            await updatePassword(auth.currentUser, newPassword);
-        } else {
-            // Replace with modal
-            console.log("invalid");
         }
         updateUser(user.userID, newData);
         closeModal();
@@ -77,11 +65,6 @@ const MemberInformationComponentCard: React.FC<MemberInformationComponentCardPro
     // Updates email as the email field is edited
     const handleEmailChange = (event: any) => {
         setEmail(event.target.value);
-    }
-
-    // Updates the password as the password field is edited
-    const handlePasswordChange = (event: any) => {
-        setNewPassword(event.target.value);
     }
 
     return  (
@@ -109,18 +92,6 @@ const MemberInformationComponentCard: React.FC<MemberInformationComponentCardPro
                             autoFocus
                             value = {email}
                             onChange = {handleEmailChange}
-                            margin="dense"
-                            id="email"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <DialogContentText>
-                            Password
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            value = {newPassword}
-                            onChange = {handlePasswordChange}
                             margin="dense"
                             id="email"
                             fullWidth
