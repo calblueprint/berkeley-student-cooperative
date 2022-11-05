@@ -103,25 +103,9 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
     await updateUser(userID, newData);
 }
 
-export const defaultUser: User = {
-	userID: "",
-	role: "",
-	name: "",
-	email: "",
-	houseID: "",
-	totalHoursAssigned: 0,
-	shiftsAssigned: new Array<string>(),
-	hoursRemainingWeek: 0,
-	hoursRemainingSemester: 0,
-	pinNumber: 0,
-	totalFines: 0,
-	availabilities: new Map<string, number[]>(),
-	preferences: new Array<string>(),
-};
-
 const mapToObject = (map: Map<any, any>): Object => {
-    return Object.fromEntries(
-      Array.from(map.entries(), ([k, v]) =>
+	return Object.fromEntries(
+		Array.from(map.entries(), ([k, v]) =>
         v instanceof Map ? [k, mapToObject(v)] : [k, v]
       )
     );
@@ -138,3 +122,19 @@ const objectToMap = (obj: Object): Map<any, any> => {
 const mapToJSON = (map: Map<any, any>): string => {
     return JSON.stringify(mapToObject(map));
 }
+
+export const defaultUser: User = {
+	userID: "",
+	role: "",
+	name: "",
+	email: "",
+	houseID: "",
+	totalHoursAssigned: 0,
+	shiftsAssigned: new Array<string>(),
+	hoursRemainingWeek: 0,
+	hoursRemainingSemester: 0,
+	pinNumber: 0,
+	totalFines: 0,
+	availabilities: new Map<string, number[]>(),
+	preferences: new Array<string>(),
+};
