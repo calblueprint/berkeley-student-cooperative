@@ -27,16 +27,20 @@ const Home: NextPage = () => {
         <meta name="description" content="Next.js firebase Workshift app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <button onClick={() => register("test@email.com", "Test Email", "test")}>
+      <button
+        onClick={() => register("test@email.com", "Test Email", "testing")}
+      >
         Register
       </button>
-      <button onClick={() => signIn("test@email.com", "test")}>SIGN IN</button>
+      <button onClick={() => signIn("test@email.com", "testing")}>
+        SIGN IN
+      </button>
       <button onClick={() => signOutAuth()}>Sign Out</button>
       <button onClick={() => getCurrentUser()}>Current Signed-In User</button>
       <ShiftCard />
       <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
-      <SettingsInfo userID={"1234"} />
-      <AvailabilityInfo userID={"1234"} />
+      {/* <SettingsInfo userID={"1234"} />
+      <AvailabilityInfo userID={"1234"} /> */}
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
           Workshift App
