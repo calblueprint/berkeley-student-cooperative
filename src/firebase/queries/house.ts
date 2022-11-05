@@ -56,13 +56,16 @@ export const updateAddress = async (houseID: string, newAddress: string): Promis
 //parses house document passed in
 const parseHouse = async (doc : any) => {
     const data = doc.data();
-    const houseID = data.id;
+    const houseID = doc.id.toString();
     const members = data.members;
     const address = data.address;
-    const schedule = data.schedule;
-    const house = {houseID, members, address, schedule};
+    const categories = data.categories;
+		const schedule = data.schedule;
+		const userPINs = data.userPINs;
+    const house = {houseID, categories, members, address, schedule, userPINs};
     return house as House;
 }
+
 
 
 //confirm how members array is going to work before trying to implement
@@ -73,7 +76,7 @@ const parseHouse = async (doc : any) => {
 
 
 // export const addMember = async (houseID: string, newMember: string): Promise<void> => {
-//     const docRef = doc(firestore, "houses", houseID);
+	//     const docRef = doc(firestore, "houses", houseID);
 //     // const promises: Promise<House>[] = []; 
 //     // const colSnap = await getDoc(docRef);
 //     // promises.push(parseHouse(colSnap));
@@ -128,3 +131,12 @@ const parseHouse = async (doc : any) => {
     //     var fireAHouse = await getHouse(houseID);
     //     setCurrHouse(fireAHouse);
     //   }
+		
+export const defaultHouse: House = {
+		houseID: "",
+		categories: new Array<string>(),
+		members: new Array<string>(),
+		address: "",
+		schedule: new Map<string, string[]>(),
+		userPINs: new Map<string, string>()
+};
