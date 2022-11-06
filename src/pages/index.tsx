@@ -9,6 +9,7 @@ import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsIn
 import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
 import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
+
 import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/user';
 import { User } from "../types/schema";
 import { useUserContext } from "../context/UserContext";
@@ -18,6 +19,11 @@ import {
   updateAddress,
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
+import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsInfo";
+import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
+import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
+import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
+
 const Home: NextPage = () => {
 
 	//getting all possible fields from auth; authUSER is current signed in user, house is the house object

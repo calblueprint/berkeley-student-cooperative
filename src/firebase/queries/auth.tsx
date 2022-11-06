@@ -42,6 +42,7 @@ export const useFirebaseAuth = () => {
 							addUser(email, houseID, name, role, user.uid)
 						*/
 					addUser(email, "EUC", name, "Member", user.uid).then(() => {
+
 						establishUserContext(user.uid);
 					});
 					})
