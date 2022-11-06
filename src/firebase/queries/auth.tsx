@@ -86,10 +86,8 @@ export const useFirebaseAuth = () => {
 			getUser(uid).then((userFromDoc) => {
 				if (userFromDoc != null) {
 					console.log("USER FROM FIREBASE: ", userFromDoc);
-					console.log({USER: "BLAH", uid: uid, userFromDoc: userFromDoc});
 					setAuthUser(userFromDoc);
 					getHouse(userFromDoc.houseID).then((houseFromDoc) => {
-						console.log({houseFromDoc: houseFromDoc});
 						console.log("HOUSE FROM FIREBASE:", houseFromDoc)
 						setHouse(houseFromDoc)
 					})
