@@ -16,6 +16,7 @@ import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsIn
 import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
 import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
+import ViewShiftcard from "../components/MemberComponents/ViewShiftcard/ViewShiftcard";
 
 const Home: NextPage = () => {
 
@@ -97,6 +98,7 @@ const Home: NextPage = () => {
         <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
         <SettingsInfo userID={"1234"}/>
         <AvailabilityInfo userID={"1234"}/>
+        <ViewShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"}/>
       </main>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">

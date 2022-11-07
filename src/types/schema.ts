@@ -33,6 +33,13 @@ export type Shift = {
   category: string;
 }
 
+export type VerifiedShift = {
+  id: string,
+  timeStamp: string,
+  shifterID: string,
+  verifiedID: string,
+}
+
 export type House = {
   houseID: string;
 	categories: string[]
