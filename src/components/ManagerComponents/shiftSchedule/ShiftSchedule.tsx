@@ -4,11 +4,9 @@
   Gives Shift Schedule view of current house.  Each row displays information about a given shift.
   Clicking on shift makes modal appear (AssignShiftCard), that allows Manager to assign user to given task.
   TODO:
-  1. Connect Modal to each row (redesign how shiftRows are generated);
-  2. Send shift Info to each row (just in case??)
-  3. Change how House is retrieved using new Danashi User Context. (Functional for now)
-  4. Have each ASC reach to firebase to retrieve users and be able to filter (later sprint task??, check later)
-  5. styling
+  1. Complete info in each Shift Card View (Future Sprint)
+  2. Change how House is retrieved using new Danashi User Context. (Functional for now, plugging House context is a little buggy)
+  3. styling
 */
 import React, {useEffect, useState} from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
@@ -22,6 +20,8 @@ import Select from "react-select";
 import { firestoreAutoId, objectToMap } from "../../../firebase/helpers";
 import Paper from '@mui/material/Paper';
 import { useUserContext } from "../../../context/UserContext";
+import ShiftCard from "../Shiftcard/Shiftcard";
+import AssignShiftcard from "../AssignShiftcard/AssignShiftcard";
 
 
 
@@ -35,11 +35,27 @@ import { useUserContext } from "../../../context/UserContext";
   6. In schedule, store table entries in based on which day they're from.
 */
 export const ShiftSchedule = () => {
-  const { authUser } = useUserContext();
-
+  const { authUser, house } = useUserContext();
+  
   /* MOST IMPORTANT:  Holds the row components that are loaded onto the table
   Each k: Days, value: List of corresponding components matching a given shift*/
   const [schedule, setSchedule] = useState(new Map<string, JSX.Element[]>());
+
+  /*
+  This block of code handles the settings of the modal. 
+  Table relies on 1 dynamic modal/MUI dialog, AssignShiftCard.
+  Whenever card is opened, shiftID prop is changed for card so correct info pops up
+  Every time open is pressed, new information is passed to make a card.
+  */
+  const [open, setOpen] = useState(false);
+  const handleOpen = (shiftID: string) => {
+    setOpen(true);
+    setCurrentShiftCardID(shiftID);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // For React Select, all options in dropdown (FRONTEND)
   const dayOptions = [
@@ -76,6 +92,7 @@ export const ShiftSchedule = () => {
     (BACKEND -> FRONTEND) */
   const loadScheduleComponents= async () => {
     let houseFB = await getHouse(authUser.houseID);
+    console.log({house: house, authUser: authUser});
     let tempSchedule = new Map<string, JSX.Element[]>();
     //Promise All is important here because we need all Data to be loaded in before setting schedule again.
     //houseFB.Schedule contains the FB schedule.
@@ -108,6 +125,7 @@ export const ShiftSchedule = () => {
       }
       
       let shiftPromises: Promise<Shift | undefined>[] = [];
+      setCurrentShiftCardID(shiftIDs[0]);
       shiftIDs.map((id) => {
         shiftPromises.push(getShift(authUser.houseID, id));
       })
@@ -194,18 +212,24 @@ export const ShiftSchedule = () => {
   const convertDataToComponent = async (dailyData: rowData[], rowComponents: JSX.Element[]) => {
     dailyData.map((data) => (
       rowComponents.push(
-        <TableRow key={data.shiftID}>
+        <TableRow key={data.shiftID} onClick = {() => handleOpen(data.shiftID)}>
           <TableCell component="th" scope="row">{data.name}</TableCell>
           <TableCell align="right">{data.timeWindow}</TableCell>
           <TableCell align="right">{data.status}</TableCell>
         </TableRow>
+        
       )
     ))
-  }
+  };
 
   useEffect(()=> {
     loadScheduleComponents();
-  }, [authUser])
+  }, [authUser]);
+
+  //ID that will be used for current Card modal.
+  const [currentShiftCardID, setCurrentShiftCardID] = useState("")
+
+
 
   if (dailyRows === undefined) {
     return <>Still loading...</>;
@@ -217,20 +241,27 @@ export const ShiftSchedule = () => {
             options={dayOptions}
             onChange={option => handleDayChange(option)}
           />
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Shift Name</TableCell>
-              <TableCell align="right">Time</TableCell>
-              <TableCell align="right">Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {dailyRows}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Shift Name</TableCell>
+                <TableCell align="right">Time</TableCell>
+                <TableCell align="right">Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {dailyRows}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <AssignShiftcard
+          shiftID = {currentShiftCardID}
+          houseID = {authUser.houseID}
+          open = {open}
+          handleOpen = {handleOpen}
+          handleClose = {handleClose}
+         />
       </div>
       
     );
