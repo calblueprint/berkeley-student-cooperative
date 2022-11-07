@@ -1,3 +1,11 @@
 .daySelect {
     color: black;
 }
+
+.tableRow {
+    background-color: white;
+}
+
+.tableRow:hover {
+    background-color: lightgrey;
+}

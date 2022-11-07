@@ -214,7 +214,11 @@ export const ShiftSchedule = () => {
   const convertDataToComponent = async (dailyData: rowData[], rowComponents: JSX.Element[]) => {
     dailyData.map((data) => (
       rowComponents.push(
-        <TableRow key={data.shiftID} onClick = {() => handleOpen(data.shiftID)}>
+        <TableRow
+         key={data.shiftID}
+         onClick = {() => handleOpen(data.shiftID)}
+         className = {styles.tableRow}
+         >
           <TableCell component="th" scope="row">{data.name}</TableCell>
           <TableCell align="right">{data.timeWindow}</TableCell>
           <TableCell align="right">{data.status}</TableCell>
