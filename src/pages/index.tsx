@@ -18,6 +18,7 @@ import {
   updateAddress,
 } from "../firebase/queries/house";
 import { House } from "../types/schema";
+
 const Home: NextPage = () => {
 
 	//getting all possible fields from auth; authUSER is current signed in user, house is the house object
@@ -82,7 +83,6 @@ const Home: NextPage = () => {
         <button onClick={() => register("dummy2@gmail.com", "swagapino23", "birdsRFake22")}>Register</button>
         <button onClick={() => signOutAuth()}>Sign Out</button>
         <ShiftCard/>
-        {/* <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} /> */}
         <SettingsInfo userID={"1234"}/>
         <AvailabilityInfo userID={"1234"}/>
         <ShiftSchedule/>
