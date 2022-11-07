@@ -22,6 +22,7 @@ import Paper from '@mui/material/Paper';
 import { useUserContext } from "../../../context/UserContext";
 import ShiftCard from "../Shiftcard/Shiftcard";
 import AssignShiftcard from "../AssignShiftcard/AssignShiftcard";
+import styles from "./ShiftSchedule.module.css";
 
 
 
@@ -92,7 +93,6 @@ export const ShiftSchedule = () => {
     (BACKEND -> FRONTEND) */
   const loadScheduleComponents= async () => {
     let houseFB = await getHouse(authUser.houseID);
-    console.log({house: house, authUser: authUser});
     let tempSchedule = new Map<string, JSX.Element[]>();
     //Promise All is important here because we need all Data to be loaded in before setting schedule again.
     //houseFB.Schedule contains the FB schedule.
@@ -160,10 +160,12 @@ export const ShiftSchedule = () => {
     numVerified - Number of verified shifts
    */
   const createRowData = (shiftFB: Shift, numVerified: number): rowData => {
-    var status = "Missing";
-    if (shiftFB.numOfPeople > numVerified){
+    var status;
+    if (numVerified == 0 ) {
+      status = "Missing";
+    }else if (shiftFB.numOfPeople > numVerified){
       status = "Incomplete";
-    } else if (shiftFB.numOfPeople <= numVerified){
+    } else {
       status = "Complete";
     }
     //May be helpful in helper file.
@@ -240,6 +242,7 @@ export const ShiftSchedule = () => {
             value={selectedDay}
             options={dayOptions}
             onChange={option => handleDayChange(option)}
+            className = {styles.daySelect}
           />
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
