@@ -1,46 +1,37 @@
 import * as React from "react";
 import { useRouter } from "next/router";
-import { Drawer, List, ListItem, ListItemText } from "@mui/material"
+import { Drawer, List, ListItem, ListItemText, Typography } from "@mui/material"
 import styles from "./MemberNavbar.module.css"
 import Icon from "../../../assets/Icon";
 
 const MemberNavbar: React.FunctionComponent = () => {
 	const router = useRouter();
 
-	return (
-		<Drawer
-			anchor="left"
-			variant="permanent"
-			sx={{
-				display: {
-					width: "110px",
-					flexShrink: "0",
-				},
-				"& .MuiDrawer-paper": {
-          boxSizing: "border-box",
-          width: "169px",
-					marginTop: "15%",
-          backgroundColor: "#FFFFFF",
-          border: "solid",
-          color: "white",
-					borderWidth: "1px",
-					borderColor: "#E2E2E2"
-        },
-			}}
-		>
-			<List className={styles.list}>
+	const userDetails = () => (
+		<ListItem className={styles.item + " " + styles.userDetails}>
+			<Icon type="navDashboard" className={styles.icon} />
+			<div>
+				<Typography variant = "subtitle1" color={"#FFFFFF"} >
+					Evan Quan
+				</Typography>
+				<Typography variant = "subtitle1" color={"#FFFFFF"}>
+					Shift Member
+				</Typography>
+			</div>
+		</ListItem>
+	)
+
+	const pages = () => (
+		<List className={styles.pages}>
 				<ListItem
 					button
 					key={"dashboard"}
           onClick={() => {
-            router.push("/dashboard");
+            router.push("/member/dashboard");
           }}
-					className={styles.active}
-          // className={router.pathname == "/dashboard" ? styles.active : styles.item}			
+					className={router.pathname == "/member/dashboard" ? styles.active : styles.item}
 					>
-						<div className={styles.icon}>
-            	<Icon type="navDashboard" />
-						</div>
+            <Icon type="navDashboard" />
 						<ListItemText
 							primaryTypographyProps={{fontSize: '18px'}}
 						  className={styles.itemText}
@@ -52,15 +43,13 @@ const MemberNavbar: React.FunctionComponent = () => {
 					button
 					key={"schedule"}
           onClick={() => {
-            router.push("/schedule");
+            router.push("/member/schedule");
           }}
-          className={router.pathname == "/schedule" ? styles.active : styles.item}			
+					className={router.pathname == "/member/schedule" ? styles.active : styles.item}
 					>
-						<div className={styles.icon}>
-            	<Icon type="navDashboard" />
-						</div>
+            <Icon type="navDashboard" />
 						<ListItemText
-							primaryTypographyProps={{fontSize: '18px'}}						
+							primaryTypographyProps={{fontSize: '18px'}}
 						  className={styles.itemText}
 							primary={"Schedule"}
 						/>
@@ -70,13 +59,11 @@ const MemberNavbar: React.FunctionComponent = () => {
 					button
 					key={"house"}
           onClick={() => {
-            router.push("/house");
+            router.push("/member/house");
           }}
-          className={router.pathname == "/house" ? styles.active : styles.item}			
+					className={router.pathname == "/member/house" ? styles.active : styles.item}
 					>
-						<div className={styles.icon}>
-            	<Icon type="navDashboard" />
-						</div>						
+            <Icon type="navDashboard" />
 						<ListItemText
 							primaryTypographyProps={{fontSize: '18px'}}
 						  className={styles.itemText}
@@ -92,9 +79,7 @@ const MemberNavbar: React.FunctionComponent = () => {
           }}
           className={router.pathname == "/settings" ? styles.active : styles.item}			
 					>
-						<div className={styles.icon}>
-            	<Icon type="navDashboard" />
-						</div>						
+            <Icon type="navDashboard" />
 						<ListItemText
 							primaryTypographyProps={{fontSize: '18px'}}
 						  className={styles.itemText}
@@ -102,7 +87,27 @@ const MemberNavbar: React.FunctionComponent = () => {
 						/>
 				</ListItem>
 			</List>
-		</Drawer>
+	)
+
+	const logout = () => (
+		<List className={styles.logout}>
+			<ListItem className={styles.item}>
+				<Icon type="navDashboard" />
+				<ListItemText
+						primaryTypographyProps={{fontSize: '18px', color: '#FFFFFF', fontWeight: 600}}
+						className={styles.itemText}
+						primary={"Logout"}
+						/>
+			</ListItem>
+		</List>
+	)
+
+	return (
+		<div className={styles.container}>
+			{userDetails()}
+			{pages()}
+			{logout()}			
+		</div>
 	)
 }
 
