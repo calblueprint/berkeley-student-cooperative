@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import { Drawer, List, ListItem, ListItemText } from "@mui/material"
-import styles from "./Navbar.module.css"
+import styles from "./MemberNavbar.module.css"
 import Icon from "../../../assets/Icon";
 
 const MemberNavbar: React.FunctionComponent = () => {
