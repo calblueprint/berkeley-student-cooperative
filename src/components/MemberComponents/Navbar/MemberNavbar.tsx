@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { Drawer, List, ListItem, ListItemText } from "@mui/material";
 import styles from "./MemberNavbar.module.css";
 import Icon from "../../../assets/Icon";
+import Link from "next/link";
 
 const MemberNavbar: React.FunctionComponent = () => {
   const router = useRouter();
@@ -29,52 +30,59 @@ const MemberNavbar: React.FunctionComponent = () => {
       }}
     >
       <List className={styles.list}>
-        <ListItem
-          button
-          key={"dashboard"}
-          onClick={() => {
-            router.push("/dashboard");
-          }}
-          className={styles.active}
-          // className={router.pathname == "/dashboard" ? styles.active : styles.item}
-        >
-          <div className={styles.icon}>
-            <Icon type="navDashboard" />
-          </div>
-          <ListItemText
-            primaryTypographyProps={{ fontSize: "18px" }}
-            className={styles.itemText}
-            primary={"Dashboard"}
-          />
-        </ListItem>
-
-        <ListItem
-          button
-          key={"schedule"}
-          onClick={() => {
-            router.push("/schedule");
-          }}
-          className={
-            router.pathname == "/schedule" ? styles.active : styles.item
-          }
-        >
-          <div className={styles.icon}>
-            <Icon type="navSchedule" />
-          </div>
-          <ListItemText
-            primaryTypographyProps={{ fontSize: "18px" }}
-            className={styles.itemText}
-            primary={"Schedule"}
-          />
-        </ListItem>
+        <Link href="/member">
+          <ListItem
+            button
+            key={"dashboard"}
+            // onClick={() => {
+            //   router.push("/");
+            // }}
+            // className={styles.active}
+            className={router.pathname == "/member" ? styles.active : styles.item}
+          >
+            <div className={styles.icon}>
+              <Icon type="navDashboard" />
+            </div>
+            <ListItemText
+              primaryTypographyProps={{ fontSize: "18px" }}
+              className={styles.itemText}
+              primary={"Dashboard"}
+            />
+          </ListItem>
+        </Link>
+        <Link href="/member/schedule">
+          <ListItem
+            button
+            key={"schedule"}
+            // onClick={() => {
+            //   router.push("/schedule");
+            // }}
+            className={
+              router.pathname == "/member/schedule"
+                ? styles.active
+                : styles.item
+            }
+          >
+            <div className={styles.icon}>
+              <Icon type="navSchedule" />
+            </div>
+            <ListItemText
+              primaryTypographyProps={{ fontSize: "18px" }}
+              className={styles.itemText}
+              primary={"Schedule"}
+            />
+          </ListItem>
+        </Link>
 
         <ListItem
           button
           key={"house"}
           onClick={() => {
-            router.push("/house");
+            router.push("/member/house");
           }}
-          className={router.pathname == "/house" ? styles.active : styles.item}
+          className={
+            router.pathname == "/member/house" ? styles.active : styles.item
+          }
         >
           <div className={styles.icon}>
             <Icon type="navHouse" />
@@ -90,10 +98,10 @@ const MemberNavbar: React.FunctionComponent = () => {
           button
           key={"settings"}
           onClick={() => {
-            router.push("/settings");
+            router.push("/member/settings");
           }}
           className={
-            router.pathname == "/settings" ? styles.active : styles.item
+            router.pathname == "/member/settings" ? styles.active : styles.item
           }
         >
           <div className={styles.icon}>
