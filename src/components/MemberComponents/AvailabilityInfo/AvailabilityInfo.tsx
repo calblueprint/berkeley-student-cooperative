@@ -36,11 +36,10 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
     let parsedAvailabilities = "";
 
     if (availabilities) {
-      console.log(availabilities);
       for (let i = 0; i < availabilities.length; i += 2) {
         console.log(availabilities[i]);
         parsedAvailabilities +=
-          parseHour(availabilities[i]) +
+          parseHour(availabilities[1]) +
           ":" +
           parseMinute(availabilities[i]) +
           parseAM(availabilities[i]) +
