@@ -169,6 +169,7 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
               </Typography>
               <TextField
                 sx = {{ minWidth: 560}}
+                inputProps ={{ maxLength: 5}}
                 id="outlined-password-input"
                 label="Enter your pin code"
                 type="password"
