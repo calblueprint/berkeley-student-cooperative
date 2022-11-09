@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Layout.module.css";
-import MemberNavbar from "../MemberComponents/Navbar/MemberNavbar";
+import MemberNavbar from "../MemberComponents/MemberNavbar/MemberNavbar";
 import Head from "next/head";
 
 interface Props {

@@ -3,6 +3,7 @@ import { User } from "../../../../types/schema";
 import { Typography, Card, TextField } from '@mui/material';
 import styles from "./MemberScheduleHeader.module.css";
 import Icon from "../../../../assets/Icon";
+import { MemberShiftFilters } from "../MemberShiftFilters/MemberShiftFilters";
 
 
 type MemberScheduleHeaderProps = {
@@ -27,7 +28,12 @@ export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderP
 
 	return (
 		<div className={styles.container}>
-			<Typography variant="h2"> Schedule </Typography>
-		</div>
+			<div className={styles.top}>
+				<Typography variant="h2"> Schedule </Typography>
+				<MemberShiftFilters/>
+			</div>
+			<div className={styles.bottom}></div>
+				Filters
+			</div>
 	)
 }

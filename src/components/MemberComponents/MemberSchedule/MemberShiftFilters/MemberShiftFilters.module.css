@@ -1,3 +1,10 @@
+.container {
+	position: inherit;
+	background-color: blueviolet;
+	width: 44.2%;
+	height: 5px;
+}
+		
 .cards {
 	display: flex;
 	justify-content: space-between;

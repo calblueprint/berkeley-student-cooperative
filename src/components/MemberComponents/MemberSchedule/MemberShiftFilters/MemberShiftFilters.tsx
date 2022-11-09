@@ -35,7 +35,7 @@ export const MemberShiftFilters: React.FunctionComponent<MemberShiftFiltersProps
 	// }
 
 	return (
-		<div>
+		<div className={styles.container}>
 			{/* {verifyCards()}; */}
 		</div>
 	)
