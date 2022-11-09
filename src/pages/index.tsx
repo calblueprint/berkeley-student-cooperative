@@ -94,6 +94,7 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
+        <button onClick={() => signIn("dummy2@gmail.com", "birdsRFake22")}>SIGN IN</button>
         <ShiftCard />
         <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
         <SettingsInfo userID={"1234"}/>

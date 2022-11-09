@@ -1,6 +1,6 @@
 import {firestore} from "../clientApp";
-import {Shift} from "../../types/schema";
-import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
+import {Shift, VerifiedShift} from "../../types/schema";
+import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc, getDocs } from "firebase/firestore";
 
 export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
     await addDoc(collection(firestore, "houses", houseID, "shifts"), {
@@ -82,5 +82,28 @@ const parseShift = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         category: data.category
     }
     return shift as Shift;
+}
+
+export const getVerifiedShifts = async (houseID: string, shiftID: string): Promise<Map<string, VerifiedShift>> => {
+    const colRef = collection(firestore, "houses", houseID, "shifts", shiftID, "verifiedShifts");
+    const verifiedShiftMap = new Map<string, VerifiedShift>();
+    const colSnap = await getDocs(colRef);
+    colSnap.forEach(doc => {
+        let verifiedShift = parseVerifiedShift(doc);
+        verifiedShiftMap.set(verifiedShift.shifterID, verifiedShift);
+    })
+    return verifiedShiftMap;
+}
+
+const parseVerifiedShift = (docSnap: QueryDocumentSnapshot<DocumentData>): VerifiedShift => {
+    const autoID = docSnap.id.toString();
+    const data = docSnap.data();
+    const verifiedShift: VerifiedShift = {
+        autoID: autoID,
+        timeStamp: data.timeStamp,
+        shifterID: data.shifterID,
+        verifierID: data.verifierID
+    }
+    return verifiedShift;
 }
 

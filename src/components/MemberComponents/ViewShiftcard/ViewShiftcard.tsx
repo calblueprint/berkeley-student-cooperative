@@ -1,9 +1,11 @@
 import { Button, Dialog, DialogContent, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import Icon from "../../../assets/Icon";
-import { getShift } from "../../../firebase/queries/shift";
+import { useUserContext } from "../../../context/UserContext";
+import { parseTime } from "../../../firebase/helpers";
+import { getShift, getVerifiedShifts } from "../../../firebase/queries/shift";
 import { getUser } from "../../../firebase/queries/user";
-import { Shift, User } from "../../../types/schema";
+import { Shift, User, VerifiedShift } from "../../../types/schema";
 import styles from "./ViewShiftcard.module.css";
 
 type ViewShiftcardProps = {
@@ -11,21 +13,38 @@ type ViewShiftcardProps = {
   houseID: string;
 };
 
+/* 
+TODO:
+ - Plug in userContext [x]
+ - Query to get VerifiedShifts [x]
+ - Create a check with verified shifts & status [x]
+ - check current user vs assigned members [x]
+ - revamp parse time for AssignShiftCard, shiftSchedule, and ViewShiftcard [x]
+ - apply changes to AssignShiftCard []
+ - apply changes to shiftSchedule (check that it's pulled) [ ]
+ - styling []
+*/
+
 const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   shiftID,
   houseID,
 }: ViewShiftcardProps) => {
+
+  const { authUser, house } = useUserContext();
   const [open, setOpen] = useState(false);
   const [shift, setShift] = useState<Shift | null>();
   const [memberRows, setMemberRows] = useState<JSX.Element[]>();
-  // const [verifiedShifts, setVerifiedShifts] = useState<>
+  const [verifiedShifts, setVerifiedShifts] = useState(new Map<string, VerifiedShift>)
 
   useEffect(() => {
+    const today = new Date();
     const getShiftFB = async () => {
+      console.log({authUser: authUser, house: house});
       const currShift = await getShift(houseID, shiftID);
       if (currShift != null) {
         setShift(currShift);
-        let verShifts = await 
+        // let verShifts = await getVerifiedShifts(houseID, shiftID);
+        // setVerifiedShifts(verShifts);
         loadMemberRows(currShift.usersAssigned) //Use currShift, instead of shift because of useState delay.
       }
     };
@@ -35,9 +54,12 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   const loadMemberRows = async (usersAssigned: string[]) => {
     let userObjects = await getAssignedUsers(usersAssigned);
     let tempMemRows = new Array<JSX.Element>();
+    let verShifts = await getVerifiedShifts(houseID, shiftID);
+    setVerifiedShifts(verShifts);
     userObjects.map((user) => {
       if (user != null) {
-        tempMemRows.push(generateMemRow(user));
+        console.log({user: user});
+        tempMemRows.push(generateMemRow(user, verShifts));
       }
     })
     setMemberRows(tempMemRows);
@@ -52,11 +74,17 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     return userObjects;
   }
 
-  const generateMemRow = (user: User) => {
+  const generateMemRow = (user: User, verShifts: Map<string, VerifiedShift>) => {
     //calculate status
     let status = "Incomplete";
     //calculate time
     let time = " ";
+    console.log({verShifts: verShifts});
+    let verifiedShift = verShifts.get(user.userID);
+    if (verifiedShift != undefined) {
+      status = "Complete";
+      time = parseTime(Number(verifiedShift.timeStamp));
+    }
     return ( 
       <TableRow
          key={user.userID}
@@ -66,29 +94,8 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
           <TableCell align="right">{time}</TableCell>
           <TableCell align="right">{status}</TableCell>
       </TableRow>
-
     )
-
   }
-
-  const parseHour = (timeWindow: number) => {
-    if (timeWindow == 1200 || timeWindow == 0) {
-      return 12;
-    } else if (timeWindow >= 1000) {
-      return Math.floor(timeWindow / 100) % 12;
-    } else return Math.floor(timeWindow / 10) % 12;
-  };
-
-  const parseMinute = (timeWindow: number) => {
-    if (timeWindow % 100 == 0) {
-      return "00";
-    }
-    return timeWindow % 100;
-  };
-
-  const parseAM = (timeWindow: number) => {
-    return timeWindow >= 1200 ? "PM" : "AM";
-  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -129,15 +136,9 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
                 {shift.possibleDays.join(", ")}
               </Typography>
               <Typography className={styles.infoForShift} variant="body1">
-                {parseHour(shift.timeWindow[0])}
-                {":"}
-                {parseMinute(shift.timeWindow[0])}
-                {parseAM(shift.timeWindow[0])}
+                {parseTime(shift.timeWindow[0])}
                 {" - "}
-                {parseHour(shift.timeWindow[1])}
-                {":"}
-                {parseMinute(shift.timeWindow[1])}
-                {parseAM(shift.timeWindow[1])}
+                {parseTime(shift.timeWindow[1])}
               </Typography>
               <Typography className={styles.infoForShift} variant="body1">
                 {shift.verificationBuffer} hour buffer

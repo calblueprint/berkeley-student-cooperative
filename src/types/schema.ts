@@ -34,10 +34,10 @@ export type Shift = {
 }
 
 export type VerifiedShift = {
-  id: string,
+  autoID: string,
   timeStamp: string,
   shifterID: string,
-  verifiedID: string,
+  verifierID: string,
 }
 
 export type House = {
