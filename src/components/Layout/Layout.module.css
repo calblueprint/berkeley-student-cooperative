@@ -1,11 +1,14 @@
 .container {
-	display: flex;
-	width: 100%;
-	background-color: #F5F5F5;
-	flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    background-color: #F5F5F5;
+    height: 100vh;
+    min-height: fit-content;
 }
 
 .page {
-	padding-left: 169px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+	margin: 3%;
 }
-

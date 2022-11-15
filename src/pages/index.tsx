@@ -1,23 +1,31 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
+import Layout from "../components/Layout/Layout";
+import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
+import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Workshift App</title>
-        <meta name="description" content="Next.js firebase Workshift app" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      {/* <SettingsInfo userID={"1234"} />
-      <AvailabilityInfo userID={"1234"} /> */}
-      <footer className={styles.footer}>
-        <a href="#" rel="noopener noreferrer">
-          Workshift App
-        </a>
-      </footer>
-    </div>
+        <Layout>
+            <div className={styles.container}>
+                <Head>
+                    <title>Workshift App</title>
+                    <meta name="description" content="Next.js firebase Workshift app" />
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
+                <main className={styles.main}>
+                    <h1 className={styles.title}>Workshift App</h1>
+                    <ShiftCard />
+                    <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
+                </main>
+                <footer className={styles.footer}>
+                    <a href="#" rel="noopener noreferrer">
+                        Workshift App
+                    </a>
+                </footer>
+            </div>
+        </Layout>
   );
 };
 

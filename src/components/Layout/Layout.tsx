@@ -25,7 +25,6 @@ const Layout = ({ children, title }: any) => {
     }
   };
 
-  console.log("hello");
   //authUser and loading to auto direct to login?
 
   return role == "member" ? (
