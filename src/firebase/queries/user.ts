@@ -1,7 +1,6 @@
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { mapToObject, objectToMap } from "../helpers";
 
 export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
     // PENDING COMPLETION OF HOUSE QUERIES
@@ -43,10 +42,6 @@ const generatePinNumber = (numDigitsInPin: number) => {
 
 
 export const updateUser = async (userID: string, newData: object) => {
-    const currUser = await getUser(userID);
-    if (currUser == null) {
-        return;
-    }
     const userRef = doc(firestore, 'users', userID);
     await updateDoc(userRef, newData);
 }
@@ -57,8 +52,6 @@ export const getUser = async (userID: string) => {
     if (docSnap.exists()) {
         return await parseUser(docSnap);
     }
-    //replace w modal
-    console.log("Invalid User ID");
     return null;
 }
 
@@ -80,14 +73,11 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         availabilities: objectToMap(data.availabilities),
         preferences: data.preferences
     }
+    console.log({user: user});
     return user as User;
 }
 
 export const deleteUser = async (userID: string) => {
-    const currUser = await getUser(userID);
-    if (currUser == null) {
-        return;
-    }
     // delete user from all instances of shifts
     await deleteDoc(doc(firestore, "users", userID));
 }
@@ -103,3 +93,39 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
     }
     await updateUser(userID, newData);
 }
+
+const mapToObject = (map: Map<any, any>): Object => {
+	return Object.fromEntries(
+		Array.from(map.entries(), ([k, v]) =>
+        [k, v]
+      )
+    );
+};
+
+const objectToMap = (obj: Object): Map<any, any> => {
+    return new Map(
+        Array.from(Object.entries(obj), ([k, v]) =>
+        [k, v]
+        )
+    );
+};
+  
+const mapToJSON = (map: Map<any, any>): string => {
+    return JSON.stringify(mapToObject(map));
+}
+
+export const defaultUser: User = {
+	userID: "",
+	role: "",
+	name: "",
+	email: "",
+	houseID: "",
+	totalHoursAssigned: 0,
+	shiftsAssigned: new Array<string>(),
+	hoursRemainingWeek: 0,
+	hoursRemainingSemester: 0,
+	pinNumber: 0,
+	totalFines: 0,
+	availabilities: new Map<string, number[]>(),
+	preferences: new Array<string>(),
+};

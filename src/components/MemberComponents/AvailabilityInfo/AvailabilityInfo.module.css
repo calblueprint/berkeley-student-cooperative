@@ -1,0 +1,28 @@
+.card {
+    margin: 10px 10px 0px 10px;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    vertical-align: bottom;
+    align-items:baseline
+}
+
+.updated {
+    color: #898989;
+}
+
+.line {
+    height: 1px;
+    border: none;
+    background-color: #DFDFDF;
+}
+
+.body {
+    color: #797979;
+}
+
+.bodyText {
+    line-height: 30px;
+}
