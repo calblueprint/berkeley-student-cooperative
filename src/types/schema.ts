@@ -13,7 +13,7 @@ export type User = {
   pinNumber: number;
   totalFines: number;
   availabilities: Map<string, number[]>;
-  preferences: string[];
+  preferences: Map<string, number[]>;
 };
 
 export type Shift = {

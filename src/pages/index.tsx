@@ -16,73 +16,65 @@ import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsIn
 import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
 import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
-
+import { mapToObject } from "../firebase/helpers";
+import { addShift } from "../firebase/queries/shift";
 const Home: NextPage = () => {
 
-	//getting all possible fields from auth; authUSER is current signed in user, house is the house object
-	const { authUser, house, register, signIn, signOutAuth, establishUserContext } = useUserContext();
-
-  const createUser = async () => {
-    addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());
+  let houseID = "EUC";
+  let cleanDownstairsBasement1 = "HEK5HlHqssGORikn4v0N";
+  let cookLunchMonday = "zGIjtcRhVF1tmQuVzEEY";
+  let cleanDownstairsBasement2 = "Z0x4x9P4rRVmDpqVQAci";
+  let cookLunchWednesday = "T4BT4aX2omS9zTHyGljj";
+  let headCookDinner = "Lv56ofll5jG23hBVGMxm";
+  let mopKitchenFloor = "DrqlMb9jA7Uq5wW7nNNK";
+  let cleanRooftop = "ufOtIX6qEtZ7FjrKosOb";
+  let vacuumKitchen = "pevk4J49ZidrWghR8pwG";
+  let quickShift = "lz6VwCFzi6rLxnI9CSdo";
+  let miscHalfHourShift = "7eaxlxK9sKtfVZ6Ddn6U";
+  let allShifts = [cleanDownstairsBasement1, cleanDownstairsBasement2, cookLunchMonday, cookLunchWednesday, headCookDinner, mopKitchenFloor, cleanRooftop, vacuumKitchen, quickShift, miscHalfHourShift];
+	function randomInteger(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  const firestoreAutoId = (): string => {
-    const CHARS =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let autoId = "";
-    for (let i = 0; i < 20; i += 1) {
-      autoId += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+  const create10Users = async () => {
+    for (let i = 1; i < 11; i++) {
+      let email = i + "@gmail.com";
+      let id = i + "";
+      await addUser(email, houseID, id, "member", id);
     }
-    return autoId;
-  };
-
-  const retrieveUser = async () => {
-    let x = await getUser("mc8XQK7aiZW1dg8IC8v5");
-    if (x != null) {
-      console.log(x.availabilities);
-      console.log(x.shiftsAssigned);
+    for (let i = 1; i < 11; i++) {
+      let id = i + "";
+      let availabilities = new Map<string, number[]>();
+      let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      for (let j = 0; j < days.length; j++) {
+        availabilities.set(days[j], [0, 300, 300, 600, 900, 1200, 1200, 1500]);
+      }
+      let newData = {
+        availabilities: mapToObject(availabilities)
+      }
+      await updateUser(id, newData);
     }
   }
 
-  const removeUser = async () => {
-    deleteUser("SIH5XjDtdtNhiGb91Sq976Pl0Zc2");//naming conflicts of subfct is same name as overall fct
-  }
-  
-  const setUser = async () => {
-    let availabilities = new Map<string, Array<number>>();
-    let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    for (let i = 0; i < days.length; i++) {
-      let newList = new Array<number>();
-      newList.push(0);
-      newList.push(2330);
-      availabilities.set(days[i], newList);
+  const preference10Users = async () => {
+    for (let userID = 1; userID < 11; userID++) {
+      let preferences = new Map<string, number>();
+      for (let shiftIndex = 0; shiftIndex < allShifts.length; shiftIndex++) {
+        let shift = allShifts[shiftIndex];
+        let rating = randomInteger(0, 2);
+        preferences.set(shift, rating);
+      }
+      let newData = {
+        preferences: mapToObject(preferences)
+      }
+      await updateUser(userID + "", newData);
     }
-    let newData = {
-      availabilities: mapToObject(availabilities)
-    }
-    updateUser("mc8XQK7aiZW1dg8IC8v5", newData);
   }
 
-  const addShiftToUser = async () => {
-    await assignShiftToUser("mc8XQK7aiZW1dg8IC8v5", "1");
-    await retrieveUser();
+  const createShift = async () => {
+    await addShift(houseID, "Misc Half Hour Shift", "idk description lmao", 5, ["Tuesday"], [900, 930], "", 0.5, true, 48, "Misc");
+    await addShift(houseID, "QuickShift", "idk description lmao", 10, ["Sunday"], [0, 200], "", 2, true, 4, "Misc");
   }
-
-  const mapToObject = (map: Map<any, any>): Object => {
-    return Object.fromEntries(
-      Array.from(map.entries(), ([k, v]) =>
-        v instanceof Map ? [k, mapToObject(v)] : [k, v]
-      )
-    );
-  };
-
-  const objectToMap = (obj: Object): Map<any, any> => {
-    return new Map(
-        Array.from(Object.entries(obj), ([k, v]) =>
-        v instanceof Object ? [k, objectToMap(v)] : [k, v]
-        )
-    );
-  };
 
   return (
     <div className={styles.container}>
@@ -91,6 +83,8 @@ const Home: NextPage = () => {
         <meta name="description" content="Next.js firebase Workshift app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <button onClick = {create10Users}>Create 10 users</button>
+      <button onClick = {preference10Users}>Create shift</button>
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
         <ShiftCard />

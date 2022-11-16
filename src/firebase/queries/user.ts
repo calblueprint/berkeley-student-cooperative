@@ -20,7 +20,7 @@ export const addUser = async (email: string, houseID: string, name: string, role
         houseID: houseID,
         name: name,
         pinNumber: pinNumber,
-        preferences: new Array<string>(),
+        preferences: mapToObject(new Map<string, number[]>()),
         role: role,
         shiftsAssigned: new Array<string>(),
         totalFines: 0,
@@ -71,7 +71,7 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         pinNumber: data.pinNumber,
         totalFines: data.totalFines,
         availabilities: objectToMap(data.availabilities),
-        preferences: data.preferences
+        preferences: objectToMap(data.preferences)
     }
     return user as User;
 }
@@ -126,5 +126,5 @@ export const defaultUser: User = {
 	pinNumber: 0,
 	totalFines: 0,
 	availabilities: new Map<string, number[]>(),
-	preferences: new Array<string>(),
+	preferences: new Map<string, number[]>()
 };
