@@ -1,8 +1,6 @@
 import React from "react";
 import { SvgIcon } from "@mui/material";
-
-export type IconType = "close" | "search";
-
+export type IconType = "close" | "search" | "navDashboard";
 const IconSvgs: Record<IconType, React.ReactElement> = {
   close: (
     <svg
@@ -32,13 +30,25 @@ const IconSvgs: Record<IconType, React.ReactElement> = {
       />
     </svg>
   ),
+	navDashboard: (
+		<svg 
+		  width="23" 
+			height="24" 
+			viewBox="0 0 23 24" 
+			fill="none" 
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path 
+			  d="M0.186523 13.25H10.1865V0.75H0.186523V13.25ZM0.186523 23.25H10.1865V15.75H0.186523V23.25ZM12.6865 23.25H22.6865V10.75H12.6865V23.25ZM12.6865 0.75V8.25H22.6865V0.75H12.6865Z" 
+				fill="#C2C2C2"
+			/>
+    </svg>
+	)
 };
-
 type Props = {
   className?: string;
   type: IconType;
 };
-
 const Icon: React.FC<Props> = ({ className, type }: Props) => {
   return React.cloneElement(IconSvgs[type], {
     className,

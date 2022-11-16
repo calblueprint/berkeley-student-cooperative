@@ -135,14 +135,16 @@ export const getCategories = async (houseID: string) => {
 //parses house document passed in
 const parseHouse = async (doc : any) => {
     const data = doc.data();
-    const houseID = doc.id;
-    const members = doc.members;
+		const houseID = doc.id.toString();
+    const members = data.members;
     const address = data.address;
     const categories = data.categories;
-    const schedule = data.schedule;
-    const house = {houseID, members, address, schedule, categories};
+		const schedule = data.schedule;
+		const userPINs = data.userPINs;
+    const house = {houseID, categories, members, address, schedule, userPINs};
     return house as House;
 }
+
 
 
 //confirm how members array is going to work before trying to implement
@@ -153,7 +155,7 @@ const parseHouse = async (doc : any) => {
 
 
 // export const addMember = async (houseID: string, newMember: string): Promise<void> => {
-//     const docRef = doc(firestore, "houses", houseID);
+	//     const docRef = doc(firestore, "houses", houseID);
 //     // const promises: Promise<House>[] = []; 
 //     // const colSnap = await getDoc(docRef);
 //     // promises.push(parseHouse(colSnap));
@@ -208,28 +210,12 @@ const parseHouse = async (doc : any) => {
     //     var fireAHouse = await getHouse(houseID);
     //     setCurrHouse(fireAHouse);
     //   }
-
-//     //gets all shifts for a particular hosue
-// export const getAllShifts = async (houseID: string): Promise<Shift[]> => {
-//     const colRef = collection(firestore, "houses", houseID, "shifts");
-//     const promises: Promise<Shift>[] = []; 
-//     const docSnap = await getDocs(colRef);
-//     docSnap.forEach((shift) => {
-//         promises.push(parseShift(shift));
-//     })
-
-//     const items = await Promise.all(promises);
-//     return items;
-// }
-// export const getShiftForCategory = async (houseID: string, category: string): Promise<Shift[]> => {
-//     const colRef = collection(firestore, "houses", houseID, "shifts");
-//     const promises: Promise<Shift>[] = []; 
-//     const docSnap = await getDocs(colRef);
-//     docSnap.forEach((shift) => {
-//         promises.push(parseShift(shift));
-//     });
-    
-
-//     const items = await Promise.all(promises);
-//     return items;
-// }
+		
+export const defaultHouse: House = {
+		houseID: "",
+		categories: new Array<string>(),
+		members: new Array<string>(),
+		address: "",
+		schedule: new Map<string, string[]>(),
+		userPINs: new Map<string, string>()
+};
