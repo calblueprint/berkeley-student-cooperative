@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { User } from "../../../types/schema";
-import { updateUser } from "../../../firebase/queries/user";
+import { getUser, updateUser } from "../../../firebase/queries/user";
 import { getAuth, updatePassword } from "firebase/auth";
 
 type MemberInformationCardProps = {
@@ -59,7 +59,11 @@ const MemberInformationCard: React.FC<MemberInformationCardProps> = ({
       name: name,
       email: email,
     };
+    console.log("BEFORE");
+    console.log(getUser(user.userID));
     updateUser(user.userID, newData);
+    console.log("AFTER");
+    console.log(getUser(user.userID));
     closeModal();
   };
 
