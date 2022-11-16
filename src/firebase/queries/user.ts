@@ -73,6 +73,7 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         availabilities: objectToMap(data.availabilities),
         preferences: data.preferences
     }
+    console.log({user: user});
     return user as User;
 }
 
@@ -94,9 +95,9 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
 }
 
 const mapToObject = (map: Map<any, any>): Object => {
-    return Object.fromEntries(
-      Array.from(map.entries(), ([k, v]) =>
-        v instanceof Map ? [k, mapToObject(v)] : [k, v]
+	return Object.fromEntries(
+		Array.from(map.entries(), ([k, v]) =>
+        [k, v]
       )
     );
 };
@@ -104,7 +105,7 @@ const mapToObject = (map: Map<any, any>): Object => {
 const objectToMap = (obj: Object): Map<any, any> => {
     return new Map(
         Array.from(Object.entries(obj), ([k, v]) =>
-        v instanceof Object ? [k, objectToMap(v)] : [k, v]
+        [k, v]
         )
     );
 };
@@ -112,3 +113,19 @@ const objectToMap = (obj: Object): Map<any, any> => {
 const mapToJSON = (map: Map<any, any>): string => {
     return JSON.stringify(mapToObject(map));
 }
+
+export const defaultUser: User = {
+	userID: "",
+	role: "",
+	name: "",
+	email: "",
+	houseID: "",
+	totalHoursAssigned: 0,
+	shiftsAssigned: new Array<string>(),
+	hoursRemainingWeek: 0,
+	hoursRemainingSemester: 0,
+	pinNumber: 0,
+	totalFines: 0,
+	availabilities: new Map<string, number[]>(),
+	preferences: new Array<string>(),
+};
