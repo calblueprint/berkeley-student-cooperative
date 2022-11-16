@@ -25,14 +25,13 @@ const ParseCSV = () => {
                 },
                 complete: function() {
                     setUserArr(userHolder);
+                 
                 }
             });
             
         }
     }, [fileHolder])
 
-    console.log("am i done", userArr)
-    console.log(fileHolder)
     const uploadCSV = (file: any) =>{
         if (file?.type == "text/csv"){
             setFileHolder(file);
@@ -67,16 +66,16 @@ const ParseCSV = () => {
                 
                 onChange={(e) => uploadCSV(e.target.files[0])}
             />
-
-            {userArr.length > 0 ?
+          
+            {(userArr.length > 0 && userArr[0].last_name) ?
                 userArr.map((item, index) => {
                     return (
                         <div key={index}>
-                            <h2>{item.name}'s email is {item.email} and they live in {item.house}.</h2>
+                            <h2>{item.first_name} {item.last_name}'s email is {item.email} and they live in {item.house}.</h2>
                         </div>   
                     )
                 })
-             : "No members found"}
+             : (userArr.length > 0 && userArr[0].last_name == undefined ? "please input csv file with fields last_name, first_name, email, house." : "No members found")}
            
             
         </div>
