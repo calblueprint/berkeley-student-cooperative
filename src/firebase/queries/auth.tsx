@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence, browserLocalPersistence} from "firebase/auth";
 import { addUser, getUser } from "./user";
 import React, { createContext, useContext, useState } from "react";
 import { User} from "../../types/schema";
@@ -22,7 +22,7 @@ export const useFirebaseAuth = () => {
 	const auth = getAuth();
 	const [authUser, setAuthUser] = useState(defaultUser);
 	const [house, setHouse] = useState(defaultHouse)
-
+	
 	const register = async (
 			email: string,
 			name: string,

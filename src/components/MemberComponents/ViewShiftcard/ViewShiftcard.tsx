@@ -14,12 +14,15 @@ type ViewShiftcardProps = {
 };
 
 /* 
+IMPORTANT:  When this component is integrated to table, must move open, setOpen, handleOpen, and handleClose to the table rather than the card itself.
 TODO:
  - Plug in userContext [x]
  - Query to get VerifiedShifts [x]
  - Create a check with verified shifts & status [x]
  - check current user vs assigned members [x]
  - revamp parse time for AssignShiftCard, shiftSchedule, and ViewShiftcard [x]
+ - need persistence to work in UserContext or userAuth []
+ - Connect verify to Firebase []
  - apply changes to AssignShiftCard []
  - apply changes to shiftSchedule (check that it's pulled) [ ]
  - styling []
@@ -34,7 +37,10 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   const [open, setOpen] = useState(false);
   const [shift, setShift] = useState<Shift | null>();
   const [memberRows, setMemberRows] = useState<JSX.Element[]>();
-  const [verifiedShifts, setVerifiedShifts] = useState(new Map<string, VerifiedShift>)
+  const [verifiedShifts, setVerifiedShifts] = useState(new Map<string, VerifiedShift>);
+  const [user, setUser] = useState();
+  const [verifierPin, setVerifierPin] = useState("");
+  const pinUserMap;
 
   useEffect(() => {
     const today = new Date();
@@ -43,8 +49,6 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
       const currShift = await getShift(houseID, shiftID);
       if (currShift != null) {
         setShift(currShift);
-        // let verShifts = await getVerifiedShifts(houseID, shiftID);
-        // setVerifiedShifts(verShifts);
         loadMemberRows(currShift.usersAssigned) //Use currShift, instead of shift because of useState delay.
       }
     };
@@ -58,7 +62,6 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     setVerifiedShifts(verShifts);
     userObjects.map((user) => {
       if (user != null) {
-        console.log({user: user});
         tempMemRows.push(generateMemRow(user, verShifts));
       }
     })
@@ -75,12 +78,12 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   }
 
   const generateMemRow = (user: User, verShifts: Map<string, VerifiedShift>) => {
-    //calculate status
     let status = "Incomplete";
-    //calculate time
-    let time = " ";
-    console.log({verShifts: verShifts});
+    let time = "";
     let verifiedShift = verShifts.get(user.userID);
+    console.log({name: user.name, authUser: authUser.name});
+    let name = user.name != authUser.name ? user.name : "me"
+    console.log({name: user.name, authUser: authUser.name, user: user});
     if (verifiedShift != undefined) {
       status = "Complete";
       time = parseTime(Number(verifiedShift.timeStamp));
@@ -90,7 +93,7 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
          key={user.userID}
          className = {styles.tableRow}
          >
-          <TableCell component="th" scope="row">{user.name}</TableCell>
+          <TableCell component="th" scope="row">{name}</TableCell>
           <TableCell align="right">{time}</TableCell>
           <TableCell align="right">{status}</TableCell>
       </TableRow>
@@ -104,6 +107,10 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleVerify = () => {
+
+  }
 
   return shift ? (
     <div>
@@ -174,12 +181,19 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
                 label="Enter your pin code"
                 type="password"
                 autoComplete="current-password"
+                onChange={(ev) => {
+                  setVerifierPin(ev.target.value);
+                }}
               />
             </div>
               <div className = {styles.verifyButton}>
                 <Button
                  variant="contained"
-                 size="medium">
+                 size="medium"
+                 onClick={() => 
+                  handleVerify()
+                }
+                 >
                   Verify shift
                 </Button>
               </div>
