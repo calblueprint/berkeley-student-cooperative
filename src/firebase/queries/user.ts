@@ -1,8 +1,8 @@
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { objectToMap, mapToObject } from "../helpers";
-export const addUser = async (email: string, houseID: string, firstName: string, lastName: string, role: string, userID: string) => {
+
+export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
     // PENDING COMPLETION OF HOUSE QUERIES
     // const houseDocRef = doc(firestore, "houses", houseID);
     // const houseDocSnap = await getDoc(houseDocRef);
@@ -18,8 +18,7 @@ export const addUser = async (email: string, houseID: string, firstName: string,
         hoursRemainingSemester: 5,
         hoursRemainingWeek: 5,
         houseID: houseID,
-        firstName: firstName,
-        lastName: lastName,
+        name: name,
         pinNumber: pinNumber,
         preferences: new Array<string>(),
         role: role,
@@ -62,8 +61,7 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
     const user = {
         userID: userID,
         role: data.role,
-        firstName: data.firstName,
-        lastName: data.lastName,
+        name: data.name,
         email: data.email,
         houseID: data.houseID,
         totalHoursAssigned: data.totalHoursAssigned,
@@ -96,11 +94,30 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
     await updateUser(userID, newData);
 }
 
+const mapToObject = (map: Map<any, any>): Object => {
+	return Object.fromEntries(
+		Array.from(map.entries(), ([k, v]) =>
+        [k, v]
+      )
+    );
+};
+
+const objectToMap = (obj: Object): Map<any, any> => {
+    return new Map(
+        Array.from(Object.entries(obj), ([k, v]) =>
+        [k, v]
+        )
+    );
+};
+  
+const mapToJSON = (map: Map<any, any>): string => {
+    return JSON.stringify(mapToObject(map));
+}
+
 export const defaultUser: User = {
 	userID: "",
 	role: "",
-	firstName: "",
-    lastName: "",
+	name: "",
 	email: "",
 	houseID: "",
 	totalHoursAssigned: 0,

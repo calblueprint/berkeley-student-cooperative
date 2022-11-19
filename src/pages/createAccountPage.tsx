@@ -1,22 +1,21 @@
 import { Button, InputLabel, TextField } from "@mui/material";
 import { useState } from "react";
 import { useUserContext } from "../context/UserContext";
-import { useRouter } from "next/router";
-import { emailRegex } from "../firebase/helpers";
-import { getAllHouses } from "../firebase/queries/house";
-import { getRowOfCSV } from "../firebase/queries/csvManagement";
-import { reauthenticateWithCredential } from "firebase/auth";
 
 const CreateAccountPage = () => {
-    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [selectHouse, setHouse] = useState("");
     const { authUser, house, register, signIn, signOutAuth, establishUserContext } = useUserContext();
     
     // Updates name as the name field is edited
     const handleEmailChange = (event: any) => {
         setEmail(event.target.value);
+    }
+
+    const handleHouseChange = (event: any) => {
+        setHouse(event.target.value);
     }
 
     // Updates email as the email field is edited
@@ -28,7 +27,8 @@ const CreateAccountPage = () => {
         setConfirmPassword(event.target.value);
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
+        let emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
         if (!emailRegex.test(email)) {
             console.log("Invalid Email");
             return;
@@ -37,13 +37,7 @@ const CreateAccountPage = () => {
             console.log("Passwords don't match");
             return;
         }
-        let csvInformation = await getRowOfCSV(email);
-        if (csvInformation === null) {
-            console.log("Invalid email");
-            return;
-        }
-        register(email, csvInformation.firstName, csvInformation.lastName, csvInformation.houseName, password, "member");
-        router.push('/member/dashboard');
+        
     }
     
     return (
@@ -53,6 +47,16 @@ const CreateAccountPage = () => {
                 autoFocus
                 value = {email}
                 onChange = {handleEmailChange}
+                margin="dense"
+                id="name"
+                fullWidth
+                variant="outlined"
+            />
+            <InputLabel>House</InputLabel>
+            <TextField
+                autoFocus
+                value = {selectHouse}
+                onChange = {handleHouseChange}
                 margin="dense"
                 id="name"
                 fullWidth
