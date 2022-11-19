@@ -25,8 +25,11 @@ export const useFirebaseAuth = () => {
 
 	const register = async (
 			email: string,
-			name: string,
-			password: string
+			firstName: string,
+			lastName: string,
+			house: string,
+			password: string,
+			role: string,
 	): Promise<void> => {
 			try {
 					//PENDING: Search for email in CSV once this func is available.
@@ -41,7 +44,7 @@ export const useFirebaseAuth = () => {
 							PENDING HouseID found in csv
 							addUser(email, houseID, name, role, user.uid)
 						*/
-					addUser(email, "Euclid", name, "Member", user.uid).then(() => {
+					addUser(email, house, firstName, lastName, role, user.uid).then(() => {
 						establishUserContext(user.uid);
 					});
 					})

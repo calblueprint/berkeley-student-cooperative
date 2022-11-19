@@ -46,7 +46,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
         <hr className={styles.line} />
         <div className={styles.body}>
           <Typography className={styles.bodyText} variant="body1">
-            {user.name}
+            {user.firstName+ " " + user.lastName}
           </Typography>
           <Typography className={styles.bodyText}>{user.email}</Typography>
           <Typography className={styles.bodyText}>{house.address}</Typography>
