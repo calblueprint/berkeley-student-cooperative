@@ -3,7 +3,8 @@ import internal from "stream";
 export type User = {
   userID: string;
   role: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   houseID: string;
   totalHoursAssigned: number;
@@ -41,3 +42,10 @@ export type House = {
   schedule: Map<string, string[]>;
   userPINs: Map<string, string>;
 };
+
+export type RowOfCSV = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  houseName: string;
+}
