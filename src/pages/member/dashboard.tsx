@@ -10,6 +10,7 @@ const Home: NextPage = () => {
         <Head>
           <title>Members Dashboard</title>
         </Head>
+        
         <main className={styles.main}>
           <h1 className={styles.title}>Members Dashboard</h1>
         </main>
