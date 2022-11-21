@@ -31,7 +31,7 @@ const AvailabilityDaySelect: React.FC<AvailabilityDaySelectionProps> = ({userID}
         let newData = {
             availabilities: mapToObject(newMap)
         }
-        // await updateUser(userID, newData);
+        await updateUser(userID, newData);
     }
 
     return (
