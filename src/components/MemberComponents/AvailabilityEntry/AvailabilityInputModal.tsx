@@ -1,15 +1,15 @@
 import { useState } from "react";
-import AvailabilityEntry from "./AvailabilityEntry";
+import AvailabilityTableInput from "./AvailabilityEntry";
 import { mergeMap, days, mapToObject } from '../../../firebase/helpers';
 import { Button } from "@mui/material";
 import styles from './AvailabilityEntry.module.css';
 import { updateUser } from "../../../firebase/queries/user";
 
-type AvailabilityDaySelectionProps = {
+type AvailabilityInputModalProps = {
     userID: string
 }
 
-const AvailabilityDaySelect: React.FC<AvailabilityDaySelectionProps> = ({userID}: AvailabilityDaySelectionProps) => {
+const AvailabilityInputModal: React.FC<AvailabilityInputModalProps> = ({userID}: AvailabilityInputModalProps) => {
 
     const initializeMap = () => {
         let m = new Map<string, number[]>();
@@ -43,11 +43,11 @@ const AvailabilityDaySelect: React.FC<AvailabilityDaySelectionProps> = ({userID}
             </div>
             {
                 days.map((day) => (
-                    <AvailabilityEntry key = {day} userID = {userID} day = {day} selectedDay = {selectedDay} assignedMap = {assignedMap}/>
+                    <AvailabilityTableInput key = {day} userID = {userID} day = {day} selectedDay = {selectedDay} assignedMap = {assignedMap}/>
                 ))
             }
-            <Button onClick = {handleSubmit}>Submit</Button>
+            <Button onClick = {handleSubmit}>Save</Button>
         </div>
     )
 }
-export default AvailabilityDaySelect;
+export default AvailabilityInputModal;
