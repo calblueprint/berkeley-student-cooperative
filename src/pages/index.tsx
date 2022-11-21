@@ -6,8 +6,18 @@ import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsIn
 import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
 import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
+import { addUser } from "../firebase/queries/user";
+import { useUserContext } from "../context/UserContext";
 
 const Home: NextPage = () => {
+  const {
+    authUser,
+    house,
+    register,
+    signIn,
+    signOutAuth,
+    establishUserContext,
+  } = useUserContext();
   return (
     <Layout>
       <div className={styles.container}>
@@ -20,6 +30,37 @@ const Home: NextPage = () => {
           <h1 className={styles.title}>Workshift App</h1>
           <ShiftCard />
           <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
+          <button
+            onClick={() =>
+              register(
+                "cazwm@bsc.coop",
+                "CAZ",
+                "Manager",
+                "Casa Zimbabwe",
+                "Manager",
+                "casamanager"
+              )
+            }
+          >
+            Register
+          </button>
+          <button
+            onClick={() =>
+              addUser(
+                "eucwm@bsc.coop",
+                "EUC",
+                "Mananger",
+                "Euclid",
+                "Manager",
+                "1777"
+              )
+            }
+          >
+            CREATE USER
+          </button>
+          <button onClick={() => signIn("eucwm@bsc.coop", "euclidmanager")}>
+            SIGN IN
+          </button>
         </main>
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">
@@ -32,3 +73,6 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+function firestoreAutoId(): string {
+  throw new Error("Function not implemented.");
+}
