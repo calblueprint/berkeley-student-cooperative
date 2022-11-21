@@ -6,6 +6,7 @@ import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsIn
 import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
 import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
+import router from "next/router";
 import { addUser } from "../firebase/queries/user";
 import { useUserContext } from "../context/UserContext";
 
@@ -22,6 +23,13 @@ const Home: NextPage = () => {
           <h1 className={styles.title}>Workshift App</h1>
           <ShiftCard />
           <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
+          <button
+            onClick={() => {
+              router.push("/ParseCsv/ParseCsv");
+            }}
+          >
+            Parse
+          </button>
         </main>
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">
