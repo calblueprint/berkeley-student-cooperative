@@ -41,7 +41,7 @@ export const useFirebaseAuth = () => {
 							PENDING HouseID found in csv
 							addUser(email, houseID, name, role, user.uid)
 						*/
-					addUser(email, "Euclid", name, "Member", user.uid).then(() => {
+					addUser(email, "EUC", name, "Member", user.uid).then(() => {
 						establishUserContext(user.uid);
 					});
 					})

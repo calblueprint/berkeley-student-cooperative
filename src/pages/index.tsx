@@ -17,6 +17,7 @@ import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/Av
 import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 import ViewShiftcard from "../components/MemberComponents/ViewShiftcard/ViewShiftcard";
+import { firestoreAutoId } from "../firebase/helpers";
 
 const Home: NextPage = () => {
 
@@ -26,16 +27,6 @@ const Home: NextPage = () => {
   const createUser = async () => {
     addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());
   }
-
-  const firestoreAutoId = (): string => {
-    const CHARS =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let autoId = "";
-    for (let i = 0; i < 20; i += 1) {
-      autoId += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
-    }
-    return autoId;
-  };
 
   const retrieveUser = async () => {
     let x = await getUser("mc8XQK7aiZW1dg8IC8v5");
@@ -94,7 +85,9 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
-        <button onClick={() => signIn("dummy2@gmail.com", "birdsRFake22")}>SIGN IN</button>
+        <button onClick={() => signIn("viewCardTester@gmail.com", "iluvtesting")}>SIGN IN</button>
+        {/* <button onClick={() => signIn("viewCardTester2@gmail.com", "testluvr2", "iluvtestingtooo")}>SIGN IN</button> */}
+        {/* <button onClick = {() => register("viewCardTester2@gmail.com", "testluvr2", "iluvtestingtoo")}>Register</button> */}
         <ShiftCard />
         <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
         <SettingsInfo userID={"1234"}/>

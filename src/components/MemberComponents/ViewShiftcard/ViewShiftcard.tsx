@@ -2,8 +2,9 @@ import { Button, Dialog, DialogContent, Paper, Table, TableBody, TableCell, Tabl
 import { useState, useEffect } from "react";
 import Icon from "../../../assets/Icon";
 import { useUserContext } from "../../../context/UserContext";
-import { parseTime } from "../../../firebase/helpers";
-import { getShift, getVerifiedShifts } from "../../../firebase/queries/shift";
+import { objectToMap, parseTime } from "../../../firebase/helpers";
+import { getHouse } from "../../../firebase/queries/house";
+import { getShift, getVerifiedShifts, verifyShift } from "../../../firebase/queries/shift";
 import { getUser } from "../../../firebase/queries/user";
 import { Shift, User, VerifiedShift } from "../../../types/schema";
 import styles from "./ViewShiftcard.module.css";
@@ -21,11 +22,13 @@ TODO:
  - Create a check with verified shifts & status [x]
  - check current user vs assigned members [x]
  - revamp parse time for AssignShiftCard, shiftSchedule, and ViewShiftcard [x]
+ - UPDATE user.ts to generate and push a pin number to the pin map.
  - need persistence to work in UserContext or userAuth []
  - Connect verify to Firebase []
  - apply changes to AssignShiftCard []
  - apply changes to shiftSchedule (check that it's pulled) [ ]
  - styling []
+ - When attaching to a schedule:  move shiftID and houseID up, as well as pinUser map. []
 */
 
 const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
@@ -40,12 +43,13 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   const [verifiedShifts, setVerifiedShifts] = useState(new Map<string, VerifiedShift>);
   const [user, setUser] = useState();
   const [verifierPin, setVerifierPin] = useState("");
-  const pinUserMap;
+  const [userPinMap, setUserPinMap] = useState(new Map<string, string>());
 
   useEffect(() => {
     const today = new Date();
     const getShiftFB = async () => {
       console.log({authUser: authUser, house: house});
+      console.log("One useEffect");
       const currShift = await getShift(houseID, shiftID);
       if (currShift != null) {
         setShift(currShift);
@@ -53,12 +57,16 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
       }
     };
     getShiftFB();
-  }, [houseID, shiftID]);
+  }, []);
 
   const loadMemberRows = async (usersAssigned: string[]) => {
+    console.log("Reading from FB");
+    console.log({usersAssigned: usersAssigned});
     let userObjects = await getAssignedUsers(usersAssigned);
     let tempMemRows = new Array<JSX.Element>();
     let verShifts = await getVerifiedShifts(houseID, shiftID);
+    let house = await getHouse(houseID);
+    setUserPinMap(objectToMap(house.userPINs));
     setVerifiedShifts(verShifts);
     userObjects.map((user) => {
       if (user != null) {
@@ -81,12 +89,12 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     let status = "Incomplete";
     let time = "";
     let verifiedShift = verShifts.get(user.userID);
-    console.log({name: user.name, authUser: authUser.name});
+    console.log({name: user.name, authUser: authUser.name, uid: user.userID});
     let name = user.name != authUser.name ? user.name : "me"
-    console.log({name: user.name, authUser: authUser.name, user: user});
+    console.log({name: user.name, authUser: authUser.name, authUserobj: authUser, uid: user.userID});
     if (verifiedShift != undefined) {
       status = "Complete";
-      time = parseTime(Number(verifiedShift.timeStamp));
+      time = verifiedShift.timeStamp;
     }
     return ( 
       <TableRow
@@ -108,8 +116,18 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     setOpen(false);
   };
 
-  const handleVerify = () => {
 
+  const handleVerify = () => {
+    let verifierID = userPinMap.get(verifierPin);
+    console.log({userPinMap: userPinMap, verifierPin: verifierPin, verifierID: verifierID});
+    if (verifierID == undefined) {
+      //Replace with modal/warning
+      console.log("Invalid PIN");
+    } else if (verifierID == authUser.userID) {
+      console.log("Can't verify self!");
+    } else {
+      verifyShift(verifierID, authUser.userID, shiftID, houseID);
+    }
   }
 
   return shift ? (

@@ -1,6 +1,8 @@
 import {firestore} from "../clientApp";
 import {Shift, VerifiedShift} from "../../types/schema";
-import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc, getDocs } from "firebase/firestore";
+import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc, getDocs, Timestamp } from "firebase/firestore";
+import { firestoreAutoId, parseTime } from "../helpers";
+import { FirebaseError } from "firebase/app";
 
 export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
     await addDoc(collection(firestore, "houses", houseID, "shifts"), {
@@ -98,12 +100,26 @@ export const getVerifiedShifts = async (houseID: string, shiftID: string): Promi
 const parseVerifiedShift = (docSnap: QueryDocumentSnapshot<DocumentData>): VerifiedShift => {
     const autoID = docSnap.id.toString();
     const data = docSnap.data();
+    let dateObj = data.timeStamp.toDate();
+    let time = parseTime(dateObj.getHours() * 100 + dateObj.getMinutes());
     const verifiedShift: VerifiedShift = {
         autoID: autoID,
-        timeStamp: data.timeStamp,
+        timeStamp: time,
         shifterID: data.shifterID,
         verifierID: data.verifierID
     }
     return verifiedShift;
 }
 
+export const verifyShift = async (verifierID: String, shifterID: String, shiftID: string, houseID: string) => {
+    let timeStamp = new Date();
+    console.log("Call Verify Shift Once");
+    let autoID = firestoreAutoId();
+    console.log(timeStamp);
+    await setDoc(doc(firestore, "houses", houseID, "shifts", shiftID, "verifiedShifts", autoID), {
+        autoID: autoID,
+        timeStamp: Timestamp.fromDate(timeStamp),
+        shifterID: shifterID,
+        verifierID: verifierID
+    })
+  }
