@@ -4,6 +4,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
 import ShiftSchedule from "../components/ManagerComponents/shiftSchedule/ShiftSchedule";
+import PlanningPage from "./manager/planningPage/PlanningPage";
 import { mapToObject } from "../firebase/helpers";
 import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsInfo";
 import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
@@ -82,10 +83,9 @@ const Home: NextPage = () => {
         <button onClick={() => signIn("dummy2@gmail.com", "birdsRFake22")}>SIGN IN</button>
         <button onClick={() => register("dummy2@gmail.com", "swagapino23", "birdsRFake22")}>Register</button>
         <button onClick={() => signOutAuth()}>Sign Out</button>
-        <ShiftCard/>
-        <SettingsInfo userID={"1234"}/>
-        <AvailabilityInfo userID={"1234"}/>
-        <ShiftSchedule/>
+        <PlanningPage/>
+        {/* <SettingsInfo userID={"1234"}/>
+        <AvailabilityInfo userID={"1234"}/> */}
       </main>
       <footer className={styles.footer}>
         <a href="#" rel="noopener noreferrer">
