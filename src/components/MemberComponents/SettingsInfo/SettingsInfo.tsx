@@ -41,7 +41,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
           <Typography variant="h5">Information</Typography>
           {/* <Typography variant="caption" className={styles.updated}>
             Last updated 3 minutes ago
-          </Typography> */}
+          </Typography>
         </div>
         <hr className={styles.line} />
         <div className={styles.body}>

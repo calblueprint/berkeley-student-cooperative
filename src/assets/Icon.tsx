@@ -1,5 +1,6 @@
 import React from "react";
 import { SvgIcon } from "@mui/material";
+
 export type IconType =
   | "close"
   | "search"
