@@ -35,7 +35,7 @@ const Home: NextPage = () => {
           </button>
 					<button onClick={() => signIn("test123@gmail.com", "test123")}>Sign In</button>
 					<button onClick={() => signOutAuth()}>Sign Out</button>
-					<h1>{authUser.first_name ? authUser.first_name + " " + authUser.last_name : "not signed in"}</h1>
+					<h1>{authUser ? authUser.first_name + " " + authUser.last_name : "not signed in"}</h1>
         </main>
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">
