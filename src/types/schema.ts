@@ -48,4 +48,5 @@ export type RowOfCSV = {
   firstName: string;
   lastName: string;
   houseID: string;
+  accountCreated: boolean;
 }

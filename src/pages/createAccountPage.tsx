@@ -4,7 +4,7 @@ import { useUserContext } from "../context/UserContext";
 import { useRouter } from "next/router";
 import { emailRegex } from "../firebase/helpers";
 import { getAllHouses } from "../firebase/queries/house";
-import { getRowOfCSV } from "../firebase/queries/csvManagement";
+import { getRowOfCSV, updateRowOfCSV } from "../firebase/queries/csvManagement";
 import { reauthenticateWithCredential } from "firebase/auth";
 
 const CreateAccountPage = () => {
@@ -42,9 +42,12 @@ const CreateAccountPage = () => {
             return;
         }
         let csvInformation = await getRowOfCSV(email);
-        console.log(csvInformation);
         if (csvInformation === null) {
             console.log("Invalid email");
+            return;
+        }
+        if (csvInformation.accountCreated) {
+            console.log("Account already created. Log in instead.");
             return;
         }
         if (csvInformation.houseID === undefined) {
@@ -55,8 +58,17 @@ const CreateAccountPage = () => {
             console.log("Invalid name");
             return;
         }
-        // register(email, csvInformation.firstName, csvInformation.lastName, csvInformation.houseID, password, "member");
-        router.push('/member/dashboard');
+        try {
+            await register(email, csvInformation.firstName, csvInformation.lastName, csvInformation.houseID, password, "member");
+            let newData = {
+                accountCreated: true
+            }
+            await updateRowOfCSV(email, newData);
+            router.push('/member/dashboard');
+        } catch(e) {
+            console.log(e);
+        }
+        
     }
     
     return (
