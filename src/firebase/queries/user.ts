@@ -1,10 +1,10 @@
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { mapToObject, objectToMap } from "../helpers";
+import { objectToMap, mapToObject } from "../helpers";
 import { getHouse } from "./house";
 
-export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
+export const addUser = async (email: string, houseID: string, firstName: string, lastName: string, role: string, userID: string) => {
     // PENDING COMPLETION OF HOUSE QUERIES
     // const houseDocRef = doc(firestore, "houses", houseID);
     // const houseDocSnap = await getDoc(houseDocRef);
@@ -20,11 +20,12 @@ export const addUser = async (email: string, houseID: string, name: string, role
         hoursRemainingSemester: 5,
         hoursRemainingWeek: 5,
         houseID: houseID,
-        name: name,
+        firstName: firstName,
+        lastName: lastName,
         pinNumber: pinNumber,
         preferences: new Array<string>(),
         role: role,
-        shiftsAssigned: new Array<string>(),
+        shiftsAssigned: mapToObject(new Map<string, number>()),
         totalFines: 0,
         totalHoursAssigned: 5
     });
@@ -63,10 +64,12 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
     const user = {
         userID: userID,
         role: data.role,
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         houseID: data.houseID,
-        totalHoursAssigned: data.totalHoursAssigned,
+        hoursAssigned: data.hoursAssigned,
+        hoursRequired: data.hoursRequired,
         shiftsAssigned: data.shiftsAssigned,
         hoursRemainingWeek: data.hoursRemainingWeek,
         hoursRemainingSemester: data.hoursRemainingSemester,
@@ -75,6 +78,7 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         availabilities: objectToMap(data.availabilities),
         preferences: data.preferences
     }
+    console.log({user: user});
     return user as User;
 }
 
@@ -95,6 +99,24 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
     await updateUser(userID, newData);
 }
 
+export const defaultUser: User = {
+	userID: "",
+	role: "",
+	firstName: "",
+    lastName: "",
+	email: "",
+	houseID: "",
+	hoursAssigned: 0,
+    hoursRequired: 5,
+	shiftsAssigned: new Array<string>(),
+	hoursRemainingWeek: 0,
+	hoursRemainingSemester: 0,
+	pinNumber: 0,
+	totalFines: 0,
+	availabilities: new Map<string, number[]>(),
+	preferences: new Map<string, number>(),
+};
+
 export const getAllUserObjectsFromHouse = async (houseID: string): Promise<User[]> => {
     const currHouse = await getHouse(houseID);
     if (currHouse === null) {
@@ -114,19 +136,3 @@ export const getAllUserObjectsFromHouse = async (houseID: string): Promise<User[
     }
     return retList;
 }
-
-export const defaultUser: User = {
-	userID: "",
-	role: "",
-	name: "",
-	email: "",
-	houseID: "",
-	totalHoursAssigned: 0,
-	shiftsAssigned: new Array<string>(),
-	hoursRemainingWeek: 0,
-	hoursRemainingSemester: 0,
-	pinNumber: 0,
-	totalFines: 0,
-	availabilities: new Map<string, number[]>(),
-	preferences: new Array<string>(),
-};

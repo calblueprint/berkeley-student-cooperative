@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { User } from "../../../types/schema";
 import { getUser, updateUser } from "../../../firebase/queries/user";
 import { getAuth, updatePassword } from "firebase/auth";
+import { emailRegex } from '../../../firebase/helpers';
 
 type MemberInformationCardProps = {
   user: User | undefined;
@@ -27,12 +28,19 @@ const MemberInformationCard: React.FC<MemberInformationCardProps> = ({
 }: MemberInformationCardProps) => {
   const auth = getAuth();
 
-  const initializeName = () => {
+  const initializeFirstName = () => {
     if (user === undefined) {
       return "";
     }
-    return user.name;
+    return user.firstName;
   };
+
+  const initializeLastName = () => {
+    if (user === undefined) {
+      return "";
+    }
+    return user.lastName;
+  }
 
   const initializeEmail = () => {
     if (user === undefined) {
@@ -42,7 +50,8 @@ const MemberInformationCard: React.FC<MemberInformationCardProps> = ({
   };
 
   // Stores the input fields for the various changing fields
-  const [name, setName] = useState(initializeName());
+  const [firstName, setFirstName] = useState(initializeFirstName());
+  const [lastName, setLastName] = useState(initializeLastName());
   const [email, setEmail] = useState(initializeEmail());
 
   // Updates the user's name, email, and password
@@ -50,14 +59,19 @@ const MemberInformationCard: React.FC<MemberInformationCardProps> = ({
     if (user === undefined) {
       return;
     }
-    if (name.length == 0 || email.length == 0) {
+    if (firstName.length == 0 || email.length == 0 || lastName.length == 0) {
       // Replace with modal
       console.log("Invalid Name or Email Length");
       return;
     }
+    if (!emailRegex.test(email)) {
+      console.log("Invalid Email");
+      return;
+    }
     let newData = {
-      name: name,
-      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      email: email
     };
     console.log("BEFORE");
     console.log(getUser(user.userID));
@@ -74,9 +88,13 @@ const MemberInformationCard: React.FC<MemberInformationCardProps> = ({
   };
 
   // Updates name as the name field is edited
-  const handleNameChange = (event: any) => {
-    setName(event.target.value);
+  const handleFirstNameChange = (event: any) => {
+    setFirstName(event.target.value);
   };
+
+  const handleLastNameChange = (event: any) => {
+    setLastName(event.target.value);
+  }
 
   // Updates email as the email field is edited
   const handleEmailChange = (event: any) => {
@@ -87,13 +105,23 @@ const MemberInformationCard: React.FC<MemberInformationCardProps> = ({
     <div>
       {user && (
         <Dialog open={isModalOpened} onClose={closeModal} fullWidth={true}>
-          <DialogTitle>{user && user.name}</DialogTitle>
+          <DialogTitle>{user && user.firstName + " " + user.lastName}</DialogTitle>
           <DialogContent>
-            <DialogContentText>Name</DialogContentText>
+            <DialogContentText>First Name</DialogContentText>
             <TextField
               autoFocus
-              value={name}
-              onChange={handleNameChange}
+              value={firstName}
+              onChange={handleFirstNameChange}
+              margin="dense"
+              id="name"
+              fullWidth
+              variant="standard"
+            />
+            <DialogContentText>Last Name</DialogContentText>
+            <TextField
+              autoFocus
+              value={lastName}
+              onChange={handleLastNameChange}
               margin="dense"
               id="name"
               fullWidth

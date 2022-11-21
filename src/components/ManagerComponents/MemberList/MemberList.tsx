@@ -62,7 +62,7 @@ const MemberList: React.FC<MemberListProps> = ({
 
   // Creates an individual row given a user
   const createRow = (user: User): RowData => {
-    let name = user.name;
+    let name = user.firstName + " " + user.lastName;
     let id = user.userID;
     let email = user.email;
     let totalFines = convertNumberIntoMonetaryValue(user.totalFines);
