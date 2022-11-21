@@ -30,7 +30,7 @@ const MemberNavbar: React.FunctionComponent = () => {
 					button
 					key={"dashboard"}
           onClick={() => {
-            router.push("/");
+            router.push("/member/dashboard");
           }}
 					className={router.pathname == "/member/dashboard" ? styles.active : styles.item}
 					>

@@ -6,10 +6,17 @@ import { defaultHouse } from "../firebase/queries/house";
 import { browserLocalPersistence, browserSessionPersistence, getAuth, onAuthStateChanged, setPersistence } from "firebase/auth";
 
 const authUserContext = createContext({
-	authUser: defaultUser,
-	house: defaultHouse,
+  authUser: defaultUser,
+  house: defaultHouse,
+  register: async (
+    email: string,
+    houseID: string,
+    last_name: string,
+    first_name: string,
+    role: string,
+    password: string
+  ) => {},
   signIn: async (email: string, password: string) => {},
-  register: async (email: string, name: string, password: string) => {},
   signOutAuth: () => {},
 	deleteUser: async (uid: string) => {}
 });

@@ -24,7 +24,7 @@ const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
 	return (
 		<Layout>
 			{/* <MemberScheduleHeader/> */}
-			<h1>{authUser ?  authUser.name : "not logged in"}</h1>
+			<h1>{authUser ?  authUser.first_name : "not logged in"}</h1>
 			<button onClick={() => signIn("test1@gmail.com", "test123")}> sign in</button>
 			<MemberShiftSchedule member=""/>
 
