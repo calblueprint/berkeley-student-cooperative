@@ -7,6 +7,8 @@ import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/Av
 import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 import router from "next/router";
+import { addUser } from "../firebase/queries/user";
+import { useUserContext } from "../context/UserContext";
 
 const Home: NextPage = () => {
   return (
@@ -40,3 +42,6 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+function firestoreAutoId(): string {
+  throw new Error("Function not implemented.");
+}
