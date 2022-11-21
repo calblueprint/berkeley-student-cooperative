@@ -10,15 +10,15 @@ import styles from './AvailabilityEntry.module.css';
 type AvailabilityEntryProps = {
     userID: string,
     day: string,
-    selectedDay: string
+    selectedDay: string,
+    assignedMap: Map<string, number[]>
 }
 
-const AvailabilityEntry: React.FC<AvailabilityEntryProps> = ({userID, day, selectedDay}: AvailabilityEntryProps) => {
+const AvailabilityEntry: React.FC<AvailabilityEntryProps> = ({userID, day, selectedDay, assignedMap}: AvailabilityEntryProps) => {
     const [user, setUser] = useState<User>();
     useEffect(() => {
         fetchUser();
     }, []);
-
 
     const fetchUser = async () => {
         let fetched = await getUser(userID);
@@ -47,7 +47,7 @@ const AvailabilityEntry: React.FC<AvailabilityEntryProps> = ({userID, day, selec
                 }
             }
             let keyString = convertTimeWindowToTime(start, end);
-            totalRender.push(<AvailabilityBox key = {keyString} stringKey= {keyString} numericKey = {[start, end]} day = {day} isSelected = {sel}/>)
+            totalRender.push(<AvailabilityBox key = {keyString} stringKey= {keyString} numericKey = {[start, end]} day = {day} isSelected = {sel} assignedMap = {assignedMap}/>)
         }
         return (
             <div className = {styles.column}>

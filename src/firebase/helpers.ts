@@ -86,4 +86,33 @@ const generateAllPossibleTimeWindows = () => {
 export const allPossibleTimeWindows: number[] = generateAllPossibleTimeWindows();
 
 export const days: string[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-        
+
+export const mergeMap = (map: Map<string, number[]>) => {
+  let tempMap = new Map<string, number[]>();
+  map.forEach((value, key) => {
+    let newList: number[] = [];
+    let intervals = [];
+    for (let i = 0; i < value.length; i += 2) {
+      intervals.push([value[i], value[i + 1]]);
+    }
+    if (intervals.length < 2) {
+      newList = [...value];
+    } else {
+      intervals.sort((a, b) => a[0] - b[0]);
+      let prev = intervals[0];
+      for (let i = 1; i < intervals.length; i++) {
+        if (prev[1] >= intervals[i][0]) {
+          prev = [prev[0], Math.max(prev[1], intervals[i][1])];
+        } else {
+          newList.push(prev[0]);
+          newList.push(prev[1]);
+          prev = intervals[i];
+        }
+      }
+      newList.push(prev[0]);
+      newList.push(prev[1]);
+    }
+    tempMap.set(key, newList);
+  })
+  return tempMap;
+}
