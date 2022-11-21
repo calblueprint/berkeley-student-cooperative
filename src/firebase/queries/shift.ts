@@ -1,6 +1,6 @@
 import {firestore} from "../clientApp";
 import {Shift} from "../../types/schema";
-import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
+import { doc, collection, addDoc, getDocs, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 
 export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
     await addDoc(collection(firestore, "houses", houseID, "shifts"), {
@@ -16,6 +16,18 @@ export const addShift = async (houseID: string, name: string, description: strin
         usersAssigned: new Array<string>(),
         category: category
     });
+}
+
+export const getAllShiftsInCategory = async (houseID: string, category: string) => {
+    const querySnapshot = await getDocs(collection(firestore, "houses", houseID, "shifts"));
+    let returnObj: Shift[] = [];
+    querySnapshot.forEach(async (docSnap) => {
+        let currShift = await parseShift(docSnap);
+        if (currShift.category === category) {
+            returnObj.push(currShift);
+        }
+    })
+    return returnObj;
 }
 
 export const updateShift = async (houseID: string, shiftID: string, newData: object) => {
