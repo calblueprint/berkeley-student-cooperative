@@ -7,15 +7,16 @@ import { User } from "../../../types/schema";
 import AvailabilityBox from "./AvailabilityBox";
 import styles from './AvailabilityEntry.module.css';
 
-type AvailabilityEntryProps = {
+type AvailabilityTableInputProps = {
     userID: string,
     day: string,
     selectedDay: string,
     assignedMap: Map<string, number[]>
 }
 
-const AvailabilityEntry: React.FC<AvailabilityEntryProps> = ({userID, day, selectedDay, assignedMap}: AvailabilityEntryProps) => {
+const AvailabilityTableInput: React.FC<AvailabilityTableInputProps> = ({userID, day, selectedDay, assignedMap}: AvailabilityTableInputProps) => {
     const [user, setUser] = useState<User>();
+
     useEffect(() => {
         fetchUser();
     }, []);
@@ -64,4 +65,4 @@ const AvailabilityEntry: React.FC<AvailabilityEntryProps> = ({userID, day, selec
     )
 }
 
-export default AvailabilityEntry;
+export default AvailabilityTableInput;
