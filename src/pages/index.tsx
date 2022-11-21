@@ -22,7 +22,7 @@ import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsIn
 const Home: NextPage = () => {
 
 	//getting all possible fields from auth; authUSER is current signed in user, house is the house object
-	const { authUser, house, register, signIn, signOutAuth, establishUserContext } = useUserContext();
+	const { authUser, house, register, signIn, signOutAuth } = useUserContext();
 
   const createUser = async () => {
     addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());
