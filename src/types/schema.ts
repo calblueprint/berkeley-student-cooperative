@@ -38,6 +38,7 @@ export type House = {
   houseID: string;
 	categories: string[]
   members: string[] | null;
+  categories: string[];
   address: string;
   schedule: Map<string, string[]>;
   userPINs: Map<string, string>;
