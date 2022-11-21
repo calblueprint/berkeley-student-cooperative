@@ -2,16 +2,18 @@ import { firestore } from "../clientApp";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 import { RowOfCSV } from "../../types/schema";
 
-export const addRowOfCSV = async (email: string, firstName: string, lastName: string, houseName: string) => {
-    await setDoc(doc(firestore, "csv", email), {
+let collectionName = "authorizedUsers";
+
+export const addRowOfCSV = async (email: string, firstName: string, lastName: string, houseID: string) => {
+    await setDoc(doc(firestore, collectionName, email), {
         firstName: firstName,
         lastName: lastName,
-        houseName: houseName
+        houseID: houseID
     });
 }
 
 export const getRowOfCSV = async (email: string) => {
-    const docRef = doc(firestore, "csv", email);
+    const docRef = doc(firestore, collectionName, email);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         return await parseUser(docSnap, email);
@@ -25,7 +27,7 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>, email: st
         email: email,
         firstName: data.firstName,
         lastName: data.lastName,
-        houseName: data.house
+        houseID: data.houseID
     }
     return row as RowOfCSV;
 }

@@ -33,16 +33,29 @@ const CreateAccountPage = () => {
             console.log("Invalid Email");
             return;
         }
+        if (password.length < 6) {
+            console.log("Password must be 6 characters or longer");
+            return;
+        }
         if (password !== confirmPassword) {
             console.log("Passwords don't match");
             return;
         }
         let csvInformation = await getRowOfCSV(email);
+        console.log(csvInformation);
         if (csvInformation === null) {
             console.log("Invalid email");
             return;
         }
-        register(email, csvInformation.firstName, csvInformation.lastName, csvInformation.houseName, password, "member");
+        if (csvInformation.houseID === undefined) {
+            console.log("Invalid house ID");
+            return;
+        }
+        if (csvInformation.firstName === undefined || csvInformation.lastName === undefined) {
+            console.log("Invalid name");
+            return;
+        }
+        // register(email, csvInformation.firstName, csvInformation.lastName, csvInformation.houseID, password, "member");
         router.push('/member/dashboard');
     }
     

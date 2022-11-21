@@ -47,5 +47,5 @@ export type RowOfCSV = {
   email: string;
   firstName: string;
   lastName: string;
-  houseName: string;
+  houseID: string;
 }
