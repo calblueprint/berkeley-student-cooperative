@@ -7,14 +7,16 @@ export type User = {
   first_name: string;
   email: string;
   houseID: string;
-  totalHoursAssigned: number;
+  // update
+  hoursAssigned: number;
+  hoursRequired: number;
   shiftsAssigned: string[];
   hoursRemainingWeek: number;
   hoursRemainingSemester: number;
   pinNumber: number;
   totalFines: number;
   availabilities: Map<string, number[]>;
-  preferences: string[];
+  preferences: Map<string, number>;
 };
 
 export type Shift = {
