@@ -18,14 +18,16 @@ const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
 	user,
 	house
 }) => {
-	const { authUser, signIn } = useUserContext();
+	const { authUser, signIn, signOutAuth } = useUserContext();
 	console.log("AUTHUSER", authUser)
 
 	return (
 		<Layout>
 			{/* <MemberScheduleHeader/> */}
-			<h1>{authUser ?  authUser.first_name : "not logged in"}</h1>
-			<button onClick={() => signIn("test1@gmail.com", "test123")}> sign in</button>
+			<h1>{authUser ?  authUser.first_name + " " + authUser.last_name : "not logged in"}</h1>
+			<button onClick={() => signIn("test123@gmail.com", "test123")}> sign in</button>
+			<button onClick={() => signOutAuth()}> sign out</button>
+
 			<MemberShiftSchedule member=""/>
 
 		</Layout>
