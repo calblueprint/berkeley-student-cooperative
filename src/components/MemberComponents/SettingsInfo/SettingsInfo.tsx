@@ -39,14 +39,14 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
       <CardContent className={styles.card}>
         <div className={styles.flex}>
           <Typography variant="h5">Information</Typography>
-          {/* <Typography variant="caption" className={styles.updated}>
+          <Typography variant="caption" className={styles.updated}>
             Last updated 3 minutes ago
           </Typography>
         </div>
         <hr className={styles.line} />
         <div className={styles.body}>
           <Typography className={styles.bodyText} variant="subtitle2">
-            {user.name}
+            {user.first_name}
           </Typography>
           <Typography className={styles.bodyText}>{user.email}</Typography>
           <Typography className={styles.bodyText}>{house.address}</Typography>
