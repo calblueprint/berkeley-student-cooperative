@@ -35,17 +35,17 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
   }, [user]);
 
   return user && house ? (
-    <Card sx={{ minWidth: 500 }}>
+    <Card sx={{ width: 550, height: 360 }}>
       <CardContent className={styles.card}>
         <div className={styles.flex}>
-          <Typography variant="h4">Information</Typography>
-          <Typography variant="caption" className={styles.updated}>
+          <Typography variant="h5">Information</Typography>
+          {/* <Typography variant="caption" className={styles.updated}>
             Last updated 3 minutes ago
           </Typography>
         </div>
         <hr className={styles.line} />
         <div className={styles.body}>
-          <Typography className={styles.bodyText} variant="body1">
+          <Typography className={styles.bodyText} variant="subtitle2">
             {user.name}
           </Typography>
           <Typography className={styles.bodyText}>{user.email}</Typography>
