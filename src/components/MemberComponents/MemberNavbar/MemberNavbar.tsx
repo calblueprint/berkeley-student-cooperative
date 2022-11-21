@@ -3,9 +3,12 @@ import { useRouter } from "next/router";
 import { Drawer, List, ListItem, ListItemText, Typography } from "@mui/material"
 import styles from "./MemberNavbar.module.css"
 import Icon from "../../../assets/Icon";
+import { useUserContext } from "../../../context/UserContext";
 
 const MemberNavbar: React.FunctionComponent = () => {
 	const router = useRouter();
+
+	const { signOutAuth } = useUserContext();
 
 	const userDetails = () => (
 		<ListItem className={styles.item + " " + styles.userDetails}>
@@ -27,7 +30,7 @@ const MemberNavbar: React.FunctionComponent = () => {
 					button
 					key={"dashboard"}
           onClick={() => {
-            router.push("/member/dashboard");
+            router.push("/");
           }}
 					className={router.pathname == "/member/dashboard" ? styles.active : styles.item}
 					>
@@ -91,7 +94,7 @@ const MemberNavbar: React.FunctionComponent = () => {
 
 	const logout = () => (
 		<List className={styles.logout}>
-			<ListItem className={styles.item}>
+			<ListItem className={styles.item} onClick = {() => signOutAuth()}>
 				<Icon type="navDashboard" />
 				<ListItemText
 						primaryTypographyProps={{fontSize: '18px', color: '#FFFFFF', fontWeight: 600}}

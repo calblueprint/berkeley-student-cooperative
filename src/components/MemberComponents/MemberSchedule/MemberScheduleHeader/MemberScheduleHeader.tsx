@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { User } from "../../../../types/schema";
-import { Typography, Card, TextField } from '@mui/material';
+import { Typography, Card, TextField, Button } from '@mui/material';
 import styles from "./MemberScheduleHeader.module.css";
 import Icon from "../../../../assets/Icon";
 import { MemberShiftFilters } from "../MemberShiftFilters/MemberShiftFilters";
@@ -19,7 +19,7 @@ export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderP
 				label="Search" 
 				variant="outlined"
 				sx={{
-					width: "45.2%",
+					width: "100%",
 					backgroundColor: "#FFFFFFFF"
 				}}
 				/>
@@ -28,12 +28,16 @@ export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderP
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.top}>
-				<Typography variant="h2"> Schedule </Typography>
+			<Typography variant="h2" className={styles.title}> Schedule </Typography>
+			<div className={styles.filterContainer}> 
 				<MemberShiftFilters/>
+				<div className={styles.bottom}>
+					{searchBar()}
+					<Button variant="outlined" size="medium" className={styles.tempShift}>
+						Medium
+					</Button>
+				</div>
 			</div>
-			<div className={styles.bottom}></div>
-				Filters
-			</div>
+		</div>
 	)
 }

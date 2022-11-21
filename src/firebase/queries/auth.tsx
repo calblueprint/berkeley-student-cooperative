@@ -1,6 +1,6 @@
-import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence, browserLocalPersistence} from "firebase/auth";
 import { addUser, getUser } from "./user";
-import React, { createContext, useContext, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User} from "../../types/schema";
 import { defaultUser } from "./user";
 import { defaultHouse } from "./house";
@@ -22,6 +22,20 @@ export const useFirebaseAuth = () => {
 	const auth = getAuth();
 	const [authUser, setAuthUser] = useState(defaultUser);
 	const [house, setHouse] = useState(defaultHouse)
+
+	const authStateChanged = async (authState: any) => {
+		if (!authState) {
+			setAuthUser(defaultUser);
+			return
+		}
+
+		establishUserContext(authState.uid)
+	}
+
+	useEffect(() => {
+		const refresh = auth.onAuthStateChanged(authStateChanged);
+		return () => refresh();
+	}, [])
 
 	const register = async (
 			email: string,
@@ -58,9 +72,9 @@ export const useFirebaseAuth = () => {
 		try {
 			console.log("Email: ", email, " Password: ", password);
 			signInWithEmailAndPassword(auth, email, password)
-			.then((userCredential) => {
-				const userID= userCredential.user.uid;
-				establishUserContext(userID);
+				.then((userCredential) => {
+					const userID= userCredential.user.uid;
+					establishUserContext(userID);
 			})
 		} catch(e) {
 			console.error(e);

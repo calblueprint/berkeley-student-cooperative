@@ -102,6 +102,8 @@ const Home: NextPage = () => {
 					<AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
 					<SettingsInfo userID={"1234"}/>
 					<AvailabilityInfo userID={"1234"}/>
+					<h1>{authUser ?  authUser.name : "not logged in"}</h1>
+					<button onClick={() => signIn("test1@gmail.com", "test123")}></button>
 				</main>
 				<footer className={styles.footer}>
 					<a href="#" rel="noopener noreferrer">
