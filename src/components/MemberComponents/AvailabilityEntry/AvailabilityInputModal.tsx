@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AvailabilityTableInput from "./AvailabilityEntry";
+import AvailabilityTableInput from "./AvailabilityTableInput";
 import { mergeMap, days, mapToObject } from '../../../firebase/helpers';
 import { Button } from "@mui/material";
 import styles from './AvailabilityEntry.module.css';
