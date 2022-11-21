@@ -22,11 +22,10 @@ TODO:
  - Create a check with verified shifts & status [x]
  - check current user vs assigned members [x]
  - revamp parse time for AssignShiftCard, shiftSchedule, and ViewShiftcard [x]
- - UPDATE user.ts to generate and push a pin number to the pin map.
  - need persistence to work in UserContext or userAuth []
- - Connect verify to Firebase []
+ - Connect verify to Firebase [x]
  - apply changes to AssignShiftCard []
- - apply changes to shiftSchedule (check that it's pulled) [ ]
+ - apply changes to shiftSchedule (check that it's pulled) []
  - styling []
  - When attaching to a schedule:  move shiftID and houseID up, as well as pinUser map. []
 */
@@ -45,11 +44,16 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   const [verifierPin, setVerifierPin] = useState("");
   const [userPinMap, setUserPinMap] = useState(new Map<string, string>());
 
+  /*
+   * Flow:
+   * Get the current shift from FB, call loadMemberRows to load in rows based on members assigned.
+   * Use uids to find members assigned to shift, compare this to the verifiedShifts list to see if complete,incomplete, or missing
+   * Load in the userPinMap to do the check for each member.  
+   * Verifying shift runs a check to assure that the verification is possible, if so, object is added to that collection.
+   */
   useEffect(() => {
     const today = new Date();
     const getShiftFB = async () => {
-      console.log({authUser: authUser, house: house});
-      console.log("One useEffect");
       const currShift = await getShift(houseID, shiftID);
       if (currShift != null) {
         setShift(currShift);
@@ -60,8 +64,6 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   }, []);
 
   const loadMemberRows = async (usersAssigned: string[]) => {
-    console.log("Reading from FB");
-    console.log({usersAssigned: usersAssigned});
     let userObjects = await getAssignedUsers(usersAssigned);
     let tempMemRows = new Array<JSX.Element>();
     let verShifts = await getVerifiedShifts(houseID, shiftID);
@@ -89,9 +91,9 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     let status = "Incomplete";
     let time = "";
     let verifiedShift = verShifts.get(user.userID);
-    console.log({name: user.name, authUser: authUser.name, uid: user.userID});
+    //changing user to "me" is iffy, persistence needs to work first due to loading order.
+    //component is loaded in before authUser is signed in, persistence fixes this.
     let name = user.name != authUser.name ? user.name : "me"
-    console.log({name: user.name, authUser: authUser.name, authUserobj: authUser, uid: user.userID});
     if (verifiedShift != undefined) {
       status = "Complete";
       time = verifiedShift.timeStamp;
@@ -108,6 +110,10 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     )
   }
 
+  /*
+  * handle open and close handle if the modal is on the screen.  When integrating this component to table, need to move these 
+  * functions and the useState to the table.
+   */
   const handleOpen = () => {
     setOpen(true);
   };
@@ -117,9 +123,13 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   };
 
 
+  /*
+   * Check that a verifying PIN isn't the current user's and that it exists in this House.
+   * If so, verifyShift is called which creates a verifyShift object in the firebase.
+   */
+
   const handleVerify = () => {
     let verifierID = userPinMap.get(verifierPin);
-    console.log({userPinMap: userPinMap, verifierPin: verifierPin, verifierID: verifierID});
     if (verifierID == undefined) {
       //Replace with modal/warning
       console.log("Invalid PIN");

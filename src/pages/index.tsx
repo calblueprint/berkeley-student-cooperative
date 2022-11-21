@@ -85,8 +85,8 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <h1 className={styles.title}>Workshift App</h1>
-        <button onClick={() => signIn("viewCardTester@gmail.com", "iluvtesting")}>SIGN IN</button>
-        {/* <button onClick={() => signIn("viewCardTester2@gmail.com", "testluvr2", "iluvtestingtooo")}>SIGN IN</button> */}
+        {/* <button onClick={() => signIn("viewCardTester@gmail.com", "iluvtesting")}>SIGN IN</button> */}
+        <button onClick={() => signIn("viewCardTester2@gmail.com", "iluvtestingtoo")}>SIGN IN</button>
         {/* <button onClick = {() => register("viewCardTester2@gmail.com", "testluvr2", "iluvtestingtoo")}>Register</button> */}
         <ShiftCard />
         <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
