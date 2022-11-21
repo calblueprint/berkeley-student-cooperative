@@ -3,7 +3,7 @@ import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 import { mapToObject, objectToMap } from "../helpers";
 
-export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
+export const addUser = async (email: string, houseID: string, last_name: string, first_name: string, role: string, userID: string) => {
     // PENDING COMPLETION OF HOUSE QUERIES
     // const houseDocRef = doc(firestore, "houses", houseID);
     // const houseDocSnap = await getDoc(houseDocRef);
@@ -19,7 +19,8 @@ export const addUser = async (email: string, houseID: string, name: string, role
         hoursRemainingSemester: 5,
         hoursRemainingWeek: 5,
         houseID: houseID,
-        name: name,
+        last_name: last_name,
+        first_name: first_name,
         pinNumber: pinNumber,
         preferences: new Array<string>(),
         role: role,
@@ -62,8 +63,8 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
     const user = {
         userID: userID,
         role: data.role,
-        firstName: data.firstName,
-        lastName: data.lastName,
+        last_name: data.last_name,
+        first_name: data.first_name,
         email: data.email,
         houseID: data.houseID,
         hoursAssigned: data.hoursAssigned,
@@ -99,8 +100,8 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
 export const defaultUser: User = {
 	userID: "",
 	role: "",
-	firstName: "",
-    lastName: "",
+	last_name: "",
+  first_name: "",
 	email: "",
 	houseID: "",
 	hoursAssigned: 0,
