@@ -23,7 +23,8 @@ export const addUser = async (email: string, houseID: string, firstName: string,
         role: role,
         shiftsAssigned: new Array<string>(),
         totalFines: 0,
-        totalHoursAssigned: 5
+        hoursAssigned: 0,
+        hoursRequired: 5
     });
     let members = currHouse.members;
     if (members == null) {
