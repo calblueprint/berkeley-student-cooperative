@@ -44,6 +44,8 @@ export const getNumVerified = async (houseID: string, shiftID: string): Promise<
     return snap.size;
 }
 
+
+
 export const deleteShift = async (houseID: string, shiftID: string) => {
     const currShift = await getShift(houseID, shiftID);
     if (currShift == null) {

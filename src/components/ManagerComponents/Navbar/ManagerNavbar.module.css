@@ -1,0 +1,46 @@
+.list {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: fixed;
+	width: 169px;
+}
+.navbar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.item {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	height: 100px;
+	width: 80%;
+}
+
+.active {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	height: 100px;
+	width: 80%;
+	background-color: #F9F9F9;
+	border-radius: 10px;
+}
+
+.itemText {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #C2C2C2;
+}
+
+.icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-top: 16px;
+}

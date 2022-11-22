@@ -1,7 +1,6 @@
-import { getAuth, createUserWithEmailAndPassword, getAdditionalUserInfo, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from "firebase/auth";
 import { addUser, getUser } from "./user";
-import React, { createContext, useContext, useState } from "react";
-import { User} from "../../types/schema";
+import { useState, useEffect } from "react";
 import { defaultUser } from "./user";
 import { defaultHouse } from "./house";
 import { doc, deleteDoc } from "firebase/firestore";
@@ -23,9 +22,25 @@ export const useFirebaseAuth = () => {
 	const [authUser, setAuthUser] = useState(defaultUser);
 	const [house, setHouse] = useState(defaultHouse)
 
+	const authStateChanged = async (authState: any) => {
+		if (!authState) {
+			setAuthUser(defaultUser);
+			return
+		}
+		establishUserContext(authState.uid)
+	}
+
+	useEffect(() => {
+		const refresh = auth.onAuthStateChanged(authStateChanged);
+		return () => refresh();
+	}, [])
+
 	const register = async (
 			email: string,
-			name: string,
+			houseID: string,
+			first_name: string,
+			last_name: string,
+			role: string,
 			password: string
 	): Promise<void> => {
 			try {
@@ -41,8 +56,8 @@ export const useFirebaseAuth = () => {
 							PENDING HouseID found in csv
 							addUser(email, houseID, name, role, user.uid)
 						*/
-					addUser(email, "EUC", name, "Member", user.uid).then(() => {
-						establishUserContext(user.uid);
+					addUser(email, houseID, first_name, last_name, role, user.uid).then(() => {
+						signIn(email, password)
 					});
 					})
 			} catch(e) {
@@ -58,9 +73,9 @@ export const useFirebaseAuth = () => {
 		try {
 			console.log("Email: ", email, " Password: ", password);
 			signInWithEmailAndPassword(auth, email, password)
-			.then((userCredential) => {
-				const userID= userCredential.user.uid;
-				establishUserContext(userID);
+				.then((userCredential) => {
+					const userID= userCredential.user.uid;
+					establishUserContext(userID);
 			})
 		} catch(e) {
 			console.log("Error Logging In");
