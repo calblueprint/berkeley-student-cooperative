@@ -51,6 +51,35 @@ export const useFirebaseAuth = () => {
 							PENDING HouseID found in csv
 							addUser(email, houseID, name, role, user.uid)
 						*/
+<<<<<<< HEAD
+					addUser(email, "EUC", name, "Member", user.uid).then(() => {
+						establishUserContext(user.uid);
+					});
+					})
+			} catch(e) {
+				console.error(e);
+				throw e
+			}
+	};
+
+	const signIn = async (
+		email: string,
+		password: string
+	) => {
+		try {
+			console.log("Email: ", email, " Password: ", password);
+			signInWithEmailAndPassword(auth, email, password)
+			.then((userCredential) => {
+				const userID= userCredential.user.uid;
+				establishUserContext(userID);
+			})
+		} catch(e) {
+			console.log("Error Logging In");
+			console.error(e);
+			throw e;
+		}
+	};
+=======
           addUser(email, houseID, last_name, first_name, role, user.uid).then(
             () => {
               establishUserContext(user.uid);
@@ -78,6 +107,7 @@ export const useFirebaseAuth = () => {
       throw e;
     }
   };
+>>>>>>> main
 
   const signOutAuth = async (): Promise<void> => {
     try {
