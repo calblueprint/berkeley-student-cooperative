@@ -44,3 +44,11 @@ export type House = {
   schedule: Map<string, string[]>;
   userPINs: Map<string, string>;
 };
+
+export type RowOfCSV = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  houseID: string;
+  accountCreated: boolean;
+}
