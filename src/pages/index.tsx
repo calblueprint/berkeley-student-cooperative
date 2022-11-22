@@ -13,6 +13,8 @@ import { useUserContext } from "../context/UserContext";
 const Home: NextPage = () => {
 
 	const { authUser, signIn, register, signOutAuth} = useUserContext()
+  console.log("AUTH USER BELOW")
+  console.log(authUser);
 
   return (
     <Layout>
