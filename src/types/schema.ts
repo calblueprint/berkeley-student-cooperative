@@ -34,7 +34,7 @@ export type Shift = {
   verificationBuffer: number;
   usersAssigned: string[];
   category: string;
-}
+};
 
 export type House = {
   houseID: string;
@@ -44,4 +44,14 @@ export type House = {
   address: string;
   schedule: Map<string, string[]>;
   userPINs: Map<string, string>;
+};
+
+export enum Day {
+  Mon = 'Monday',
+  Tue = 'Tuesday',
+  Wed = 'Wednesday',
+  Thu = 'Thursday',
+  Fri = 'Friday',
+  Sat = 'Saturday',
+  Sun = 'Sunday'
 };
