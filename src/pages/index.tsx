@@ -9,6 +9,7 @@ import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 import router from "next/router";
 import { addUser } from "../firebase/queries/user";
 import { useUserContext } from "../context/UserContext";
+import CategoryDropdown from "./manager/CategoryDropdown/categoryDropdown";
 
 const Home: NextPage = () => {
 
@@ -26,7 +27,7 @@ const Home: NextPage = () => {
         </Head>
         <main className={styles.main}>
           <h1 className={styles.title}>Workshift App</h1>
-          <ShiftCard />
+          <CategoryDropdown />
           <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
           <button
             onClick={() => {
