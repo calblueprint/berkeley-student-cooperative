@@ -27,7 +27,7 @@ const Layout = ({ children, title }: any) => {
 
   //authUser and loading to auto direct to login?
 
-  return role == "member" ? (
+  return role == "member" || role == "Member" ? ( // TODO: fix how we set the roles to be consistent with one of these
     <div className={styles.container}>
       <Head>
         <title>{title}</title>
