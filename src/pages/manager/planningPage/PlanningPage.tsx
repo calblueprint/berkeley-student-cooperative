@@ -1,21 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
-import { getUser } from "../../../firebase/queries/user";
-import { getHouse } from "../../../firebase/queries/houseQueries";
+import { getHouse } from "../../../firebase/queries/house";
 import { Day } from "../../../types/schema";
 import { getNumVerified, getShift } from "../../../firebase/queries/shift";
 import { Shift } from "../../../types/schema";
-import { type } from "os";
 import Select from "react-select";
-import { firestoreAutoId, objectToMap } from "../../../firebase/helpers";
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { useUserContext } from "../../../context/UserContext";
-import ShiftCard from "../../../components/ManagerComponents/Shiftcard/Shiftcard";
 import AssignShiftcard from "../../../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import styles from "./PlanningPage.module.css";
-
-
 
 /*
   Flow

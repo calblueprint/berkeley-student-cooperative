@@ -1,24 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { useEffect, useState, useContext } from "react";
-import Link from "next/link";
-import ShiftSchedule from "../components/ManagerComponents/shiftSchedule/ShiftSchedule";
 import PlanningPage from "./manager/planningPage/PlanningPage";
 import { mapToObject } from "../firebase/helpers";
-import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsInfo";
-import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
-import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
-import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 import {addUser, deleteUser, updateUser, getUser, assignShiftToUser} from '../firebase/queries/user';
-import { User } from "../types/schema";
 import { useUserContext } from "../context/UserContext";
-import {
-  getAllHouses,
-  getHouse,
-  updateAddress,
-} from "../firebase/queries/house";
-import { House } from "../types/schema";
 
 const Home: NextPage = () => {
 

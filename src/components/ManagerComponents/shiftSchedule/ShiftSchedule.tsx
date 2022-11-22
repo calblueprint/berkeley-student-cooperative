@@ -11,7 +11,7 @@
 import React, {useEffect, useState} from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import { getUser } from "../../../firebase/queries/user";
-import { getHouse } from "../../../firebase/queries/houseQueries";
+import { getHouse } from "../../../firebase/queries/house";
 import { Day } from "../../../types/schema";
 import { getNumVerified, getShift } from "../../../firebase/queries/shift";
 import { Shift } from "../../../types/schema";
