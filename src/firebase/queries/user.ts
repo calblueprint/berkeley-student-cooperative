@@ -44,6 +44,10 @@ const generatePinNumber = (numDigitsInPin: number) => {
 
 
 export const updateUser = async (userID: string, newData: object) => {
+    const currUser = await getUser(userID);
+    if (currUser == null) {
+        return;
+    }
     const userRef = doc(firestore, 'users', userID);
     await updateDoc(userRef, newData);
 }
@@ -54,6 +58,8 @@ export const getUser = async (userID: string) => {
     if (docSnap.exists()) {
         return await parseUser(docSnap);
     }
+    //replace w modal
+    console.log("Invalid User ID");
     return null;
 }
 
@@ -81,6 +87,10 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
 }
 
 export const deleteUser = async (userID: string) => {
+    const currUser = await getUser(userID);
+    if (currUser == null) {
+        return;
+    }
     // delete user from all instances of shifts
     await deleteDoc(doc(firestore, "users", userID));
 }
