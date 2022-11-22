@@ -6,9 +6,14 @@ import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsIn
 import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
 import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
 import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
-import CreateAccountPage from "./createAccountPage";
+import router from "next/router";
+import { addUser } from "../firebase/queries/user";
+import { useUserContext } from "../context/UserContext";
 
 const Home: NextPage = () => {
+
+	const { authUser, signIn, register, signOutAuth} = useUserContext()
+
   return (
     <Layout>
       <div className={styles.container}>
@@ -21,6 +26,17 @@ const Home: NextPage = () => {
           <h1 className={styles.title}>Workshift App</h1>
           <ShiftCard />
           <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
+          <button
+            onClick={() => {
+              router.push("/ParseCsv/ParseCsv");
+            }}
+          >
+            Parse
+          </button>
+          <button onClick={() => register("testing_register@gmail.com", "EUC", "Greg", "M", "Member", "testing123")}>Register</button>
+					<button onClick={() => signIn("test123@gmail.com", "test123")}>Sign In</button>
+					<button onClick={() => signOutAuth()}>Sign Out</button>
+					<h1>{authUser ? authUser.first_name + " " + authUser.last_name : "not signed in"}</h1>
         </main>
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">
@@ -33,3 +49,6 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+function firestoreAutoId(): string {
+  throw new Error("Function not implemented.");
+}
