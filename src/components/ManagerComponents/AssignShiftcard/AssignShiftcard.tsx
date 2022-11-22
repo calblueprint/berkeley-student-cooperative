@@ -6,20 +6,15 @@ import { Shift } from "../../../types/schema";
 import styles from "./AssignShiftcard.module.css";
 
 type AssignShiftcardProps = {
-  shiftID: string,
-  houseID: string,
-  open: boolean,
-  handleClose: any,
-  handleOpen: any
+  shiftID: string;
+  houseID: string;
 };
 
 const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
   shiftID,
   houseID,
-  open,
-  handleClose,
-  handleOpen
 }: AssignShiftcardProps) => {
+  const [open, setOpen] = useState(false);
   const [shift, setShift] = useState<Shift | null>();
 
   useEffect(() => {
@@ -49,8 +44,19 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
     return timeWindow >= 1200 ? "PM" : "AM";
   };
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return shift ? (
     <div>
+      <Button variant="outlined" onClick={handleOpen}>
+        <Typography>Assign Shift</Typography>
+      </Button>
       <Dialog
         fullWidth
         maxWidth="md"
