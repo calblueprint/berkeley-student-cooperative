@@ -2,7 +2,7 @@ import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 
-export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
+export const addUser = async (email: string, houseID: string, last_name: string, first_name: string, role: string, userID: string) => {
     // PENDING COMPLETION OF HOUSE QUERIES
     // const houseDocRef = doc(firestore, "houses", houseID);
     // const houseDocSnap = await getDoc(houseDocRef);
@@ -18,7 +18,8 @@ export const addUser = async (email: string, houseID: string, name: string, role
         hoursRemainingSemester: 5,
         hoursRemainingWeek: 5,
         houseID: houseID,
-        name: name,
+        last_name: last_name,
+        first_name: first_name,
         pinNumber: pinNumber,
         preferences: new Array<string>(),
         role: role,
@@ -67,7 +68,8 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
     const user = {
         userID: userID,
         role: data.role,
-        name: data.name,
+        last_name: data.last_name,
+        first_name: data.first_name,
         email: data.email,
         houseID: data.houseID,
         totalHoursAssigned: data.totalHoursAssigned,
@@ -79,6 +81,7 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         availabilities: objectToMap(data.availabilities),
         preferences: data.preferences
     }
+    console.log({user: user});
     return user as User;
 }
 
@@ -106,7 +109,7 @@ export const assignShiftToUser = async (userID: string, shiftID: string) => {
 const mapToObject = (map: Map<any, any>): Object => {
 	return Object.fromEntries(
 		Array.from(map.entries(), ([k, v]) =>
-        v instanceof Map ? [k, mapToObject(v)] : [k, v]
+        [k, v]
       )
     );
 };
@@ -114,7 +117,7 @@ const mapToObject = (map: Map<any, any>): Object => {
 const objectToMap = (obj: Object): Map<any, any> => {
     return new Map(
         Array.from(Object.entries(obj), ([k, v]) =>
-        v instanceof Object ? [k, objectToMap(v)] : [k, v]
+        [k, v]
         )
     );
 };
@@ -126,7 +129,8 @@ const mapToJSON = (map: Map<any, any>): string => {
 export const defaultUser: User = {
 	userID: "",
 	role: "",
-	name: "",
+	last_name: "",
+    first_name: "",
 	email: "",
 	houseID: "",
 	totalHoursAssigned: 0,
