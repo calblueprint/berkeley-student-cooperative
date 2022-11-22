@@ -4,6 +4,11 @@ import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, Query
 import { mapToObject, objectToMap } from "../helpers";
 import { getHouse, updateHouse } from "./house";
 
+
+/*
+* Review updateDoc documentation, firebase not updating yet
+* apply changes to Sami's branch 
+*/
 export const addUser = async (email: string, houseID: string, last_name: string, first_name: string, role: string, userID: string) => {
     const currHouse = await getHouse(houseID);
     let currHouseMap = currHouse.userPINs;
