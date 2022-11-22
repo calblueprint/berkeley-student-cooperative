@@ -10,8 +10,8 @@ const authUserContext = createContext({
   register: async (
     email: string,
     houseID: string,
-    last_name: string,
-    first_name: string,
+    lastName: string,
+    firstName: string,
     role: string,
     password: string
   ) => {},

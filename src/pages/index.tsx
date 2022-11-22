@@ -9,6 +9,7 @@ import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 import router from "next/router";
 import { addUser } from "../firebase/queries/user";
 import { useUserContext } from "../context/UserContext";
+import AvailabilityInputModal from "../components/MemberComponents/AvailabilityEntry/AvailabilityInputModal";
 
 const Home: NextPage = () => {
   return (
@@ -31,6 +32,7 @@ const Home: NextPage = () => {
             Parse
           </button>
         </main>
+        <AvailabilityInputModal userID = "1"></AvailabilityInputModal>
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">
             Workshift App

@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import Layout from "../../components/Layout/Layout";
-import AvailabilityTableInput from "../../components/MemberComponents/AvailabilityEntry/AvailabilityEntry";
 import AvailabilityInputModal from "../../components/MemberComponents/AvailabilityEntry/AvailabilityInputModal";
 
 const Home: NextPage = () => {
