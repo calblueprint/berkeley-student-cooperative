@@ -59,6 +59,7 @@ export const useFirebaseAuth = () => {
         }
       );
     } catch (e) {
+		console.log("ERROR");
       console.error(e);
       throw e;
     }

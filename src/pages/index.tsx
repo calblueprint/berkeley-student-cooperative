@@ -11,6 +11,9 @@ import { addUser } from "../firebase/queries/user";
 import { useUserContext } from "../context/UserContext";
 
 const Home: NextPage = () => {
+
+  const { authUser, house, register, signIn, signOutAuth, establishUserContext } = useUserContext();
+  console.log({authUser: authUser});
   return (
     <Layout>
       <div className={styles.container}>
@@ -21,8 +24,9 @@ const Home: NextPage = () => {
         </Head>
         <main className={styles.main}>
           <h1 className={styles.title}>Workshift App</h1>
+          <button onClick={() => register("pinTest78@gmail.com", "EUC", "Tester2", "Pin", "member", "wowTesting")}>Register</button>
+          <button onClick={() => signIn("pinTest78@gmail.com", "wowTesting")}>Sign In</button>
           <ShiftCard />
-          <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
           <button
             onClick={() => {
               router.push("/ParseCsv/ParseCsv");

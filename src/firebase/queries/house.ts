@@ -2,6 +2,7 @@ import { collection, addDoc, updateDoc, doc, getDoc, getDocs, deleteDoc } from "
 import { firestore } from "../clientApp";
 import { House } from "../../types/schema";
 import { arrayBuffer } from "stream/consumers";
+import { objectToMap } from "../helpers";
 
 
 const colRef = collection(firestore, "houses");
@@ -135,14 +136,20 @@ export const getCategories = async (houseID: string) => {
 //parses house document passed in
 const parseHouse = async (doc : any) => {
     const data = doc.data();
-		const houseID = doc.id.toString();
+	const houseID = doc.id.toString();
     const members = data.members;
     const address = data.address;
     const categories = data.categories;
-		const schedule = data.schedule;
-		const userPINs = data.userPINs;
+	const schedule = objectToMap(data.schedule);
+	const userPINs = objectToMap(data.userPINs);
     const house = {houseID, categories, members, address, schedule, userPINs};
+    console.log({HouseHouse: house});
     return house as House;
+}
+
+export const updateHouse = async(houseID: string, newData: any) => {
+    const docRef = doc(firestore, "houses", houseID);
+    const updates = await updateDoc(docRef, newData);
 }
 
 

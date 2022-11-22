@@ -2,17 +2,17 @@ import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 import { mapToObject, objectToMap } from "../helpers";
+import { getHouse, updateHouse } from "./house";
 
 export const addUser = async (email: string, houseID: string, last_name: string, first_name: string, role: string, userID: string) => {
-    // PENDING COMPLETION OF HOUSE QUERIES
-    // const houseDocRef = doc(firestore, "houses", houseID);
-    // const houseDocSnap = await getDoc(houseDocRef);
-    // const currHouse = await parseHouse(houseDocSnap);
-    // let currHouseMap = currHouse.pinUserMap;
-    // do {
-    //     var pinNumber = generatePinNumber(5);
-    // } while (currHouseMap.has(pinNumber));
+    const currHouse = await getHouse(houseID);
+    let currHouseMap = currHouse.userPINs;
+    console.log({currHouseMap: currHouseMap});
     let pinNumber = generatePinNumber(5);
+    do {
+        pinNumber = generatePinNumber(5);
+    } while (currHouseMap.has(pinNumber));
+    console.log({pinNumber: pinNumber});
     await setDoc(doc(firestore, "users", userID), {
         availabilities: mapToObject(new Map<string, number[]>()),
         email: email,
@@ -28,14 +28,17 @@ export const addUser = async (email: string, houseID: string, last_name: string,
         totalFines: 0,
         totalHoursAssigned: 5
     });
-    // PENDING COMPLETION OF HOUSE QUERIES
-    // currHouse.members.push(userID);
-    // currHouseMap.set(pinNumber, userID);
-    // let newData = {
-    //     members: currHouse.members,
-    //     pinUserMap: currHouseMap
-    // }
-    // updateHouse(currHouse.houseID, newData);
+    let houseMems = currHouse.members;
+    if (houseMems) {
+        houseMems.push(userID);
+    }
+    currHouseMap.set(pinNumber, userID);
+    let newData = {
+        members: currHouse.members,
+        pinUserMap: mapToObject(currHouseMap)
+    }
+    console.log({newUserID: userID, PIN: pinNumber, newData: newData, houseID: houseID});
+    await updateHouse(houseID, newData);
 }
 
 const generatePinNumber = (numDigitsInPin: number) => {
