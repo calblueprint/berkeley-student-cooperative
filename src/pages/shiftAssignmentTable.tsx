@@ -1,4 +1,5 @@
 
+import { Paper } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -39,6 +40,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
 
     // Creates a row of the table given a user
     const createRow = (user: User) : RowData => {
+        console.log({uid: user.userID, user: user});
         let name = user.name;
         let hoursRemaining = user.hoursRequired - user.hoursAssigned;
         let preference = numericToStringPreference(user, shiftID);
@@ -55,6 +57,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
     // Initializes all of the rows of the table
     const initializeRows = () => {
         let ret = [];
+        console.log({Users: users});
         for (let i = 0; i < users.length; i++) {
             ret.push(createRow(users[i]));
         }
@@ -93,7 +96,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
 
     return (
         <div>
-            <TableContainer sx = {{maxHeight: 440}}>
+            <TableContainer sx = {{maxHeight: 440}} component={Paper}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>

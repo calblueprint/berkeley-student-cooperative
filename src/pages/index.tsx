@@ -7,9 +7,9 @@ import { mapToObject } from "../firebase/helpers";
 import { addShift } from "../firebase/queries/shift";
 
 const Home: NextPage = () => {
-  const shiftID = "iBVA4gOntEGFA4AxpqFU";
+  const shiftID = "xzm3GT08IDqIPA5ePX0V";
   const houseID = "EUC";
-  const day = "Monday";
+  const day = "Sunday";
   const id = "123456";
 
   const createUser = async () => {
@@ -28,7 +28,7 @@ const Home: NextPage = () => {
   }
 
   const createShift = async () => {
-    await addShift(houseID, "Clean Basement", "Clean Basement 1", 3, ["Monday", "Tuesday"], [0, 300], "", 1, 48, "Clean");
+    await addShift(houseID, "Intensive Kitchen Cleaning (IKC)", "clean the kitchen intensively", 5, ["Sunday"], [1000, 1200], "", 2, true, 24, "wash di");
   }
   const addUserPreference = async () => {
     let map = new Map<string, number>();
