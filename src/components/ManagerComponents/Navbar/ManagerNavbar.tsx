@@ -7,7 +7,7 @@ import { useUserContext } from "../../../context/UserContext";
 
 const MemberNavbar: React.FunctionComponent = () => {
   const router = useRouter();
-  const { authUser, signIn, register, signOutAuth } = useUserContext();
+  const { authUser, signOutAuth } = useUserContext();
 
   const userDetails = () => (
     <ListItem className={styles.item + " " + styles.userDetails}>
@@ -65,12 +65,12 @@ const MemberNavbar: React.FunctionComponent = () => {
       </ListItem>
       <ListItem
         button
-        key={"members"}
+        key={"house"}
         onClick={() => {
-          router.push("/manager/members");
+          router.push("/manager/house");
         }}
         className={
-          router.pathname == "/manager/members" ? styles.active : styles.item
+          router.pathname == "/manager/house" ? styles.active : styles.item
         }
       >
         <div className={styles.icon}>
