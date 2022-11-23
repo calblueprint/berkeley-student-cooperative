@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (authUser.userID != "") {
-      if (authUser.role == "Member") {
+      if (authUser.role == "Member" || authUser.role == "member") {
         router.push("/member/dashboard");
       }
       router.push("/manager/schedule");
@@ -35,8 +35,8 @@ export default function LoginPage() {
   });
 
   const createAccount = () => {
-    router.push("/createAccount")
-  }
+    router.push("/createAccount");
+  };
   return authUser.userID != "" ? (
     <Layout />
   ) : (
@@ -92,9 +92,7 @@ export default function LoginPage() {
           <Button className={styles.createAccount} onClick={createAccount}>
             Create an account
           </Button>
-          <Typography className={styles.createAccount}>
-            
-          </Typography>
+          <Typography className={styles.createAccount}></Typography>
         </div>
       </div>
     </div>
