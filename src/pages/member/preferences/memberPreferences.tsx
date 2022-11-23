@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState, useEffect} from 'react';
-import { getCategories } from '../../firebase/queries/house';
+import { getCategories } from '../../../firebase/queries/house';
 import {Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, ButtonGroup} from '@mui/material';
 import styles from './memberPreferences.module.css'
 

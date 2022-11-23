@@ -11,6 +11,11 @@ import { addUser } from "../firebase/queries/user";
 import { useUserContext } from "../context/UserContext";
 
 const Home: NextPage = () => {
+
+	const { authUser, signIn, register, signOutAuth} = useUserContext()
+  console.log("AUTH USER BELOW")
+  console.log(authUser);
+
   return (
     <Layout>
       <div className={styles.container}>
@@ -30,6 +35,10 @@ const Home: NextPage = () => {
           >
             Parse
           </button>
+          <button onClick={() => register("testing_register@gmail.com", "EUC", "Greg", "M", "Member", "testing123")}>Register</button>
+					<button onClick={() => signIn("eucwm@bsc.coop", "euclidmanager")}>Sign In</button>
+					<button onClick={() => signOutAuth()}>Sign Out</button>
+					<h1>{authUser ? authUser.first_name + " " + authUser.last_name : "not signed in"}</h1>
         </main>
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">
