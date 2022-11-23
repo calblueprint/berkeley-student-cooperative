@@ -33,9 +33,9 @@ const ManagerNavbar: React.FunctionComponent = () => {
           button
           key={"dashboard"}
           onClick={() => {
-            router.push("/dashboard");
+            router.push("/manager");
           }}
-          className={styles.active}
+          className={router.pathname == "/manager" ? styles.active : styles.item}
         >
           <div className={styles.icon}>
             <Icon type="navDashboard" />
@@ -51,9 +51,9 @@ const ManagerNavbar: React.FunctionComponent = () => {
           button
           key={"planner"}
           onClick={() => {
-            router.push("/planner");
+            router.push("/manager/planner/planner");
           }}
-          className={router.pathname == "/planner" ? styles.active : styles.item}
+          className={router.pathname == "/manager/planner/planner" ? styles.active : styles.item}
         >
           <div className={styles.icon}>
             <Icon type="navPlanner" />
@@ -69,10 +69,10 @@ const ManagerNavbar: React.FunctionComponent = () => {
           button
           key={"schedule"}
           onClick={() => {
-            router.push("/schedule");
+            router.push("/manager/schedule/schedule");
           }}
           className={
-            router.pathname == "/schedule" ? styles.active : styles.item
+            router.pathname == "/manager/schedule/schedule" ? styles.active : styles.item
           }
         >
           <div className={styles.icon}>
@@ -89,9 +89,9 @@ const ManagerNavbar: React.FunctionComponent = () => {
           button
           key={"house"}
           onClick={() => {
-            router.push("/house");
+            router.push("/manager/house/house");
           }}
-          className={router.pathname == "/house" ? styles.active : styles.item}
+          className={router.pathname == "/manager/house/house" ? styles.active : styles.item}
         >
           <div className={styles.icon}>
             <Icon type="navHouse" />
@@ -103,25 +103,6 @@ const ManagerNavbar: React.FunctionComponent = () => {
           />
         </ListItem>
 
-        <ListItem
-          button
-          key={"settings"}
-          onClick={() => {
-            router.push("/settings");
-          }}
-          className={
-            router.pathname == "/settings" ? styles.active : styles.item
-          }
-        >
-          <div className={styles.icon}>
-            <Icon type="navSettings" />
-          </div>
-          <ListItemText
-            primaryTypographyProps={{ fontSize: "18px" }}
-            className={styles.itemText}
-            primary={"Settings"}
-          />
-        </ListItem>
       </List>
     </Drawer>
   );

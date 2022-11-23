@@ -80,7 +80,6 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
         availabilities: objectToMap(data.availabilities),
         preferences: objectToMap(data.preferences)
     }
-    console.log({user: user});
     return user as User;
 }
 
@@ -105,11 +104,11 @@ export const defaultUser: User = {
 	userID: "",
 	role: "",
 	firstName: "",
-    lastName: "",
+  lastName: "",
 	email: "",
 	houseID: "",
 	hoursAssigned: 0,
-    hoursRequired: 5,
+  hoursRequired: 5,
 	shiftsAssigned: new Array<string>(),
 	hoursRemainingWeek: 0,
 	hoursRemainingSemester: 0,

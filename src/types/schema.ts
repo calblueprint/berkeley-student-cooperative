@@ -39,8 +39,15 @@ export type Shift = {
 export type House = {
   houseID: string;
   members: string[] | null;
-  categories: string[];
   address: string;
   schedule: Map<string, string[]>;
   userPINs: Map<string, string>;
 };
+
+export type RowOfCSV = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  houseID: string;
+  accountCreated: boolean;
+}
