@@ -1,13 +1,11 @@
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { mapToObject, objectToMap } from "../helpers";
+import { objectToMap, mapToObject } from "../helpers";
 import { getHouse, updateHouse } from "./house";
-
-export const addUser = async (email: string, houseID: string, name: string, role: string, userID: string) => {
-    // PENDING COMPLETION OF HOUSE QUERIES
+export const addUser = async (email: string, houseID: string, firstName: string, lastName: string, role: string, userID: string) => {
     const currHouse = await getHouse(houseID);
-    // let currHouseMap = currHouse.pinUserMap;
+    // let currHouseMap = currHouse.userPINs;
     // do {
     //     var pinNumber = generatePinNumber(5);
     // } while (currHouseMap.has(pinNumber));
@@ -18,16 +16,16 @@ export const addUser = async (email: string, houseID: string, name: string, role
         hoursRemainingSemester: 5,
         hoursRemainingWeek: 5,
         houseID: houseID,
-        name: name,
+        firstName: firstName,
+        lastName: lastName,
         pinNumber: pinNumber,
         preferences: mapToObject(new Map<string, number>()),
         role: role,
         shiftsAssigned: new Array<string>(),
         totalFines: 0,
-        hoursRequired: 5,
-        hoursAssigned: 0
+        hoursAssigned: 0,
+        hoursRequired: 5
     });
-    // PENDING COMPLETION OF HOUSE QUERIES
     let members = currHouse.members;
     if (members == null) {
         members = new Array<string>();
@@ -37,8 +35,8 @@ export const addUser = async (email: string, houseID: string, name: string, role
     }
     // currHouseMap.set(pinNumber, userID);
     let newData = {
-        members: currHouse.members
-        // pinUserMap: currHouseMap
+        members: currHouse.members,
+        // userPINs: currHouseMap
     }
     updateHouse(houseID, newData);
 }
@@ -50,10 +48,6 @@ const generatePinNumber = (numDigitsInPin: number) => {
 
 // data must be passed in availabilities: mapToObject
 export const updateUser = async (userID: string, newData: object) => {
-    const currUser = await getUser(userID);
-    if (currUser == null) {
-        return;
-    }
     const userRef = doc(firestore, 'users', userID);
     await updateDoc(userRef, newData);
 }
@@ -64,8 +58,6 @@ export const getUser = async (userID: string) => {
     if (docSnap.exists()) {
         return await parseUser(docSnap);
     }
-    //replace w modal
-    console.log("Invalid User ID");
     return null;
 }
 
@@ -75,11 +67,12 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
     const user = {
         userID: userID,
         role: data.role,
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         houseID: data.houseID,
-        hoursAssigned: data.hoursAssigned,
         hoursRequired: data.hoursRequired,
+        hoursAssigned: data.hoursAssigned,
         shiftsAssigned: data.shiftsAssigned,
         hoursRemainingWeek: data.hoursRemainingWeek,
         hoursRemainingSemester: data.hoursRemainingSemester,
@@ -92,10 +85,6 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
 }
 
 export const deleteUser = async (userID: string) => {
-    const currUser = await getUser(userID);
-    if (currUser == null) {
-        return;
-    }
     // delete user from all instances of shifts
     const user = await getUser(userID);
     if (user == null) {
@@ -103,3 +92,21 @@ export const deleteUser = async (userID: string) => {
     }
     await deleteDoc(doc(firestore, "users", userID));
 }
+
+export const defaultUser: User = {
+	userID: "",
+	role: "",
+	firstName: "",
+  lastName: "",
+	email: "",
+	houseID: "",
+	hoursAssigned: 0,
+  hoursRequired: 5,
+	shiftsAssigned: new Array<string>(),
+	hoursRemainingWeek: 0,
+	hoursRemainingSemester: 0,
+	pinNumber: 0,
+	totalFines: 0,
+	availabilities: new Map<string, number[]>(),
+	preferences: new Map<string, number>(),
+};

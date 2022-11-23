@@ -1,66 +1,54 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import ShiftAssignmentComponentCard from "./shiftAssignmentComponentCard";
-import { addUser, updateUser, getUser } from "../firebase/queries/user";
-import { mapToObject } from "../firebase/helpers";
-import { addShift } from "../firebase/queries/shift";
+import Layout from "../components/Layout/Layout";
+import SettingsInfo from "../components/MemberComponents/SettingsInfo/SettingsInfo";
+import AvailabilityInfo from "../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
+import AssignShiftcard from "../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
+import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
+import router from "next/router";
+import { addUser } from "../firebase/queries/user";
+import { useUserContext } from "../context/UserContext";
 
 const Home: NextPage = () => {
-  const shiftID = "xzm3GT08IDqIPA5ePX0V";
-  const houseID = "EUC";
-  const day = "Sunday";
-  const id = "123456";
 
-  const createUser = async () => {
-    await addUser("hello@gmail.com", houseID, id, "member", id);
-    let availabilities = new Map<string, number[]>();
-    availabilities.set("Monday", [0, 300]);
-    let newData = {
-      availabilities: mapToObject(availabilities)
-    }
-    await updateUser(id, newData);
-  }
+	const { authUser, signIn, register, signOutAuth} = useUserContext()
 
-  const retrieveUser = async () => {
-    let obj = await getUser(id);
-    console.log(obj);
-  }
-
-  const createShift = async () => {
-    await addShift(houseID, "Intensive Kitchen Cleaning (IKC)", "clean the kitchen intensively", 5, ["Sunday"], [1000, 1200], "", 2, true, 24, "wash di");
-  }
-  const addUserPreference = async () => {
-    let map = new Map<string, number>();
-    map.set(shiftID, 2);
-    let newData = {
-      preferences: mapToObject(map)
-    }
-    await updateUser(id, newData);  
-  }
-  
   return (
-    <div className={styles.container}>
-      <button onClick = {createUser}>Create User</button>
-      <button onClick = {retrieveUser}>Get User</button>
-      <button onClick = {createShift}>Create Shift</button>
-      <button onClick = {addUserPreference}>Add Pref</button>
-      <Head>
-        <title>Workshift App</title>
-        <meta name="description" content="Next.js firebase Workshift app" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className={styles.main}>
-        <h1 className={styles.title}>Workshift App</h1>
-      </main>
-      <ShiftAssignmentComponentCard day = {day} houseID = {houseID} shiftID = { shiftID }/>
-      <footer className={styles.footer}>
-        <a href="#" rel="noopener noreferrer">
-          Workshift App
-        </a>
-      </footer>
-    </div>
+    <Layout>
+      <div className={styles.container}>
+        <Head>
+          <title>Workshift App</title>
+          <meta name="description" content="Next.js firebase Workshift app" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <main className={styles.main}>
+          <h1 className={styles.title}>Workshift App</h1>
+          <ShiftCard />
+          <AssignShiftcard shiftID={"KGA1GPrcoFUqjVc6bUSh"} houseID={"EUC"} />
+          <button
+            onClick={() => {
+              router.push("/ParseCsv/ParseCsv");
+            }}
+          >
+            Parse
+          </button>
+          <button onClick={() => register("testing_register@gmail.com", "EUC", "Greg", "M", "Member", "testing123")}>Register</button>
+					<button onClick={() => signIn("eucwm@bsc.coop", "euclidmanager")}>Sign In</button>
+					<button onClick={() => signOutAuth()}>Sign Out</button>
+					<h1>{authUser ? authUser.firstName + " " + authUser.lastName : "not signed in"}</h1>
+        </main>
+        <footer className={styles.footer}>
+          <a href="#" rel="noopener noreferrer">
+            Workshift App
+          </a>
+        </footer>
+      </div>
+    </Layout>
   );
 };
 
 export default Home;
+function firestoreAutoId(): string {
+  throw new Error("Function not implemented.");
+}
