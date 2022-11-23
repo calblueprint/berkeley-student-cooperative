@@ -2,7 +2,7 @@ import { collection, addDoc, updateDoc, doc, getDoc, getDocs, deleteDoc } from "
 import { firestore } from "../clientApp";
 import { House } from "../../types/schema";
 import { arrayBuffer } from "stream/consumers";
-
+import { objectToMap, mapToObject } from "../helpers";
 
 const colRef = collection(firestore, "houses");
 
@@ -32,11 +32,18 @@ export const getHouse = async(houseID: string)  => {
   
     const promise: Promise<House> = parseHouse(colSnap);
     const house = await promise;
-
     return house;
 
 }
 
+export const updateHouse = async (houseID: string, newData: object) => {
+    const currHouse = await getHouse(houseID);
+    if (currHouse == null) {
+        return;
+    }
+    const houseRef = doc(firestore, 'houses', houseID);
+    await updateDoc(houseRef, newData);
+}
 
 //updating the fields of house, may not be useful ?
 export const updateAddress = async (houseID: string, newAddress: string): Promise<void> => {
@@ -49,6 +56,15 @@ export const updateAddress = async (houseID: string, newAddress: string): Promis
     await updateDoc(docRef, data)
 }
 
+export const updateHouse = async (houseID: string, newData: object) => {
+    const currHouse = await getHouse(houseID);
+    if (currHouse == null) {
+        return;
+    }
+    const houseRef = doc(firestore, 'houses', houseID);
+    await updateDoc(houseRef, newData);
+}
+
 //adds a value to the categories array
 export const addCategory = async (houseID: string, newCategory: string): Promise<void> => {
     const docRef = doc(firestore, "houses", houseID);
@@ -56,7 +72,7 @@ export const addCategory = async (houseID: string, newCategory: string): Promise
     if (colSnap.exists()) {
         const promise: Promise<House> = parseHouse(colSnap);
         const house = await promise;
-        var newCategories = house.categories
+        var newCategories = house.categories;
         
         //checks if category already exists
         const index = newCategories?.indexOf(newCategory);
@@ -90,7 +106,7 @@ export const removeCategory = async (houseID: string, oldCategory: string): Prom
     if (colSnap.exists()) {
         const promise: Promise<House> = parseHouse(colSnap);
         const house = await promise;
-        var newCategories = house.categories
+        var newCategories = house.categories;
 
         const index = newCategories?.indexOf(oldCategory);
         if (index !== -1 && index){
@@ -135,13 +151,20 @@ export const getCategories = async (houseID: string) => {
 //parses house document passed in
 const parseHouse = async (doc : any) => {
     const data = doc.data();
-		const houseID = doc.id.toString();
+    const houseID = doc.id.toString();
     const members = data.members;
     const address = data.address;
     const categories = data.categories;
-		const schedule = data.schedule;
-		const userPINs = data.userPINs;
-    const house = {houseID, categories, members, address, schedule, userPINs};
+    const schedule = data.schedule;
+    const userPINs = data.userPINs;
+    const house = {
+        houseID: houseID,
+        categories: categories,
+        members: members,
+        address: address,
+        schedule: objectToMap(schedule),
+        userPINs: objectToMap(userPINs)
+    }
     return house as House;
 }
 
