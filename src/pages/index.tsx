@@ -36,7 +36,7 @@ const Home: NextPage = () => {
             Parse
           </button>
           <button onClick={() => register("testing_register@gmail.com", "EUC", "Greg", "M", "Member", "testing123")}>Register</button>
-					<button onClick={() => signIn("test123@gmail.com", "test123")}>Sign In</button>
+					<button onClick={() => signIn("eucwm@bsc.coop", "euclidmanager")}>Sign In</button>
 					<button onClick={() => signOutAuth()}>Sign Out</button>
 					<h1>{authUser ? authUser.first_name + " " + authUser.last_name : "not signed in"}</h1>
         </main>
