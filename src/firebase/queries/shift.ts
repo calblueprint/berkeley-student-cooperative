@@ -38,10 +38,20 @@ export const getShift = async (houseID: string, shiftID: string) => {
     return null;
 }
 
-export const getNumVerified = async (houseID: string, shiftID: string): Promise<number> => {
-    console.log("Getting num verified");
-    const verShiftsRef = await collection(firestore, "houses", houseID, "shifts", shiftID, "verifiedShifts");
-    const snap = await getDocs(verShiftsRef);
+export const getNumVerified = async (
+  houseID: string,
+  shiftID: string
+): Promise<number> => {
+  console.log("Getting num verified");
+  const verShiftsRef = await collection(
+    firestore,
+    "houses",
+    houseID,
+    "shifts",
+    shiftID,
+    "verifiedShifts"
+  );
+    const snap = await getDoc(verShiftsRef);
     return snap.size;
 }
 

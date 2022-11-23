@@ -3,9 +3,6 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '
 import { getUser } from "../../../firebase/queries/user";
 import { getHouse } from "../../../firebase/queries/house";
 import { Day } from "../../../types/schema";
-// import { getNumVerified, getShift };
-
-
 import { Shift } from "../../../types/schema";
 import { type } from "os";
 import Select from "react-select";
@@ -118,14 +115,13 @@ export const CategoryDropdown = () => {
   const getDailyData = async (day: string, shiftIDs: string[],usersAssigned: string[]): Promise<rowData[]> => {
       // May be a redundant line.
       if (shiftIDs == undefined && usersAssigned == null) {
+        // eslint-disable-next-line prettier/prettier
         return new Array<rowData>;
       }
       
       let shiftPromises: Promise<Shift | undefined>[] = [];
       setCurrentShiftCardID(shiftIDs[0]);
-      shiftIDs.map((id) => {
-        shiftPromises.push(getShift(authUser.houseID, id));
-      })
+      shiftIDs.map((id) => shiftPromises.push(getShift(authUser.houseID, id)))
       //MUST use Promise.all to assure that ALL shifts are loaded in before any loading is done.
       let shiftObjects = await Promise.all(shiftPromises);
       let numVerifiedPromises: Promise<number | undefined>[] = [];
