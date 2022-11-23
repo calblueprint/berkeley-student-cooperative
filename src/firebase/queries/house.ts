@@ -65,7 +65,7 @@ export const addCategory = async (houseID: string, newCategory: string): Promise
     if (colSnap.exists()) {
         const promise: Promise<House> = parseHouse(colSnap);
         const house = await promise;
-        var newCategories = house.categories
+        var newCategories = house.categories;
         
         //checks if category already exists
         const index = newCategories?.indexOf(newCategory);
@@ -99,7 +99,7 @@ export const removeCategory = async (houseID: string, oldCategory: string): Prom
     if (colSnap.exists()) {
         const promise: Promise<House> = parseHouse(colSnap);
         const house = await promise;
-        var newCategories = house.categories
+        var newCategories = house.categories;
 
         const index = newCategories?.indexOf(oldCategory);
         if (index !== -1 && index){
