@@ -51,6 +51,6 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-function firestoreAutoId(): string {
-  throw new Error("Function not implemented.");
-}
+// function firestoreAutoId(): string {
+//   throw new Error("Function not implemented.");
+// }

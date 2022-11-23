@@ -93,7 +93,7 @@ export const CategoryDropdown = () => {
     Promise.all(Object.entries((houseFB.schedule)).map(async (entry) => {
       let day = entry[0], shiftIDs = entry[1];
       //getDailyData converts all Firebase Shifts to row Data, only retrieves essential info for a row
-      let dailyData: rowData[] = await getDailyData(day, shiftIDs);
+      let dailyData: rowData[] = await getDailyData(day, shiftIDs);//(day: string, shiftIDs: string[],usersAssigned: string[])
       let rowComponents: JSX.Element[] = [];
       //Turn all row Data into Row Components
       convertDataToComponent(dailyData, rowComponents);
