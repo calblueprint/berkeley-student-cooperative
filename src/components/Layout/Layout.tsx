@@ -3,31 +3,12 @@ import styles from "./Layout.module.css";
 import MemberNavbar from "../MemberComponents/Navbar/MemberNavbar";
 import Head from "next/head";
 import ManagerNavbar from "../ManagerComponents/Navbar/ManagerNavbar";
-import { useRouter } from "next/router";
+import { useUserContext } from "../../context/UserContext";
 
 const Layout = ({ children, title }: any) => {
-  const router = useRouter();
-  const [role, setRole] = useState("member");
+  const { authUser } = useUserContext();
 
-  const memoizedRouterChange = useCallback(() => {
-    if (role == "member") {
-      router.push("/member");
-    }
-  }, [role, router]);
-
-  useEffect(() => {
-    memoizedRouterChange;
-  }, [memoizedRouterChange]);
-
-  const updateURL = () => {
-    if (role == "member") {
-      router.push("/member");
-    }
-  };
-
-  //authUser and loading to auto direct to login?
-
-  return role == "member" ? (
+  return authUser.role == "Member" ? (
     <div className={styles.container}>
       <Head>
         <title>{title}</title>

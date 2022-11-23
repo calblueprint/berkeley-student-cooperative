@@ -1,26 +1,23 @@
 import * as React from "react";
 import { useRouter } from "next/router";
-import {
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { List, ListItem, ListItemText, Typography } from "@mui/material";
 import styles from "./MemberNavbar.module.css";
 import Icon from "../../../assets/Icon";
+import { useUserContext } from "../../../context/UserContext";
 
 const MemberNavbar: React.FunctionComponent = () => {
   const router = useRouter();
+  const { authUser, signOutAuth } = useUserContext();
 
   const userDetails = () => (
     <ListItem className={styles.item + " " + styles.userDetails}>
       <Icon type="navProfile" className={styles.icon} />
       <div>
         <Typography variant="subtitle1" color={"#FFFFFF"}>
-          Evan Quan
+          {authUser.first_name} {authUser.last_name}
         </Typography>
         <Typography variant="subtitle1" color={"#FFFFFF"}>
-          Shift Member
+          {authUser.role}
         </Typography>
       </div>
     </ListItem>
@@ -32,10 +29,11 @@ const MemberNavbar: React.FunctionComponent = () => {
         button
         key={"dashboard"}
         onClick={() => {
-          router.push("/member");
+          router.push("/member/dashboard");
         }}
-        // className={styles.active}
-        className={router.pathname == "/member" ? styles.active : styles.item}
+        className={
+          router.pathname == "/member/dashboard" ? styles.active : styles.item
+        }
       >
         <div className={styles.icon}>
           <Icon type="navDashboard" />
@@ -108,7 +106,15 @@ const MemberNavbar: React.FunctionComponent = () => {
 
   const logout = () => (
     <List className={styles.logout}>
-      <ListItem className={styles.item}>
+      <ListItem
+        className={styles.item}
+        button
+        key={"settings"}
+        onClick={() => {
+          router.push("/login");
+          signOutAuth();
+        }}
+      >
         <Icon type="navLogout" />
         <ListItemText
           primaryTypographyProps={{
