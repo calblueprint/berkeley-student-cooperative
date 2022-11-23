@@ -33,6 +33,10 @@ export default function LoginPage() {
       router.push("/manager/schedule");
     }
   });
+
+  const createAccount = () => {
+    router.push("/createAccount")
+  }
   return authUser.userID != "" ? (
     <Layout />
   ) : (
@@ -57,7 +61,6 @@ export default function LoginPage() {
           <Typography variant="body1" className={styles.text}>
             Password
           </Typography>
-          {/* <input type="password" name="psswd"></input> */}
           <TextField
             className={styles.textfield}
             fullWidth
@@ -86,8 +89,11 @@ export default function LoginPage() {
           >
             Login
           </Button>
-          <Typography className={styles.createAccount}>
+          <Button className={styles.createAccount} onClick={createAccount}>
             Create an account
+          </Button>
+          <Typography className={styles.createAccount}>
+            
           </Typography>
         </div>
       </div>
