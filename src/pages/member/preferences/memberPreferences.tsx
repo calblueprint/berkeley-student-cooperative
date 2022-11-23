@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState, useEffect} from 'react';
-import { getCategories } from '../../firebase/queries/house';
+import { getCategories } from '../../../firebase/queries/house';
 import {Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, ButtonGroup} from '@mui/material';
 import styles from './memberPreferences.module.css'
 
@@ -26,18 +26,25 @@ const PreferButton = () => {
     );
 };
 
+// map1.forEach((value, key) => {
+//     console.log(value, key); // 👉️ Chile country, 30 age
+//   });
+
 const MemberPreferences = () => {
     //array that holds the categories of particular house
-    const [houseCategories, setHouseCategories] = useState<String[]>()
+    const [houseCategories, setHouseCategories] = useState<String[][]>()
     const [preferID, setPreferID] = useState<String>();
     
     //gets all categories from the backend
     //Euclid is hardcoded in so info appears.
     useEffect(() => {
-        getCategories('EUC').then((value) => {
+        getCategories('EUC').then((category) => {
             
-            setHouseCategories(value);
-            console.log("value returned from getCategories", houseCategories);
+            // setHouseCategories(value);
+            console.log("value returned from getCategories", category);
+            console.log("object", Object.entries(category));
+            setHouseCategories(Object.entries(category));
+           
         });
     }, []);
 
@@ -53,29 +60,31 @@ const MemberPreferences = () => {
                 <Typography className={styles.taskTitle} variant='h2'>Task Preferences</Typography>    
             </div>
             <div className={styles.prefTables}>
+                
                 {/* maps through house categories and creates a table for each table */}
-                {houseCategories?.map((item,index) => {
+                
+                {houseCategories?.map((value, key) => {
                     return (
-                        <div key={index} className={styles.spefTable} >
+                        <div key={key} className={styles.spefTable} >
                             <TableContainer>
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>{item}</TableCell>
-                                            <TableCell align="right">
+                                            <TableCell style={{backgroundColor:'lightblue'}} className='category'>{value[0]}</TableCell>
+                                            <TableCell style={{backgroundColor:'lightblue'}}align="right">
                                                 <PreferButton />
                                             </TableCell>
                                         </TableRow>
                                         
                                     </TableHead>
-
+                                    
                                     {/* goes through each task and creates a row with a button that determines user's preference */}
                                     {/* should be changed when able to grab tasks for each category */}
                                     <TableBody>
-                                        {dummyArr.map((shift, idx) => {
+                                        {Object.entries(value[1]).map((value, index) => {
                                             return (
-                                                <TableRow key={idx}>
-                                                    <TableCell>{shift}</TableCell>
+                                                <TableRow key={index}>
+                                                    <TableCell>{value[1]}</TableCell>
                                                     <TableCell align="right">
                                                         <PreferButton />
                                                     </TableCell>
@@ -88,6 +97,7 @@ const MemberPreferences = () => {
                         </div>
                     )
                 })}
+                
                 
                
             </div>

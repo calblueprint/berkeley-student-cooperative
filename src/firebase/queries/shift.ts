@@ -30,6 +30,16 @@ export const getAllShiftsInCategory = async (houseID: string, category: string) 
     return returnObj;
 }
 
+export const getAllShifts = async (houseID: string) => {
+    const querySnapshot = await getDocs(collection(firestore, "houses", houseID, "shifts"));
+    let returnObj: Shift[] = [];
+    querySnapshot.forEach(async (docSnap) => {
+        let currShift = await parseShift(docSnap);
+        returnObj.push(currShift);
+    })
+    return returnObj;
+}
+
 export const updateShift = async (houseID: string, shiftID: string, newData: object) => {
     const currShift = await getShift(houseID, shiftID);
     if (currShift == null) {

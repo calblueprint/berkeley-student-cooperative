@@ -4,30 +4,34 @@ import MemberNavbar from "../MemberComponents/Navbar/MemberNavbar";
 import Head from "next/head";
 import ManagerNavbar from "../ManagerComponents/Navbar/ManagerNavbar";
 import { useRouter } from "next/router";
+import { useUserContext } from "../../context/UserContext";
 
 const Layout = ({ children, title }: any) => {
+
+  const { authUser, house } = useUserContext();
+
   const router = useRouter();
-  const [role, setRole] = useState("member");
+  // const [role, setRole] = useState("member");
 
   const memoizedRouterChange = useCallback(() => {
-    if (role == "member") {
+    if (authUser.role == "member" || authUser.role == "Member") {
       router.push("/member");
     }
-  }, [role, router]);
+  }, [authUser.role, router]);
 
   useEffect(() => {
     memoizedRouterChange;
   }, [memoizedRouterChange]);
 
   const updateURL = () => {
-    if (role == "member") {
+    if (authUser.role == "member") {
       router.push("/member");
     }
   };
 
   //authUser and loading to auto direct to login?
 
-  return role == "member" ? (
+  return authUser.role == "member" || authUser.role == "Member" ? ( // TODO: fix how we set the roles to be consistent with one of these
     <div className={styles.container}>
       <Head>
         <title>{title}</title>

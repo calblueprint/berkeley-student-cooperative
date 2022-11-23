@@ -14,13 +14,11 @@ import {addCategory, updateCategory, removeShiftFromCategory, removeCategory} fr
 import { getShift } from "../firebase/queries/shift";
 
 const Home: NextPage = () => {
-  useEffect(() => {
-    getShift('EUC', 'T4BT4aX2omS9zTHyGljj').then((value) => {
-      if (value)      
-      removeShiftFromCategory('EUC', value);
-  });
 
-  }, []);
+	const { authUser, signIn, register, signOutAuth} = useUserContext()
+  console.log("AUTH USER BELOW")
+  console.log(authUser);
+
   return (
     <Layout>
       <div className={styles.container}>
@@ -40,6 +38,10 @@ const Home: NextPage = () => {
           >
             Parse
           </button>
+          <button onClick={() => register("testing_register@gmail.com", "EUC", "Greg", "M", "Member", "testing123")}>Register</button>
+					<button onClick={() => signIn("eucwm@bsc.coop", "euclidmanager")}>Sign In</button>
+					<button onClick={() => signOutAuth()}>Sign Out</button>
+					<h1>{authUser ? authUser.first_name + " " + authUser.last_name : "not signed in"}</h1>
         </main>
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">

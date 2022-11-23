@@ -142,6 +142,17 @@ export const updateCategory = async(houseID: string, shift: Shift): Promise<void
     }
 }
 
+export const getCategories = async(houseID: string) => {
+    const docRef = doc(firestore, "houses", houseID);
+
+    const colSnap = await getDoc(docRef);
+  
+    const promise: Promise<House> = parseHouse(colSnap);
+    const house = await promise;
+
+    return house.categories;
+}
+
 export const removeShiftFromCategory = async(houseID: string, shift: Shift): Promise<void> => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
