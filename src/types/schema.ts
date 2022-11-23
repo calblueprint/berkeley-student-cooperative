@@ -3,8 +3,8 @@ import internal from "stream";
 export type User = {
   userID: string;
   role: string;
-  last_name: string;
-  first_name: string;
+  lastName: string;
+  firstName: string;
   email: string;
   houseID: string;
   // update
@@ -41,6 +41,7 @@ export type House = {
   members: string[] | null;
   categories: Map<string, (Map<string, string>)>;
   address: string;
+  categories: string[];
   schedule: Map<string, string[]>;
   userPINs: Map<string, string>;
 };
