@@ -12,8 +12,7 @@ import { useUserContext } from "../context/UserContext";
 import CategoryDropdown from "./manager/CategoryDropdown/categoryDropdown";
 
 const Home: NextPage = () => {
-
-	const { authUser, signIn, register, signOutAuth} = useUserContext()
+    const { authUser, signIn, register, signOutAuth} = useUserContext()
   console.log("AUTH USER BELOW")
   console.log(authUser);
 
@@ -52,6 +51,6 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-// function firestoreAutoId(): string {
-//   throw new Error("Function not implemented.");
-// }
+function firestoreAutoId(): string {
+  throw new Error("Function not implemented.");
+}
