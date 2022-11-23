@@ -32,11 +32,18 @@ export const getHouse = async(houseID: string)  => {
   
     const promise: Promise<House> = parseHouse(colSnap);
     const house = await promise;
-
     return house;
 
 }
 
+export const updateHouse = async (houseID: string, newData: object) => {
+    const currHouse = await getHouse(houseID);
+    if (currHouse == null) {
+        return;
+    }
+    const houseRef = doc(firestore, 'houses', houseID);
+    await updateDoc(houseRef, newData);
+}
 
 //updating the fields of house, may not be useful ?
 export const updateAddress = async (houseID: string, newAddress: string): Promise<void> => {

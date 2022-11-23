@@ -46,6 +46,7 @@ const generatePinNumber = (numDigitsInPin: number) => {
 }
 
 
+// data must be passed in availabilities: mapToObject
 export const updateUser = async (userID: string, newData: object) => {
     const userRef = doc(firestore, 'users', userID);
     await updateDoc(userRef, newData);
@@ -85,19 +86,11 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
 
 export const deleteUser = async (userID: string) => {
     // delete user from all instances of shifts
-    await deleteDoc(doc(firestore, "users", userID));
-}
-
-export const assignShiftToUser = async (userID: string, shiftID: string) => {
-    const currUser = await getUser(userID);
-    if (currUser === null) {
+    const user = await getUser(userID);
+    if (user == null) {
         return;
     }
-    currUser.shiftsAssigned.push(shiftID);
-    let newData = {
-        shiftsAssigned: currUser.shiftsAssigned
-    }
-    await updateUser(userID, newData);
+    await deleteDoc(doc(firestore, "users", userID));
 }
 
 export const defaultUser: User = {
