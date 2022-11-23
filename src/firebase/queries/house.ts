@@ -1,7 +1,8 @@
 import { collection, addDoc, updateDoc, doc, getDoc, getDocs, deleteDoc } from "firebase/firestore";
 import { firestore } from "../clientApp";
-import { House } from "../../types/schema";
+import { House, Shift } from "../../types/schema";
 import { arrayBuffer } from "stream/consumers";
+import { objectToMap, mapToObject } from "../helpers";
 
 
 const colRef = collection(firestore, "houses");
@@ -49,84 +50,253 @@ export const updateAddress = async (houseID: string, newAddress: string): Promis
     await updateDoc(docRef, data)
 }
 
-//adds a value to the categories array
-export const addCategory = async (houseID: string, newCategory: string): Promise<void> => {
+
+//add a new category to the categories map
+export const addCategory = async(houseID: string, newCategory: string): Promise<void> =>{
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
     if (colSnap.exists()) {
         const promise: Promise<House> = parseHouse(colSnap);
         const house = await promise;
-        var newCategories = house.categories
+        var houseCategories = objectToMap(house.categories);
+       
         
         //checks if category already exists
-        const index = newCategories?.indexOf(newCategory);
-        if (index == -1 ){
-            if (!newCategories){
-                newCategories = [newCategory]
-            } else {
-                newCategories?.push(newCategory)
-            }
+        // const index = newCategories?.has(newCategory);
+        if(!houseCategories?.has(newCategory)) {
+            houseCategories.set(newCategory, {});
             const data = {
-                categories: newCategories
+                categories: mapToObject(houseCategories)
             }
             await updateDoc(docRef, data)
-            
+
         } else {
-            console.log(newCategory+ " category already exists")
+            console.log("The", newCategory, " category already exists, use the updateCategory function");
         }
         
     } else{
         console.log("invalid house id for add category")
     }
-  
-    
-    
-    
 }
 
-export const removeCategory = async (houseID: string, oldCategory: string): Promise<void> => {
+
+//adds a shift to the categories map
+export const updateCategory = async(houseID: string, shift: Shift): Promise<void> => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
     if (colSnap.exists()) {
         const promise: Promise<House> = parseHouse(colSnap);
         const house = await promise;
-        var newCategories = house.categories
+        var houseCategories = objectToMap(house.categories)
+        
+        //checks if category already exists
+        // const index = newCategories?.has(newCategory);
+        if(shift.name && shift.shiftID && shift.category) {
+            if(houseCategories?.has(shift.category)) {
+                // if (houseCategories.get(shift.category)?.length == 0){
+                //     houseCategories.set(shift.category, [[shift.shiftID, shift.name]]);
+                // } else {
+                //     let currCatArr = houseCategories.get(shift.category);
+                //     currCatArr?.push([shift.shiftID, shift.name]);
+                //     if (currCatArr){
+                //         houseCategories.set(shift.category, currCatArr);
+                //     } else {
+                //         houseCategories.set(shift.category, [[shift.shiftID, shift.name]]);
+                //     }
+                    
+                // }
+                const currCatMap = objectToMap(houseCategories.get(shift.category))
+                if(!currCatMap.has(shift.shiftID)) {
+                    currCatMap.set(shift.shiftID, shift.name)
+                    houseCategories.set(shift.category, mapToObject(currCatMap))
 
-        const index = newCategories?.indexOf(oldCategory);
-        if (index !== -1 && index){
+                    const data = {
+                        categories: mapToObject(houseCategories)
+                    }
+                    await updateDoc(docRef, data);
+
+
+                } else {
+                    console.log("This shift already exists in the", shift.category, "category");
+                }
             
-            newCategories?.splice(index, 1)
-            const data = {
-                categories: newCategories
+                
+
+            } else {
+                const currCatMap = new Map();
+                currCatMap.set(shift.shiftID, shift.name)
+                houseCategories.set(shift.category, mapToObject(currCatMap))
+                const data = {
+                    categories: mapToObject(houseCategories)
+                }
+                await updateDoc(docRef, data)
             }
-            await updateDoc(docRef, data)
-        } else {
-            console.log("category does not exist");
+        } else{
+            console.log("This is an invalid shift object");
         }
+
+        
+        
     } else{
-        console.log("invalid house id for removeCategory")
+        console.log("invalid house id for update category")
     }
-    
-    
 }
 
-
-export const getCategories = async (houseID: string) => {
+export const removeShiftFromCategory = async(houseID: string, shift: Shift): Promise<void> => {
     const docRef = doc(firestore, "houses", houseID);
-
     const colSnap = await getDoc(docRef);
-    if(colSnap.exists()){
-        const house =  await parseHouse(colSnap);
-        return house.categories;
+    if (colSnap.exists()) {
+        const promise: Promise<House> = parseHouse(colSnap);
+        const house = await promise;
+        var houseCategories = objectToMap(house.categories)
+  
+        if(shift.name && shift.shiftID && shift.category) {
+
+            if(houseCategories?.has(shift.category)) {
+
+                const currShift = objectToMap(houseCategories.get(shift.category));
+                currShift.delete(shift.shiftID);
+                houseCategories.set(shift.category, mapToObject(currShift))
+                const data = {
+                    categories: mapToObject(houseCategories)
+                }
+                await updateDoc(docRef, data);
+
+                // if(currShift) {
+                //     const index = currShift.indexOf([shift.shiftID, shift.name]);
+
+                //     if (index > -1) { // only splice array when item is found
+                //         currShift.splice(index, 1); 
+                //         houseCategories.set(shift.category, currShift)
+                //         const data = {
+                //             categories: mapToObject(houseCategories)
+                //         }
+                //         await updateDoc(docRef, data)
+                //     } else {
+                //         console.log("this shift does not exist in the ", shift.category, "category");
+                //     }
+
+                // } else {
+                //     console.log("this shift does not exist in the ", shift.category, "category");
+                // }
+              
+            } else{
+                console.log("this category does not exist")
+            }
+            
+        } else {
+            console.log("This is an invalid shift object");
+        }
+        
     } else{
-        console.log("invalid house id for getCategories")
-        return;
+        console.log("invalid house id for remove category")
     }
+}
+
+export const removeCategory = async(houseID: string, oldCategory: string): Promise<void> => {
+    const docRef = doc(firestore, "houses", houseID);
+    const colSnap = await getDoc(docRef);
+    if (colSnap.exists()) {
+        const promise: Promise<House> = parseHouse(colSnap);
+        const house = await promise;
+        var houseCategories = objectToMap(house.categories)
+        
+        //checks if category already exists
+        // const index = newCategories?.has(newCategory);
+        if(houseCategories?.has(oldCategory)) {
+            houseCategories.delete(oldCategory);
+            const data = {
+                categories: mapToObject(houseCategories)
+            }
+            await updateDoc(docRef, data)
+
+        } else {
+            console.log("The", oldCategory, " category does not exist");
+        }
+        
+    } else{
+        console.log("invalid house id for add category")
+    }
+}
+
+// //adds a value to the categories array
+// export const addCategory = async (houseID: string, newCategory: string): Promise<void> => {
+//     const docRef = doc(firestore, "houses", houseID);
+//     const colSnap = await getDoc(docRef);
+//     if (colSnap.exists()) {
+//         const promise: Promise<House> = parseHouse(colSnap);
+//         const house = await promise;
+//         var newCategories = house.categories
+        
+//         //checks if category already exists
+//         const index = newCategories?.indexOf(newCategory);
+//         if (index == -1 ){
+//             if (!newCategories){
+//                 newCategories = [newCategory]
+//             } else {
+//                 newCategories?.push(newCategory)
+//             }
+//             const data = {
+//                 categories: newCategories
+//             }
+//             await updateDoc(docRef, data)
+            
+//         } else {
+//             console.log(newCategory+ " category already exists")
+//         }
+        
+//     } else{
+//         console.log("invalid house id for add category")
+//     }
+  
+    
+    
+    
+// }
+
+// export const removeCategory = async (houseID: string, oldCategory: string): Promise<void> => {
+//     const docRef = doc(firestore, "houses", houseID);
+//     const colSnap = await getDoc(docRef);
+//     if (colSnap.exists()) {
+//         const promise: Promise<House> = parseHouse(colSnap);
+//         const house = await promise;
+//         var newCategories = house.categories
+
+//         const index = newCategories?.indexOf(oldCategory);
+//         if (index !== -1 && index){
+            
+//             newCategories?.splice(index, 1)
+//             const data = {
+//                 categories: newCategories
+//             }
+//             await updateDoc(docRef, data)
+//         } else {
+//             console.log("category does not exist");
+//         }
+//     } else{
+//         console.log("invalid house id for removeCategory")
+//     }
+    
+    
+// }
+
+
+// export const getCategories = async (houseID: string) => {
+//     const docRef = doc(firestore, "houses", houseID);
+
+//     const colSnap = await getDoc(docRef);
+//     if(colSnap.exists()){
+//         const house =  await parseHouse(colSnap);
+//         return house.categories;
+//     } else{
+//         console.log("invalid house id for getCategories")
+//         return;
+//     }
 
    
     
 
-}
+// }
 
 
 //address schedule field when shifts are all done
@@ -213,7 +383,7 @@ const parseHouse = async (doc : any) => {
 		
 export const defaultHouse: House = {
 		houseID: "",
-		categories: new Array<string>(),
+		categories: new Map<string, (Map<string, string>)>(),
 		members: new Array<string>(),
 		address: "",
 		schedule: new Map<string, string[]>(),

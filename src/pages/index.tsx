@@ -9,8 +9,18 @@ import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 import router from "next/router";
 import { addUser } from "../firebase/queries/user";
 import { useUserContext } from "../context/UserContext";
+import { useEffect } from "react";
+import {addCategory, updateCategory, removeShiftFromCategory, removeCategory} from "../firebase/queries/house";
+import { getShift } from "../firebase/queries/shift";
 
 const Home: NextPage = () => {
+  useEffect(() => {
+    getShift('EUC', 'T4BT4aX2omS9zTHyGljj').then((value) => {
+      if (value)      
+      removeShiftFromCategory('EUC', value);
+  });
+
+  }, []);
   return (
     <Layout>
       <div className={styles.container}>

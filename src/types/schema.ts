@@ -40,7 +40,7 @@ export type House = {
   houseID: string;
   members: string[] | null;
   // maps string to tuple
-  categories: Map<string, [string[], string]>;
+  categories: Map<string, (Map<string, string>)>;
   address: string;
   schedule: Map<string, string[]>;
   userPINs: Map<string, string>;
