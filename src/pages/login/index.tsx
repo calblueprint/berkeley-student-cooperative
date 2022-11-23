@@ -27,10 +27,10 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (authUser.userID != "") {
-      if (authUser.role == "Member" || authUser.role == "member") {
-        router.push("/member/dashboard");
+      if (authUser.role == "Manager" || authUser.role == "manager") {
+        router.push("/manager/schedule");
       }
-      router.push("/manager/schedule");
+      router.push("/member/dashboard");
     }
   });
 
