@@ -4,8 +4,16 @@ import { defaultUser } from "../firebase/queries/user";
 import { defaultHouse } from "../firebase/queries/house";
 
 const authUserContext = createContext({
-	authUser: defaultUser,
-	house: defaultHouse,
+  authUser: defaultUser,
+  house: defaultHouse,
+  register: async (
+    email: string,
+    houseID: string,
+    lastName: string,
+    firstName: string,
+    role: string,
+    password: string
+  ) => {},
   signIn: async (email: string, password: string) => {},
   register: async (email: string, houseID:string, first_name: string, last_name: string, role: string, password: string) => {},
   signOutAuth: () => {},

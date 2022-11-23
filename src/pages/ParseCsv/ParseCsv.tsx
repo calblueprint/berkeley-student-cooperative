@@ -55,19 +55,19 @@ const ParseCSV = () => {
             </label> */}
       <input type="file" onChange={(e) => uploadCSV(e.target.files[0])} />
 
-      {userArr.length > 0 && userArr[0].last_name
+      {userArr.length > 0 && userArr[0].lastName
         ? userArr.map((item, index) => {
             return (
               <div key={index}>
                 <h2>
-                  {item.first_name} {item.last_name}'s email is {item.email} and
+                  {item.firstName} {item.lastName}'s email is {item.email} and
                   they live in {item.house}.
                 </h2>
               </div>
             );
           })
-        : userArr.length > 0 && userArr[0].last_name == undefined
-        ? "please input csv file with fields last_name, first_name, email, house."
+        : userArr.length > 0 && userArr[0].lastName == undefined
+        ? "please input csv file with fields lastName, firstName, email, house."
         : "No members found"}
     </div>
   );
