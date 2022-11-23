@@ -22,6 +22,33 @@ export const useFirebaseAuth = () => {
 	const [authUser, setAuthUser] = useState(defaultUser);
 	const [house, setHouse] = useState(defaultHouse)
 
+  const register = async (
+    email: string,
+    houseID: string,
+    lastName: string,
+    firstName: string,
+    role: string,
+    password: string
+  ): Promise<void> => {
+    try {
+      //PENDING: Search for email in CSV once this func is available.
+      createUserWithEmailAndPassword(auth, email, password).then(
+        (userCredential) => {
+          const user = userCredential.user;
+          console.log("Created User:", user);
+          addUser(email, houseID, lastName, firstName, role, user.uid).then(
+            () => {
+              establishUserContext(user.uid);
+            }
+          );
+        }
+      );
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  };
+
 	const authStateChanged = async (authState: any) => {
 		if (!authState) {
 			setAuthUser(defaultUser);
@@ -34,38 +61,7 @@ export const useFirebaseAuth = () => {
 		const refresh = auth.onAuthStateChanged(authStateChanged);
 		return () => refresh();
 	}, [])
-
-	const register = async (
-			email: string,
-			houseID: string,
-			first_name: string,
-			last_name: string,
-			role: string,
-			password: string
-	): Promise<void> => {
-			try {
-					//PENDING: Search for email in CSV once this func is available.
-					createUserWithEmailAndPassword(auth, email, password )
-					.then((userCredential) => {
-						const user = userCredential.user;
-						console.log("Created User:", user);
-						/* 
-							Signed in
-							PENDING Completion of addUser
-							PENDING Role is automatically resident/ not Manager
-							PENDING HouseID found in csv
-							addUser(email, houseID, name, role, user.uid)
-						*/
-					addUser(email, houseID, first_name, last_name, role, user.uid).then(() => {
-						signIn(email, password)
-					});
-					})
-			} catch(e) {
-				console.error(e);
-				throw e
-			}
-	};
-
+  
 	const signIn = async (
 		email: string,
 		password: string
