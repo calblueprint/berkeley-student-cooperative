@@ -8,16 +8,18 @@ import {
 import Image from "next/image";
 import BscLogo from "../../assets/bsclogo.png";
 import styles from "./Login.module.css";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFirebaseAuth } from "../../firebase/queries/auth";
 import Layout from "../../components/Layout/Layout";
 import { useRouter } from "next/router";
+import { useUserContext } from  "../../context/UserContext";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { signIn, authUser } = useFirebaseAuth();
+  const {setAuthUser} = useUserContext();
 
   const login = async () => {
     if (email.length > 0 && password.length > 0) {
@@ -28,6 +30,11 @@ export default function LoginPage() {
   useEffect(() => {
     if (authUser.userID != "") {
       if (authUser.role == "Member" || authUser.role == "member") {
+        //// DEBUGG *******************
+        console.log("++++++++++++++Login page user: ")
+        setAuthUser(authUser)
+        console.log(authUser)
+        //// DEBUG ********************
         router.push("/member/dashboard");
       }
       router.push("/manager/schedule");

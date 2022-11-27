@@ -6,6 +6,7 @@ import { defaultHouse } from "./house";
 import { doc, deleteDoc } from "firebase/firestore";
 import { firestore } from "../clientApp";
 import { getHouse } from "./house";
+import { useUserContext } from "../../context/UserContext";
 
 //managers don't have to register.  House will be matched to email
 //userID is going to get generated in register.
@@ -18,8 +19,10 @@ import { getHouse } from "./house";
 */
 
 export const useFirebaseAuth = () => {
+	const {authUser, setAuthUser} = useUserContext();
+
 	const auth = getAuth();
-	const [authUser, setAuthUser] = useState(defaultUser);
+	// const [authUser, setAuthUser] = useState(defaultUser);
 	const [house, setHouse] = useState(defaultHouse)
 
   const register = async (
@@ -93,6 +96,7 @@ export const useFirebaseAuth = () => {
 	
 	const establishUserContext = async(uid: string): Promise<void> => {
 		try {
+			console.log("updating user *****************")
 			getUser(uid).then((userFromDoc) => {
 				if (userFromDoc != null) {
 					console.log("USER FROM FIREBASE: ", userFromDoc);
