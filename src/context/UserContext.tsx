@@ -14,7 +14,7 @@ import {
 
 export const authUserContext = createContext({
   authUser: defaultUser, // added
-  setAuthUser: function(user:any){},  // added
+  // setAuthUser: function(user:any){},  // added
   house: defaultHouse,
   register: async (
     email: string,
@@ -31,13 +31,13 @@ export const authUserContext = createContext({
 
 export const AuthUserProvider = ({children}: any) => {
   // const auth = getAuth();
-  const [user, setUser] = useState(defaultUser);
+  // const [user, setUser] = useState(defaultUser);
   // const [loding, setLoding] = useState(true);
   const val = useFirebaseAuth();
   
   var x = {
     authUser: val["authUser"],//val["authUser"], // added
-    setAuthUser: (user:any) => {setUser(user)},  // added
+    // setAuthUser: (user:any) => {setUser(user)},  // added
     house: val["house"],
     register: val["register"],
     signIn: val["signIn"],

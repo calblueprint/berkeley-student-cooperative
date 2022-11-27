@@ -19,7 +19,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { signIn, authUser } = useFirebaseAuth();
-  const {setAuthUser} = useUserContext();
 
   const login = async () => {
     if (email.length > 0 && password.length > 0) {
@@ -30,14 +29,10 @@ export default function LoginPage() {
   useEffect(() => {
     if (authUser.userID != "") {
       if (authUser.role == "Member" || authUser.role == "member") {
-        //// DEBUGG *******************
-        console.log("++++++++++++++Login page user: ")
-        // setAuthUser(authUser)
-        console.log(authUser)
-        //// DEBUG ********************
         router.push("/member/dashboard");
+      } else {
+        router.push("/manager/schedule");
       }
-      router.push("/manager/schedule");
     }
   });
 

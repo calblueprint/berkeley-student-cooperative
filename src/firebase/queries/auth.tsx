@@ -62,6 +62,7 @@ export const useFirebaseAuth = () => {
 	console.log("I am in authStateChange %%%%%%%%%%%%%%")
     if (!authState) {
       setAuthUser(defaultUser);
+	  setLoding(false);
       return;
     }
     establishUserContext(authState.uid);
