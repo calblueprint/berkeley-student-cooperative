@@ -32,7 +32,7 @@ export default function LoginPage() {
       if (authUser.role == "Member" || authUser.role == "member") {
         //// DEBUGG *******************
         console.log("++++++++++++++Login page user: ")
-        setAuthUser(authUser)
+        // setAuthUser(authUser)
         console.log(authUser)
         //// DEBUG ********************
         router.push("/member/dashboard");
