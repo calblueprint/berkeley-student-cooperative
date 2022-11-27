@@ -33,7 +33,7 @@ export default function LoginPage() {
       } else {
         router.push("/manager/schedule");
       }
-    }
+    } 
   });
 
   const createAccount = () => {

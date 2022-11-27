@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { createContext, useContext } from "react";
 import { useFirebaseAuth } from "../firebase/queries/auth";
 import { defaultUser } from "../firebase/queries/user";
 import { defaultHouse } from "../firebase/queries/house";
-import { User } from "firebase/auth";
-import { userAgent } from "next/server";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
+
+
 
 export const authUserContext = createContext({
   authUser: defaultUser, // added
@@ -32,8 +26,6 @@ export const authUserContext = createContext({
 export const AuthUserProvider = ({children}: any) => {
  
   const val = useFirebaseAuth();
-
-
 
 	return (
 		<authUserContext.Provider value={val}> {
