@@ -32,27 +32,21 @@ export const authUserContext = createContext({
 export const AuthUserProvider = ({children}: any) => {
  
   const val = useFirebaseAuth();
-  
-  // var x = {
-  //   authUser: val["authUser"],//val["authUser"], // added
-  //   // setAuthUser: (user:any) => {setUser(user)},  // added
-  //   house: val["house"],
-  //   register: val["register"],
-  //   signIn: val["signIn"],
-  //   signOutAuth: val["signOutAuth"],
-  //   deleteUser: val["deleteUser"]
-  // };
-	// // setUser(auth.authUser);
-  // console.log("********This is the context User: ")
-  // console.log(x["authUser"])
-  // console.log(val["authUser"])
 
-	// const value = {authUser:user, setAuthUser:setUser};
+
 
 	return (
 		<authUserContext.Provider value={val}> {
+      /** 
+       * When loading is true the authStateChanged() is fetching a user and 
+       * false when is done. This allows the children componets to wait for the 
+       * user to be fetch. If we proceed without waiting the children componets 
+       * try to use a null user which gives an error. 
+       * When lodign is true nothing is displayed, but if desired a loding component could 
+       * be displayed intead of null.
+       */
       val["loding"]? 
-      null : 
+      null : //<div>Loading User</div> : x
       children
       } </authUserContext.Provider>
 	)

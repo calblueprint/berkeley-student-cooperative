@@ -24,8 +24,6 @@ import { getHouse } from "./house";
 */
 
 export const useFirebaseAuth = () => {
-//   const { authUser, setAuthUser } = useUserContext();
-
   const auth = getAuth();
   const [authUser, setAuthUser] = useState(defaultUser);
   const [house, setHouse] = useState(defaultHouse);
@@ -68,9 +66,9 @@ export const useFirebaseAuth = () => {
   };
 
   const authStateChanged = async (authState: any) => {
-	console.log("I am in authStateChange %%%%%%%%%%%%%%")
     if (!authState) {
       setAuthUser(defaultUser);
+
 	  /* If authState is false then no user fetching is needed. Signal authUserContext.Provider to proceed  */ 
 	  setLoding(false);
       return;
@@ -111,7 +109,7 @@ export const useFirebaseAuth = () => {
 
   const establishUserContext = async (uid: string): Promise<void> => {
     try {
-      console.log("updating user *****************");
+    //   console.log("updating user *****************");
       getUser(uid).then((userFromDoc) => {
         if (userFromDoc != null) {
           console.log("USER FROM FIREBASE: ", userFromDoc);
@@ -137,6 +135,11 @@ export const useFirebaseAuth = () => {
   const deleteUser = async (uid: string): Promise<void> => {
     await deleteDoc(doc(firestore, "users", uid));
   };
+
+  /** 
+   * Added loding to the returned elements so that authUserContext.Provider can be signaled when 
+   * fetching the user has been completed.
+   */
 
   return {
     authUser,
