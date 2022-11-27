@@ -34,27 +34,7 @@ export const AuthUserProvider = ({children}: any) => {
   const [user, setUser] = useState(defaultUser);
   // const [loding, setLoding] = useState(true);
   const val = useFirebaseAuth();
-  // const authStateChanged = async (authState: any) => {
-   
-  //     if (!authState) {
-  //       setUser(defaultUser);
-  //       return;
-  //     }
-  //     val["establishUserContext"](authState.uid);
-  //     console.log("I am in authStateChange !!!!!!!!!!!!!!!!!")
-  //     console.log(authState)
-  //     setLoding(false)
-  //   };
   
-  //   useEffect(() => {
-  //     const refresh = auth.onAuthStateChanged(authStateChanged);
-    
-  //     return () => refresh();
-  //   }, []);
-	
-  
-	
-  // val["establishUserContext"]()
   var x = {
     authUser: val["authUser"],//val["authUser"], // added
     setAuthUser: (user:any) => {setUser(user)},  // added
