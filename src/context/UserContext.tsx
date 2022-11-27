@@ -45,8 +45,8 @@ export const AuthUserProvider = ({children}: any) => {
        * When lodign is true nothing is displayed, but if desired a loding component could 
        * be displayed intead of null.
        */
-      val["loding"]? 
-      null : //<div>Loading User</div> : x
+      // val["loding"]? 
+      // <div>Loading User</div> :
       children
       } </authUserContext.Provider>
 	)

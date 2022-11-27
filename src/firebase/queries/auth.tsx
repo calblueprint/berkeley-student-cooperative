@@ -73,7 +73,7 @@ export const useFirebaseAuth = () => {
 	  setLoding(false);
       return;
     }
-    establishUserContext(authState.uid);
+    await establishUserContext(authState.uid);
   };
 
   useEffect(() => {
