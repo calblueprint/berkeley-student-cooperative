@@ -30,29 +30,31 @@ export const authUserContext = createContext({
 });
 
 export const AuthUserProvider = ({children}: any) => {
-  // const auth = getAuth();
-  // const [user, setUser] = useState(defaultUser);
-  // const [loding, setLoding] = useState(true);
+ 
   const val = useFirebaseAuth();
   
-  var x = {
-    authUser: val["authUser"],//val["authUser"], // added
-    // setAuthUser: (user:any) => {setUser(user)},  // added
-    house: val["house"],
-    register: val["register"],
-    signIn: val["signIn"],
-    signOutAuth: val["signOutAuth"],
-    deleteUser: val["deleteUser"]
-  };
-	// setUser(auth.authUser);
-  console.log("********This is the context User: ")
-  console.log(x["authUser"])
-  console.log(val["authUser"])
+  // var x = {
+  //   authUser: val["authUser"],//val["authUser"], // added
+  //   // setAuthUser: (user:any) => {setUser(user)},  // added
+  //   house: val["house"],
+  //   register: val["register"],
+  //   signIn: val["signIn"],
+  //   signOutAuth: val["signOutAuth"],
+  //   deleteUser: val["deleteUser"]
+  // };
+	// // setUser(auth.authUser);
+  // console.log("********This is the context User: ")
+  // console.log(x["authUser"])
+  // console.log(val["authUser"])
 
 	// const value = {authUser:user, setAuthUser:setUser};
 
 	return (
-		<authUserContext.Provider value={x}> {val["loding"]? null : children} </authUserContext.Provider>
+		<authUserContext.Provider value={val}> {
+      val["loding"]? 
+      null : 
+      children
+      } </authUserContext.Provider>
 	)
 }
 

@@ -12,7 +12,7 @@ import { useContext, useEffect, useState } from "react";
 import { useFirebaseAuth } from "../../firebase/queries/auth";
 import Layout from "../../components/Layout/Layout";
 import { useRouter } from "next/router";
-import { useUserContext } from  "../../context/UserContext";
+
 
 export default function LoginPage() {
   const router = useRouter();
