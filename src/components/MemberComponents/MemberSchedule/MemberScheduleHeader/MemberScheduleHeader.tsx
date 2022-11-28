@@ -29,15 +29,6 @@ export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderP
 	return (
 		<div className={styles.container}>
 			<Typography variant="h2" className={styles.title}> Schedule </Typography>
-			<div className={styles.filterContainer}> 
-				<MemberShiftFilters/>
-				<div className={styles.bottom}>
-					{searchBar()}
-					<Button variant="outlined" size="medium" className={styles.tempShift}>
-						Medium
-					</Button>
-				</div>
-			</div>
 		</div>
 	)
 }

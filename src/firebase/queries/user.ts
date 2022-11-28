@@ -1,14 +1,11 @@
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { mapToObject, objectToMap } from "../helpers";
-
-export const addUser = async (email: string, houseID: string, last_name: string, first_name: string, role: string, userID: string) => {
-    // PENDING COMPLETION OF HOUSE QUERIES
-    // const houseDocRef = doc(firestore, "houses", houseID);
-    // const houseDocSnap = await getDoc(houseDocRef);
-    // const currHouse = await parseHouse(houseDocSnap);
-    // let currHouseMap = currHouse.pinUserMap;
+import { objectToMap, mapToObject } from "../helpers";
+import { getHouse, updateHouse } from "./house";
+export const addUser = async (email: string, houseID: string, firstName: string, lastName: string, role: string, userID: string) => {
+    const currHouse = await getHouse(houseID);
+    // let currHouseMap = currHouse.userPINs;
     // do {
     //     var pinNumber = generatePinNumber(5);
     // } while (currHouseMap.has(pinNumber));
@@ -19,23 +16,29 @@ export const addUser = async (email: string, houseID: string, last_name: string,
         hoursRemainingSemester: 5,
         hoursRemainingWeek: 5,
         houseID: houseID,
-        last_name: last_name,
-        first_name: first_name,
+        firstName: firstName,
+        lastName: lastName,
         pinNumber: pinNumber,
-        preferences: new Array<string>(),
+        preferences: mapToObject(new Map<string, number>()),
         role: role,
         shiftsAssigned: new Array<string>(),
         totalFines: 0,
-        totalHoursAssigned: 5
+        hoursAssigned: 0,
+        hoursRequired: 5
     });
-    // PENDING COMPLETION OF HOUSE QUERIES
-    // currHouse.members.push(userID);
+    let members = currHouse.members;
+    if (members == null) {
+        members = new Array<string>();
+    }
+    if (!members.includes(userID)) {
+        members.push(userID);
+    }
     // currHouseMap.set(pinNumber, userID);
-    // let newData = {
-    //     members: currHouse.members,
-    //     pinUserMap: currHouseMap
-    // }
-    // updateHouse(currHouse.houseID, newData);
+    let newData = {
+        members: currHouse.members,
+        // userPINs: currHouseMap
+    }
+    updateHouse(houseID, newData);
 }
 
 const generatePinNumber = (numDigitsInPin: number) => {
@@ -43,6 +46,7 @@ const generatePinNumber = (numDigitsInPin: number) => {
 }
 
 
+// data must be passed in availabilities: mapToObject
 export const updateUser = async (userID: string, newData: object) => {
     const userRef = doc(firestore, 'users', userID);
     await updateDoc(userRef, newData);
@@ -63,12 +67,12 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
     const user = {
         userID: userID,
         role: data.role,
-        last_name: data.last_name,
-        first_name: data.first_name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         houseID: data.houseID,
-        hoursAssigned: data.hoursAssigned,
         hoursRequired: data.hoursRequired,
+        hoursAssigned: data.hoursAssigned,
         shiftsAssigned: data.shiftsAssigned,
         hoursRemainingWeek: data.hoursRemainingWeek,
         hoursRemainingSemester: data.hoursRemainingSemester,
@@ -82,30 +86,22 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
 
 export const deleteUser = async (userID: string) => {
     // delete user from all instances of shifts
-    await deleteDoc(doc(firestore, "users", userID));
-}
-
-export const assignShiftToUser = async (userID: string, shiftID: string) => {
-    const currUser = await getUser(userID);
-    if (currUser === null) {
+    const user = await getUser(userID);
+    if (user == null) {
         return;
     }
-    currUser.shiftsAssigned.push(shiftID);
-    let newData = {
-        shiftsAssigned: currUser.shiftsAssigned
-    }
-    await updateUser(userID, newData);
+    await deleteDoc(doc(firestore, "users", userID));
 }
 
 export const defaultUser: User = {
 	userID: "",
 	role: "",
-	last_name: "",
-  first_name: "",
+	firstName: "",
+  lastName: "",
 	email: "",
 	houseID: "",
 	hoursAssigned: 0,
-    hoursRequired: 5, 
+  hoursRequired: 5,
 	shiftsAssigned: new Array<string>(),
 	hoursRemainingWeek: 0,
 	hoursRemainingSemester: 0,
