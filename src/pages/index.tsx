@@ -9,6 +9,7 @@ import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 import router from "next/router";
 import { addUser } from "../firebase/queries/user";
 import { useUserContext } from "../context/UserContext";
+import ShiftSchedule from "../components/ManagerComponents/shiftSchedule/ShiftSchedule";
 
 const Home: NextPage = () => {
 
@@ -34,6 +35,11 @@ const Home: NextPage = () => {
           >
             Parse
           </button>
+          <button onClick={() => register("testing_register@gmail.com", "EUC", "Greg", "M", "Member", "testing123")}>Register</button>
+					<button onClick={() => signIn("test123@gmail.com", "test123")}>Sign In</button>
+					<button onClick={() => signOutAuth()}>Sign Out</button>
+					<h1>{authUser ? authUser.first_name + " " + authUser.last_name : "not signed in"}</h1>
+          <ShiftSchedule/>
         </main>
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">

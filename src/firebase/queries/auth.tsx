@@ -75,6 +75,7 @@ export const useFirebaseAuth = () => {
 					establishUserContext(userID);
 			})
 		} catch(e) {
+			console.log("Error Logging In");
 			console.error(e);
 			throw e;
 		}
