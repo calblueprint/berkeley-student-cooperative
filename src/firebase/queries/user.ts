@@ -24,14 +24,15 @@ export const addUser = async (email: string, houseID: string, last_name: string,
         hoursRemainingSemester: 5,
         hoursRemainingWeek: 5,
         houseID: houseID,
-        last_name: last_name,
-        first_name: first_name,
+        firstName: first_name,
+        lastName: last_name,
         pinNumber: pinNumber,
-        preferences: new Array<string>(),
+        preferences: mapToObject(new Map<string, number>()),
         role: role,
         shiftsAssigned: new Array<string>(),
         totalFines: 0,
-        totalHoursAssigned: 5
+        hoursAssigned: 0,
+        hoursRequired: 5
     });
     let houseMems = currHouse.members;
     if (houseMems) {
@@ -51,6 +52,7 @@ const generatePinNumber = (numDigitsInPin: number) => {
 }
 
 
+// data must be passed in availabilities: mapToObject
 export const updateUser = async (userID: string, newData: object) => {
     const userRef = doc(firestore, 'users', userID);
     await updateDoc(userRef, newData);
@@ -71,12 +73,12 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
     const user = {
         userID: userID,
         role: data.role,
-        last_name: data.last_name,
-        first_name: data.first_name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         houseID: data.houseID,
-        hoursAssigned: data.hoursAssigned,
         hoursRequired: data.hoursRequired,
+        hoursAssigned: data.hoursAssigned,
         shiftsAssigned: data.shiftsAssigned,
         hoursRemainingWeek: data.hoursRemainingWeek,
         hoursRemainingSemester: data.hoursRemainingSemester,
@@ -90,30 +92,22 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
 
 export const deleteUser = async (userID: string) => {
     // delete user from all instances of shifts
-    await deleteDoc(doc(firestore, "users", userID));
-}
-
-export const assignShiftToUser = async (userID: string, shiftID: string) => {
-    const currUser = await getUser(userID);
-    if (currUser === null) {
+    const user = await getUser(userID);
+    if (user == null) {
         return;
     }
-    currUser.shiftsAssigned.push(shiftID);
-    let newData = {
-        shiftsAssigned: currUser.shiftsAssigned
-    }
-    await updateUser(userID, newData);
+    await deleteDoc(doc(firestore, "users", userID));
 }
 
 export const defaultUser: User = {
 	userID: "",
 	role: "",
-	last_name: "",
-  first_name: "",
+	firstName: "",
+  lastName: "",
 	email: "",
 	houseID: "",
 	hoursAssigned: 0,
-    hoursRequired: 5, 
+  hoursRequired: 5,
 	shiftsAssigned: new Array<string>(),
 	hoursRemainingWeek: 0,
 	hoursRemainingSemester: 0,

@@ -1,4 +1,5 @@
 import { Card, CardContent, Typography } from "@mui/material";
+import router from "next/router";
 import { useState, useEffect } from "react";
 import { getUser } from "../../../firebase/queries/user";
 import { User } from "../../../types/schema";
@@ -26,12 +27,13 @@ const TaskPreferenceInfo: React.FC<TaskPreferenceInfoProps> = ({
       <CardContent className={styles.card}>
         <div className={styles.flex}>
           <Typography variant="h5">Task Preferences</Typography>
-          {/* <Typography variant="caption" className={styles.updated}>
-            Last updated 3 minutes ago
-          </Typography> */}
         </div>
         <hr className={styles.line} />
-        <div className={styles.body}></div>
+        <div className={styles.body}>
+          <button onClick={() => {
+          router.push("/member/preferences/memberPreferences");
+        }}>Fill Out Preferences</button>
+        </div>
       </CardContent>
     </Card>
   ) : (
