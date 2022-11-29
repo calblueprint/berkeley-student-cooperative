@@ -36,7 +36,7 @@ export const useFirebaseAuth = () => {
    * 
    *  @param setLoading sets the state of Loading
    */
-  const [loding, setLoding] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const register = async (
     email: string,
@@ -70,7 +70,7 @@ export const useFirebaseAuth = () => {
       setAuthUser(defaultUser);
 
 	  /* If authState is false then no user fetching is needed. Signal authUserContext.Provider to proceed  */ 
-	  setLoding(false);
+	  setLoading(false);
       return;
     }
     await establishUserContext(authState.uid);
@@ -119,13 +119,13 @@ export const useFirebaseAuth = () => {
             setHouse(houseFromDoc);
 
 			/** Once setAuthUser and setHouse completed, we can signal the authUserContext.Provider to proceed */
-			setLoding(false);
+			setLoading(false);
           });
         } else {
           console.log("user does not exist");
 		  
 		  /** Signal authUserContext.Provider to proceed  */
-		  setLoding(false);
+		  setLoading(false);
         }
 		
       });
@@ -137,14 +137,14 @@ export const useFirebaseAuth = () => {
   };
 
   /** 
-   * Added loding to the returned elements so that authUserContext.Provider can be signaled when 
+   * Added loading to the returned elements so that authUserContext.Provider can be signaled when 
    * fetching the user has been completed.
    */
 
   return {
     authUser,
     house,
-	loding,
+	  loading,
     register,
     signIn,
     signOutAuth,
