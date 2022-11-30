@@ -15,6 +15,16 @@ type AvailabilityTableInputProps = {
 }
 
 const AvailabilityTableInput: React.FC<AvailabilityTableInputProps> = ({userID, day, selectedDay, assignedMap}: AvailabilityTableInputProps) => {
+    /**
+     * Given a day, a table is rendered that displays people's availabilities. 
+     * Contains multiple AvailabilityBox objects. Called from AvailabilityInputModal.tsx.
+     * @param userID - The userID
+     * @param day - The day that is correlated with this table.
+     * @param selectedDay - The day that the user has selected to input times for. Only renders when day = selectedDay.
+     * @param assignedMap - A map that maps days to time windows when people are available
+     * @returns AvailabilityTableInput
+     */
+
     const [user, setUser] = useState<User>();
 
     useEffect(() => {
@@ -29,6 +39,7 @@ const AvailabilityTableInput: React.FC<AvailabilityTableInputProps> = ({userID, 
         setUser(fetched);
     }
 
+    // Renders a table starting at start time (inclusive) and ending at end time (exclusive)
     const renderTable = (start: number, end: number) => {
         let totalRender: JSX.Element[] = [];
         let availabilities = user?.availabilities;
