@@ -14,21 +14,29 @@ type ViewShiftcardProps = {
   houseID: string;
 };
 
-/* 
-IMPORTANT:  When this component is integrated to table, must move open, setOpen, handleOpen, and handleClose to the table rather than the card itself.
-TODO:
- - Plug in userContext [x]
- - Query to get VerifiedShifts [x]
- - Create a check with verified shifts & status [x]
- - check current user vs assigned members [x]
- - revamp parse time for AssignShiftCard, shiftSchedule, and ViewShiftcard [x]
- - need persistence to work in UserContext or userAuth []
- - Connect verify to Firebase [x]
- - apply changes to AssignShiftCard []
- - apply changes to shiftSchedule (check that it's pulled) []
- - styling []
- - When attaching to a schedule:  move shiftID and houseID up, as well as pinUser map. []
-*/
+/**
+ * IMPORTANT:  When this component is integrated to table, must move open, setOpen, handleOpen, and handleClose to the table rather than the card itself.
+ * TODO:
+ * Plug in userContext [x]
+ * Query to get VerifiedShifts [x]
+ * Create a check with verified shifts & status [x]
+ * check current user vs assigned members [x]
+ * revamp parse time for AssignShiftCard, shiftSchedule, and ViewShiftcard [x]
+ * need persistence to work in UserContext or userAuth []
+ * Connect verify to Firebase [x]
+ * apply changes to AssignShiftCard []
+ * apply changes to shiftSchedule (check that it's pulled) []
+ * styling []
+ * When attaching to a schedule:  move shiftID and houseID up, as well as pinUser map. []
+ * 
+ * @remarks
+ * When integrated with the member view table, will give shift properties
+ * Table will display other members participating in task.
+ * Verify field will allow another member to verify this user with a PIN
+ * 
+ * @param shiftID - ID of Shift in Firebase
+ * @param houseID - ID of House in Firebase
+**/
 
 const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   shiftID,
@@ -44,13 +52,14 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   const [verifierPin, setVerifierPin] = useState("");
   const [userPinMap, setUserPinMap] = useState(new Map<string, string>());
 
-  /*
+  /**
+   * @remarks
    * Flow:
    * Get the current shift from FB, call loadMemberRows to load in rows based on members assigned.
    * Use uids to find members assigned to shift, compare this to the verifiedShifts list to see if complete,incomplete, or missing
    * Load in the userPinMap to do the check for each member.  
    * Verifying shift runs a check to assure that the verification is possible, if so, object is added to that collection.
-   */
+   **/
   useEffect(() => {
     const today = new Date();
     const getShiftFB = async () => {
@@ -62,7 +71,14 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     };
     getShiftFB();
   }, []);
-
+  
+  /**
+   * @remarks 
+   * Populates the table that displays the Members assigned to task
+   * Also checks if member has been verified for this shift
+   * Accesses all pins associated with house, to make sure a valid PIN is used to verify.
+   * @param usersAssigned - IDs of members assigned to this Shift
+   */
   const loadMemberRows = async (usersAssigned: string[]) => {
     let userObjects = await getAssignedUsers(usersAssigned);
     let tempMemRows = new Array<JSX.Element>();
@@ -70,6 +86,7 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     let house = await getHouse(houseID);
     setUserPinMap(objectToMap(house.userPINs));
     setVerifiedShifts(verShifts);
+    //Uses list of Users to generate the member rows in table
     userObjects.map((user) => {
       if (user != null) {
         tempMemRows.push(generateMemRow(user, verShifts));
@@ -78,6 +95,12 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     setMemberRows(tempMemRows);
   }
 
+  /**
+   * @remarks 
+   * Helper func for loadMemberRows, retrieves assigned users for shift
+   * @param usersAssigned - IDs of members assigned to this Shift
+   * @returns - List of Users assigned to shift
+   */
   const getAssignedUsers = async (usersAssigned: string[]) => {
     let promises: Promise<User | null>[] = [];
     usersAssigned.map((userID) => {
@@ -87,6 +110,15 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     return userObjects;
   }
 
+  /**
+   * @remarks
+   * Takes a User Object and creates a JSX table row to represent it
+   * Checks with verifiedShifts to see if Shift was completed by a User
+   * PENDING:  Needs to be abe to display "me" for signed-in user
+   * @param user - Assigned User Object
+   * @param verShifts - List of VerifiedShifts
+   * @returns 
+   */
   const generateMemRow = (user: User, verShifts: Map<string, VerifiedShift>) => {
     let status = "Incomplete";
     let time = "";
@@ -110,10 +142,11 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     )
   }
 
-  /*
-  * handle open and close handle if the modal is on the screen.  When integrating this component to table, need to move these 
-  * functions and the useState to the table.
-   */
+  /** 
+   * @remarks
+   * handle open and close handle if the modal is on the screen.  When integrating this component to table, need to move these 
+   * functions and the useState to the table.
+   **/
   const handleOpen = () => {
     setOpen(true);
   };
@@ -123,11 +156,11 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   };
 
 
-  /*
+  /**
+   * @remarks
    * Check that a verifying PIN isn't the current user's and that it exists in this House.
    * If so, verifyShift is called which creates a verifyShift object in the firebase.
    */
-
   const handleVerify = () => {
     let verifierID = userPinMap.get(verifierPin);
     if (verifierID == undefined) {
