@@ -15,7 +15,6 @@ const authUserContext = createContext({
     password: string
   ) => {},
   signIn: async (email: string, password: string) => {},
-  register: async (email: string, houseID:string, first_name: string, last_name: string, role: string, password: string) => {},
   signOutAuth: () => {},
 	deleteUser: async (uid: string) => {}
 });
