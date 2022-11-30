@@ -9,12 +9,14 @@ import ShiftCard from "../components/ManagerComponents/Shiftcard/Shiftcard";
 import router from "next/router";
 import { addUser } from "../firebase/queries/user";
 import { useUserContext } from "../context/UserContext";
-import ShiftSchedule from "../components/ManagerComponents/shiftSchedule/ShiftSchedule";
+import ShiftSchedule from "../components/ManagerComponents/ShiftSchedule/ShiftSchedule";
+import { getAuth } from "firebase/auth";
 
 const Home: NextPage = () => {
 
   const { authUser, house, register, signIn, signOutAuth, establishUserContext } = useUserContext();
-  console.log({authUser: authUser});
+  const auth = getAuth();
+  const loggedUser = auth.currentUser;
   return (
     <Layout>
       <div className={styles.container}>
@@ -25,8 +27,8 @@ const Home: NextPage = () => {
         </Head>
         <main className={styles.main}>
           <h1 className={styles.title}>Workshift App</h1>
-          <button onClick={() => register("pinTest78@gmail.com", "EUC", "Tester2", "Pin", "member", "wowTesting")}>Register</button>
-          <button onClick={() => signIn("pinTest78@gmail.com", "wowTesting")}>Sign In</button>
+          <button onClick={() => register("pinTest79@gmail.com", "EUC", "Tester2", "Pin", "member", "wowTesting")}>Register for Pintest</button>
+          <button onClick={() => signIn("pinTest79@gmail.com", "wowTesting")}>Sign In (PinTest)</button>
           <ShiftCard />
           <button
             onClick={() => {

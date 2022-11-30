@@ -92,6 +92,7 @@ export const ShiftSchedule = () => {
     Loads FB data and creates Row Components to display on MUI Table
     (BACKEND -> FRONTEND) */
   const loadScheduleComponents= async () => {
+    console.log({shiftScheduleUser: authUser});
     let houseFB = await getHouse(authUser.houseID);
     let tempSchedule = new Map<string, JSX.Element[]>();
     //Promise All is important here because we need all Data to be loaded in before setting schedule again.
@@ -122,8 +123,7 @@ export const ShiftSchedule = () => {
       // May be a redundant line.
       if (shiftIDs == undefined) {
         return new Array<rowData>;
-      }
-      
+      }      
       let shiftPromises: Promise<Shift | undefined>[] = [];
       setCurrentShiftCardID(shiftIDs[0]);
       shiftIDs.map((id) => {
