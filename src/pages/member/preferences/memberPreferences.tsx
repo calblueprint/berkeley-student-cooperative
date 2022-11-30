@@ -70,7 +70,7 @@ const MemberPreferences = () => {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell style={{backgroundColor:'lightblue'}} className='category'>{value[0]}</TableCell>
+                                            <TableCell style={{backgroundColor:'lightblue', fontSize: '19pt'}} className='category'>{value[0]}</TableCell>
                                             <TableCell style={{backgroundColor:'lightblue'}}align="right">
                                                 <PreferButton />
                                             </TableCell>
