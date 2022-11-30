@@ -33,11 +33,9 @@ export const getHouse = async(houseID: string)  => {
   
     const promise: Promise<House> = parseHouse(colSnap);
     const house = await promise;
-
     return house;
 
 }
-
 
 //updating the fields of house, may not be useful ?
 export const updateAddress = async (houseID: string, newAddress: string): Promise<void> => {
@@ -51,15 +49,24 @@ export const updateAddress = async (houseID: string, newAddress: string): Promis
 }
 
 
-//add a new category to the categories map
-export const addCategory = async(houseID: string, newCategory: string): Promise<void> =>{
+
+export const updateHouse = async (houseID: string, newData: object) => {
+    const currHouse = await getHouse(houseID);
+    if (currHouse == null) {
+        return;
+    }
+    const houseRef = doc(firestore, 'houses', houseID);
+    await updateDoc(houseRef, newData);
+}
+
+//adds a value to the categories array
+export const addCategory = async (houseID: string, newCategory: string): Promise<void> => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
     if (colSnap.exists()) {
         const promise: Promise<House> = parseHouse(colSnap);
         const house = await promise;
         var houseCategories = objectToMap(house.categories);
-       
         
         //checks if category already exists
         // const index = newCategories?.has(newCategory);
@@ -316,13 +323,20 @@ export const removeCategory = async(houseID: string, oldCategory: string): Promi
 //parses house document passed in
 const parseHouse = async (doc : any) => {
     const data = doc.data();
-		const houseID = doc.id.toString();
+    const houseID = doc.id.toString();
     const members = data.members;
     const address = data.address;
     const categories = data.categories;
-		const schedule = data.schedule;
-		const userPINs = data.userPINs;
-    const house = {houseID, categories, members, address, schedule, userPINs};
+    const schedule = data.schedule;
+    const userPINs = data.userPINs;
+    const house = {
+        houseID: houseID,
+        categories: categories,
+        members: members,
+        address: address,
+        schedule: objectToMap(schedule),
+        userPINs: objectToMap(userPINs)
+    }
     return house as House;
 }
 
