@@ -18,7 +18,12 @@ export const objectToMap = (obj: Object): Map<any, any> => {
     );
 };
 
-// Converst an individual time into a valid time
+// Generates a pin number for a user
+export const generatePinNumber = (numDigitsInPin: number) => {
+  return Math.floor((Math.random() * (10 ** numDigitsInPin - 10 ** (numDigitsInPin - 1)) + 10 ** (numDigitsInPin - 1)));
+}
+
+// Converts an individual time into a valid time
 export const convertNumberToTime = (input: number): string => {
   let timePeriod = " AM";
   if (input >= 1200) {
