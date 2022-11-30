@@ -2,6 +2,20 @@ import {firestore} from "../clientApp";
 import {Shift} from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 
+/**
+ * Adds a shift. Used when a manager creates a shift.
+ * @param houseID - ID of house
+ * @param name - The name of the shift
+ * @param description - The description of the shift
+ * @param numOfPeople - The number of people needed to complete the shift
+ * @param possibleDays - A list of days the shift can be completed on
+ * @param hours - The number of hours earned for completing the shift
+ * @param timeWindow - The time window for a shift
+ * @param assignedDay - The day that the shift has been assigned (may be "" if not assigned a specific day yet)
+ * @param category - The category the shift belongs to
+ * @param verification
+ * @param verificationBuffer - The number of hours after shift end that the user has to verify their shift
+*/
 export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
     await addDoc(collection(firestore, "houses", houseID, "shifts"), {
         name: name,
@@ -18,6 +32,12 @@ export const addShift = async (houseID: string, name: string, description: strin
     });
 }
 
+/**
+ * Updates a shift object with newData.
+ * @param newData - An object containing the newData that will be uploaded to Firebase
+ * @param houseID - The ID of the house
+ * @param shiftID - The ID of the shift
+*/
 export const updateShift = async (houseID: string, shiftID: string, newData: object) => {
     const currShift = await getShift(houseID, shiftID);
     if (currShift == null) {
@@ -27,6 +47,12 @@ export const updateShift = async (houseID: string, shiftID: string, newData: obj
     await updateDoc(docRef, newData);
 }
 
+/**
+ * Gets a shift with the shiftID from Firebase and returns a shift object. Calls parseShift.
+ * @param shiftID - The ID of the shift
+ * @param houseID - The ID of the house
+ * @returns A Shift object or null if the shiftID is invalid
+*/
 export const getShift = async (houseID: string, shiftID: string) => {
     const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
     const docSnap = await getDoc(docRef);
@@ -38,14 +64,20 @@ export const getShift = async (houseID: string, shiftID: string) => {
     return null;
 }
 
-
-
+/**
+ * Deletes a shift with a shiftID in houseID
+ * @param shiftID - The ID of the shift
+ * @param houseID - The ID of the house
+*/
 export const deleteShift = async (houseID: string, shiftID: string) => {
     const currShift = await getShift(houseID, shiftID);
     if (currShift == null) {
         return;
     }
     const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
+    // TODO: unassign the shifts that the user has been assigned to
+    // TODO: remove shift ID from users' preference map (not sure if necessary)
+    // - still must keep shift for verification maybe?? not sure what happens when delete
     // const docSnap = await getDoc(docRef);
     // if (!docSnap.exists()) {
     //     return null;
@@ -66,6 +98,7 @@ export const deleteShift = async (houseID: string, shiftID: string) => {
     await deleteDoc(docRef);
 }
 
+// Used internally; parses the shift data from Firebase into a shift object
 const parseShift = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
     const shiftID = docSnap.id.toString();
     const data = docSnap.data();

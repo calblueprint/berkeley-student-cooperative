@@ -17,6 +17,7 @@ import { generatePinNumber } from "../helpers";
 */
 export const addUser = async (email: string, houseID: string, firstName: string, lastName: string, role: string, userID: string) => {
     const currHouse = await getHouse(houseID);
+    // TODO: update userPINs of house (not sure if we can assume it exists yet/if we should make new obj if dne)
     // let currHouseMap = currHouse.userPINs;
     // do {
     //     var pinNumber = generatePinNumber(5);
@@ -109,7 +110,8 @@ const parseUser = async (docSnap: QueryDocumentSnapshot<DocumentData>) => {
  * @param userID - The userID assigned to this user in auth
 */
 export const deleteUser = async (userID: string) => {
-    // delete user from all instances of shifts
+    // TODO: delete user from all instances of shifts (all shifts that the user has been assigned to)
+    // TODO: delete user from their house's userPINs and member list
     const user = await getUser(userID);
     if (user == null) {
         return;
