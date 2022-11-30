@@ -1,6 +1,6 @@
 import {firestore} from "../clientApp";
 import {Shift} from "../../types/schema";
-import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
+import { doc, collection, addDoc, getDoc, getDocs, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 
 export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
     await addDoc(collection(firestore, "houses", houseID, "shifts"), {
@@ -51,7 +51,7 @@ export const getNumVerified = async (
     shiftID,
     "verifiedShifts"
   );
-    const snap = await getDoc(verShiftsRef);
+    const snap = await getDocs(verShiftsRef);
     return snap.size;
 }
 

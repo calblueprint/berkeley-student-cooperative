@@ -3,6 +3,9 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '
 import { getUser } from "../../../firebase/queries/user";
 import { getHouse } from "../../../firebase/queries/house";
 import { Day } from "../../../types/schema";
+// import { getNumVerified, getShift };
+
+
 import { Shift } from "../../../types/schema";
 import { type } from "os";
 import Select from "react-select";
@@ -12,7 +15,7 @@ import Button from '@mui/material/Button';
 import { useUserContext } from "../../../context/UserContext";
 import ShiftCard from "../../../components/ManagerComponents/Shiftcard/Shiftcard";
 import AssignShiftcard from "../../../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
-import styles from "./categoryDropdown.module.css";
+import styles from "./PlanningPage.module.css";
 import { getShift, getNumVerified } from "../../../firebase/queries/shift";
 
 
@@ -90,7 +93,7 @@ export const CategoryDropdown = () => {
     Promise.all(Object.entries((houseFB.schedule)).map(async (entry) => {
       let day = entry[0], shiftIDs = entry[1];
       //getDailyData converts all Firebase Shifts to row Data, only retrieves essential info for a row
-      let dailyData: rowData[] = await getDailyData(day, shiftIDs);//(day: string, shiftIDs: string[],usersAssigned: string[])
+      let dailyData: rowData[] = await getDailyData(day, shiftIDs);
       let rowComponents: JSX.Element[] = [];
       //Turn all row Data into Row Components
       convertDataToComponent(dailyData, rowComponents);
@@ -115,13 +118,14 @@ export const CategoryDropdown = () => {
   const getDailyData = async (day: string, shiftIDs: string[],usersAssigned: string[]): Promise<rowData[]> => {
       // May be a redundant line.
       if (shiftIDs == undefined && usersAssigned == null) {
-        // eslint-disable-next-line prettier/prettier
         return new Array<rowData>;
       }
       
       let shiftPromises: Promise<Shift | undefined>[] = [];
       setCurrentShiftCardID(shiftIDs[0]);
-      shiftIDs.map((id) => shiftPromises.push(getShift(authUser.houseID, id)))
+      shiftIDs.map((id) => {
+        shiftPromises.push(getShift(authUser.houseID, id));
+      })
       //MUST use Promise.all to assure that ALL shifts are loaded in before any loading is done.
       let shiftObjects = await Promise.all(shiftPromises);
       let numVerifiedPromises: Promise<number | undefined>[] = [];
