@@ -12,19 +12,7 @@ type MemberScheduleHeaderProps = {
 
 export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderProps> = ({member}) => {
 
-	const searchBar = () => (
-		<div className={styles.searchBar}>
-			<TextField 
-			  id = "outlined-basic" 
-				label="Search" 
-				variant="outlined"
-				sx={{
-					width: "100%",
-					backgroundColor: "#FFFFFFFF"
-				}}
-				/>
-		</div>
-	)
+
 
 	return (
 		<div className={styles.container}>

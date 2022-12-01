@@ -3,6 +3,7 @@ import { User } from "../../../../types/schema";
 import { Typography, Card, TextField } from '@mui/material';
 import styles from "./MemberShiftFilters.module.css";
 import Icon from "../../../../assets/Icon";
+import { getShiftsByUser } from "../../../../firebase/queries/shift";
 
 
 type MemberShiftFiltersProps = {
@@ -33,10 +34,39 @@ export const MemberShiftFilters: React.FunctionComponent<MemberShiftFiltersProps
 	// 		<Icon type="rightArrow" className="rightArrow" />
 	// 	</div>
 	// }
+	const searchBar = () => (
+		<div className={styles.searchBar}>
+			<TextField 
+			  id = "outlined-basic" 
+				label="Search" 
+				variant="outlined"
+				sx={{
+					width: "100%",
+					backgroundColor: "#FFFFFFFF"
+				}}
+				/>
+		</div>
+	)
 
+	const filterButtons = () => (
+		<div className={styles.filters}>
+			<button onClick={() => getShiftsByUser("1234", "EUC")}>alphabetical</button>
+			<button>monday</button>
+			<button>temp shift</button>
+		</div>
+	)
+
+
+	// <div className={styles.toolBar}>
+	// 			<MemberShiftFilters />
+	// 			<div className={styles.filters}>
+
+	// 			</div>
+	// 		</div>
 	return (
 		<div className={styles.container}>
-			{/* {verifyCards()}; */}
+			<>{searchBar()}</>
+			<>{filterButtons()}</>
 		</div>
 	)
 }

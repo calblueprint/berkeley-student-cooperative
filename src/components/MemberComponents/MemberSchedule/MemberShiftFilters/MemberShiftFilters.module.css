@@ -1,25 +1,18 @@
-/* .container {
-	position: inherit;
-	background-color: blueviolet;
-	width: 44.2%;
-	height: 5px;
-} */
-		
-.cards {
+.container {
 	display: flex;
 	justify-content: space-between;
-	width: 45.2%;
-	gap: 20px;
-	position: absolute;
-	top: 15.4%;
+	width: 90%;
+	gap: 10%;
+	margin-top: 25px;
 }
 
-.card {
-	display: flex;
-	flex-direction: column;
-	background-color: white;
-	width: 100%;
-	height: 100%;
-	padding: 19px;
-	border: 1px solid #E2E2E2;
+.searchBar {
+	width: 50%;
 }
+
+.filters {
+	width: 40%;
+	display: flex;
+	justify-content: space-between;
+}
+		

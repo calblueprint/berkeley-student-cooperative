@@ -1,6 +1,7 @@
 import {firestore} from "../clientApp";
 import {Shift} from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
+import { getUser } from "./user";
 
 export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
     await addDoc(collection(firestore, "houses", houseID, "shifts"), {
@@ -38,7 +39,18 @@ export const getShift = async (houseID: string, shiftID: string) => {
     return null;
 }
 
-
+export const getShiftsByUser = async (userID: string, houseID: string) => {
+		 //get the shiftsAssigned array from userID in firebase
+		 //go through the array and getShift forEach shift
+		 //[arse and return array of shift objects 
+		const user = await getUser(userID)
+		user?.shiftsAssigned.forEach((elem) => {
+			console.log(elem)
+		})
+	// .forEach(element => {
+			
+	// 	});
+}
 
 export const deleteShift = async (houseID: string, shiftID: string) => {
     const currShift = await getShift(houseID, shiftID);

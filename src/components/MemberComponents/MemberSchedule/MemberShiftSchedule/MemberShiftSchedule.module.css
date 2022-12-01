@@ -1,24 +1,19 @@
 .container {
 	display: flex;
 	flex-direction: column;
-	width: 53.5%;
-	background-color: wheat;
+	width: 90%;
+	margin-top: 50px;
+	height: 90%
 }
+
+.schedule {
+	background-color: white;
+	border: 0px;
+}
+
 .searchBar {
 	position: inherit;
 	top: 27.5%;
 	width: 100%;
 	height: 100%;
 }
-
-/* .leftCard {
-	background-color: white;
-	width: 100%;
-	height: 100%;
-}
-
-.rightCard {
-	background-color: white;
-	width: 100%;
-	height: 10.5%;
-} */
