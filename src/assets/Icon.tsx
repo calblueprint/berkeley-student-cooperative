@@ -1,5 +1,12 @@
 import React from "react";
-import { SvgIcon } from "@mui/material";
+
+/**
+ * Returns an icon component
+ *
+ * @param type -  The icon type
+ *
+ * used as <Icon type={"close"} />
+ */
 
 export type IconType =
   | "close"

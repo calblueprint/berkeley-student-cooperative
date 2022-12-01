@@ -1,8 +1,7 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
-import { getHouse } from "../../../firebase/queries/house";
 import { getUser } from "../../../firebase/queries/user";
-import { House, User } from "../../../types/schema";
+import { User } from "../../../types/schema";
 import styles from "./AvailabilityInfo.module.css";
 
 type AvailabilityInfoProps = {
@@ -12,6 +11,11 @@ type AvailabilityInfoProps = {
 const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
   userID,
 }: AvailabilityInfoProps) => {
+  /**
+   * Returns a card component to display a member's availability information in the settings page
+   *
+   * @param userID - ID of the member
+   */
   const [user, setUser] = useState<User | null>();
   let daysList = [
     "Monday",
@@ -23,6 +27,7 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
     "Sunday",
   ];
 
+  // retrieves user from context
   useEffect(() => {
     const getData = async () => {
       const currUser = await getUser(userID);
@@ -32,6 +37,11 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
   }, [userID]);
 
   const getTime = (day: string) => {
+    /**
+     * Parses time into a readable format for time windows
+     *
+     * @param day - the string for the day that the availabilities are being retrieved for
+     */
     let availabilities = user?.availabilities.get(day);
     let parsedAvailabilities = "";
     if (availabilities) {
@@ -57,6 +67,11 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
   };
 
   const parseHour = (timeWindow: number) => {
+    /**
+     * Parses the time value into just the hour value (1230 -> 12)
+     *
+     * @param timeWindow - the time value to be parsed (0 - 2400)
+     */
     if (Math.floor(timeWindow / 100) == 12 || timeWindow == 0) {
       return 12;
     } else if (timeWindow >= 1000) {
@@ -65,6 +80,11 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
   };
 
   const parseMinute = (timeWindow: number) => {
+    /**
+     * Parses the time value into just the minute value (1230 -> 30)
+     *
+     * @param timeWindow - the time value to be parsed (0 - 2400)
+     */
     if (timeWindow % 100 == 0) {
       return "00";
     }
@@ -72,6 +92,11 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
   };
 
   const parseAM = (timeWindow: number) => {
+    /**
+     * Parses the time value into just the AM/PM value (1300 -> PM)
+     *
+     * @param timeWindow - the time value to be parsed (0 - 2400)
+     */
     return timeWindow >= 1200 ? "PM" : "AM";
   };
 

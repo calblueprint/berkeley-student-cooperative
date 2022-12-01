@@ -14,17 +14,24 @@ import Layout from "../../components/Layout/Layout";
 import { useRouter } from "next/router";
 
 export default function LoginPage() {
+  /**
+   * Displays a login page for all users
+   * 
+   * sets the context if login information is correct and pushes the router to the manager/member default page
+   */
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { signIn, authUser } = useFirebaseAuth();
 
   const login = async () => {
+    // tries to log in with given credentials
     if (email.length > 0 && password.length > 0) {
       await signIn(email, password);
     }
   };
 
+  // pushes the router to the member/manager default page if the user is set in the context
   useEffect(() => {
     if (authUser.userID != "") {
       if (authUser.role == "Member" || authUser.role == "member") {
@@ -34,6 +41,7 @@ export default function LoginPage() {
     }
   });
 
+  // onClick handler that pushes the router to the create account page
   const createAccount = () => {
     router.push("/createAccount");
   };

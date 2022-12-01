@@ -12,11 +12,17 @@ type SettingsInfoProps = {
 const SettingsInfo: React.FC<SettingsInfoProps> = ({
   userID,
 }: SettingsInfoProps) => {
+  /**
+   * Returns a card component to display a member's personal information in the settings page
+   *
+   * @param userID - ID of the member
+   */
   const [user, setUser] = useState<User | null>();
   const [house, setHouse] = useState<House | null>();
   let star = "*";
 
   useEffect(() => {
+    // retrieves user from context
     const getData = async () => {
       const currUser = await getUser(userID);
       setUser(currUser);
@@ -25,6 +31,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
   }, [userID]);
 
   useEffect(() => {
+    // retrieves house from context
     const getData = async () => {
       if (user) {
         const currHouse = await getHouse(user.houseID);

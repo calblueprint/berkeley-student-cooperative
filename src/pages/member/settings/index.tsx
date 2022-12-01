@@ -7,13 +7,16 @@ import TaskPreferenceInfo from "../../../components/MemberComponents/TaskPrefere
 import styles from "./Settings.module.css";
 
 export default function SettingsPage() {
+  /**
+   * Displays 4 cards of information for the settings page - avaiailability, task preferences, personal information, documents
+   */
   return (
     <Layout>
       <Typography variant="h4">Settings</Typography>
       <div className={styles.row}>
         <AvailabilityInfo userID={"1"} />
         <div className={styles.rightCard}>
-          <TaskPreferenceInfo userID={"1"}/>
+          <TaskPreferenceInfo userID={"1"} />
         </div>
       </div>
       <div className={styles.row}>
