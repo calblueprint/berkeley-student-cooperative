@@ -4,8 +4,19 @@ import { getCategories } from '../../../firebase/queries/house';
 import {Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, ButtonGroup} from '@mui/material';
 import styles from './memberPreferences.module.css'
 
+
+
 const PreferButton = () => {
-    //logic needs to be added, but something will be done when a certain button is pressed
+
+    /**
+   * Updates a user's preferences in the firebase.
+   * @remark This method should be called whenever a button on the preference page is pressed.
+   * @remark Logic pertaining to authContext hasn't been added yet, currently working on it
+   * @remark Also please ignore styling, I am working on the logic at the moment.
+   * 
+   * @public
+   * 
+   */
     const handlePrefButton = (prefValue : String) => {
         if (prefValue == 'dislike'){
             console.log("dislike pushed")
@@ -26,9 +37,7 @@ const PreferButton = () => {
     );
 };
 
-// map1.forEach((value, key) => {
-//     console.log(value, key); // 👉️ Chile country, 30 age
-//   });
+
 
 const MemberPreferences = () => {
     //array that holds the categories of particular house
@@ -36,22 +45,17 @@ const MemberPreferences = () => {
     const [preferID, setPreferID] = useState<String>();
     
     //gets all categories from the backend
-    //Euclid is hardcoded in so info appears.
+    //Euclid is hardcoded in so info appears, but will depend on user.
     useEffect(() => {
         getCategories('EUC').then((category) => {
             
-            // setHouseCategories(value);
-            console.log("value returned from getCategories", category);
-            console.log("object", Object.entries(category));
+           
+            //holds categories in houseCategories useState
             setHouseCategories(Object.entries(category));
            
         });
     }, []);
 
-    
-
-    //change when shift queries allow to get by categories
-    const dummyArr = ["cook breakie", "cook din din", "prepare lunch"]
     return (
         <div className={styles.memberPrefPage}>
             {/* title of page */}
@@ -61,7 +65,7 @@ const MemberPreferences = () => {
             </div>
             <div className={styles.prefTables}>
                 
-                {/* maps through house categories and creates a table for each table */}
+                {/* iterates through house categories and creates a table for each category */}
                 
                 {houseCategories?.map((value, key) => {
                     return (
@@ -78,8 +82,7 @@ const MemberPreferences = () => {
                                         
                                     </TableHead>
                                     
-                                    {/* goes through each task and creates a row with a button that determines user's preference */}
-                                    {/* should be changed when able to grab tasks for each category */}
+                                    {/* for each category it iterates through each shift to display */}
                                     <TableBody>
                                         {Object.entries(value[1]).map((value, index) => {
                                             return (
