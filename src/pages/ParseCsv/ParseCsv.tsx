@@ -4,8 +4,16 @@ import Papa from "papaparse";
 // import { readFileSync } from 'fs';
 import { useState, useEffect } from "react";
 import { Input, SelectChangeEvent, TextField } from "@mui/material";
+import {addRowOfCSV} from "../../firebase/queries/csvManagement";
 
 const ParseCSV = () => {
+  type InternalRowOfCSV = {
+    email: string;
+    firstName: string;
+    lastName: string;
+    houseID: string;
+  }
+  
   const [fileHolder, setFileHolder] = useState("");
   const [userArr, setUserArr] = useState<Object[]>([]);
 
@@ -21,10 +29,18 @@ const ParseCSV = () => {
         },
         complete: function () {
           setUserArr(userHolder);
+          uploadRowsToFirebase(userHolder);
         },
       });
     }
   }, [fileHolder]);
+
+  const uploadRowsToFirebase = async (rowList: Object[]) => {
+    for (let i = 0; i < rowList.length; i++) {
+      let row = rowList[i];
+      addRowOfCSV(row.email, row.firstName, row.lastName, row.houseID);
+    }
+  }
 
   const uploadCSV = (file: any) => {
     if (file?.type == "text/csv") {
