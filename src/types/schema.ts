@@ -3,8 +3,8 @@ import internal from "stream";
 export type User = {
   userID: string;
   role: string;
-  last_name: string;
-  first_name: string;
+  lastName: string;
+  firstName: string;
   email: string;
   houseID: string;
   // update
@@ -38,9 +38,9 @@ export type Shift = {
 
 export type House = {
   houseID: string;
-	categories: string[]
   members: string[] | null;
   address: string;
+  categories: string[];
   schedule: Map<string, string[]>;
   userPINs: Map<string, string>;
 };
@@ -54,3 +54,10 @@ export enum Day {
   Sat = 'Saturday',
   Sun = 'Sunday'
 };
+export type RowOfCSV = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  houseID: string;
+  accountCreated: boolean;
+}
