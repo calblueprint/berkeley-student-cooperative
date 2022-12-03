@@ -287,7 +287,3 @@ export const UnassignedShiftList = () => {
 }
 
 export default UnassignedShiftList;
-
-function loadScheduleComponents() {
-    throw new Error("Function not implemented.");
-}
