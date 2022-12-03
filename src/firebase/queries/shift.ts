@@ -40,6 +40,8 @@ export const getShift = async (houseID: string, shiftID: string) => {
     return null;
 }
 
+
+
 export const deleteShift = async (houseID: string, shiftID: string) => {
     const currShift = await getShift(houseID, shiftID);
     if (currShift == null) {

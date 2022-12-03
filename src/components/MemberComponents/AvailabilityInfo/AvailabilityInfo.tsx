@@ -34,7 +34,6 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
   const getTime = (day: string) => {
     let availabilities = user?.availabilities.get(day);
     let parsedAvailabilities = "";
-
     if (availabilities) {
       for (let i = 0; i < availabilities.length; i += 2) {
         parsedAvailabilities +=
@@ -58,11 +57,11 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
   };
 
   const parseHour = (timeWindow: number) => {
-    if (timeWindow == 1200 || timeWindow == 0) {
+    if (Math.floor(timeWindow / 100) == 12 || timeWindow == 0) {
       return 12;
     } else if (timeWindow >= 1000) {
       return Math.floor(timeWindow / 100) % 12;
-    } else return Math.floor(timeWindow / 10) % 12;
+    } else return Math.floor(timeWindow / 100) % 12;
   };
 
   const parseMinute = (timeWindow: number) => {
@@ -77,10 +76,10 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
   };
 
   return user ? (
-    <Card sx={{ minWidth: 500 }}>
+    <Card sx={{ width: 550, height: 360 }}>
       <CardContent className={styles.card}>
         <div className={styles.flex}>
-          <Typography variant="h4">Availability</Typography>
+          <Typography variant="h5">Availability</Typography>
           {/* <Typography variant="caption" className={styles.updated}>
             Last updated 3 minutes ago
           </Typography> */}
@@ -88,7 +87,11 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
         <hr className={styles.line} />
         <div className={styles.body}>
           {daysList.map((day) => (
-            <Typography key={day} className={styles.bodyText} variant="body1">
+            <Typography
+              key={day}
+              className={styles.bodyText}
+              variant="subtitle2"
+            >
               {day}
               {": "}
               {getTime(day)}
