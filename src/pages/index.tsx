@@ -35,10 +35,10 @@ const Home: NextPage = () => {
           >
             Parse
           </button>
-          <button onClick={() => register("testing_register@gmail.com", "EUC", "Greg", "M", "Member", "testing123")}>Register</button>
+          {/* <button onClick={() => register("testing_register@gmail.com", "EUC", "Greg", "M", "Member", "testing123")}>Register</button>
 					<button onClick={() => signIn("eucwm@bsc.coop", "euclidmanager")}>Sign In</button>
 					<button onClick={() => signOutAuth()}>Sign Out</button>
-					<h1>{authUser ? authUser.first_name + " " + authUser.last_name : "not signed in"}</h1>
+					<h1>{authUser ? authUser.first_name + " " + authUser.last_name : "not signed in"}</h1> */}
         </main>
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">

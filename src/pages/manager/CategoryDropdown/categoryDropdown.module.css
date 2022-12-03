@@ -1,11 +1,24 @@
-.daySelect {
-    color: black;
+.assignShiftBox {
+    padding: 10%;
 }
 
-.tableRow {
-    background-color: white;
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 3%;
 }
 
-.tableRow:hover {
-    background-color: lightgrey;
+.close{
+    text-align: right;
+}
+
+.assignShiftInfo{
+    display: flex;
+    justify-content: space-between;
+}
+
+.infoForShift{
+    background-color: #EEEEEE;
+    border-radius: 34px;
+    padding: 4px 10px 4px 10px;
 }

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import { getUser } from "../../../firebase/queries/user";
 import { getHouse } from "../../../firebase/queries/house";
-import { Day } from "../../../types/schema";
+// import { Day } from "../../../types/schema";
 // import { getNumVerified, getShift };
 
 
@@ -15,8 +15,8 @@ import Button from '@mui/material/Button';
 import { useUserContext } from "../../../context/UserContext";
 import ShiftCard from "../../../components/ManagerComponents/Shiftcard/Shiftcard";
 import AssignShiftcard from "../../../components/ManagerComponents/AssignShiftcard/AssignShiftcard";
-import styles from "./PlanningPage.module.css";
 import { getShift, getNumVerified } from "../../../firebase/queries/shift";
+import styles from "./categoryDropdown.module.css";
 
 
 
@@ -86,6 +86,7 @@ export const CategoryDropdown = () => {
     Loads FB data and creates Row Components to display on MUI Table
     (BACKEND -> FRONTEND) */
   const loadScheduleComponents= async () => {
+    console.log(authUser)
     let houseFB = await getHouse(authUser.houseID);
     let tempSchedule = new Map<string, JSX.Element[]>();
     //Promise All is important here because we need all Data to be loaded in before setting schedule again.
@@ -93,6 +94,7 @@ export const CategoryDropdown = () => {
     Promise.all(Object.entries((houseFB.schedule)).map(async (entry) => {
       let day = entry[0], shiftIDs = entry[1];
       //getDailyData converts all Firebase Shifts to row Data, only retrieves essential info for a row
+      console.log({dayInPromise: day});
       let dailyData: rowData[] = await getDailyData(day, shiftIDs);
       let rowComponents: JSX.Element[] = [];
       //Turn all row Data into Row Components
@@ -100,7 +102,10 @@ export const CategoryDropdown = () => {
       tempSchedule.set(day, rowComponents);
     })).then(() => {
       //By Default, day is monday.
-      setDailyRows(tempSchedule.get(Day.Mon));
+      console.log({tempsched: tempSchedule});
+      setDailyRows(tempSchedule.get("Monday"));
+    //   setDailyRows(tempSchedule.get(Day.Mon));
+     
       //Use Dummy Schedule to update the schedule useState
       setSchedule(tempSchedule);
     });
@@ -117,6 +122,7 @@ export const CategoryDropdown = () => {
   */
   const getDailyData = async (day: string, shiftIDs: string[],usersAssigned: string[]): Promise<rowData[]> => {
       // May be a redundant line.
+      console.log({day: day});
       if (shiftIDs == undefined && usersAssigned == null) {
         return new Array<rowData>;
       }
