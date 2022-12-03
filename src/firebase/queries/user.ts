@@ -41,7 +41,7 @@ export const addUser = async (email: string, houseID: string, firstName: string,
     updateHouse(houseID, newData);
 }
 
-const generatePinNumber = (numDigitsInPin: number) => {
+export const generatePinNumber = (numDigitsInPin: number) => {
     return Math.floor((Math.random() * (10 ** numDigitsInPin - 10 ** (numDigitsInPin - 1)) + 10 ** (numDigitsInPin - 1)));
 }
 
