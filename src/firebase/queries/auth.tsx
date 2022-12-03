@@ -7,7 +7,6 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { firestore } from "../clientApp";
 import { getHouse } from "./house";
 
-
 //managers don't have to register.  House will be matched to email
 //userID is going to get generated in register.
 /*
@@ -23,12 +22,12 @@ export const useFirebaseAuth = () => {
   const [authUser, setAuthUser] = useState(defaultUser);
   const [house, setHouse] = useState(defaultHouse);
 
-  /** 
-   *  @brif This variabel signals the authUserContext.Provider if authStateChange() function is 
+  /**
+   *  @brif This variabel signals the authUserContext.Provider if authStateChange() function is
    * 		running and fetching a user from the server.
-   * 
+   *
    *  @param loading: true when authStateChanged is running  and false otherwise
-   * 
+   *
    *  @param setLoading sets the state of Loading
    */
   const [loading, setLoading] = useState(true);
@@ -64,8 +63,8 @@ export const useFirebaseAuth = () => {
     if (!authState) {
       setAuthUser(defaultUser);
 
-	  /* If authState is false then no user fetching is needed. Signal authUserContext.Provider to proceed  */ 
-	  setLoading(false);
+      /* If authState is false then no user fetching is needed. Signal authUserContext.Provider to proceed  */
+      setLoading(false);
       return;
     }
     await establishUserContext(authState.uid);
@@ -104,7 +103,7 @@ export const useFirebaseAuth = () => {
 
   const establishUserContext = async (uid: string): Promise<void> => {
     try {
-    //   console.log("updating user *****************");
+      //   console.log("updating user *****************");
       getUser(uid).then((userFromDoc) => {
         if (userFromDoc != null) {
           console.log("USER FROM FIREBASE: ", userFromDoc);
@@ -113,16 +112,15 @@ export const useFirebaseAuth = () => {
             console.log("HOUSE FROM FIREBASE:", houseFromDoc);
             setHouse(houseFromDoc);
 
-			/** Once setAuthUser and setHouse completed, we can signal the authUserContext.Provider to proceed */
-			setLoading(false);
+            /** Once setAuthUser and setHouse completed, we can signal the authUserContext.Provider to proceed */
+            setLoading(false);
           });
         } else {
           console.log("user does not exist");
-		  
-		  /** Signal authUserContext.Provider to proceed  */
-		  setLoading(false);
+
+          /** Signal authUserContext.Provider to proceed  */
+          setLoading(false);
         }
-		
       });
     } catch (e) {}
   };
@@ -131,15 +129,15 @@ export const useFirebaseAuth = () => {
     await deleteDoc(doc(firestore, "users", uid));
   };
 
-  /** 
-   * Added loading to the returned elements so that authUserContext.Provider can be signaled when 
+  /**
+   * Added loading to the returned elements so that authUserContext.Provider can be signaled when
    * fetching the user has been completed.
    */
 
   return {
     authUser,
     house,
-	  loading,
+    loading,
     register,
     signIn,
     signOutAuth,

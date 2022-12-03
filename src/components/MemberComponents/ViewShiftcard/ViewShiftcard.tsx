@@ -17,18 +17,12 @@ type ViewShiftcardProps = {
 /**
  * IMPORTANT:  When this component is integrated to table, must move open, setOpen, handleOpen, and handleClose to the table rather than the card itself.
  * TODO:
- * Plug in userContext [x]
- * Query to get VerifiedShifts [x]
- * Create a check with verified shifts & status [x]
- * check current user vs assigned members [x]
- * revamp parse time for AssignShiftCard, shiftSchedule, and ViewShiftcard [x]
- * need persistence to work in UserContext or userAuth []
- * Connect verify to Firebase [x]
+ * Verify button only pops up if current user isn't verified for this shift[]
+ * Deprecate table []
  * apply changes to AssignShiftCard []
  * apply changes to shiftSchedule (check that it's pulled) []
  * styling []
  * When attaching to a schedule:  move shiftID and houseID up, as well as pinUser map. []
- * 
  * @remarks
  * When integrated with the member view table, will give shift properties
  * Table will display other members participating in task.
@@ -47,10 +41,9 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   const [open, setOpen] = useState(false);
   const [shift, setShift] = useState<Shift | null>();
   const [memberRows, setMemberRows] = useState<JSX.Element[]>();
-  const [verifiedShifts, setVerifiedShifts] = useState(new Map<string, VerifiedShift>);
-  const [user, setUser] = useState();
   const [verifierPin, setVerifierPin] = useState("");
   const [userPinMap, setUserPinMap] = useState(new Map<string, string>());
+  const [isMemVerified, setMemVerified] = useState(true)
 
   /**
    * @remarks
@@ -80,12 +73,12 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    * @param usersAssigned - IDs of members assigned to this Shift
    */
   const loadMemberRows = async (usersAssigned: string[]) => {
+    console.log({authUser: authUser})
     let userObjects = await getAssignedUsers(usersAssigned);
     let tempMemRows = new Array<JSX.Element>();
     let verShifts = await getVerifiedShifts(houseID, shiftID);
     let house = await getHouse(houseID);
     setUserPinMap(objectToMap(house.userPINs));
-    setVerifiedShifts(verShifts);
     //Uses list of Users to generate the member rows in table
     userObjects.map((user) => {
       if (user != null) {
@@ -123,12 +116,15 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     let status = "Incomplete";
     let time = "";
     let verifiedShift = verShifts.get(user.userID);
+    let username = user.firstName + " " + user.lastName;
+    let authname = authUser.firstName + " " + authUser.lastName;
     //changing user to "me" is iffy, persistence needs to work first due to loading order.
     //component is loaded in before authUser is signed in, persistence fixes this.
-    let name = user.name != authUser.name ? user.name : "me"
+    let name = username != authname ? username : "me"
     if (verifiedShift != undefined) {
       status = "Complete";
       time = verifiedShift.timeStamp;
+      setMemVerified(verifiedShift.shifterID == authUser.userID);
     }
     return ( 
       <TableRow
@@ -231,6 +227,25 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
                     </TableBody>
                 </Table>
             </TableContainer>
+            {isMemVerified ?
+              (<div className = {styles.verificationHeader}>
+                <Typography variant="h6">
+                  Verification
+                </Typography>
+                <TextField
+                  sx = {{ minWidth: 560}}
+                  inputProps ={{ maxLength: 5}}
+                  id="outlined-password-input"
+                  label="Enter your pin code"
+                  type="password"
+                  autoComplete="current-password"
+                  onChange={(ev) => {
+                    setVerifierPin(ev.target.value);
+                  }}
+                />
+              </div>): 
+              <div/>
+            }
             <div className = {styles.verificationHeader}>
               <Typography variant="h6">
                 Verification
@@ -247,17 +262,6 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
                 }}
               />
             </div>
-              <div className = {styles.verifyButton}>
-                <Button
-                 variant="contained"
-                 size="medium"
-                 onClick={() => 
-                  handleVerify()
-                }
-                 >
-                  Verify shift
-                </Button>
-              </div>
             </div>
           </div>
         </DialogContent>
