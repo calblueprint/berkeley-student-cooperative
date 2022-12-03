@@ -20,7 +20,6 @@ const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
 	house
 }) => {
 	const { authUser, signIn, signOutAuth, register } = useUserContext();
-	console.log("AUTHUSER", authUser)
 
 	return (
 		<Layout>

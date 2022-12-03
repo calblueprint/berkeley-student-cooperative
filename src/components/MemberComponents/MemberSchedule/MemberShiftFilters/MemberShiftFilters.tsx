@@ -76,7 +76,7 @@ export const MemberShiftFilters: React.FunctionComponent<MemberShiftFiltersProps
 	return (
 		<div className={styles.container}>
 			{searchBar()}
-			{filterButtons()}
+			{/* {filterButtons()} */}
 		</div>
 	)
 }

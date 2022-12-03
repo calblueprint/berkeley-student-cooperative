@@ -85,7 +85,7 @@ export const MemberShiftSchedule: React.FunctionComponent<MemberShiftSchedulePro
 					onCellClick = {(row) => {
 						//OPEN ANDREIS MODAL
 					}}
-					disableSelectionOnClick
+					// disableSelectionOnClick
 				/>
 			</div>
 	)
