@@ -13,7 +13,6 @@ import { useFirebaseAuth } from "../../firebase/queries/auth";
 import Layout from "../../components/Layout/Layout";
 import { useRouter } from "next/router";
 
-
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -33,7 +32,7 @@ export default function LoginPage() {
       } else {
         router.push("/manager/schedule");
       }
-    } 
+    }
   });
 
   const createAccount = () => {
@@ -82,15 +81,16 @@ export default function LoginPage() {
               Forgot your password?
             </Typography>
           </div>
-          <Button
-            className={styles.button}
-            variant="contained"
-            fullWidth
-            disableElevation
-            onClick={login}
-          >
-            Login
-          </Button>
+          <div className={styles.button}>
+            <Button
+              variant="contained"
+              fullWidth
+              disableElevation
+              onClick={login}
+            >
+              Login
+            </Button>
+          </div>
           <Button className={styles.createAccount} onClick={createAccount}>
             Create an account
           </Button>

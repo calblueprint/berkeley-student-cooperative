@@ -1,11 +1,19 @@
-import { Button, InputLabel, TextField } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useUserContext } from "../../context/UserContext";
 import { useRouter } from "next/router";
 import { emailRegex } from "../../firebase/helpers";
-import { getAllHouses } from "../../firebase/queries/house";
-import { getRowOfCSV, updateRowOfCSV } from "../../firebase/queries/csvManagement";
-import { reauthenticateWithCredential } from "firebase/auth";
+import {
+  getRowOfCSV,
+  updateRowOfCSV,
+} from "../../firebase/queries/csvManagement";
+import Image from "next/image";
+import BscLogo from "../../assets/bsclogo.png";
+import styles from "./CreateAccount.module.css";
 
 const CreateAccountPage = () => {
   const router = useRouter();
@@ -13,6 +21,10 @@ const CreateAccountPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { register } = useUserContext();
+
+  const login = () => {
+    router.push("/login");
+  }
 
   // Updates name as the name field is edited
   const handleEmailChange = (event: any) => {
@@ -82,39 +94,71 @@ const CreateAccountPage = () => {
 
   return (
     <div>
-      <InputLabel>Email</InputLabel>
-      <TextField
-        autoFocus
-        value={email}
-        onChange={handleEmailChange}
-        margin="dense"
-        id="name"
-        fullWidth
-        variant="outlined"
-      />
-      <InputLabel>Password</InputLabel>
-      <TextField
-        autoFocus
-        type="password"
-        value={password}
-        onChange={handlePasswordChange}
-        margin="dense"
-        id="email"
-        fullWidth
-        variant="outlined"
-      />
-      <InputLabel>Confirm Password</InputLabel>
-      <TextField
-        autoFocus
-        type="password"
-        value={confirmPassword}
-        onChange={handleConfirmPasswordChange}
-        margin="dense"
-        id="email"
-        fullWidth
-        variant="outlined"
-      />
-      <Button onClick={handleSubmit}>Create Account</Button>
+      <div className={styles.create}>
+        <div className={styles.logo}>
+          <Image src={BscLogo} alt="bsc logo" width={150} height={70} />
+        </div>
+
+        <div className={styles.card}>
+          <div className={styles.body}>
+            <Typography variant="body1" className={styles.text}>
+              Email address
+            </Typography>
+            <TextField
+              className={styles.textfield}
+              autoFocus
+              value={email}
+              onChange={handleEmailChange}
+              margin="dense"
+              id="name"
+              fullWidth
+              variant="outlined"
+            />
+            <Typography variant="body1" className={styles.text}>
+              Password
+            </Typography>
+            <TextField
+              className={styles.textfield}
+              autoFocus
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              margin="dense"
+              id="email"
+              fullWidth
+              variant="outlined"
+            />
+            <Typography className={styles.pwhelp} variant="caption">password must be 6+ characters with 1 number</Typography>
+            <Typography variant="body1" className={styles.text}>
+              Confirm Password
+            </Typography>
+            <TextField
+              className={styles.textfield}
+              autoFocus
+              type="password"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              margin="dense"
+              id="email"
+              fullWidth
+              variant="outlined"
+            />
+            <div className={styles.button}>
+              <Button
+                variant="contained"
+                fullWidth
+                disableElevation
+                onClick={handleSubmit}
+              >
+                Create Account
+              </Button>
+            </div>
+            <Button className={styles.login} onClick={login}>
+            Already have an account? Log in here
+          </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
