@@ -7,7 +7,6 @@ import { Input, SelectChangeEvent, TextField } from "@mui/material";
 import {addRowOfCSV} from "../../firebase/queries/authorizedUsers";
 import {getStorage, ref, uploadBytes} from "firebase/storage";
 
-
 const ParseCSV = () => {
   
   const [fileHolder, setFileHolder] = useState("");
