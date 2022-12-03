@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { Input, SelectChangeEvent, TextField } from "@mui/material";
 import {addRowOfCSV} from "../../firebase/queries/authorizedUsers";
 import {getStorage, ref, uploadBytes} from "firebase/storage";
-
+// TODO: ADD way to view uploaded CSV (named with houseID)
 const ParseCSV = () => {
   
   const [fileHolder, setFileHolder] = useState("");
