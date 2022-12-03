@@ -4,7 +4,7 @@ import styles from "./Dashboard.module.css";
 import Layout from "../../../components/Layout/Layout";
 import AvailabilityInputModal from "../../../components/MemberComponents/AvailabilityEntry/AvailabilityInputModal";
 import { useUserContext } from "../../../context/UserContext";
-
+import ParseCSV from "../../ParseCsv/ParseCsv";
 const Home: NextPage = () => {
 
   const {authUser} = useUserContext();
@@ -18,7 +18,8 @@ const Home: NextPage = () => {
         <main className={styles.main}>
           <h1 className={styles.title}>Members Dashboard</h1>
         </main>
-        <AvailabilityInputModal userID={authUser.userID}></AvailabilityInputModal>
+        <ParseCSV/>
+        {/* <AvailabilityInputModal userID={authUser.userID}></AvailabilityInputModal> */}
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">
             Workshift App

@@ -9,6 +9,10 @@ export const addRowOfCSV = async (email: string, firstName: string, lastName: st
     if (user !== null) {
         return;
     }
+    console.log(houseID);
+    console.log(email);
+    console.log(firstName);
+    console.log(lastName);
     await setDoc(doc(firestore, collectionName, email), {
         firstName: firstName,
         lastName: lastName,

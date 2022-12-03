@@ -4,18 +4,16 @@ import Papa from "papaparse";
 // import { readFileSync } from 'fs';
 import { useState, useEffect } from "react";
 import { Input, SelectChangeEvent, TextField } from "@mui/material";
-import {addRowOfCSV} from "../../firebase/queries/csvManagement";
+import {addRowOfCSV} from "../../firebase/queries/authorizedUsers";
+import {getStorage, ref, uploadBytes} from "firebase/storage";
+
 
 const ParseCSV = () => {
-  type InternalRowOfCSV = {
-    email: string;
-    firstName: string;
-    lastName: string;
-    houseID: string;
-  }
   
   const [fileHolder, setFileHolder] = useState("");
   const [userArr, setUserArr] = useState<Object[]>([]);
+  const [file, setFile] = useState<File>();
+  const storage = getStorage();
 
   useEffect(() => {
     if (fileHolder != "") {
@@ -29,16 +27,34 @@ const ParseCSV = () => {
         },
         complete: function () {
           setUserArr(userHolder);
-          uploadRowsToFirebase(userHolder);
+          uploadRowsToFirebase(userHolder, fileHolder);
         },
       });
     }
   }, [fileHolder]);
 
-  const uploadRowsToFirebase = async (rowList: Object[]) => {
+  const uploadRowsToFirebase = async (rowList: Object[], fileHolder: string) => {
+    let house = "";
     for (let i = 0; i < rowList.length; i++) {
       let row = rowList[i];
-      addRowOfCSV(row.email, row.firstName, row.lastName, row.houseID);
+      if (row.house === undefined || row.lastName === undefined || row.firstName === undefined || row.email === undefined) {
+        console.log("Invalid data");
+        return;
+      }
+      if (house === "") {
+        house = row.house;
+      } else if (row.house !== house) {
+        console.log("Contains data from multiple houses");
+      }      
+    }
+    for (let i = 0; i < rowList.length; i++) {
+      let row = rowList[i];
+      addRowOfCSV(row.email, row.firstName, row.lastName, row.house);
+    }
+    if (file !== null && file !== undefined) {
+      const storageRef = ref(storage, house);
+      uploadBytes(storageRef, file);
+      alert("Successful Upload");
     }
   }
 
@@ -50,6 +66,18 @@ const ParseCSV = () => {
       window.alert("Ew! This isn't a csv file. YUCk!!");
     }
   };
+
+  const handleUploadClick = (lst: FileList | null) => {
+    if (lst === null) {
+      console.log("Invalid input");
+      return;
+    }
+    uploadCSV(lst[0]);
+    let item = lst.item(0);
+    if (item !== null) {
+      setFile(item);
+    }
+  }
 
   return (
     <div>
@@ -69,22 +97,7 @@ const ParseCSV = () => {
                     <Input type="submit" value="Submit" id="submitButton" />
               
             </label> */}
-      <input type="file" onChange={(e) => uploadCSV(e.target.files[0])} />
-
-      {userArr.length > 0 && userArr[0].lastName
-        ? userArr.map((item, index) => {
-            return (
-              <div key={index}>
-                <h2>
-                  {item.firstName} {item.lastName}'s email is {item.email} and
-                  they live in {item.house}.
-                </h2>
-              </div>
-            );
-          })
-        : userArr.length > 0 && userArr[0].lastName == undefined
-        ? "please input csv file with fields lastName, firstName, email, house."
-        : "No members found"}
+      <input type="file" onChange={(e) => handleUploadClick(e.target.files)} />
     </div>
   );
 };

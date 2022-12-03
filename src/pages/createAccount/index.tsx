@@ -4,7 +4,7 @@ import { useUserContext } from "../../context/UserContext";
 import { useRouter } from "next/router";
 import { emailRegex } from "../../firebase/helpers";
 import { getAllHouses } from "../../firebase/queries/house";
-import { getRowOfCSV, updateRowOfCSV } from "../../firebase/queries/csvManagement";
+import { getRowOfCSV, updateRowOfCSV } from "../../firebase/queries/authorizedUsers";
 import { reauthenticateWithCredential } from "firebase/auth";
 
 const CreateAccountPage = () => {
