@@ -34,7 +34,7 @@ export type Shift = {
   verificationBuffer: number;
   usersAssigned: string[];
   category: string;
-}
+};
 
 export type House = {
   houseID: string;
@@ -45,6 +45,15 @@ export type House = {
   userPINs: Map<string, string>;
 };
 
+export enum Day {
+  Mon = 'Monday',
+  Tue = 'Tuesday',
+  Wed = 'Wednesday',
+  Thu = 'Thursday',
+  Fri = 'Friday',
+  Sat = 'Saturday',
+  Sun = 'Sunday'
+};
 export type RowOfCSV = {
   email: string;
   firstName: string;
