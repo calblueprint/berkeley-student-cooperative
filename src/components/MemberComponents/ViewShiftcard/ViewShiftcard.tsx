@@ -17,9 +17,10 @@ type ViewShiftcardProps = {
 /**
  * IMPORTANT:  When this component is integrated to table, must move open, setOpen, handleOpen, and handleClose to the table rather than the card itself.
  * TODO:
- * Verify button only pops up if current user isn't verified for this shift[]
- * Deprecate table []
- * apply changes to AssignShiftCard []
+ * Verify button only pops up if current user isn't verified for this shift[x]
+ * Make table into Data Table []
+ * Update shift info representation to match Updated Designs []
+\ * apply changes to AssignShiftCard []
  * apply changes to shiftSchedule (check that it's pulled) []
  * styling []
  * When attaching to a schedule:  move shiftID and houseID up, as well as pinUser map. []
