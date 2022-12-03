@@ -20,12 +20,12 @@ import ViewShiftcard from "../components/MemberComponents/ViewShiftcard/ViewShif
 import { firestoreAutoId } from "../firebase/helpers";
 
 const Home: NextPage = () => {
-
+ 
 	//getting all possible fields from auth; authUSER is current signed in user, house is the house object
-	const { authUser, house, register, signIn, signOutAuth, establishUserContext } = useUserContext();
+	const { authUser, house, register, signIn, signOutAuth} = useUserContext();
 
   const createUser = async () => {
-    addUser("bsc@berkeley.edu", "Euclid", "Sean", "Manager", firestoreAutoId());
+    addUser("bsc@berkeley.edu", "EUC", "Sean", "Seanson", "Manager", firestoreAutoId());
   }
 
   const retrieveUser = async () => {
@@ -89,7 +89,6 @@ const Home: NextPage = () => {
         <button onClick={() => signIn("viewCardTester2@gmail.com", "iluvtestingtoo")}>SIGN IN</button>
         {/* <button onClick = {() => register("viewCardTester2@gmail.com", "testluvr2", "iluvtestingtoo")}>Register</button> */}
         <ShiftCard />
-        <AssignShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"} />
         <SettingsInfo userID={"1234"}/>
         <AvailabilityInfo userID={"1234"}/>
         <ViewShiftcard shiftID={"iBVA4gOntEGFA4AxpqFU"} houseID={"EUC"}/>
