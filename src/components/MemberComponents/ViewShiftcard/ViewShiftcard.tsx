@@ -43,7 +43,7 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   const [memberRows, setMemberRows] = useState<JSX.Element[]>();
   const [verifierPin, setVerifierPin] = useState("");
   const [userPinMap, setUserPinMap] = useState(new Map<string, string>());
-  const [isMemVerified, setMemVerified] = useState(true)
+  const [isMemVerified, setMemVerified] = useState(false)
 
   /**
    * @remarks
@@ -78,7 +78,7 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     let tempMemRows = new Array<JSX.Element>();
     let verShifts = await getVerifiedShifts(houseID, shiftID);
     let house = await getHouse(houseID);
-    setUserPinMap(objectToMap(house.userPINs));
+    setUserPinMap(house.userPINs);
     //Uses list of Users to generate the member rows in table
     userObjects.map((user) => {
       if (user != null) {
@@ -118,13 +118,13 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     let verifiedShift = verShifts.get(user.userID);
     let username = user.firstName + " " + user.lastName;
     let authname = authUser.firstName + " " + authUser.lastName;
-    //changing user to "me" is iffy, persistence needs to work first due to loading order.
-    //component is loaded in before authUser is signed in, persistence fixes this.
-    let name = username != authname ? username : "me"
+    let name = username != authname ? username : "me" //If member row is the current user, display name as 'me'
     if (verifiedShift != undefined) {
       status = "Complete";
       time = verifiedShift.timeStamp;
-      setMemVerified(verifiedShift.shifterID == authUser.userID);
+      if (!isMemVerified && verifiedShift.shifterID == authUser.userID) { 
+        setMemVerified(true); //IF current member is already verified, this useState will disable the verification button
+      }
     }
     return ( 
       <TableRow
@@ -159,6 +159,7 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    */
   const handleVerify = () => {
     let verifierID = userPinMap.get(verifierPin);
+    console.log({userPinMap, verifierPin});
     if (verifierID == undefined) {
       //Replace with modal/warning
       console.log("Invalid PIN");
@@ -217,8 +218,8 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
                 <Table sx={{ minWidth: 500 }} aria-label="simple table">
                     <TableHead>
                     <TableRow>
-                        <TableCell>Member</TableCell>
-                        <TableCell align="right">Time</TableCell>
+                        <TableCell>Available</TableCell>
+                        <TableCell align="right">Timestamp</TableCell>
                         <TableCell align="right">Status</TableCell>
                     </TableRow>
                     </TableHead>
@@ -227,41 +228,39 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
                     </TableBody>
                 </Table>
             </TableContainer>
-            {isMemVerified ?
-              (<div className = {styles.verificationHeader}>
-                <Typography variant="h6">
-                  Verification
-                </Typography>
-                <TextField
-                  sx = {{ minWidth: 560}}
-                  inputProps ={{ maxLength: 5}}
-                  id="outlined-password-input"
-                  label="Enter your pin code"
-                  type="password"
-                  autoComplete="current-password"
-                  onChange={(ev) => {
-                    setVerifierPin(ev.target.value);
-                  }}
-                />
-              </div>): 
+            {!isMemVerified ?
+              (<div>
+                <div className = {styles.verificationHeader}>
+                  <Typography variant="h6">
+                    Pin code
+                  </Typography>
+                  <TextField
+                    sx = {{ minWidth: 560}}
+                    inputProps ={{ maxLength: 5}}
+                    id="outlined-password-input"
+                    label="Enter your pin code"
+                    type="password"
+                    autoComplete="current-password"
+                    onChange={(ev) => {
+                      setVerifierPin(ev.target.value);
+                    }}
+                  />
+                </div>
+                <div className = {styles.verifyButton}>
+                  <Button
+                  variant="contained"
+                  size="medium"
+                  onClick={() => 
+                    handleVerify()
+                  }
+                  >
+                    Save
+                  </Button>
+                </div> 
+              </div>
+              ): 
               <div/>
             }
-            <div className = {styles.verificationHeader}>
-              <Typography variant="h6">
-                Verification
-              </Typography>
-              <TextField
-                sx = {{ minWidth: 560}}
-                inputProps ={{ maxLength: 5}}
-                id="outlined-password-input"
-                label="Enter your pin code"
-                type="password"
-                autoComplete="current-password"
-                onChange={(ev) => {
-                  setVerifierPin(ev.target.value);
-                }}
-              />
-            </div>
             </div>
           </div>
         </DialogContent>
