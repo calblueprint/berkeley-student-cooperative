@@ -1,33 +1,8 @@
-.container {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-} 
-
 .center {
 	display: flex;
-	justify-content: center;
-}
-
-.filters {
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	position: inherit;
-	top: 100px
-}
-
-
-.table {
-	display: flex;
-	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 	height: 100%;
 	width: 100%;
 }
-/* 
-.title {
-	position: absolute;
-	top: 7.5%;
-} */
 

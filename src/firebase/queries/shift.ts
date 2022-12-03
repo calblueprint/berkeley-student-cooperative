@@ -36,21 +36,18 @@ export const getShift = async (houseID: string, shiftID: string) => {
     }
     // probably replace with modal
     console.log("Invalid Shift ID");
-    return null;
 }
 
-export const getShiftsByUser = async (userID: string, houseID: string) => {
-		 //get the shiftsAssigned array from userID in firebase
-		 //go through the array and getShift forEach shift
-		 //[arse and return array of shift objects 
-		const user = await getUser(userID)
-		user?.shiftsAssigned.forEach((elem) => {
-			console.log(elem)
-		})
-	// .forEach(element => {
-			
-	// 	});
-}
+// export const getShiftsByUser = async (userID: string, houseID: string) => {
+// 		const user = await getUser(userID);
+// 		// const shifts: (Shift | undefined)[] = [];
+// 		user?.shiftsAssigned.map(async (elem) => {
+// 			const shift = await getShift(houseID, elem)
+// 			shifts.push(shift)
+// 		})
+// 		console.log("USER SHIFTS", shifts)
+// 		return shifts
+// }
 
 export const deleteShift = async (houseID: string, shiftID: string) => {
     const currShift = await getShift(houseID, shiftID);

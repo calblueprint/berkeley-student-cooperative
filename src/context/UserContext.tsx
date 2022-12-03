@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import { createContext, useContext, useEffect } from "react";
-=======
 import React from "react";
 import { createContext, useContext } from "react";
->>>>>>> 9e399b7883cafdebecea432e1831969c85f73d83
 import { useFirebaseAuth } from "../firebase/queries/auth";
 import { defaultUser } from "../firebase/queries/user";
 import { defaultHouse } from "../firebase/queries/house";

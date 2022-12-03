@@ -15,8 +15,10 @@ export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderP
 
 
 	return (
-		<div className={styles.container}>
-			<Typography variant="h2" className={styles.title}> Schedule </Typography>
+		<div className={styles.background}>
+			<div className={styles.container}>
+				<Typography variant="h2" className = {styles.title}> Schedule </Typography>
+			</div>
 		</div>
 	)
 }

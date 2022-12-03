@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from "react";
 import { User } from "../../../../types/schema";
-import { Typography, Card, TextField } from '@mui/material';
+import { Typography, Card, TextField, FormControl, InputLabel, MenuItem, Select, InputAdornment } from '@mui/material';
 import styles from "./MemberShiftFilters.module.css";
 import Icon from "../../../../assets/Icon";
-import { getShiftsByUser } from "../../../../firebase/queries/shift";
 
 
 type MemberShiftFiltersProps = {
@@ -12,28 +11,6 @@ type MemberShiftFiltersProps = {
 
 export const MemberShiftFilters: React.FunctionComponent<MemberShiftFiltersProps> = ({member}) => {
 
-	// const verifyCards = () => (
-	// 	<div className={styles.cards}>
-	// 		<div className={styles.card}>
-	// 				<Typography variant="h4">4</Typography>
-	// 				<Typography variant="body1">shifts to verify today</Typography>
-	// 			</div>
-	// 			<div className={styles.card}>
-	// 				<Typography variant="h4">3</Typography>
-	// 				<Typography variant="body1">hours of shifts to verify today</Typography>			
-	// 			</div>
-	// 	</div>
-	// );
-
-	//MOVE TO FILTER COMPONENT WITH ALPH DAY DATE
-	// const dateCard = () => {
-	// 	<div className={styles.dateCard}>
-	// 		<Icon type="leftArrow" className="leftArrow" />
-	// 		{/* TODO GET SUNDAY - SUNDAY */}
-	// 		<Typography variant="subtitle1">Oct 16</Typography>
-	// 		<Icon type="rightArrow" className="rightArrow" />
-	// 	</div>
-	// }
 	const searchBar = () => (
 		<div className={styles.searchBar}>
 			<TextField 
@@ -42,7 +19,10 @@ export const MemberShiftFilters: React.FunctionComponent<MemberShiftFiltersProps
 				variant="outlined"
 				sx={{
 					width: "100%",
-					backgroundColor: "#FFFFFFFF"
+					backgroundColor: "#FFFFFFFF",
+				}}
+				InputProps={{
+					endAdornment: <InputAdornment position="start"><Icon type="search"/></InputAdornment>,
 				}}
 				/>
 		</div>
@@ -50,23 +30,53 @@ export const MemberShiftFilters: React.FunctionComponent<MemberShiftFiltersProps
 
 	const filterButtons = () => (
 		<div className={styles.filters}>
-			<button onClick={() => getShiftsByUser("1234", "EUC")}>alphabetical</button>
-			<button>monday</button>
-			<button>temp shift</button>
+			<FormControl fullWidth>
+				<InputLabel id="demo-simple-select-label">Alphabetical</InputLabel>
+				<Select
+					labelId="demo-simple-select-label"
+					id="demo-simple-select"
+					// value={age}
+					label="Alphabetical"
+					// onChange={handleChange}
+					sx={{
+						backgroundColor: "#FFFFFFFF"
+					}}
+				>
+					<MenuItem value={"add values"}>A</MenuItem>
+					<MenuItem>B</MenuItem>
+					<MenuItem>C</MenuItem>
+					<MenuItem>sort? already in table...</MenuItem>
+
+				</Select>
+			</FormControl>
+			<FormControl fullWidth>
+				<InputLabel id="demo-simple-select-label">Day</InputLabel>
+				<Select
+					labelId="demo-simple-select-label"
+					id="demo-simple-select"
+					// value={age}
+					label="Age"
+					// onChange={handleChange}
+					sx={{
+						backgroundColor: "#FFFFFFFF"
+					}}
+				>
+					<MenuItem>Sunday</MenuItem>
+					<MenuItem>Monday</MenuItem>
+					<MenuItem>Tuesday</MenuItem>
+					<MenuItem>Wednesday</MenuItem>
+					<MenuItem>Thursday</MenuItem>
+					<MenuItem>Friday</MenuItem>
+					<MenuItem>Saturday</MenuItem>
+				</Select>
+			</FormControl>
 		</div>
 	)
 
-
-	// <div className={styles.toolBar}>
-	// 			<MemberShiftFilters />
-	// 			<div className={styles.filters}>
-
-	// 			</div>
-	// 		</div>
 	return (
 		<div className={styles.container}>
-			<>{searchBar()}</>
-			<>{filterButtons()}</>
+			{searchBar()}
+			{filterButtons()}
 		</div>
 	)
 }

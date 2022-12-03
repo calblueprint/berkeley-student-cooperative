@@ -1,18 +1,23 @@
 .container {
 	display: flex;
 	justify-content: space-between;
-	width: 90%;
-	gap: 10%;
-	margin-top: 25px;
+	width: 92%;
+	height: 11%;
+	align-items: center;
+	/* gap: 16%; */
+	/* position: relative;
+	top: 2.6%; */
 }
 
 .searchBar {
-	width: 50%;
+	width: 53.6%;
 }
 
 .filters {
-	width: 40%;
+	width: 30%;
+	height: 56px;
 	display: flex;
 	justify-content: space-between;
+	gap: 2%;
 }
 		
