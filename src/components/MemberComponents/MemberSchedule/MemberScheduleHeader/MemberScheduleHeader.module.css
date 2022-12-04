@@ -1,7 +1,6 @@
 .component {
-	height: 16%;
-	min-height: 100px;
-	max-height: 175px;
+	height: 15.77%;
+	max-height: 200px;
 	background-color: white;
 	width: 100%;
 	display: flex;
@@ -60,7 +59,7 @@
 
 .dates {
 	width: 22%;
-	max-width: 300px;
+	max-width: 250px;
 }
 
 .dateSelector {
@@ -71,7 +70,7 @@
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
-	font-size: larger;
+	font-size: x-large;
 	border-radius: 5px;
 }
 
@@ -82,4 +81,5 @@
 
 .text {
 	color: #656565;
+	font-size: small;
 }

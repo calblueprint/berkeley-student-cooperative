@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from "../../../components/Layout/Layout";
 import { MemberScheduleHeader } from "../../../components/MemberComponents/MemberSchedule/MemberScheduleHeader/MemberScheduleHeader";
-import { MemberShiftSchedule } from "../../../components/MemberComponents/MemberSchedule/MemberShiftSchedule/MemberShiftView";
+import { MemberShiftView } from "../../../components/MemberComponents/MemberSchedule/MemberShiftView/MemberShiftView";
 import { useUserContext } from "../../../context/UserContext";
 import { House, User } from "../../../types/schema";
 import styles from "./MemberSchedule.module.css";
@@ -20,7 +20,7 @@ const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
   return (
     <Layout>
       <MemberScheduleHeader />
-      <MemberShiftSchedule user={authUser} />
+      <MemberShiftView user={authUser} />
     </Layout>
   );
 };
