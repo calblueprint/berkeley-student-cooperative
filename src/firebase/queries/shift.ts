@@ -64,6 +64,23 @@ export const getShift = async (houseID: string, shiftID: string) => {
   // probably replace with modal
 };
 
+/************************************************************* */
+/** This function gets all shifts from a house with houseID */
+export const getAllShift = async (houseID: string) => {
+  // const docRef = doc(firestore, "houses", "EUC", "shifts", "dhWWmgzM1MISFWyblp8J");
+  const colRef = collection(firestore, "houses", houseID, "shifts");
+
+  const promises: Promise<Shift>[] = [];
+  const colSnap = await getDocs(colRef);
+  colSnap.forEach((shift) => {
+    promises.push(parseShift(shift));
+  })
+  const shfits = await Promise.all(promises);
+  return shfits;
+  // probably replace with modal
+};
+/************************************************************* */
+
 export const getNumVerified = async (
   houseID: string,
   shiftID: string
