@@ -2,7 +2,6 @@ import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Layout from "../../../components/Layout/Layout";
 import { MemberScheduleHeader } from "../../../components/MemberComponents/MemberSchedule/MemberScheduleHeader/MemberScheduleHeader";
-import { MemberShiftFilters } from "../../../components/MemberComponents/MemberSchedule/MemberShiftFilters/MemberShiftFilters";
 import { MemberShiftSchedule } from "../../../components/MemberComponents/MemberSchedule/MemberShiftSchedule/MemberShiftSchedule";
 import { useUserContext } from "../../../context/UserContext";
 import  {useFirebaseAuth}  from "../../../firebase/queries/auth";
@@ -24,7 +23,6 @@ const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
 	return (
 		<Layout>
 			<MemberScheduleHeader/>
-			{/* <MemberShiftFilters /> */}
 			<MemberShiftSchedule user = {authUser}/>
 		</Layout>
 	)

@@ -1,4 +1,4 @@
-.center {
+.component {
 	height: 84%;
 	width: 100%;
 	display: flex;
@@ -6,16 +6,17 @@
 }
 
 .container {
-	height: 84%;
-	width: 92%;
 	display: flex;
+	width: 92%;
+	height: 100%;
 	flex-direction: column;
-	justify-content: space-between;
+	justify-content: space-evenly;
 }
 
 .schedule {
 	background-color: white;
 	border: 0px;
+	max-height: 80%;
 }
 
 .status {

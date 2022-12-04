@@ -3,7 +3,6 @@ import { User } from "../../../../types/schema";
 import { Typography, Card, TextField, Button } from '@mui/material';
 import styles from "./MemberScheduleHeader.module.css";
 import Icon from "../../../../assets/Icon";
-import { MemberShiftFilters } from "../MemberShiftFilters/MemberShiftFilters";
 
 
 type MemberScheduleHeaderProps = {
@@ -12,10 +11,14 @@ type MemberScheduleHeaderProps = {
 
 export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderProps> = ({member}) => {
 
+	/**
+	 * TODO: complete functionality for switching pages between individual and all shifts and date picker
+	 */
+
 	return (
-		<div className={styles.background}>
+		<div className={styles.component}>
 			<div className={styles.container}>
-				<div className={styles.title}>
+				<div className={styles.top}>
 					<Typography variant="h2"> Schedule </Typography>
 				</div>
 				<div className={styles.bottom}>
@@ -28,14 +31,13 @@ export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderP
 						</button>
 					</div>
 					<div className={styles.dates}>
-						<button className={styles.dateButton}>
-								<Icon type="leftArrow" className={styles.scale}/>
+						<div className={styles.dateSelector}>
+								<Icon type="leftArrow" className={styles.icon}/>
 								<Typography variant="subtitle1" className={styles.text}>
 									Dec 20 - Dec 27
 								</Typography>
-								<Icon type="rightArrow" className={styles.scale}/>
-							
-						</button>
+								<Icon type="rightArrow" className={styles.icon}/>
+						</div>
 					</div>
 				</div>
 			</div>

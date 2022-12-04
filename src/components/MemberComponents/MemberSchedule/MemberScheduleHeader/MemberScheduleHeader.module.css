@@ -1,6 +1,7 @@
-.background {
+.component {
 	height: 16%;
-	max-height: 16%;
+	min-height: 100px;
+	max-height: 175px;
 	background-color: white;
 	width: 100%;
 	display: flex;
@@ -13,17 +14,9 @@
 	width: 92%;
 }
 
-.filterContainer {
+.top {
 	display: flex;
-	width: 62.2%;
-	height: 100%;
-	background-color: bisque;
-	position: relative;
-}
-
-.title {
-	display: flex;
-	align-items: center;
+	align-items: flex-end;
 	height: 58%;
 }
 
@@ -32,6 +25,15 @@
 	flex-direction: row;
 	justify-content: space-between;
 	height: 42%;
+}
+
+.pages {
+	display: flex;
+	flex-direction: row;
+	min-width: fit-content;
+	max-width: 14%;
+	width: 14%;
+	gap: 30px
 }
 
 .pageButton {
@@ -44,43 +46,6 @@
 	align-items: center;
 }
 
-.dateButton {
-	height: 65%;
-	width: 100%;
-	background-color: white;
-	border: 0.75px solid #E2E2E2;
-	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-	font-size: larger;
-}
-
-.pages {
-	display: flex;
-	flex-direction: row;
-	min-width: fit-content;
-	max-width: 14%;
-	width: 14%;
-	gap: 30px
-}
-
-.dates {
-	width: 22%;
-	max-width: 300px;
-}
-
-.searchBar {
-	width: 49.3%;
-}
-
-.scale {
-	transform: scale(1.5)
-}
-
-.text {
-	color: #656565;
-}
-
 .selectedPageButton {
 	height: 100%;
 	width: 100%;
@@ -91,4 +56,30 @@
 	justify-content: flex-start;
 	align-items: center;
 	border-bottom: 1px solid #1A202C;
+}
+
+.dates {
+	width: 22%;
+	max-width: 300px;
+}
+
+.dateSelector {
+	height: 65%;
+	width: 100%;
+	background-color: white;
+	border: 0.75px solid #E2E2E2;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	font-size: larger;
+	border-radius: 5px;
+}
+
+.icon {
+	transform: scale(1.25);
+	color: #656565
+}
+
+.text {
+	color: #656565;
 }
