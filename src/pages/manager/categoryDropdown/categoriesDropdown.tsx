@@ -38,7 +38,7 @@ const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({mapKey, category
             </TableRow>
             
             {
-                isExpanded && categoryMap && Array.from(categoryMap.keys()).map((shiftID, index) => (
+                isExpanded && categoryMap && Array.from(categoryMap.keys()).sort().map((shiftID, index) => (
                     <TableRow key = {index}>
                         <TableCell padding = "checkbox">
                             

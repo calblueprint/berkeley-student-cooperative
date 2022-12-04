@@ -55,7 +55,10 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({houseID}: CategoriesView
 
     // Uploads the new category to Firebase if the category doesn't exist yet
     const uploadCategory = async () => {
-        if (house !== undefined) {
+        if (newCategoryName.length == 0) {
+            console.log("Invalid Category Name length");
+        }
+        if (house !== undefined && newCategoryName.length > 0) {
             let successful  = await addCategory(houseID, newCategoryName);
             if (successful) {
                 house.categories.set(newCategoryName, new Map<string, string>());
@@ -72,7 +75,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({houseID}: CategoriesView
                 <Table >
                     <TableBody>
                         {
-                            house && Array.from(house.categories.keys()).map((key, index) => (
+                            house && Array.from(house.categories.keys()).sort().map((key, index) => (
                                 <CategoriesDropdown key = {index} mapKey = {key} categoryMap = {house.categories.get(key)}></CategoriesDropdown>
                             ))
                         }
