@@ -9,11 +9,8 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { getHouse } from "../../../firebase/queries/house";
-import {
-  getUser,
-  generatePinNumber,
-  updateUser,
-} from "../../../firebase/queries/user";
+import { getUser, updateUser } from "../../../firebase/queries/user";
+import { generatePinNumber } from "../../../firebase/helpers";
 import { House, User } from "../../../types/schema";
 import styles from "./SettingsInfo.module.css";
 
