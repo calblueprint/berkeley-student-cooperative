@@ -1,5 +1,12 @@
 import React from "react";
-import { SvgIcon } from "@mui/material";
+
+/**
+ * Returns an icon component
+ *
+ * @param type -  The icon type
+ *
+ * used as <Icon type={"close"} />
+ */
 export type IconType =
   | "close"
   | "search"
@@ -10,8 +17,8 @@ export type IconType =
   | "navPlanner"
   | "navProfile"
   | "navLogout"
-	| "leftArrow"
-	| "rightArrow"
+  | "leftArrow"
+  | "rightArrow"
   | "navMembers";
 
 const IconSvgs: Record<IconType, React.ReactElement> = {
@@ -43,30 +50,48 @@ const IconSvgs: Record<IconType, React.ReactElement> = {
       />
     </svg>
   ),
-	navDashboard: (
-		<svg 
-		  width="23" 
-			height="24" 
-			viewBox="0 0 23 24" 
-			fill="none" 
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path 
-			  d="M0.186523 13.25H10.1865V0.75H0.186523V13.25ZM0.186523 23.25H10.1865V15.75H0.186523V23.25ZM12.6865 23.25H22.6865V10.75H12.6865V23.25ZM12.6865 0.75V8.25H22.6865V0.75H12.6865Z" 
-				fill="#C2C2C2"
-			/>
+  navDashboard: (
+    <svg
+      width="23"
+      height="24"
+      viewBox="0 0 23 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0.186523 13.25H10.1865V0.75H0.186523V13.25ZM0.186523 23.25H10.1865V15.75H0.186523V23.25ZM12.6865 23.25H22.6865V10.75H12.6865V23.25ZM12.6865 0.75V8.25H22.6865V0.75H12.6865Z"
+        fill="#C2C2C2"
+      />
     </svg>
-	),
-	leftArrow: (
-		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M7.03458 9.11416L6.36527 9.78348L11.7207 15.1389L13.0593 13.8003L9.04346 9.78348L13.0593 5.76666L11.7207 4.42804L7.03458 9.11416Z" fill="#969696"/>
-		</svg>
-	),
-	rightArrow: (
-		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M12.9659 10.4527L13.6352 9.78342L8.27978 4.42798L6.94116 5.76661L10.957 9.78342L6.94116 13.8002L8.27978 15.1389L12.9659 10.4527Z" fill="#969696"/>
-		</svg>
-	),
+  ),
+  leftArrow: (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7.03458 9.11416L6.36527 9.78348L11.7207 15.1389L13.0593 13.8003L9.04346 9.78348L13.0593 5.76666L11.7207 4.42804L7.03458 9.11416Z"
+        fill="#969696"
+      />
+    </svg>
+  ),
+  rightArrow: (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12.9659 10.4527L13.6352 9.78342L8.27978 4.42798L6.94116 5.76661L10.957 9.78342L6.94116 13.8002L8.27978 15.1389L12.9659 10.4527Z"
+        fill="#969696"
+      />
+    </svg>
+  ),
   navSchedule: (
     <svg
       width="20"
