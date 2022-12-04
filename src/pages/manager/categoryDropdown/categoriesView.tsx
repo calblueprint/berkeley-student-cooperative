@@ -12,10 +12,22 @@ type CategoriesViewProps = {
 }
 
 const CategoriesView: React.FC<CategoriesViewProps> = ({houseID}: CategoriesViewProps) => {
+    /**
+     * Displays the shift categories in a house and provides the ability to add a new category.
+     * Each shift category is a drop-down, such that when clicked, it displays all of the shifts under that category.
+     * 
+     * @param houseID - The ID of the house.
+     * @returns CategoriesView
+     */
+    
+    // Retrieved house object
     const [house, setHouse] = useState<House>();
+    // Stores whether the modal to create a new category is opened
     const [isModalOpened, setIsModalOpened] = useState(false);
+    // Stores the new category name
     const [newCategoryName, setNewCategoryName] = useState("");
 
+    // Retrieves the house object given the houseID
     const retrieveHouse = async () => {
         let h = await getHouse(houseID);
         setHouse(h);
@@ -25,27 +37,32 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({houseID}: CategoriesView
         retrieveHouse();
     }, []);
 
+    // Opens modal
     const openModal = () => {
         setIsModalOpened(true);
     }
 
+    // Updates the newCategoryName state as the user types in
     const handleCategoryNameChange = (event: any) => {
         setNewCategoryName(event.target.value);
     }
 
+    // Closes the modal without pushing anything to firebase
     const closeModal = () => {
         setIsModalOpened(false);
         setNewCategoryName("");
     }
 
+    // Uploads the new category to Firebase if the category doesn't exist yet
     const uploadCategory = async () => {
         if (house !== undefined) {
-            house.categories.set(newCategoryName, new Map<string, string>());
-            await addCategory(houseID, newCategoryName);
-            setHouse(house);
+            let successful  = await addCategory(houseID, newCategoryName);
+            if (successful) {
+                house.categories.set(newCategoryName, new Map<string, string>());
+                setHouse(house);
+            }
         }
-        setIsModalOpened(false);
-        setNewCategoryName("");
+        closeModal();
     }
 
     return (

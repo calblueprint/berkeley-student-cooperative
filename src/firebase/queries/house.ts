@@ -56,7 +56,7 @@ export const updateHouse = async (houseID: string, newData: object) => {
 }
 
 //adds a value to the categories array
-export const addCategory = async (houseID: string, newCategory: string): Promise<void> => {
+export const addCategory = async (houseID: string, newCategory: string): Promise<boolean> => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
 
@@ -66,7 +66,7 @@ export const addCategory = async (houseID: string, newCategory: string): Promise
         const house = await promise;
         var houseCategories = house.categories;
         
-        //checks if category already exists, {} is nested map
+        //checks if category already exists, {} is nested 
         if(!houseCategories?.has(newCategory)) {
             // Nested maps -> object
             let newMap = new Map<string, object>();
@@ -79,13 +79,15 @@ export const addCategory = async (houseID: string, newCategory: string): Promise
                 categories: mapToObject(newMap)
             }
             await updateDoc(docRef, data)
-
+            return true;
         } else {
             console.log("The", newCategory, " category already exists, use the updateCategory function");
+            return false;
         }
         
     } else{
         console.log("invalid house id for add category")
+        return false;
     }
 }
 

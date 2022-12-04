@@ -9,12 +9,20 @@ type CategoriesDropdownProps = {
 }
 
 const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({mapKey, categoryMap}: CategoriesDropdownProps) => {
-
+    /**
+     * Displays an individual category and displays the shifts inside those categories on click.
+     * 
+     * @param mapKey - The name of the category
+     * @param categoryMap - The map of categoryNames : shifts that is used to display information about the individual shifts
+     * @returns CategoriesDropdown
+     */
+    
+    // Stores whether the dropdown has been expanded / collapsed
     const [isExpanded, setIsExpanded] = useState(false);
     
+    // Expands / collapses the dropdown
     const handleExpand = () => {
         setIsExpanded(!isExpanded);
-        console.log("hel");
     }
 
     return (
