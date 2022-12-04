@@ -6,6 +6,7 @@
   2. Change how House is retrieved using new Danashi User Context. (Functional for now, plugging House context is a little buggy)
   3. styling
 */
+import { getUser } from "../../../firebase/queries/user";
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -19,21 +20,27 @@ import { getHouse } from "../../../firebase/queries/houseQueries";
 import { Day } from "../../../types/schema";
 import { getNumVerified, getShift } from "../../../firebase/queries/shift";
 import { Shift } from "../../../types/schema";
+import { type } from "os";
 import Select from "react-select";
+import { firestoreAutoId, objectToMap } from "../../../firebase/helpers";
 import Paper from "@mui/material/Paper";
 import { useUserContext } from "../../../context/UserContext";
+import ShiftCard from "../Shiftcard/Shiftcard";
 import AssignShiftcard from "../AssignShiftcard/AssignShiftcard";
 import styles from "./ShiftSchedule.module.css";
 
-/*
-  Flow
-  1. useEffect calls loadScheduleComponents
-  2. Retrieve the House's schedule
-  3. For each entry in schedule, use list of shiftIDs to retrieve shifts from Firebase
-  4. Turn Shift objects into rowData
-  5. use rowData to create a table entry
-  6. In schedule, store table entries in based on which day they're from.
-*/
+/**
+ * @remarks
+ * Returns a table of all the shifts created for a given House.
+ * House is retrieved using User context
+ * Flow
+ * 1. useEffect calls loadScheduleComponents
+ * 2. Retrieve the House's schedule
+ * 3. For each entry in schedule, use list of shiftIDs to retrieve shifts from Firebase
+ * 4. Turn Shift objects into rowData
+ * 5. use rowData to create a table entry
+ * 6. In schedule, store table entries in based on which day they're from.
+ */
 export const ShiftSchedule = () => {
   const { authUser, house } = useUserContext();
 
@@ -48,6 +55,12 @@ export const ShiftSchedule = () => {
   Every time open is pressed, new information is passed to make a card.
   */
   const [open, setOpen] = useState(false);
+  /**
+   * @remarks
+   * Since we are using 1 modal that is dynamic, handleOpen changes the settings
+   * of the modal upon clicking a row
+   * @param shiftID - shiftID of the row being clicked.
+   */
   const handleOpen = (shiftID: string) => {
     setOpen(true);
     setCurrentShiftCardID(shiftID);
@@ -72,6 +85,13 @@ export const ShiftSchedule = () => {
   const [selectedDay, setSelectedDay] = useState<ValueType<OptionType>>(
     dayOptions[0]
   );
+
+  /**
+   * @remarks
+   * When changing the day in the dropdown, we change the selected Day AND
+   * must rerender the table rows to fit that day
+   * @param option - From dayOptions
+   */
   const handleDayChange = (option: ValueType<any>) => {
     setSelectedDay(option);
     setDailyRows(schedule.get(option.value));
@@ -89,9 +109,11 @@ export const ShiftSchedule = () => {
   //The Rows that populate the table.  Will change depending on what dropdown day we pick (FRONTEND)
   const [dailyRows, setDailyRows] = useState<JSX.Element[]>();
 
-  /* Function used to retrieve ALL shifts of a house at once.  
-    Loads FB data and creates Row Components to display on MUI Table
-    (BACKEND -> FRONTEND) */
+  /**
+   * @remarks
+   * Retrieves all shifts of a house at once.
+   * Loads the FB data and creates Row Components to display on MUI Table
+   */
   const loadScheduleComponents = async () => {
     let houseFB = await getHouse(authUser.houseID);
     let tempSchedule = new Map<string, JSX.Element[]>();
@@ -116,12 +138,12 @@ export const ShiftSchedule = () => {
     });
   };
 
-  /* 
-    Takes shift IDs, retrives Shifts from Firebase, then converts them all to rowData
-    which are used to create components.
-    day - Current Day
-    shiftIDs - List of shift IDs corresponding to shifts from Current Day.
-  */
+  /**
+   * Takes shift IDs, retrives Shifts from Firebase, then converts them all to rowData
+   * which are used to create components.
+   * @param day - Current Day
+   * @param shiftIDs - List of shift IDs corresponding to shifts from Current Day.
+   */
   const getDailyData = async (
     day: string,
     shiftIDs: string[]
@@ -130,7 +152,6 @@ export const ShiftSchedule = () => {
     if (shiftIDs == undefined) {
       return new Array<rowData>();
     }
-
     let shiftPromises: Promise<Shift | undefined>[] = [];
     setCurrentShiftCardID(shiftIDs[0]);
     shiftIDs.map((id) => {
@@ -152,10 +173,10 @@ export const ShiftSchedule = () => {
     shiftObjects.map((shift, index) => {
       let numVerified = numVerifiedList[index];
       if (shift != undefined && numVerified != undefined) {
-        /*
-          Since verified shifts aren't set up in firebase, 
-          can put random numbers in numVerified to test that status bar works 
-          */
+        /**
+         * Since verified shifts aren't set up in firebase,
+         * can put random numbers in numVerified to test that status bar works
+         * */
         let rowObject = createRowData(shift, numVerified);
         rowObjects.push(rowObject);
       }
@@ -163,10 +184,11 @@ export const ShiftSchedule = () => {
     return rowObjects;
   };
 
-  /*
-    Converts Firebase Shift Object into rowData object 
-    shiftFB - Firebase Shift Object
-    numVerified - Number of verified shifts
+  /**
+   * @remarks
+   * Converts Firebase Shift Object into rowData object
+   * @param shiftFB - Firebase Shift Object
+   * @param numVerified - Number of verified shifts
    */
   const createRowData = (shiftFB: Shift, numVerified: number): rowData => {
     var status;
@@ -215,11 +237,12 @@ export const ShiftSchedule = () => {
     };
   };
 
-  /*
-    Takes rowData and creates a JSX Component for it, the final table row
-    dailyData - List of rowData from a given day
-    rowComponents - List of row components that we push to
-  */
+  /**
+   * @remarks
+   *  Takes rowData and creates a JSX Component for it, the final table row
+   * @param dailyData - List of rowData from a given day
+   * @param rowComponents - List of row components that we push to
+   */
   const convertDataToComponent = async (
     dailyData: rowData[],
     rowComponents: JSX.Element[]

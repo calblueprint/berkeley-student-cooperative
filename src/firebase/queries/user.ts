@@ -1,7 +1,7 @@
 import { firestore } from "../clientApp";
 import { User } from "../../types/schema";
 import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { objectToMap, mapToObject } from "../helpers";
+import { mapToObject, objectToMap } from "../helpers";
 import { getHouse, updateHouse } from "./house";
 import { generatePinNumber } from "../helpers";
 
