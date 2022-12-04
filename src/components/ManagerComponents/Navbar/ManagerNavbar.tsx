@@ -5,16 +5,24 @@ import styles from "./ManagerNavbar.module.css";
 import Icon from "../../../assets/Icon";
 import { useUserContext } from "../../../context/UserContext";
 
-const MemberNavbar: React.FunctionComponent = () => {
+const ManagerNavbar: React.FunctionComponent = () => {
+  /**
+   * Returns the navigation bar component for managers
+   *
+   * no params
+   * user is retrieved from the context using useUserContext()
+   *
+   */
   const router = useRouter();
   const { authUser, signOutAuth } = useUserContext();
 
   const userDetails = () => (
+    // Renders user details - name and role
     <ListItem className={styles.item + " " + styles.userDetails}>
       <Icon type="navProfile" className={styles.icon} />
       <div>
         <Typography variant="subtitle1" color={"#FFFFFF"}>
-          {authUser.first_name} {authUser.last_name}
+          {authUser.firstName} {authUser.lastName}
         </Typography>
         <Typography variant="subtitle1" color={"#FFFFFF"}>
           {authUser.role}
@@ -24,6 +32,12 @@ const MemberNavbar: React.FunctionComponent = () => {
   );
 
   const pages = () => (
+    /**
+     * Renders navigation bar buttons for 3 pages - schedule, planner, house
+     *
+     * schedule is the default page
+     * onClick handler pushes "/manager/[page name]" to the url using router
+     */
     <List className={styles.pages}>
       <ListItem
         button
@@ -86,6 +100,11 @@ const MemberNavbar: React.FunctionComponent = () => {
   );
 
   const logout = () => (
+    /**
+     * Renders the logout button
+     *
+     * onClick handler pushes "/login" to the url using router and signs out the current user in context
+     */
     <List className={styles.logout}>
       <ListItem
         className={styles.item}
@@ -119,4 +138,4 @@ const MemberNavbar: React.FunctionComponent = () => {
   );
 };
 
-export default MemberNavbar;
+export default ManagerNavbar;

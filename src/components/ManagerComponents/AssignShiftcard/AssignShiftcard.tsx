@@ -8,25 +8,29 @@ import styles from "./AssignShiftcard.module.css";
 type AssignShiftcardProps = {
   shiftID: string;
   houseID: string;
+  open: boolean;
+  handleClose: any;
+  handleOpen: any;
 };
 
 const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
   shiftID,
   houseID,
+  open,
+  handleClose,
+  handleOpen,
 }: AssignShiftcardProps) => {
-  const [open, setOpen] = useState(false);
   const [shift, setShift] = useState<Shift | null>();
 
   useEffect(() => {
-
-   /**
-   * Updates the shift useState.
-   *
-   * @remarks
-   * This method is uses the houseID and shiftID props that get passed in.
-   *
-   * 
-   */
+    /**
+     * Updates the shift useState.
+     *
+     * @remarks
+     * This method is uses the houseID and shiftID props that get passed in.
+     *
+     *
+     */
 
     const getShiftFB = async () => {
       const currShift = await getShift(houseID, shiftID);
@@ -35,15 +39,14 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
     getShiftFB();
   }, [houseID, shiftID]);
 
-
   /**
    * Returns the hour digit(s) of the time window.
    *
    * @param timeWindow - A four digit number equating to the time of a shift window
-   * 
+   *
    * @returns one digit or two digit number that represent the hour of the time window
-   * 
-   * 
+   *
+   *
    * @public
    */
   const parseHour = (timeWindow: number) => {
@@ -54,16 +57,15 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
     } else return Math.floor(timeWindow / 10) % 12;
   };
 
-
   /**
    * Returns the minute digit(s) of the time window.
    *
    * @param timeWindow - A four digit number equating to the time of a shift window
-   * 
+   *
    * @returns number that represents the minute value of the time window
-   * 
+   *
    * @public
-   * 
+   *
    */
   const parseMinute = (timeWindow: number) => {
     if (timeWindow % 100 == 0) {
@@ -76,41 +78,18 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
    * Returns string displaying whether the time window takes place in the AM or PM.
    *
    * @param timeWindow - A four digit number equating to the time of a shift window
-   * 
+   *
    * @returns string stating whether the time window takes place in the AM or PM.
-   * 
+   *
    * @public
-   * 
+   *
    */
   const parseAM = (timeWindow: number) => {
     return timeWindow >= 1200 ? "PM" : "AM";
   };
 
-
-  /**
-   * Updates the open useState to a True value.
-   * 
-   * @public
-   * 
-   */
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  /**
-   * Updates the open useState to a False value.
-   * @public
-   * 
-   */
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return shift ? (
     <div>
-      <Button variant="outlined" onClick={handleOpen}>
-        <Typography>Assign Shift</Typography>
-      </Button>
       <Dialog
         fullWidth
         maxWidth="md"

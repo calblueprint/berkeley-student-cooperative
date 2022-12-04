@@ -50,7 +50,7 @@ export const getHouse = async(houseID: string)  => {
     const docRef = doc(firestore, "houses", houseID);
 
     const colSnap = await getDoc(docRef);
-  
+    console.log(houseID);
     const promise: Promise<House> = parseHouse(colSnap);
     const house = await promise;
     return house;
@@ -333,8 +333,8 @@ export const removeCategory = async(houseID: string, oldCategory: string): Promi
 
 //parses house document passed in
 const parseHouse = async (doc : any) => {
-    const data = doc.data();
-    const houseID = doc.id.toString();
+    const data = await doc.data();
+	const houseID = doc.id.toString();
     const members = data.members;
     const address = data.address;
     const categories = data.categories;
