@@ -240,7 +240,7 @@ export const UnassignedShiftList = () => {
             handleOpen;
           }}
         >
-          <Typography>Add Shift +</Typography>
+          <Typography>Create New Shift</Typography>
         </Button>
         <Select
           value={selectedDay}
