@@ -25,7 +25,7 @@ const CreateAccountPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { register } = useUserContext();
+  const { authUser, register } = useUserContext();
 
   const login = () => {
     router.push("/login");
@@ -98,7 +98,31 @@ const CreateAccountPage = () => {
         accountCreated: true,
       };
       await updateRowOfCSV(email, newData);
+
       router.push("/member/dashboard");
+
+      /******************* */
+      // register(
+      //   email,
+      //   csvInformation.houseID,
+      //   csvInformation.firstName,
+      //   csvInformation.lastName,
+      //   "member",
+      //   password
+      // )
+      //   .then((res) => {
+      //     let newData = {
+      //       accountCreated: true,
+      //     };
+      //     updateRowOfCSV(email, newData)
+      //       .then((res) => {
+      //         console.log("PUSH ROUTER");
+      //         router.push("/member/dashboard");
+      //       })
+      //       .catch((e) => console.log(e));
+      //   })
+      //   .catch((e) => console.log(e));
+      /******************* */
     } catch (e) {
       console.log(e);
     }
