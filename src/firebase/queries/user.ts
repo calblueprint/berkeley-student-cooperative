@@ -55,7 +55,6 @@ export const addUser = async (email: string, houseID: string, firstName: string,
 }
 
 
-
 /**
  * Updates a user object with newData. If updating a map, it must be converted
  * to an object before this is called.
