@@ -8,10 +8,11 @@ import {
 import Image from "next/image";
 import BscLogo from "../../assets/bsclogo.png";
 import styles from "./Login.module.css";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFirebaseAuth } from "../../firebase/queries/auth";
 import Layout from "../../components/Layout/Layout";
 import { useRouter } from "next/router";
+
 
 export default function LoginPage() {
   /**
@@ -36,9 +37,10 @@ export default function LoginPage() {
     if (authUser.userID != "") {
       if (authUser.role == "Member" || authUser.role == "member") {
         router.push("/member/dashboard");
+      } else {
+        router.push("/manager/schedule");
       }
-      router.push("/manager/schedule");
-    }
+    } 
   });
 
   // onClick handler that pushes the router to the create account page

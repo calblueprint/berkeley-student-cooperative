@@ -13,7 +13,7 @@ const Home: NextPage = () => {
     }
   });
 
-  return (<div/>)
+  return <div />;
 };
 
 export default Home;
