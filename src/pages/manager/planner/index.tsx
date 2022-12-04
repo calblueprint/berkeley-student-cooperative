@@ -14,11 +14,9 @@ export default function PlannerPage() {
         </Head>
         <p>This is the planner page.</p>
         <main>
-          <ShiftCard />
           <UnassignedShiftList />
         </main>
-        <footer>
-        </footer>
+        <footer></footer>
       </div>
     </Layout>
   );

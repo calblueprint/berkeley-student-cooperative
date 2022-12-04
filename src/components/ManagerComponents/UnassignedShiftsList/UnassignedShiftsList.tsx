@@ -17,6 +17,8 @@ import {
   TableRow,
   Select,
   MenuItem,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import { getHouse } from "../../../firebase/queries/houseQueries";
 import { Day } from "../../../types/schema";
@@ -27,6 +29,8 @@ import Paper from "@mui/material/Paper";
 import { useUserContext } from "../../../context/UserContext";
 import AssignShiftcard from "../AssignShiftcard/AssignShiftcard";
 import styles from "./UnassignedShiftsList.module.css";
+import Icon from "../../../assets/Icon";
+import ShiftCard from "../Shiftcard/Shiftcard";
 /*
   Flow
   1. useEffect calls loadScheduleComponents
@@ -77,7 +81,7 @@ export const UnassignedShiftList = () => {
     shiftID: string;
     // Converted Time Window to a String
     timeWindow: string;
-    hoursWorth: number;
+    hoursWorth: string;
   };
   //The Rows that populate the table.  Will change depending on what dropdown day we pick (FRONTEND)
   const [dailyRows, setDailyRows] = useState<JSX.Element[]>();
@@ -129,6 +133,8 @@ export const UnassignedShiftList = () => {
     //MUST use Promise.all to assure that ALL shifts are loaded in before any loading is done.
     let shiftObjects = await Promise.all(shiftPromises);
     let rowObjects: rowData[] = [];
+    console.log("SHIFT OBJECT:");
+    console.log(shiftObjects);
     shiftObjects.map((shift) => {
       if (
         shift != undefined &&
@@ -174,11 +180,17 @@ export const UnassignedShiftList = () => {
     let startTime = parseTime(shiftFB.timeWindow[0]);
     let endTime = parseTime(shiftFB.timeWindow[1]);
     let timeWindow = startTime + " - " + endTime;
+    let displayHours = "";
+    if (shiftFB.hours == 1) {
+      displayHours = " hour";
+    } else {
+      displayHours = " hours";
+    }
     return {
       name: shiftFB.name,
       shiftID: shiftFB.shiftID,
       timeWindow: timeWindow,
-      hoursWorth: shiftFB.hours,
+      hoursWorth: String(shiftFB.hours) + displayHours,
     };
   };
   /*
@@ -209,6 +221,27 @@ export const UnassignedShiftList = () => {
   useEffect(() => {
     loadScheduleComponents();
   }, [authUser]);
+  const searchBar = () => (
+    <div className={styles.searchBar}>
+      <TextField
+        id="outlined-basic"
+        label="Search"
+        variant="outlined"
+        sx={{
+          width: "100%",
+          backgroundColor: "#FFFFFFFF",
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="start">
+              <Icon type="search" />
+            </InputAdornment>
+          ),
+        }}
+      />
+    </div>
+  );
+
   //ID that will be used for current Card modal.
   const [currentShiftCardID, setCurrentShiftCardID] = useState("");
   if (dailyRows === undefined) {
@@ -216,24 +249,31 @@ export const UnassignedShiftList = () => {
   } else {
     return (
       <div>
-        <Select
-          value={selectedDay}
-          onChange={handleDayChange}
-          className={styles.daySelect}
-        >
-          {dayOptions.map((day) => (
-            <MenuItem key={day} value={day}>
-              {day}
-            </MenuItem>
-          ))}
-        </Select>
+        <div className={styles.flex}>
+          {searchBar()}
+          <div className={styles.flex2}>
+            <Select
+              value={selectedDay}
+              onChange={handleDayChange}
+              className={styles.daySelect}
+            >
+              {dayOptions.map((day) => (
+                <MenuItem key={day} value={day}>
+                  {day}
+                </MenuItem>
+              ))}
+            </Select>
+            <ShiftCard />
+          </div>
+        </div>
+
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Shift Name</TableCell>
-                <TableCell align="right">Time</TableCell>
-                <TableCell align="right">Hours Worth</TableCell>
+                <TableCell>SHIFT NAME</TableCell>
+                <TableCell align="right">TIME</TableCell>
+                <TableCell align="right">VALUE</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{dailyRows}</TableBody>

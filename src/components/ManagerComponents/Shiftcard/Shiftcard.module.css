@@ -40,3 +40,7 @@
     float: left;
     margin-bottom: 10px;
 }
+
+.button {
+    float: right;
+}
