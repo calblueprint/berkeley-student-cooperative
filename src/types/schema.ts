@@ -69,8 +69,8 @@ export type VerifiedShift = {
 export type House = {
   houseID: string;
   members: string[] | null;
+  categories: Map<string, (Map<string, string>)>;
   address: string;
-  categories: string[];
   schedule: Map<string, string[]>;
   userPINs: Map<string, string>;
 };

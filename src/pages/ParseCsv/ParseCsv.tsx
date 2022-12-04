@@ -6,12 +6,20 @@ import { useState, useEffect } from "react";
 import { Input, SelectChangeEvent, TextField } from "@mui/material";
 
 const ParseCSV = () => {
+
+  //useState that holds file user uploads
   const [fileHolder, setFileHolder] = useState("");
+
+  //useState that holds user objects after papaparse finishes running
   const [userArr, setUserArr] = useState<Object[]>([]);
 
+  //runs everyitme fileHolder updates
   useEffect(() => {
+    //checks if fileHolder has a file in it
     if (fileHolder != "") {
-      let userHolder: String[] = [];
+      let userHolder: any[] = [];
+
+      //papaparse parses the csv file passed in and updates the userArr when finished
       const papaholder = Papa.parse(fileHolder, {
         header: true,
         skipEmptyLines: true,
@@ -26,7 +34,21 @@ const ParseCSV = () => {
     }
   }, [fileHolder]);
 
+  /**
+   * Updates fileHolder and userArr useStates.
+   *
+   * @param file - File that is uploaded by user
+
+   * 
+   * @remark I know this entire file has a lot of errors :sobbing-emoji: it works though, VSCode just does not like me. I'll revist the errors later please.
+   * 
+   * 
+   * 
+   * @public
+   * 
+   */
   const uploadCSV = (file: any) => {
+    //checks if the file uploaded is a csv file
     if (file?.type == "text/csv") {
       setFileHolder(file);
       setUserArr([]);
@@ -54,7 +76,8 @@ const ParseCSV = () => {
               
             </label> */}
       <input type="file" onChange={(e) => uploadCSV(e.target.files[0])} />
-
+          
+       {/* lets user know if the csv file they uploaded fits the correct standards */}
       {userArr.length > 0 && userArr[0].lastName
         ? userArr.map((item, index) => {
             return (
