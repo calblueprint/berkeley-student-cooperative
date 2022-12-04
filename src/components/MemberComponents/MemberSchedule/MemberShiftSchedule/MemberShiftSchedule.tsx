@@ -108,7 +108,6 @@ export const MemberShiftSchedule: React.FunctionComponent<MemberShiftSchedulePro
     let promises: Promise<Shift | undefined>[] = [];
 		user.shiftsAssigned.map((shift) => {
 			promises.push(getShift(user.houseID, shift))
-			console.log(shift)
 		})
     let shiftObjects = await Promise.all(promises);
     return shiftObjects;
