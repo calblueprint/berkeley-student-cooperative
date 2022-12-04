@@ -12,8 +12,14 @@ type TaskPreferenceInfoProps = {
 const TaskPreferenceInfo: React.FC<TaskPreferenceInfoProps> = ({
   userID,
 }: TaskPreferenceInfoProps) => {
+  /**
+   * Returns a card component to display a member's task preferences in the settings page
+   *
+   * @param userID - ID of the member
+   */
   const [user, setUser] = useState<User | null>();
 
+  // retrieves user from context
   useEffect(() => {
     const getData = async () => {
       const currUser = await getUser(userID);
@@ -30,9 +36,13 @@ const TaskPreferenceInfo: React.FC<TaskPreferenceInfoProps> = ({
         </div>
         <hr className={styles.line} />
         <div className={styles.body}>
-          <button onClick={() => {
-          router.push("/member/preferences/memberPreferences");
-        }}>Fill Out Preferences</button>
+          <button
+            onClick={() => {
+              router.push("/member/preferences/memberPreferences");
+            }}
+          >
+            Fill Out Preferences
+          </button>
         </div>
       </CardContent>
     </Card>
