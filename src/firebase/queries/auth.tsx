@@ -12,7 +12,6 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { firestore } from "../clientApp";
 import { getHouse } from "./house";
 
-
 //managers don't have to register.  House will be matched to email
 //userID is going to get generated in register.
 /*
@@ -47,7 +46,14 @@ export const useFirebaseAuth = () => {
 	// state var for house of current signed in user
   const [house, setHouse] = useState(defaultHouse);
 
-	// boolean state var set to true if authStateChanged is running and user is being fetched, else otherwise
+  /**
+   *  @brif This variabel signals the authUserContext.Provider if authStateChange() function is
+   * 		running and fetching a user from the server.
+   *
+   *  @param loading: true when authStateChanged is running  and false otherwise
+   *
+   *  @param setLoading sets the state of Loading
+   */
   const [loading, setLoading] = useState(true);
 
 	// useEffect that calls authStateChanged() everytime the auth state is changed (refresh, signIn, navigating pages)
@@ -203,7 +209,7 @@ export const useFirebaseAuth = () => {
   return {
     authUser,
     house,
-	  loading,
+    loading,
     register,
     signIn,
     signOutAuth,
