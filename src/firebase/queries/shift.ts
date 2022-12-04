@@ -93,6 +93,19 @@ export const getNumVerified = async (houseID: string, shiftID: string): Promise<
     const snap = await getDocs(verShiftsRef);
     return snap.size;
 }
+export const getShiftForCategories = async (houseID: string, category: string): Promise<Shift[]> => {
+    const colRef = collection(firestore, "houses", houseID, "shifts");
+    const promises: Promise<Shift>[] = []; 
+    const docSnap = await getDocs(colRef);
+    docSnap.forEach((shift) => {
+        promises.push(parseShift(shift));
+    })
+
+    const items = await Promise.all(promises);
+    return items;
+    return [];
+}
+
 
 /**
  * Deletes a shift with a shiftID in houseID
