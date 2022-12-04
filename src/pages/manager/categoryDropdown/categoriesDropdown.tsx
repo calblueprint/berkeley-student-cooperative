@@ -25,6 +25,13 @@ const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({mapKey, category
         setIsExpanded(!isExpanded);
     }
 
+    const pluralizeShift = (size: number) => {
+        if (size == 0 || size >= 2) {
+            return " shifts";
+        }
+        return " shift"
+    }
+
     return (
         <>
             <TableRow>
@@ -32,7 +39,7 @@ const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({mapKey, category
                     <IconButton onClick={handleExpand}>
                         {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
-                    {mapKey}
+                    {mapKey + " - " + categoryMap?.size + pluralizeShift(categoryMap?.size)}
                 </TableCell>
 
             </TableRow>
