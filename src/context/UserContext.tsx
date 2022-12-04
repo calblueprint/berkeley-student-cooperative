@@ -1,10 +1,13 @@
+import React from "react";
 import { createContext, useContext } from "react";
 import { useFirebaseAuth } from "../firebase/queries/auth";
 import { defaultUser } from "../firebase/queries/user";
 import { defaultHouse } from "../firebase/queries/house";
 
-const authUserContext = createContext({
-  authUser: defaultUser,
+
+export const authUserContext = createContext({
+  authUser: defaultUser, // added
+  // setAuthUser: function(user:any){},  // added
   house: defaultHouse,
   register: async (
     email: string,
@@ -20,9 +23,23 @@ const authUserContext = createContext({
 });
 
 export const AuthUserProvider = ({children}: any) => {
-	const auth = useFirebaseAuth();
+ 
+  const val = useFirebaseAuth();
+
 	return (
-		<authUserContext.Provider value = {auth}> {children} </authUserContext.Provider>
+		<authUserContext.Provider value={val}> {
+      /** 
+       * When loading is true the authStateChanged() is fetching a user and 
+       * false when is done. This allows the children componets to wait for the 
+       * user to be fetch. If we proceed without waiting the children componets 
+       * try to use a null user which gives an error. 
+       * When lodign is true nothing is displayed, but if desired a loding component could 
+       * be displayed intead of null.
+       */
+      val["loading"]? 
+      <div>Loading User</div> :
+      children
+      } </authUserContext.Provider>
 	)
 }
 
