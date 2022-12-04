@@ -1,6 +1,6 @@
 .background {
 	height: 16%;
-	min-height: 15%;
+	max-height: 16%;
 	background-color: white;
 	width: 100%;
 	display: flex;
@@ -61,11 +61,12 @@
 	min-width: fit-content;
 	max-width: 14%;
 	width: 14%;
+	gap: 30px
 }
 
 .dates {
 	width: 22%;
-	max-width: 400px;
+	max-width: 300px;
 }
 
 .searchBar {
@@ -78,4 +79,16 @@
 
 .text {
 	color: #656565;
+}
+
+.selectedPageButton {
+	height: 100%;
+	width: 100%;
+	max-width: fit-content;
+	background-color: white;
+	border: 0px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	border-bottom: 1px solid #1A202C;
 }

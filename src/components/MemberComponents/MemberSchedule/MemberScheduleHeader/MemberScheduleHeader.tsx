@@ -20,7 +20,7 @@ export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderP
 				</div>
 				<div className={styles.bottom}>
 					<div className={styles.pages}>
-						<button className={styles.pageButton}>
+						<button className={styles.selectedPageButton}>
 							<Typography variant="h6" style = {{fontWeight: 700}}> Individual </Typography>
 						</button>
 						<button className={styles.pageButton}>

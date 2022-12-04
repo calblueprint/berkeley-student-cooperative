@@ -1,6 +1,16 @@
+.center {
+	height: 84%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
 .container {
+	height: 84%;
 	width: 92%;
-	height: 85%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .schedule {
@@ -8,9 +18,32 @@
 	border: 0px;
 }
 
-.searchBar {
-	position: inherit;
-	top: 27.5%;
-	width: 100%;
+.status {
+	display: flex;
+	align-items: center;
 	height: 100%;
+	width: 75%;
 }
+
+.complete {
+	background-color: #D1FAE5 ;
+	color: #065F46;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	border-radius: 5px;
+	font-weight: 600;
+}
+
+.incomplete {
+	background-color: #FEF3C7;
+	color: #AD6D3C;
+	font-weight: 600;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	border-radius: 5px;
+}
+

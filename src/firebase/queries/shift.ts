@@ -1,7 +1,6 @@
 import {firestore} from "../clientApp";
 import {Shift} from "../../types/schema";
-import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { getUser } from "./user";
+import { doc, collection, addDoc, getDoc, deleteDoc, setDoc, DocumentData, QueryDocumentSnapshot, updateDoc, getDocs } from "firebase/firestore";
 
 export const addShift = async (houseID: string, name: string, description: string, numOfPeople: number, possibleDays: string[], timeWindow: number[], assignedDay: string, hours: number, verification: boolean, verificationBuffer: number, category: string) => {
     await addDoc(collection(firestore, "houses", houseID, "shifts"), {
@@ -29,13 +28,20 @@ export const updateShift = async (houseID: string, shiftID: string, newData: obj
 }
 
 export const getShift = async (houseID: string, shiftID: string) => {
+    // const docRef = doc(firestore, "houses", "EUC", "shifts", "dhWWmgzM1MISFWyblp8J");
     const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         return await parseShift(docSnap);
-    }
+    } 
     // probably replace with modal
-    console.log("Invalid Shift ID");
+}
+
+export const getNumVerified = async (houseID: string, shiftID: string): Promise<number> => {
+    console.log("Getting num verified");
+    const verShiftsRef = await collection(firestore, "houses", houseID, "shifts", shiftID, "verifiedShifts");
+    const snap = await getDocs(verShiftsRef);
+    return snap.size;
 }
 
 // export const getShiftsByUser = async (userID: string, houseID: string) => {

@@ -24,10 +24,8 @@ const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
 	return (
 		<Layout>
 			<MemberScheduleHeader/>
-			<div className={styles.center}>
-				<MemberShiftFilters />
-				<MemberShiftSchedule user = {authUser}/>
-			</div>
+			{/* <MemberShiftFilters /> */}
+			<MemberShiftSchedule user = {authUser}/>
 		</Layout>
 	)
 }

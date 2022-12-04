@@ -15,6 +15,22 @@ export const objectToMap = (obj: Object): Map<any, any> => {
         )
     );
 };
+  
+export const mapToJSON = (map: Map<any, any>): string => {
+    return JSON.stringify(mapToObject(map));
+}
+
+export const firestoreAutoId = (): string => {
+  const CHARS =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  let autoId = "";
+
+  for (let i = 0; i < 20; i += 1) {
+    autoId += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+  }
+  return autoId;
+};
 
 export const convertNumberToTime = (input: number): string => {
   let timePeriod = " AM";
@@ -118,3 +134,28 @@ export const mergeMap = (map: Map<string, number[]>) => {
 }
 
 export const emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+export const parseTime = (time: number) => {
+  let meridian = "AM";
+  if (time == 0) {
+    return "12AM";
+  }
+  if (time > 1159) {
+    meridian = "PM";
+  }
+  if (time > 1259) {
+    time = time - 1200;
+  } 
+  let timeString = String(time);
+  let hours;
+  if (timeString.length > 3) {
+    hours = timeString.slice(0, 2);
+  } else {
+    hours = timeString.slice(0, 1);
+  }
+  let minutes = timeString.slice(-2);
+  if (Number(minutes) > 0) {
+    return hours + ":" + minutes + meridian; 
+  }
+  return hours + meridian; 
+}
