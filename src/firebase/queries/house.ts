@@ -25,9 +25,8 @@ export const getAllHouses = async()  => {
 
 
 //grabs a specific house from database
-export const getHouse = async(houseID: string)  => {
+export const getHouse = async(houseID: string) => {
     const docRef = doc(firestore, "houses", houseID);
-
     const colSnap = await getDoc(docRef);
     console.log(houseID);
     const promise: Promise<House> = parseHouse(colSnap);
@@ -60,35 +59,34 @@ export const updateHouse = async (houseID: string, newData: object) => {
 export const addCategory = async (houseID: string, newCategory: string): Promise<void> => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
+
+    //checks if the house id is valid
     if (colSnap.exists()) {
         const promise: Promise<House> = parseHouse(colSnap);
         const house = await promise;
-        var newCategories = house.categories;
+        var houseCategories = house.categories;
         
-        //checks if category already exists
-        const index = newCategories?.indexOf(newCategory);
-        if (index == -1 ){
-            if (!newCategories){
-                newCategories = [newCategory]
-            } else {
-                newCategories?.push(newCategory)
-            }
+        //checks if category already exists, {} is nested map
+        if(!houseCategories?.has(newCategory)) {
+            // Nested maps -> object
+            let newMap = new Map<string, object>();
+            houseCategories.forEach((value, key) => {
+                newMap.set(key, mapToObject(value));
+            })
+            // Adds new category
+            newMap.set(newCategory, {});
             const data = {
-                categories: newCategories
+                categories: mapToObject(newMap)
             }
             await updateDoc(docRef, data)
-            
+
         } else {
-            console.log(newCategory+ " category already exists")
+            console.log("The", newCategory, " category already exists, use the updateCategory function");
         }
         
     } else{
         console.log("invalid house id for add category")
     }
-  
-    
-    
-    
 }
 
 export const removeCategory = async (houseID: string, oldCategory: string): Promise<void> => {
@@ -148,9 +146,14 @@ const parseHouse = async (doc : any) => {
     const categories = data.categories;
     const schedule = data.schedule;
     const userPINs = data.userPINs;
+    let categMap = objectToMap(categories);
+    let newMap = new Map<string, Map<string, string>>();
+    categMap.forEach((value, key) => {
+        newMap.set(key, objectToMap(value));
+    })
     const house = {
         houseID: houseID,
-        categories: categories,
+        categories: newMap,
         members: members,
         address: address,
         schedule: objectToMap(schedule),

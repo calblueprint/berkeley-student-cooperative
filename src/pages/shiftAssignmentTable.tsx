@@ -41,7 +41,7 @@ const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shift
     // Creates a row of the table given a user
     const createRow = (user: User) : RowData => {
         console.log({uid: user.userID, user: user});
-        let name = user.name;
+        let name = user.firstName + " " + user.lastName;
         let hoursRemaining = user.hoursRequired - user.hoursAssigned;
         let preference = numericToStringPreference(user, shiftID);
         let id = user.userID;
