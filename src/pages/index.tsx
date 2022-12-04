@@ -27,8 +27,6 @@ const Home: NextPage = () => {
         </Head>
         <main className={styles.main}>
           <h1 className={styles.title}>Workshift App</h1>
-          <button onClick={() => register("pinTest79@gmail.com", "EUC", "Tester2", "Pin", "member", "wowTesting")}>Register for Pintest</button>
-          <button onClick={() => signIn("pinTest79@gmail.com", "wowTesting")}>Sign In (PinTest)</button>
           <ShiftCard />
           <button
             onClick={() => {
