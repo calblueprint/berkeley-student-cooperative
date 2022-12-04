@@ -4,21 +4,27 @@ import Papa from "papaparse";
 // import { readFileSync } from 'fs';
 import { useState, useEffect } from "react";
 import { Input, SelectChangeEvent, TextField } from "@mui/material";
-import {addRowOfCSV} from "../../firebase/queries/authorizedUsers";
-import {getStorage, ref, uploadBytes} from "firebase/storage";
+import { addRowOfCSV } from "../../firebase/queries/authorizedUsers";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 // TODO: ADD way to view uploaded CSV (named with houseID)
 const ParseCSV = () => {
-  
+  //useState that holds file user uploads
   const [fileHolder, setFileHolder] = useState("");
+
+  //useState that holds user objects after papaparse finishes running
   const [userArr, setUserArr] = useState<Object[]>([]);
   // Stores the file that the CSV is stored; used to upload the CSV directly to Firebase
   const [file, setFile] = useState<File>();
   // Storage used to upload CSV
   const storage = getStorage();
 
+  //runs everyitme fileHolder updates
   useEffect(() => {
+    //checks if fileHolder has a file in it
     if (fileHolder != "") {
-      let userHolder: String[] = [];
+      let userHolder: any[] = [];
+
+      //papaparse parses the csv file passed in and updates the userArr when finished
       const papaholder = Papa.parse(fileHolder, {
         header: true,
         skipEmptyLines: true,
@@ -35,11 +41,19 @@ const ParseCSV = () => {
   }, [fileHolder]);
 
   // Function that uploads a list of pre-approved emails to Firebase; also uploads the CSV to Firebase storage
-  const uploadRowsToFirebase = async (rowList: Object[], fileHolder: string) => {
+  const uploadRowsToFirebase = async (
+    rowList: Object[],
+    fileHolder: string
+  ) => {
     let house = "";
     for (let i = 0; i < rowList.length; i++) {
       let row = rowList[i];
-      if (row.house === undefined || row.lastName === undefined || row.firstName === undefined || row.email === undefined) {
+      if (
+        row.house === undefined ||
+        row.lastName === undefined ||
+        row.firstName === undefined ||
+        row.email === undefined
+      ) {
         console.log("Invalid data");
         return;
       }
@@ -47,7 +61,7 @@ const ParseCSV = () => {
         house = row.house;
       } else if (row.house !== house) {
         console.log("Contains data from multiple houses");
-      }      
+      }
     }
     for (let i = 0; i < rowList.length; i++) {
       let row = rowList[i];
@@ -58,9 +72,23 @@ const ParseCSV = () => {
       uploadBytes(storageRef, file);
       alert("Successful Upload");
     }
-  }
+  };
 
+  /**
+   * Updates fileHolder and userArr useStates.
+   *
+   * @param file - File that is uploaded by user
+
+   * 
+   * @remark I know this entire file has a lot of errors :sobbing-emoji: it works though, VSCode just does not like me. I'll revist the errors later please.
+   * 
+   * 
+   * 
+   * @public
+   * 
+   */
   const uploadCSV = (file: any) => {
+    //checks if the file uploaded is a csv file
     if (file?.type == "text/csv") {
       setFileHolder(file);
       setUserArr([]);
@@ -79,7 +107,7 @@ const ParseCSV = () => {
     if (item !== null) {
       setFile(item);
     }
-  }
+  };
 
   return (
     <div>
