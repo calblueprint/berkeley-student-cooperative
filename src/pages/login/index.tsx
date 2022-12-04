@@ -8,12 +8,17 @@ import {
 import Image from "next/image";
 import BscLogo from "../../assets/bsclogo.png";
 import styles from "./Login.module.css";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFirebaseAuth } from "../../firebase/queries/auth";
 import Layout from "../../components/Layout/Layout";
 import { useRouter } from "next/router";
 
 export default function LoginPage() {
+  /**
+   * Displays a login page for all users
+   * 
+   * sets the context if login information is correct and pushes the router to the manager/member default page
+   */
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,20 +26,24 @@ export default function LoginPage() {
 
 
   const login = async () => {
+    // tries to log in with given credentials
     if (email.length > 0 && password.length > 0) {
       await signIn(email, password);
     }
   };
 
+  // pushes the router to the member/manager default page if the user is set in the context
   useEffect(() => {
     if (authUser.userID != "") {
       if (authUser.role == "Member" || authUser.role == "member") {
         router.push("/member/dashboard");
+      } else {
+        router.push("/manager/schedule");
       }
-      router.push("/manager/schedule");
     }
   });
 
+  // onClick handler that pushes the router to the create account page
   const createAccount = () => {
     router.push("/createAccount");
   };
@@ -81,15 +90,16 @@ export default function LoginPage() {
               Forgot your password?
             </Typography>
           </div>
-          <Button
-            className={styles.button}
-            variant="contained"
-            fullWidth
-            disableElevation
-            onClick={login}
-          >
-            Login
-          </Button>
+          <div className={styles.button}>
+            <Button
+              variant="contained"
+              fullWidth
+              disableElevation
+              onClick={login}
+            >
+              Login
+            </Button>
+          </div>
           <Button className={styles.createAccount} onClick={createAccount}>
             Create an account
           </Button>

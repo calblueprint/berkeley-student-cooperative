@@ -16,7 +16,20 @@ type ShiftAssignmentComponentCardProps = {
   shiftID: string
 }
 
+
 const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> = ({day, houseID, shiftID}: ShiftAssignmentComponentCardProps) => {
+  /**
+   * A modal that appears when a manager wants to assign people/unassign people from a shift.
+   * Matches people to shifts based on availabilities.
+   * @remarks
+   * This method is part of the {@link core-library#Statistics | Statistics subsystem}.
+   * Contains a ShiftAssignmentTable.
+   *
+   * @param day - The day that is selected when the manager is going through shifts on a day-by-day view
+   * @param houseID - The ID of the house that the manager manages
+   * @param shiftID - The ID of the shift that the manager has selected.
+   * @returns ShiftAssignmentComponentCard
+   */
   // Stores the shiftObject retrieved, given the Shift ID
   const [shiftObject, setShiftObject] = useState<Shift>();
   // Stores the list of potential workers eligible to do this shift
@@ -259,7 +272,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
         </div>
       </div>
       <ShiftAssignmentTable users = {potentialWorkers} shiftID = {shiftID} selectedRows = {selectedRows} setSelectedRows = {setSelectedRows}/>
-      <Button onClick = {updateUserAndShiftObjects}>Assign</Button>
+      <Button onClick = {updateUserAndShiftObjects}>Save</Button>
     </div>
   );
 };

@@ -11,8 +11,14 @@ type DocumentsInfoProps = {
 const DocumentsInfo: React.FC<DocumentsInfoProps> = ({
   userID,
 }: DocumentsInfoProps) => {
+  /**
+   * Returns a card component to display a member's documents and information in the settings page
+   *
+   * @param userID - ID of the member
+   */
   const [user, setUser] = useState<User | null>();
 
+  // retrieves user from context
   useEffect(() => {
     const getData = async () => {
       const currUser = await getUser(userID);
