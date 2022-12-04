@@ -111,8 +111,6 @@ const ParseCSV = () => {
 
   return (
     <div>
-      <h3>In parse csv</h3>
-
       <h2>Upload File Here:</h2>
       {/* <label htmlFor="upload-csv">
                     <Input
