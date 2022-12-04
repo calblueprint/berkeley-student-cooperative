@@ -9,12 +9,14 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
+  InputAdornment,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
 import { getHouse } from "../../../firebase/queries/houseQueries";
@@ -26,6 +28,7 @@ import Paper from "@mui/material/Paper";
 import { useUserContext } from "../../../context/UserContext";
 import AssignShiftcard from "../AssignShiftcard/AssignShiftcard";
 import styles from "./UnassignedShiftList.module.css";
+import Icon from "../../../assets/Icon";
 
 /*
   Flow
@@ -232,15 +235,36 @@ export const UnassignedShiftList = () => {
   if (dailyRows === undefined) {
     return <>Still loading...</>;
   } else {
+    const searchBar = () => (
+      <div className={styles.searchBar}>
+        <TextField
+          id="outlined-basic"
+          label="Search"
+          variant="outlined"
+          sx={{
+            width: "100%",
+            backgroundColor: "#FFFFFFFF",
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="start">
+                <Icon type="search" />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </div>
+    );
     return (
       <div>
+        {searchBar()}
         <Button
           variant="outlined"
           onClick={() => {
             handleOpen;
           }}
         >
-          <Typography>Create New Shift</Typography>
+          <Typography>New shift +</Typography>
         </Button>
         <Select
           value={selectedDay}
@@ -252,9 +276,9 @@ export const UnassignedShiftList = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Shift Name</TableCell>
-                <TableCell align="right">Time</TableCell>
-                <TableCell align="right">Hours Worth</TableCell>
+                <TableCell>SHIFT NAME</TableCell>
+                <TableCell align="right">TIME</TableCell>
+                <TableCell align="right">VALUE</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{dailyRows}</TableBody>
