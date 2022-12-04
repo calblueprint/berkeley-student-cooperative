@@ -3,22 +3,25 @@ import { useState, useEffect } from "react";
 import Icon from "../../../assets/Icon";
 import { getShift } from "../../../firebase/queries/shift";
 import { Shift } from "../../../types/schema";
+import ShiftAssignmentComponentCard from "../AssignShiftTable/ShiftAssigmentTableUsers";
 import styles from "./AssignShiftcard.module.css";
 
 type AssignShiftcardProps = {
-  shiftID: string,
-  houseID: string,
-  open: boolean,
-  handleClose: any,
-  handleOpen: any
+  day: string;
+  shiftID: string;
+  houseID: string;
+  open: boolean;
+  handleClose: any;
+  handleOpen: any;
 };
 
 const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
+  day,
   shiftID,
   houseID,
   open,
   handleClose,
-  handleOpen
+  handleOpen,
 }: AssignShiftcardProps) => {
   const [shift, setShift] = useState<Shift | null>();
 
@@ -95,6 +98,11 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
                 {shift.numOfPeople < 2 ? "member" : "members"}
               </Typography>
             </div>
+            <ShiftAssignmentComponentCard
+              day={day}
+              houseID={houseID}
+              shiftID={shiftID}
+            />
           </div>
         </DialogContent>
       </Dialog>

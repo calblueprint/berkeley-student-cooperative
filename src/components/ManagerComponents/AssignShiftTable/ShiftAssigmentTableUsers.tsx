@@ -1,29 +1,30 @@
 import { useState } from "react";
-import styles from "../styles/Home.module.css";
-import { getShift } from "../firebase/queries/shift";
-import { User, Shift, House } from "../types/schema";
+import styles from "./ShiftAssignTable.module.css";
+import { getShift } from "../../../firebase/queries/shift";
+import { User, Shift } from "../../../types/schema";
 import { useEffect } from "react";
-import { getHouse } from "../firebase/queries/house";
-import { updateUser, getUser} from "../firebase/queries/user";
-import ShiftAssignmentTable from "./shiftAssignmentTable";
+import { getHouse } from "../../../firebase/queries/house";
+import { updateUser, getUser } from "../../../firebase/queries/user";
 import Button from "@mui/material/Button";
-import { updateShift } from "../firebase/queries/shift";
-import { convertTimeWindowToTime, pluralizeHours } from "../firebase/helpers";
+import { updateShift } from "../../../firebase/queries/shift";
+import ShiftAssignmentTable from "./ShiftAssignmentTable";
 
 type ShiftAssignmentComponentCardProps = {
-  day: string,
-  houseID: string,
-  shiftID: string
-}
+  day: string;
+  houseID: string;
+  shiftID: string;
+};
 
-const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> = ({day, houseID, shiftID}: ShiftAssignmentComponentCardProps) => {
+const ShiftAssignmentComponentCard: React.FC<
+  ShiftAssignmentComponentCardProps
+> = ({ day, houseID, shiftID }: ShiftAssignmentComponentCardProps) => {
   // Stores the shiftObject retrieved, given the Shift ID
   const [shiftObject, setShiftObject] = useState<Shift>();
   // Stores the list of potential workers eligible to do this shift
   const [potentialWorkers, setPotentialWorkers] = useState<User[]>([]);
   // Stores the users that the manager has selected so far to complete this shift
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  
+
   // On page load, retrieves the shift and sets the shift Object and also populates the potentialWorkers + selectedRows arrays
   useEffect(() => {
     retrieveShift();
@@ -35,8 +36,8 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     if (shift != null) {
       setShiftObject(shift);
     }
-  }
-  
+  };
+
   // Helper function to find available users
   const findAvailableUsers = async (tempShiftObject: Shift) => {
     const timeWindow = tempShiftObject.timeWindow;
@@ -56,7 +57,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     if (mult100 != numHours * 100) {
       thirtyMin = 30;
     }
-    
+
     for (let i = 0; i < totalUsersInHouse.length; i++) {
       const userID = totalUsersInHouse[i];
       const userObject = await getUser(userID);
@@ -104,20 +105,20 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
       }
     }
     return potentialUsers;
-  }
+  };
 
   // Helper function to initialize selected users to be, out of potential users, if they've already been assigned, add it to the list and set selected rows
   const setSelectedUsers = (potentialUsers: User[]) => {
     let selectedUsers = [];
     for (let i = 0; i < potentialUsers.length; i++) {
-        let user = potentialUsers[i];
-        let assignedShifts = user.shiftsAssigned;
-        if (assignedShifts.includes(shiftID)) {
-            selectedUsers.push(user.userID);
-        }
+      let user = potentialUsers[i];
+      let assignedShifts = user.shiftsAssigned;
+      if (assignedShifts.includes(shiftID)) {
+        selectedUsers.push(user.userID);
+      }
     }
     setSelectedRows(selectedUsers);
-  }
+  };
 
   // Method that is called to populate the potentialWorkers and selectedRows state elements
   const populatePotentialWorkersAndSelected = async () => {
@@ -164,7 +165,7 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     });
     setPotentialWorkers(potentialUsers);
     setSelectedUsers(potentialUsers);
-  }
+  };
 
   // Function called when assign is clicked to update the backend
   const updateUserAndShiftObjects = async () => {
@@ -173,17 +174,23 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
     // Refetch so not using stale data (may or may not remove, depending on use)
     retrieveShift();
     populatePotentialWorkersAndSelected();
-  }
+  };
 
   // Updates the user objects by clearing all people assigned to the shift
   const updateUserObjects = async () => {
     // hoursAssigned
     // clear prior
-    if (shiftObject !== undefined && selectedRows.length <= shiftObject.numOfPeople) {
+    if (
+      shiftObject !== undefined &&
+      selectedRows.length <= shiftObject.numOfPeople
+    ) {
       // Decreases hours assigned for all of the workers who are assigned, but not included in the selected rows list (they were removed)
       for (let i = 0; i < potentialWorkers.length; i++) {
         let user = potentialWorkers[i];
-        if (user.shiftsAssigned.includes(shiftID) && !selectedRows.includes(user.userID)) {
+        if (
+          user.shiftsAssigned.includes(shiftID) &&
+          !selectedRows.includes(user.userID)
+        ) {
           let copy = [...user.shiftsAssigned];
           let index = copy.indexOf(shiftID);
           copy.splice(index, 1);
@@ -192,9 +199,9 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
             newHours -= shiftObject.hours;
           }
           let newData = {
-              shiftsAssigned: copy,
-              hoursAssigned: newHours
-          }
+            shiftsAssigned: copy,
+            hoursAssigned: newHours,
+          };
           await updateUser(user.userID, newData);
         }
       }
@@ -211,55 +218,48 @@ const ShiftAssignmentComponentCard: React.FC<ShiftAssignmentComponentCardProps> 
           newHours += shiftObject.hours;
         }
         let newData = {
-            shiftsAssigned: copy,
-            hoursAssigned: newHours
-        }
+          shiftsAssigned: copy,
+          hoursAssigned: newHours,
+        };
         await updateUser(userID, newData);
       }
     } else {
       // replace w modal
       console.log("Too many people selected");
     }
-  }
+  };
 
   // Updates the shiftObject with the assigned day and the people assigned to that shift
   // If 0 selected rows, reset day to ""
   const updateShiftObject = async () => {
-    if (shiftObject !== undefined && selectedRows.length <= shiftObject.numOfPeople) {
+    if (
+      shiftObject !== undefined &&
+      selectedRows.length <= shiftObject.numOfPeople
+    ) {
       let assignedDay = day;
       if (selectedRows.length == 0) {
         assignedDay = "";
       }
       let newData = {
         usersAssigned: selectedRows,
-        assignedDay: assignedDay
-      }
+        assignedDay: assignedDay,
+      };
       await updateShift(houseID, shiftID, newData);
     }
-  }
-  
+  };
+
   return (
-    <div className={styles.container}>
-      <h3>{shiftObject?.name}</h3>
-      <div id = "shiftAssignmentHeaderFlex">
-        <div className = "shiftAssignmentHeaderEntry">
-          {shiftObject && pluralizeHours(shiftObject.hours)}
-        </div>
-        <div className = "shiftAssignmentHeaderEntry">
-          {day}
-        </div>
-        <div className = "shiftAssignmentHeaderEntry">
-          {shiftObject && convertTimeWindowToTime(shiftObject.timeWindow[0], shiftObject.timeWindow[1])}
-        </div>
-        <div className = "shiftAssignmentHeaderEntry">
-          {shiftObject && pluralizeHours(shiftObject.verificationBuffer)}
-        </div>
-        <div className = "shiftAssignmentHeaderEntry">
-          {shiftObject && shiftObject.category}
-        </div>
+    <div>
+      <div className={styles.table}>
+        <ShiftAssignmentTable
+        users={potentialWorkers}
+        shiftID={shiftID}
+        selectedRows={selectedRows}
+        setSelectedRows={setSelectedRows}
+      />
       </div>
-      <ShiftAssignmentTable users = {potentialWorkers} shiftID = {shiftID} selectedRows = {selectedRows} setSelectedRows = {setSelectedRows}/>
-      <Button onClick = {updateUserAndShiftObjects}>Assign</Button>
+      
+      <Button onClick={updateUserAndShiftObjects} variant="contained" className={styles.assign}>Assign</Button>
     </div>
   );
 };
