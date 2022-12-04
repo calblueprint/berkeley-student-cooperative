@@ -40,6 +40,10 @@ function a11yProps(index: number) {
 }
 
 export default function SchedulePage() {
+  /**
+   * Allows for navigation between unassigned shifts, assigned shifts, and the category view page. Used in the planner view.
+   * @returns SchedulePage
+   */
   const {authUser} = useUserContext();
 
   const [currPage, setCurrPage] = useState(0);
