@@ -84,7 +84,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
         onClose={handleClose}
         className={styles.dialog}
       >
-        <DialogContent>
+        <DialogContent dividers={true}>
           <div className={styles.shiftBox}>
             <div className={styles.body}>
               <Typography className={styles.bodyTitle} variant="h5">
