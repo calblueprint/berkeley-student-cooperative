@@ -33,7 +33,7 @@ export const MemberScheduleHeader: React.FunctionComponent<MemberScheduleHeaderP
 					<div className={styles.dates}>
 						<div className={styles.dateSelector}>
 								<Icon type="leftArrow" className={styles.icon}/>
-								<Typography variant="subtitle1" className={styles.text}>
+								<Typography variant="h6" className={styles.text}>
 									Dec 20 - Dec 27
 								</Typography>
 								<Icon type="rightArrow" className={styles.icon}/>

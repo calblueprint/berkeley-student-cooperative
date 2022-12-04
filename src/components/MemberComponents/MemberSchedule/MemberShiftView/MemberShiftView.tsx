@@ -21,7 +21,7 @@ type row = {
 }
 
 
-export const MemberShiftSchedule: React.FunctionComponent<MemberShiftScheduleProps> = ({user}) => {
+export const MemberShiftView: React.FunctionComponent<MemberShiftScheduleProps> = ({user}) => {
 	
 	//height and width of the window; used to calculate col widths in table
 	const { height, width } = useWindowDimensions();
@@ -31,13 +31,17 @@ export const MemberShiftSchedule: React.FunctionComponent<MemberShiftSchedulePro
 
 	//state variable that holds the rows that display in the main data grid table
 	const [rows, setRows] = useState<row[]>([])
+	const [allRows, setAllRows] = useState<row[]>([])
 
+
+	const [search, setSearch] = useState("")
 	/**
  	* useEffect that sets the tableWidth as the width from window changes 
  	*/
 	useEffect(() => {
 		//UPDATE THIS LOGIC TO ADJUST TABLE WIDTH W/OUT USEEFFECT?
 		setTableWidth((width - 197) * 0.92);
+		console.log(width, height)
 	}, [width])
 
 	/**
@@ -47,9 +51,23 @@ export const MemberShiftSchedule: React.FunctionComponent<MemberShiftSchedulePro
 		const fetchRows = async () => {
 			const rows = await getRows()
 			setRows(rows)
+			setAllRows(rows)
 		}
 		fetchRows()
 	}, [])
+
+	useEffect(() => {
+		if (search) {
+			setRows(allRows.filter(
+					(row) => {
+						return row.shiftName.startsWith(search)
+					})
+				)
+			}
+		else {
+			setRows(allRows)
+		}
+	}, [search])
 
 	/**
 	 * Render the status column for each row 
@@ -80,14 +98,14 @@ export const MemberShiftSchedule: React.FunctionComponent<MemberShiftSchedulePro
 	 * Array of columns that are passsed into the data grid
 	 */
 	const columns: GridColDef[] = [
-		{field: 'shiftName', headerName: 'SHIFT NAME', width: tableWidth * 0.3},
-		{field: 'day', headerName: 'DAY', width: tableWidth * 0.17},
-		{field: 'time', headerName: 'TIME', width: tableWidth * 0.17},
-		{field: 'value', headerName: 'VALUE', width: tableWidth * 0.17},
+		{field: 'shiftName', headerName: 'SHIFT NAME', width: tableWidth * 0.32},
+		{field: 'day', headerName: 'DAY', width: tableWidth * 0.18},
+		{field: 'time', headerName: 'TIME', width: tableWidth * 0.18},
+		{field: 'value', headerName: 'VALUE', width: tableWidth * 0.18},
 		{
 			field: 'status', 
 			headerName: 'STATUS', 
-			width: tableWidth * 0.18, 
+			width: tableWidth * 0.12, 
 			renderCell: (cellValues) => renderStatus(cellValues)
 		}
 	]
@@ -150,11 +168,13 @@ export const MemberShiftSchedule: React.FunctionComponent<MemberShiftSchedulePro
 	const searchBar = () => (
 		<TextField 
 			label="Search" 
+			value={search}
+			onChange={(e) => setSearch(e.target.value)}
 			sx={{
 				width: "53.6%",
 				backgroundColor: "#FFFFFFFF",
 				borderRadius: "5px",
-				border: "0.75px solif #E2E2E2"
+				border: "0.75px solid #E2E2E2"
 			}}
 			InputProps={{
 				endAdornment: <InputAdornment position="start"><Icon type="search"/></InputAdornment>,
@@ -171,21 +191,30 @@ export const MemberShiftSchedule: React.FunctionComponent<MemberShiftSchedulePro
 					columns = {columns}
 					className = {styles.schedule}
 					rowHeight = {60}
-					headerHeight = {50}
+					headerHeight = {60}
 					sx={{
 						borderRadius: "10px",
-						border: "0.5px solid #E2E2E2",
+						fontSize: "17px",
 						"& .MuiDataGrid-columnSeparator": {
 							display: "none"
 						},
 						"& .MuiDataGrid-cell": {
-							paddingLeft: "20px"
+							paddingLeft: "20px",
+							borderTop: "0.25px solid #E2E2E2",
+							borderBottom: "0.25px solid #E2E2E2",
+							backgroundColor: "#FFFFFF"
 						},
 						"& .MuiDataGrid-columnHeader": {
 							paddingLeft: "20px"						
 						},
 						"& .MuiDataGrid-columnHeaderTitle": {
 							fontWeight: "600",
+						},
+						"& .MuiDataGrid-footerContainer": {
+							backgroundColor: "#F5F5F5",
+						},						
+						"& .MuiDataGrid-virtualScrollerContent": {
+							backgroundColor: "#F5F5F5",
 						},
 					}}
 					onCellClick = {(row) => {
