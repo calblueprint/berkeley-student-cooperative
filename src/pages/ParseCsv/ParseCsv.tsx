@@ -11,7 +11,9 @@ const ParseCSV = () => {
   
   const [fileHolder, setFileHolder] = useState("");
   const [userArr, setUserArr] = useState<Object[]>([]);
+  // Stores the file that the CSV is stored; used to upload the CSV directly to Firebase
   const [file, setFile] = useState<File>();
+  // Storage used to upload CSV
   const storage = getStorage();
 
   useEffect(() => {
@@ -32,6 +34,7 @@ const ParseCSV = () => {
     }
   }, [fileHolder]);
 
+  // Function that uploads a list of pre-approved emails to Firebase; also uploads the CSV to Firebase storage
   const uploadRowsToFirebase = async (rowList: Object[], fileHolder: string) => {
     let house = "";
     for (let i = 0; i < rowList.length; i++) {
