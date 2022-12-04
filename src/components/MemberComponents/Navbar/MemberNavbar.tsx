@@ -6,15 +6,23 @@ import Icon from "../../../assets/Icon";
 import { useUserContext } from "../../../context/UserContext";
 
 const MemberNavbar: React.FunctionComponent = () => {
+  /**
+   * Returns the navigation bar component for members
+   *
+   * no params
+   * user is retrieved from the context using useUserContext()
+   *
+   */
   const router = useRouter();
   const { authUser, signOutAuth } = useUserContext();
 
   const userDetails = () => (
+    // Renders user details - name and role
     <ListItem className={styles.item + " " + styles.userDetails}>
       <Icon type="navProfile" className={styles.icon} />
       <div>
         <Typography variant="subtitle1" color={"#FFFFFF"}>
-          {authUser.first_name} {authUser.last_name}
+          {authUser.firstName} {authUser.lastName}
         </Typography>
         <Typography variant="subtitle1" color={"#FFFFFF"}>
           {authUser.role}
@@ -24,6 +32,12 @@ const MemberNavbar: React.FunctionComponent = () => {
   );
 
   const pages = () => (
+    /**
+     * Renders navigation bar buttons for 4 pages - dashboard, schedule, house, settings
+     *
+     * dashboard is the default page
+     * onClick handler pushes "/member/[page name]" to the url using router
+     */
     <List className={styles.pages}>
       <ListItem
         button
@@ -105,14 +119,15 @@ const MemberNavbar: React.FunctionComponent = () => {
   );
 
   const logout = () => (
-    <List className={styles.logout}>
+    <div className={styles.logout}>
       <ListItem
         className={styles.item}
         button
         key={"settings"}
         onClick={() => {
-          router.push("/login");
+          // signout MUST happen before pushing the login page, or else there is an error cuz the user context tries to use an empty user
           signOutAuth();
+          router.push("/login");
         }}
       >
         <Icon type="navLogout" />
@@ -126,7 +141,7 @@ const MemberNavbar: React.FunctionComponent = () => {
           primary={"Logout"}
         />
       </ListItem>
-    </List>
+    </div>
   );
 
   return (

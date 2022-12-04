@@ -4,11 +4,16 @@ import { RowOfCSV } from "../../types/schema";
 
 let collectionName = "authorizedUsers";
 
+// Adds a row of the CSV to the Firebase under authorizedUsers; document id = email
 export const addRowOfCSV = async (email: string, firstName: string, lastName: string, houseID: string) => {
     let user = await getRowOfCSV(email);
     if (user !== null) {
         return;
     }
+    console.log(houseID);
+    console.log(email);
+    console.log(firstName);
+    console.log(lastName);
     await setDoc(doc(firestore, collectionName, email), {
         firstName: firstName,
         lastName: lastName,
@@ -17,6 +22,7 @@ export const addRowOfCSV = async (email: string, firstName: string, lastName: st
     });
 }
 
+// Retrieves a document in Firebase under authorizedUsers with the documentId = email
 export const getRowOfCSV = async (email: string) => {
     const docRef = doc(firestore, collectionName, email);
     const docSnap = await getDoc(docRef);
@@ -26,6 +32,7 @@ export const getRowOfCSV = async (email: string) => {
     return null;
 }
 
+// Updates a row of the CSV
 export const updateRowOfCSV = async (email: string, newData: object) => {
     const userRef = doc(firestore, collectionName, email);
     await updateDoc(userRef, newData);
