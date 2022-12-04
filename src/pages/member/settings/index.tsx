@@ -8,7 +8,11 @@ import { useUserContext } from "../../../context/UserContext";
 import styles from "./Settings.module.css";
 
 export default function SettingsPage() {
-  const {authUser} = useUserContext();
+  /**
+   * Displays 4 cards of information for the settings page - avaiailability, task preferences, personal information, documents
+   */
+
+  const { authUser } = useUserContext();
 
   return (
     <Layout>
@@ -16,7 +20,7 @@ export default function SettingsPage() {
       <div className={styles.row}>
         <AvailabilityInfo userID={authUser.userID} />
         <div className={styles.rightCard}>
-          <TaskPreferenceInfo userID={authUser.userID}/>
+          <TaskPreferenceInfo userID={authUser.userID} />
         </div>
       </div>
       <div className={styles.row}>
