@@ -1,26 +1,79 @@
-import Head from "next/head";
+import { Tabs, Tab, Box, Typography } from "@mui/material";
 import Layout from "../../../components/Layout/Layout";
-import ShiftCard from "../../../components/ManagerComponents/Shiftcard/Shiftcard";
+import { useState } from "react";
+import CategoriesView from "../categoryDropdown/categoriesView";
+import { useUserContext } from "../../../context/UserContext";
+import ShiftSchedule from "../../../components/ManagerComponents/shiftSchedule/ShiftSchedule";
+
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 export default function SchedulePage() {
+  /**
+   * Allows for navigation between unassigned shifts, assigned shifts, and the category view page. Used in the planner view.
+   * @returns SchedulePage
+   */
+  const {authUser} = useUserContext();
+
+  const [currPage, setCurrPage] = useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    console.log(authUser);
+    setCurrPage(newValue);
+  };
+
   return (
     <Layout>
-      <div>
-        <Head>
-          <title>Workshift App</title>
-          <meta name="description" content="Next.js firebase Workshift app" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <p>This is the planner page.</p>
-        <main>
-          <ShiftCard />
-        </main>
-        <footer>
-          <a href="#" rel="noopener noreferrer">
-            Workshift App
-          </a>
-        </footer>
-      </div>
+      <Typography variant="h4">Settings</Typography>
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs value={currPage} onChange={handleChange}>
+            <Tab label="Unassigned" {...a11yProps(0)} />
+            <Tab label="Assigned" {...a11yProps(1)} />
+            <Tab label="Categories" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={currPage} index={0}>
+          Item One
+        </TabPanel>
+        <TabPanel value={currPage} index={1}>
+          <ShiftSchedule />
+        </TabPanel>
+        <TabPanel value={currPage} index={2}>
+          <CategoriesView houseID = {authUser.houseID}/>
+        </TabPanel>
+      </Box>
     </Layout>
   );
 }
