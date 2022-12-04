@@ -49,10 +49,10 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({houseID}: CategoriesView
     }
 
     return (
-        <div>
+        <div className = {styles.categoryViewContainer}>
             <Button onClick = {openModal} id = {styles.newCategory}>New Category</Button>
             <TableContainer>
-                <Table>
+                <Table >
                     <TableBody>
                         {
                             house && Array.from(house.categories.keys()).map((key, index) => (

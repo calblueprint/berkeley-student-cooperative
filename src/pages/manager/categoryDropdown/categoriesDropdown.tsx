@@ -1,7 +1,7 @@
 import { Collapse, IconButton, MobileStepperClassKey, TableCell, TableContainer, TableRow, Table, TableBody } from "@mui/material"
 import { useEffect, useState } from "react"
-import KeyboardArrowDownIcon from '@mui/icons-material'
-import KeyboardArrowUpIcon from '@mui/icons-material'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 type CategoriesDropdownProps = {
     categoryMap: Map<string, string> | undefined,
@@ -33,6 +33,7 @@ const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({mapKey, category
                 isExpanded && categoryMap && Array.from(categoryMap.keys()).map((shiftID, index) => (
                     <TableRow key = {index}>
                         <TableCell padding = "checkbox">
+                            
                             {categoryMap.get(shiftID)}
                         </TableCell>
                     </TableRow>
