@@ -110,7 +110,6 @@ export const ShiftSchedule = () => {
    * Loads the FB data and creates Row Components to display on MUI Table
    */
   const loadScheduleComponents= async () => {
-    console.log({shiftScheduleUser: authUser});
     let houseFB = await getHouse(authUser.houseID);
     let tempSchedule = new Map<string, JSX.Element[]>();
     //Promise All is important here because we need all Data to be loaded in before setting schedule again.

@@ -42,7 +42,7 @@ export type House = {
   address: string;
   categories: string[];
   schedule: Map<string, string[]>;
-  userPINs: Map<number, string>;
+  userPINs: Map<string, string>;
 };
 
 export enum Day {

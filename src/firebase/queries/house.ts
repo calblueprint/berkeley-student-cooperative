@@ -53,6 +53,7 @@ export const updateHouse = async (houseID: string, newData: object) => {
         return;
     }
     const houseRef = doc(firestore, 'houses', houseID);
+    console.log({updateHouse: newData, house: houseID});
     await updateDoc(houseRef, newData);
 }
 

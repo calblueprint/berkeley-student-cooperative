@@ -12,12 +12,10 @@ import { getHouse, updateHouse } from "./house";
 export const addUser = async (email: string, houseID: string, last_name: string, first_name: string, role: string, userID: string) => {
     const currHouse = await getHouse(houseID);
     let currHouseMap = currHouse.userPINs;
-    console.log({currHouseMap: currHouseMap});
-    let pinNumber = generatePinNumber(5);
+    let pinNumber = String(generatePinNumber(5));
     do {
-        pinNumber = generatePinNumber(5);
+        pinNumber = String(generatePinNumber(5));
     } while (currHouseMap.has(pinNumber));
-    console.log({pinNumber: pinNumber});
     await setDoc(doc(firestore, "users", userID), {
         availabilities: mapToObject(new Map<string, number[]>()),
         email: email,
@@ -38,12 +36,11 @@ export const addUser = async (email: string, houseID: string, last_name: string,
     if (houseMems) {
         houseMems.push(userID);
     }
-    currHouseMap.set(pinNumber, userID);
+    currHouseMap.set(String(pinNumber), userID);
     let newData = {
         members: currHouse.members,
-        pinUserMap: mapToObject(currHouseMap)
+        userPINs: mapToObject(currHouseMap)
     }
-    console.log({newUserID: userID, PIN: pinNumber, newData: newData, houseID: houseID});
     await updateHouse(houseID, newData);
 }
 
