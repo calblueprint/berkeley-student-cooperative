@@ -8,16 +8,18 @@
 */
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { getHouse } from "../../../firebase/queries/houseQueries";
 import { Day } from "../../../types/schema";
-import { getNumVerified, getShift } from "../../../firebase/queries/shift";
+import { getShift } from "../../../firebase/queries/shift";
 import { Shift } from "../../../types/schema";
 import Select from "react-select";
 import Paper from "@mui/material/Paper";
@@ -142,7 +144,7 @@ export const UnassignedShiftList = () => {
     shiftObjects.map((shift) => {
       if (
         shift != undefined &&
-        // If the number of people required for a shift has not been met, there are still unasigned 
+        // If the number of people required for a shift has not been met, there are still unasigned
         // shifts available.
         shift.usersAssigned.length < shift.numOfPeople
       ) {
@@ -232,6 +234,14 @@ export const UnassignedShiftList = () => {
   } else {
     return (
       <div>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            handleOpen;
+          }}
+        >
+          <Typography>Add Shift +</Typography>
+        </Button>
         <Select
           value={selectedDay}
           options={dayOptions}
