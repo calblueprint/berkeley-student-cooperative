@@ -1,0 +1,24 @@
+.assignShiftBox {
+    padding: 10%;
+}
+​
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 3%;
+}
+​
+.close{
+    text-align: right;
+}
+​
+.assignShiftInfo{
+    display: flex;
+    justify-content: space-between;
+}
+​
+.infoForShift{
+    background-color: #EEEEEE;
+    border-radius: 34px;
+    padding: 4px 10px 4px 10px;
+}
