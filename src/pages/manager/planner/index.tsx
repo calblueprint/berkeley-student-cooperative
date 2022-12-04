@@ -1,8 +1,9 @@
 import Head from "next/head";
 import Layout from "../../../components/Layout/Layout";
 import ShiftCard from "../../../components/ManagerComponents/Shiftcard/Shiftcard";
+import UnassignedShiftList from "../../../components/ManagerComponents/UnassignedShiftsList/UnassignedShiftsList";
 
-export default function SchedulePage() {
+export default function PlannerPage() {
   return (
     <Layout>
       <div>
@@ -13,13 +14,9 @@ export default function SchedulePage() {
         </Head>
         <p>This is the planner page.</p>
         <main>
-          <ShiftCard />
+          <UnassignedShiftList />
         </main>
-        <footer>
-          <a href="#" rel="noopener noreferrer">
-            Workshift App
-          </a>
-        </footer>
+        <footer></footer>
       </div>
     </Layout>
   );

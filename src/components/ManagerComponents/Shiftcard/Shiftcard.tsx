@@ -161,9 +161,11 @@ const ShiftCard = () => {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleOpen}>
-        <Typography>Add Shift</Typography>
+      <div className={styles.button}>
+        <Button variant="contained" onClick={handleOpen}>
+        <Typography>New shift +</Typography>
       </Button>
+      </div>
       <Dialog
         fullWidth
         maxWidth="md"
