@@ -7,22 +7,22 @@ import { House, User } from "../../../types/schema";
 import styles from "./MemberSchedule.module.css";
 
 type MemberSchedulePageProps = {
-	user?: User,
-	house?: House,
-}
+  user?: User;
+  house?: House;
+};
 
 const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
-	user,
-	house
+  user,
+  house,
 }) => {
-	const { authUser, signIn, signOutAuth, register } = useUserContext();
+  const { authUser, signIn, signOutAuth, register } = useUserContext();
 
-	return (
-		<Layout>
-			<MemberScheduleHeader/>
-			<MemberShiftSchedule user = {authUser}/>
-		</Layout>
-	)
-}
+  return (
+    <Layout>
+      <MemberScheduleHeader />
+      <MemberShiftSchedule user={authUser} />
+    </Layout>
+  );
+};
 
 export default MemberSchedulePage;
