@@ -125,8 +125,9 @@ const MemberNavbar: React.FunctionComponent = () => {
         button
         key={"settings"}
         onClick={() => {
-          router.push("/login");
+          // signout MUST happen before pushing the login page, or else there is an error cuz the user context tries to use an empty user
           signOutAuth();
+          router.push("/login");
         }}
       >
         <Icon type="navLogout" />
