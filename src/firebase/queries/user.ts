@@ -63,6 +63,10 @@ export const addUser = async (email: string, houseID: string, firstName: string,
  * @param userID - The userID assigned to this user in auth
 */
 export const updateUser = async (userID: string, newData: object) => {
+    const currUser = await getUser(userID);
+    if (currUser == null) {
+        return;
+    }
     const userRef = doc(firestore, 'users', userID);
     await updateDoc(userRef, newData);
 }
@@ -78,6 +82,8 @@ export const getUser = async (userID: string) => {
     if (docSnap.exists()) {
         return await parseUser(docSnap);
     }
+    //replace w modal
+    console.log("Invalid User ID");
     return null;
 }
 

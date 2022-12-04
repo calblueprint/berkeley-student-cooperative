@@ -15,6 +15,14 @@ import { addShift } from "../../../firebase/queries/shift";
 import Icon from "../../../assets/Icon";
 
 const ShiftCard = () => {
+  /**
+   * Returns a component for managers to create shifts
+   *
+   * form fields - name, shift category, number of members, number of hours, start time, end time, buffer period, description, possible days for the shift, verification or no verification
+   *
+   * (dialog is the pop-up screen that contains the create shift form)
+   */
+
   const [open, setOpen] = useState(false);
   const [name, setName] = useState<string>("");
   const [category, setCategory] = useState<string>("");
@@ -31,6 +39,7 @@ const ShiftCard = () => {
   const [possibleDays, setPossibleDays] = useState<string[]>([]);
   const [verification, setVerification] = useState<boolean>(false);
 
+  // TODO: import shift categories
   let shiftCategories = [
     "cook dinner",
     "clean bathroom",
@@ -50,14 +59,21 @@ const ShiftCard = () => {
   let verificationOptions = ["Verification required", "No verification"];
 
   const handleOpen = () => {
+    // sets the variable "open" to true to open the dialog
     setOpen(true);
   };
 
   const handleClose = () => {
+    // sets the variable "open" to false to close the dialog
     setOpen(false);
   };
 
   const handleSubmit = async () => {
+    /**
+     * checks that form fields are filled out and contain valid inputs
+     * calls addShift() with all the inputted form field values
+     * parseTime() is used to change time into the correct format (scale of 0 to 2400)
+     */
     if (
       name &&
       description &&
@@ -67,6 +83,7 @@ const ShiftCard = () => {
       isValidNumber(buffer) &&
       category
     ) {
+      // TODO: retrieve house code from user context instead of "EUC"
       await addShift(
         "EUC",
         name,
@@ -91,6 +108,7 @@ const ShiftCard = () => {
   };
 
   const clearFields = () => {
+    // resets all useState variables to reset form fields
     setName("");
     setCategory("");
     setMembers(0);
@@ -108,16 +126,19 @@ const ShiftCard = () => {
   };
 
   const closeDialog = () => {
+    // clears fields and closes dialog when the 'x' is clicked (top right corner of dialog)
     clearFields();
     handleClose();
   };
 
   const handlePossibleDays = (event: SelectChangeEvent<string>) => {
+    // onclick handler for multi-select containing "possible days" input
     let input = event.target.value;
     setPossibleDays(typeof input === "string" ? input.split(",") : input);
   };
 
   const handleMembers = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // onclick handler for the number text field input containing number of members
     let input = event.target.value;
     let parsed = parseInt(input);
     if (input.length == 0 || !isNaN(parsed)) {
@@ -126,6 +147,7 @@ const ShiftCard = () => {
   };
 
   const handleHours = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // onclick handler for the number text field input containing number of hours
     let input = event.target.value;
     let parsed = parseInt(input);
     if (input.length == 0 || !isNaN(parsed)) {
@@ -134,6 +156,7 @@ const ShiftCard = () => {
   };
 
   const handleBuffer = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // onclick handler for the number text field input containing number of buffer hours
     let input = event.target.value;
     let parsed = parseInt(input);
     if (input.length == 0 || !isNaN(parsed)) {
@@ -142,6 +165,7 @@ const ShiftCard = () => {
   };
 
   const handleVerification = (event: SelectChangeEvent<string>) => {
+    // onclick handler for select containing "verification" input
     let input = event.target.value;
     if (input == "Verification required") {
       setVerification(true);
@@ -152,10 +176,12 @@ const ShiftCard = () => {
   };
 
   const isValidNumber = (input: number) => {
+    // checks to see that a number is a valid input
     return input > 0 && !isNaN(input);
   };
 
   const parseTime = (hour: number, minute: number, AM: string) => {
+    // parses time to match our 0-2400 scale for time
     return AM == "AM" ? hour * 100 + minute : (hour + 12) * 100 + minute;
   };
 

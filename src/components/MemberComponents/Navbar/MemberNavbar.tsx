@@ -6,10 +6,18 @@ import Icon from "../../../assets/Icon";
 import { useUserContext } from "../../../context/UserContext";
 
 const MemberNavbar: React.FunctionComponent = () => {
+  /**
+   * Returns the navigation bar component for members
+   *
+   * no params
+   * user is retrieved from the context using useUserContext()
+   *
+   */
   const router = useRouter();
   const { authUser, signOutAuth } = useUserContext();
 
   const userDetails = () => (
+    // Renders user details - name and role
     <ListItem className={styles.item + " " + styles.userDetails}>
       <Icon type="navProfile" className={styles.icon} />
       <div>
@@ -24,6 +32,12 @@ const MemberNavbar: React.FunctionComponent = () => {
   );
 
   const pages = () => (
+    /**
+     * Renders navigation bar buttons for 4 pages - dashboard, schedule, house, settings
+     *
+     * dashboard is the default page
+     * onClick handler pushes "/member/[page name]" to the url using router
+     */
     <List className={styles.pages}>
       <ListItem
         button
@@ -105,6 +119,11 @@ const MemberNavbar: React.FunctionComponent = () => {
   );
 
   const logout = () => (
+    /**
+     * Renders the logout button
+     *
+     * onClick handler pushes "/login" to the url using router and signs out the current user in context
+     */
     <List className={styles.logout}>
       <ListItem
         className={styles.item}

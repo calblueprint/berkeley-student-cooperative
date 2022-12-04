@@ -80,11 +80,11 @@ const CreateAccountPage = () => {
     try {
       await register(
         email,
+        csvInformation.houseID,
         csvInformation.firstName,
         csvInformation.lastName,
-        csvInformation.houseID,
-        password,
-        "member"
+        "member",
+        password
       );
       let newData = {
         accountCreated: true,
