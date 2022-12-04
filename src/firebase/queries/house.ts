@@ -1,8 +1,9 @@
 import { collection, addDoc, updateDoc, doc, getDoc, getDocs, deleteDoc } from "firebase/firestore";
 import { firestore } from "../clientApp";
-import { House } from "../../types/schema";
+import { House, Shift } from "../../types/schema";
 import { arrayBuffer } from "stream/consumers";
 import { objectToMap, mapToObject } from "../helpers";
+
 
 const colRef = collection(firestore, "houses");
 
@@ -10,7 +11,18 @@ const colRef = collection(firestore, "houses");
 
 
 
-//grabs all houses from database
+/**
+   * Returns an array of all the houses in the BSC Firebase
+   *
+   * 
+   * 
+   * @returns array containing every house
+   * 
+   * @remark The only time I can see this needing to be called is for the supervisor.
+   * 
+   * @public
+   * 
+   */
 export const getAllHouses = async()  => {
     
     const promises: Promise<House>[] = []; 
@@ -24,18 +36,37 @@ export const getAllHouses = async()  => {
 }
 
 
-//grabs a specific house from database
-export const getHouse = async(houseID: string) => {
+/**
+   * Returns house object dependant on houseID that is passed in.
+   *
+   * @param houseID - Three letter long code corresponding to certain houses in the BSC.
+   * 
+   * @returns House object containing a snapshot of the house's fields.
+   * 
+   * @public
+   * 
+   */
+export const getHouse = async(houseID: string)  => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
-    console.log(houseID);
+  
     const promise: Promise<House> = parseHouse(colSnap);
     const house = await promise;
     return house;
 
 }
 
-//updating the fields of house, may not be useful ?
+/**
+   * Updates a house's address on the firebase.
+   *
+   * @param houseID - Three letter long code corresponding to certain houses in the BSC.
+   * @param newAddress - String that contains a house's new address
+   * 
+   * @remark I do not think we'll really need this, as the coop addresses won't change.
+   * 
+   * @public
+   * 
+   */
 export const updateAddress = async (houseID: string, newAddress: string): Promise<void> => {
     // TODO: add null checking
     const docRef = doc(firestore, "houses", houseID);
@@ -46,16 +77,38 @@ export const updateAddress = async (houseID: string, newAddress: string): Promis
     await updateDoc(docRef, data)
 }
 
+
+/**
+   * Updates house's fields in firebase dependant on houseID that is passed in.
+   *
+   * @param houseID - Three letter long code corresponding to certain houses in the BSC.
+   * @param newData - Object containing data that will be updated on firebase
+   * 
+   * 
+   * 
+   * @public
+   * 
+   */
 export const updateHouse = async (houseID: string, newData: object) => {
     const currHouse = await getHouse(houseID);
     if (currHouse == null) {
         return;
     }
     const houseRef = doc(firestore, 'houses', houseID);
+    console.log({updateHouse: newData, house: houseID});
     await updateDoc(houseRef, newData);
 }
 
-//adds a value to the categories array
+/**
+   * Adds a category to a house's category field in firebase.
+   *
+   * @param houseID - Three letter long code corresponding to certain houses in the BSC.
+   * @param newCategory - category to be added to the house's category field in the firebase
+   * 
+   * 
+   * @public
+   * 
+   */
 export const addCategory = async (houseID: string, newCategory: string): Promise<boolean> => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
@@ -91,58 +144,204 @@ export const addCategory = async (houseID: string, newCategory: string): Promise
     }
 }
 
-export const removeCategory = async (houseID: string, oldCategory: string): Promise<void> => {
+
+/**
+   * Updates a house's category map in the firebase.
+   *
+   * @param houseID - Three letter long code corresponding to certain houses in the BSC.
+   * @param shift - Shift object
+   * 
+   * @remark This method should be called whenever a new shift is created.
+   * 
+   * 
+   * 
+   * @public
+   * 
+   */
+export const updateCategory = async(houseID: string, shift: Shift): Promise<void> => {
     const docRef = doc(firestore, "houses", houseID);
     const colSnap = await getDoc(docRef);
+
+    //checks if houseId is valid
     if (colSnap.exists()) {
         const promise: Promise<House> = parseHouse(colSnap);
         const house = await promise;
-        var newCategories = house.categories;
+        var houseCategories = objectToMap(house.categories)
+        
+        //checks if shift is a valid shift object
+        if(shift.name && shift.shiftID && shift.category) {
 
-        const index = newCategories?.indexOf(oldCategory);
-        if (index !== -1 && index){
+            //checks if category corresponding to shift param is already in the firebase 
+            if(houseCategories?.has(shift.category)) {
+                
+                const currCatMap = objectToMap(houseCategories.get(shift.category))
+                //checks if shift already exists in the nested category map
+                if(!currCatMap.has(shift.shiftID)) {
+
+                    //updates nested category map in firebase to include new shift
+                    currCatMap.set(shift.shiftID, shift.name)
+                    houseCategories.set(shift.category, mapToObject(currCatMap))
+
+                    const data = {
+                        categories: mapToObject(houseCategories)
+                    }
+                    await updateDoc(docRef, data);
+
+
+                } else {
+                    console.log("This shift already exists in the", shift.category, "category");
+                }
             
-            newCategories?.splice(index, 1)
-            const data = {
-                categories: newCategories
+                
+
+            } else {
+                //creates a new category map in firebase
+                const currCatMap = new Map();
+
+                //adds shift to new category map
+                currCatMap.set(shift.shiftID, shift.name)
+                houseCategories.set(shift.category, mapToObject(currCatMap))
+                const data = {
+                    categories: mapToObject(houseCategories)
+                }
+                await updateDoc(docRef, data)
             }
-            await updateDoc(docRef, data)
-        } else {
-            console.log("category does not exist");
+        } else{
+            console.log("This is an invalid shift object");
         }
+
+        
+        
     } else{
-        console.log("invalid house id for removeCategory")
+        console.log("invalid house id for update category")
     }
-    
-    
 }
 
-
-export const getCategories = async (houseID: string) => {
+/**
+   * Returns a house's category map.
+   *
+   * @param houseID - Three letter long code corresponding to certain houses in the BSC.
+   * 
+   * @returns a map that contains nested maps corresponding categories to shifts
+   * 
+   * 
+   * @public
+   * 
+   */
+export const getCategories = async(houseID: string) => {
     const docRef = doc(firestore, "houses", houseID);
 
     const colSnap = await getDoc(docRef);
-    if(colSnap.exists()){
-        const house =  await parseHouse(colSnap);
-        return house.categories;
+  
+    const promise: Promise<House> = parseHouse(colSnap);
+    const house = await promise;
+
+    return house.categories;
+}
+
+/**
+   * Removes a shift from a house's category map in the firebase.
+   *
+   * @param houseID - Three letter long code corresponding to certain houses in the BSC.
+   * @param shift - Shift object
+   * 
+   * @remark This method should be called whenever a shift is deleted.
+   * 
+   * @public
+   * 
+   */
+export const removeShiftFromCategory = async(houseID: string, shift: Shift): Promise<void> => {
+    const docRef = doc(firestore, "houses", houseID);
+    const colSnap = await getDoc(docRef);
+
+    //checks if the houseId is a valid house
+    if (colSnap.exists()) {
+        const promise: Promise<House> = parseHouse(colSnap);
+        const house = await promise;
+        var houseCategories = objectToMap(house.categories)
+  
+        //checks if shift is a valid shift object
+        if(shift.name && shift.shiftID && shift.category) {
+
+
+            //checks if categories map contains category corresponding to shift
+            if(houseCategories?.has(shift.category)) {
+
+                const currShift = objectToMap(houseCategories.get(shift.category));
+
+                //will delete shift from category if it is there, returns false if shift does not exist in map
+                currShift.delete(shift.shiftID);
+
+                //updates categories map in firebase
+                houseCategories.set(shift.category, mapToObject(currShift))
+                const data = {
+                    categories: mapToObject(houseCategories)
+                }
+                await updateDoc(docRef, data);
+
+                
+              
+            } else{
+                console.log("this category does not exist")
+            }
+            
+        } else {
+            console.log("This is an invalid shift object");
+        }
+        
     } else{
-        console.log("invalid house id for getCategories")
-        return;
+        console.log("invalid house id for remove category")
     }
-
-   
-    
-
 }
 
 
-//address schedule field when shifts are all done
+/**
+   * Removes a category map from a house's categories map in the firebase.
+   *
+   * @param houseID - Three letter long code corresponding to certain houses in the BSC.
+   * @param oldCategory - Name of category that should be removed from categories map
+   * 
+   * 
+   * @remark USE SPARINGLY; it will remove entire nested category map including all shifts inside of it 
+   * 
+   * 
+   * @public
+   * 
+   */
+export const removeCategory = async(houseID: string, oldCategory: string): Promise<void> => {
+    const docRef = doc(firestore, "houses", houseID);
+    const colSnap = await getDoc(docRef);
+
+    //checks if houseId is a valid house
+    if (colSnap.exists()) {
+        const promise: Promise<House> = parseHouse(colSnap);
+        const house = await promise;
+        var houseCategories = objectToMap(house.categories)
+        
+        //checks if category exists
+        if(houseCategories?.has(oldCategory)) {
+            //if the categories map it removes the entire map of oldCategory, containing everything inside it
+            houseCategories.delete(oldCategory);
+            const data = {
+                categories: mapToObject(houseCategories)
+            }
+            await updateDoc(docRef, data)
+
+        } else {
+            console.log("The", oldCategory, " category does not exist");
+        }
+        
+    } else{
+        console.log("invalid house id for add category")
+    }
+}
+
 
 
 //parses house document passed in
 const parseHouse = async (doc : any) => {
-    const data = await doc.data();
-	const houseID = doc.id.toString();
+    const data = doc.data();
+    const houseID = doc.id.toString();
     const members = data.members;
     const address = data.address;
     const categories = data.categories;
@@ -165,74 +364,10 @@ const parseHouse = async (doc : any) => {
 }
 
 
-
-//confirm how members array is going to work before trying to implement
-// how will we be parsing through the csv file ? is that how we are going to create the members list
-
-//main issue im running into is error handling for when the member array comes back as undefined,
-
-
-
-// export const addMember = async (houseID: string, newMember: string): Promise<void> => {
-	//     const docRef = doc(firestore, "houses", houseID);
-//     // const promises: Promise<House>[] = []; 
-//     // const colSnap = await getDoc(docRef);
-//     // promises.push(parseHouse(colSnap));
-    
-//     const colSnap = await getDoc(docRef);
-    
-//     var addedMembers = (await parseHouse(colSnap)).members;
-    
-
-//     addedMembers?.push(newMember)
-//     const data = {
-//         members: addedMembers
-//     }
-//     await updateDoc(docRef, data)
-// }
-// export const deleteMember = async (houseID: string, oldMember: string) => {
-//     const docRef = doc(firestore, "houses", houseID);
-
-//     const promises: Promise<House>[] = []; 
-//     const colSnap = await getDoc(docRef);
-//     promises.push(parseHouse(colSnap));
-//     const houseMembers = (await promises[0]).members;
-//     const index = houseMembers?.indexOf(oldMember);
-//     if (index !== -1 && index){
-//         houseMembers?.splice(index, 1)
-//     }
-//     const data = {
-//         members: houseMembers
-//     }
-
-//     await updateDoc(docRef, data);
-// }
-
-
-//applies to comments above, but goes in index.tsx
-  // const addMemberFB = async (houseID :string, newMember:string) =>{
-  //   var addAMember = await addMember(houseID, newMember);
-  //   console.log("added member", newMember);
-  // }
-  // const removeMemberFB = async (houseID :string, oldMember:string) =>{
-  //   var rmAMember = await deleteMember(houseID, oldMember);
-  //   console.log("removed member", rmAMember);
-  // }
-
-    //gets all houses from firebase
-    // const getAllHouseFB = async () =>{
-    //     var fireHouse = await getAllHouses();
-    //     setHouses(fireHouse);
-    //   }
-    //   //gets specific house from firebase, must specify certain house
-    //   const getHouseFB = async (houseID :string) =>{
-    //     var fireAHouse = await getHouse(houseID);
-    //     setCurrHouse(fireAHouse);
-    //   }
 		
 export const defaultHouse: House = {
 		houseID: "",
-		categories: new Array<string>(),
+		categories: new Map<string, (Map<string, string>)>(),
 		members: new Array<string>(),
 		address: "",
 		schedule: new Map<string, string[]>(),

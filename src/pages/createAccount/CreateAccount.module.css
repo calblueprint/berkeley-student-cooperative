@@ -1,4 +1,4 @@
-.login {
+.create {
     height: 100vh;
     background-color: #F3F5F6;
 }
@@ -9,11 +9,11 @@
 
 .card {
     background-color: #FFFFFF;
-    width: 40%;
-    height: 60%;
+    width: 45%;
+    height: 70%;
     margin: auto;
     border-radius: 10px;
-    margin-top: 2%;
+    margin-top: 1%;
 }
 
 .body {
@@ -39,14 +39,9 @@
 }
 
 .button {
-    padding: 3% 0% 3% 0%;
+    margin: 3% 0 3% 0;
 }
 
-.forgotPW {
-    text-decoration: underline;
-}
-
-.createAccount {
-    text-decoration: underline;
-    text-align: center;
+.pwhelp {
+    color: #A5A5A5;
 }

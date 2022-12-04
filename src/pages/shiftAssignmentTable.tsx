@@ -10,7 +10,6 @@ import TableRow from "@mui/material/TableRow";
 import { numericToStringPreference } from "../firebase/helpers";
 import { User } from "../types/schema";
 
-
 type ShiftAssignmentTableProps = {
     users: User[],
     shiftID: string,
@@ -19,6 +18,17 @@ type ShiftAssignmentTableProps = {
 }
 
 const ShiftAssignmentTable: React.FC<ShiftAssignmentTableProps> = ({users, shiftID, selectedRows, setSelectedRows} : ShiftAssignmentTableProps) => {
+/**
+   * The table that is rendered in the ShiftAssignmentComponentCard.
+   * Supports checking and unchecking users.
+   *
+   * @param users - List of user objects that are available for the shift
+   * @param shiftID - The ID of the shift
+   * @param selectedRows - The rows that have been selected for the shift
+   * @param setSelectedRows - Updates the selectedRows variables
+   * @returns ShiftAssignmentTable
+   */
+
     // Row data type 
     type RowData = {
         // id of the rows (userID)

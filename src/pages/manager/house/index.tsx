@@ -1,6 +1,6 @@
 import Head from "next/head";
-import router from "next/router";
 import Layout from "../../../components/Layout/Layout";
+import ParseCSV from "../../ParseCsv/ParseCsv";
 
 export default function SchedulePage() {
   return (
@@ -13,13 +13,7 @@ export default function SchedulePage() {
         </Head>
         <p>This is the house page.</p>
         <main>
-          <button
-            onClick={() => {
-              router.push("/ParseCsv/ParseCsv");
-            }}
-          >
-            Upload House List
-          </button>
+          <ParseCSV />
         </main>
         <footer>
           <a href="#" rel="noopener noreferrer">

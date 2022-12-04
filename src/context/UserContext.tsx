@@ -5,7 +5,6 @@ import { defaultUser } from "../firebase/queries/user";
 import { defaultHouse } from "../firebase/queries/house";
 
 
-
 export const authUserContext = createContext({
   authUser: defaultUser, // added
   // setAuthUser: function(user:any){},  // added
