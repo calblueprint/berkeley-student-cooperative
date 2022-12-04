@@ -1,11 +1,28 @@
+import React from "react";
 import Layout from "../../../components/Layout/Layout";
-import ViewShiftcard from "../../../components/MemberComponents/ViewShiftcard/ViewShiftcard";
+import { MemberScheduleHeader } from "../../../components/MemberComponents/MemberSchedule/MemberScheduleHeader/MemberScheduleHeader";
+import { MemberShiftView } from "../../../components/MemberComponents/MemberSchedule/MemberShiftView/MemberShiftView";
+import { useUserContext } from "../../../context/UserContext";
+import { House, User } from "../../../types/schema";
+import styles from "./MemberSchedule.module.css";
 
-export default function SchedulePage() {
+type MemberSchedulePageProps = {
+  user?: User;
+  house?: House;
+};
+
+const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
+  user,
+  house,
+}) => {
+  const { authUser, signIn, signOutAuth, register } = useUserContext();
+
   return (
     <Layout>
-      <p>This is the schedule page.</p>
-      <ViewShiftcard shiftID={"gTyVkT3TAh6NX0oHangP"} houseID={"EUC"} />
+      <MemberScheduleHeader />
+      <MemberShiftView user={authUser} />
     </Layout>
   );
-}
+};
+
+export default MemberSchedulePage;
