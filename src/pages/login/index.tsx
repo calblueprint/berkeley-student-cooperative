@@ -22,7 +22,8 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn, authUser } = useFirebaseAuth();
+  const { signIn, authUser, register } = useFirebaseAuth();
+
 
   const login = async () => {
     // tries to log in with given credentials
