@@ -34,6 +34,28 @@ export const addShift = async (houseID: string, name: string, description: strin
     });
 }
 
+export const getAllShiftsInCategory = async (houseID: string, category: string) => {
+    const querySnapshot = await getDocs(collection(firestore, "houses", houseID, "shifts"));
+    let returnObj: Shift[] = [];
+    querySnapshot.forEach(async (docSnap) => {
+        let currShift = await parseShift(docSnap);
+        if (currShift.category === category) {
+            returnObj.push(currShift);
+        }
+    })
+    return returnObj;
+}
+
+export const getAllShifts = async (houseID: string) => {
+    const querySnapshot = await getDocs(collection(firestore, "houses", houseID, "shifts"));
+    let returnObj: Shift[] = [];
+    querySnapshot.forEach(async (docSnap) => {
+        let currShift = await parseShift(docSnap);
+        returnObj.push(currShift);
+    })
+    return returnObj;
+}
+
 /**
  * Updates a shift object with newData.
  * @param newData - An object containing the newData that will be uploaded to Firebase
