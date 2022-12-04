@@ -119,19 +119,15 @@ const MemberNavbar: React.FunctionComponent = () => {
   );
 
   const logout = () => (
-    /**
-     * Renders the logout button
-     *
-     * onClick handler pushes "/login" to the url using router and signs out the current user in context
-     */
-    <List className={styles.logout}>
+    <div className={styles.logout}>
       <ListItem
         className={styles.item}
         button
         key={"settings"}
         onClick={() => {
-          router.push("/login");
+          // signout MUST happen before pushing the login page, or else there is an error cuz the user context tries to use an empty user
           signOutAuth();
+          router.push("/login");
         }}
       >
         <Icon type="navLogout" />
@@ -145,7 +141,7 @@ const MemberNavbar: React.FunctionComponent = () => {
           primary={"Logout"}
         />
       </ListItem>
-    </List>
+    </div>
   );
 
   return (
