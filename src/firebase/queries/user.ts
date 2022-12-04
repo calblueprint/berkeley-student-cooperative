@@ -76,14 +76,19 @@ export const updateUser = async (userID: string, newData: object) => {
  * @returns A User object or null if the UserID is invalid
 */
 export const getUser = async (userID: string) => {
-    const docRef = doc(firestore, "users", userID);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-        return await parseUser(docSnap);
+    try {
+        const docRef = doc(firestore, "users", userID);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return await parseUser(docSnap);
+        }
+        //replace w modal
+        console.log("Invalid User ID");
+        return null;
+    } catch (e) {
+        console.log(e);
     }
-    //replace w modal
-    console.log("Invalid User ID");
-    return null;
+    
 }
 
 // Used internally; parses the user data from Firebase into a user object
