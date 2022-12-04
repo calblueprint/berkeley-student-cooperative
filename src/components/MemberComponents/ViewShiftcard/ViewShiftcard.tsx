@@ -29,6 +29,9 @@ import styles from "./ViewShiftcard.module.css";
 type ViewShiftcardProps = {
   shiftID: string;
   houseID: string;
+  open: boolean;
+  handleClose: any;
+  handleOpen: any;
 };
 
 /**
@@ -53,9 +56,11 @@ type ViewShiftcardProps = {
 const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   shiftID,
   houseID,
+  open,
+  handleClose,
+  handleOpen,
 }: ViewShiftcardProps) => {
   const { authUser, house } = useUserContext();
-  const [open, setOpen] = useState(false);
   const [shift, setShift] = useState<Shift | null>();
   const [memberRows, setMemberRows] = useState<JSX.Element[]>();
   const [verifierPin, setVerifierPin] = useState("");
@@ -73,14 +78,17 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   useEffect(() => {
     const today = new Date();
     const getShiftFB = async () => {
-      const currShift = await getShift(houseID, shiftID);
-      if (currShift != null) {
-        setShift(currShift);
-        loadMemberRows(currShift.usersAssigned); //Use currShift, instead of shift because of useState delay.
+      if (shiftID != "") {
+        // greg: added this check for an empty shiftID cuz the default state in the MemberShiftView is an empty string
+        const currShift = await getShift(houseID, shiftID);
+        if (currShift != null) {
+          setShift(currShift);
+          await loadMemberRows(currShift.usersAssigned); //Use currShift, instead of shift because of useState delay.
+        }
       }
     };
     getShiftFB();
-  }, []);
+  }, [shiftID]); // greg: added this so that the modal grabbed the correct shift info based on the changing currentShiftCard value in MemberShiftView component
 
   /**
    * @remarks
@@ -121,6 +129,12 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   };
 
   /**
+   * @TODO
+   * Modal loads weirdly: loads with previous states from previously selected shift,
+   * then does logic for currently selected shift, and then loads the correct stuff.
+   * What we should be doing is the logic first, and then filling out the components
+   * with the correct information.
+   *
    * @remarks
    * Takes a User Object and creates a JSX table row to represent it
    * Checks with verifiedShifts to see if Shift was completed by a User
@@ -139,13 +153,17 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     let username = user.firstName + " " + user.lastName;
     let authname = authUser.firstName + " " + authUser.lastName;
     let name = username != authname ? username : "me"; //If member row is the current user, display name as 'me'
+    console.log("Member: ", username, " | VerifiedShift: ", verifiedShift);
     if (verifiedShift != undefined) {
       status = "Complete";
       time = verifiedShift.timeStamp;
       if (!isMemVerified && verifiedShift.shifterID == authUser.userID) {
         setMemVerified(true); //IF current member is already verified, this useState will disable the verification button
       }
+    } else {
+      setMemVerified(false); // greg: had to add this here because when modal loaded for a shift that was verified, isVerified never got updated back to false for future modals
     }
+    console.log("Is mem verified?: ", isMemVerified);
     return (
       <TableRow key={user.userID} className={styles.tableRow}>
         <TableCell component="th" scope="row">
@@ -162,13 +180,13 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    * handle open and close handle if the modal is on the screen.  When integrating this component to table, need to move these
    * functions and the useState to the table.
    **/
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   /**
    * @remarks
@@ -190,9 +208,6 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
 
   return shift ? (
     <div>
-      <Button variant="outlined" onClick={handleOpen}>
-        <Typography>View Shift</Typography>
-      </Button>
       <Dialog
         fullWidth
         maxWidth="md"

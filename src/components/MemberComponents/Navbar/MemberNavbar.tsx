@@ -14,7 +14,7 @@ const MemberNavbar: React.FunctionComponent = () => {
       <Icon type="navProfile" className={styles.icon} />
       <div>
         <Typography variant="subtitle1" color={"#FFFFFF"}>
-          {authUser.first_name} {authUser.last_name}
+          {authUser.firstName} {authUser.lastName}
         </Typography>
         <Typography variant="subtitle1" color={"#FFFFFF"}>
           {authUser.role}
