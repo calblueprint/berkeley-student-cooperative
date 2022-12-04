@@ -203,6 +203,7 @@ export const UnassignedShiftList = () => {
     (BACKEND -> FRONTEND) */
   const loadScheduleComponents = async () => {
     let shifts = await getAllShift(authUser.houseID);
+    // let shifts = shifts[]
     console.log(shifts);
 
     shifts

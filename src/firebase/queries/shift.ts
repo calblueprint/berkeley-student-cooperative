@@ -56,11 +56,16 @@ export const updateShift = async (
 
 export const getShift = async (houseID: string, shiftID: string) => {
   // const docRef = doc(firestore, "houses", "EUC", "shifts", "dhWWmgzM1MISFWyblp8J");
-  const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return await parseShift(docSnap);
+  try {
+    const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return await parseShift(docSnap);
+    }
+  } catch (error) {
+    console.log(error)
   }
+ 
   // probably replace with modal
 };
 
