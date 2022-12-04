@@ -44,16 +44,7 @@ export const getNumVerified = async (houseID: string, shiftID: string): Promise<
     return snap.size;
 }
 
-// export const getShiftsByUser = async (userID: string, houseID: string) => {
-// 		const user = await getUser(userID);
-// 		// const shifts: (Shift | undefined)[] = [];
-// 		user?.shiftsAssigned.map(async (elem) => {
-// 			const shift = await getShift(houseID, elem)
-// 			shifts.push(shift)
-// 		})
-// 		console.log("USER SHIFTS", shifts)
-// 		return shifts
-// }
+
 
 export const deleteShift = async (houseID: string, shiftID: string) => {
     const currShift = await getShift(houseID, shiftID);

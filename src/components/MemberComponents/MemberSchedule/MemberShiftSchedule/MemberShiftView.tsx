@@ -1,15 +1,12 @@
 import React, {useState, useEffect} from "react";
 import { User, Shift } from "../../../../types/schema";
-import { Typography, Card, TextField, InputAdornment } from '@mui/material';
-import styles from "./MemberShiftSchedule.module.css";
-import { MemberScheduleHeader } from "../MemberScheduleHeader/MemberScheduleHeader";
-import {DataGrid, GridColDef, GridColumns, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid';
+import { TextField, InputAdornment } from '@mui/material';
+import styles from "./MemberShiftView.module.css";
+import {DataGrid, GridColDef } from '@mui/x-data-grid';
 import { getShift } from "../../../../firebase/queries/shift";
 import useWindowDimensions from "../../../../helpers/helpers";
 import { parseTime } from "../../../../firebase/helpers";
 import Icon  from "../../../../assets/Icon"
-import { borderRadius, fontSize, fontWeight } from "@mui/system";
-
 
 type MemberShiftScheduleProps = {
 	user: User;

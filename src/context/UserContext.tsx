@@ -3,8 +3,6 @@ import { createContext, useContext } from "react";
 import { useFirebaseAuth } from "../firebase/queries/auth";
 import { defaultUser } from "../firebase/queries/user";
 import { defaultHouse } from "../firebase/queries/house";
-import { browserLocalPersistence, browserSessionPersistence, getAuth, onAuthStateChanged, setPersistence } from "firebase/auth";
-
 
 
 export const authUserContext = createContext({
