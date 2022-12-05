@@ -47,14 +47,41 @@ export const getAllShiftsInCategory = async (houseID: string, category: string) 
 }
 
 export const getAllShifts = async (houseID: string) => {
-    const querySnapshot = await getDocs(collection(firestore, "houses", houseID, "shifts"));
-    let returnObj: Shift[] = [];
-    querySnapshot.forEach(async (docSnap) => {
-        let currShift = await parseShift(docSnap);
-        returnObj.push(currShift);
-    })
-    return returnObj;
+    try{
+        const querySnapshot = await getDocs(collection(firestore, "houses", houseID, "shifts"));
+        let returnObj: Shift[] = [];
+        querySnapshot.forEach(async (docSnap) => {
+            let currShift = await parseShift(docSnap);
+            returnObj.push(currShift);
+        })
+        return returnObj;
+    } catch(e) {
+        console.log(e);
+    }
+   
 }
+
+/************************************************************* */
+/** This function gets all shifts from a house with houseID */
+export const getAllShift = async (houseID: string) => {
+    try{
+         // const docRef = doc(firestore, "houses", "EUC", "shifts", "dhWWmgzM1MISFWyblp8J");
+        const colRef = collection(firestore, "houses", houseID, "shifts");
+    
+        const promises: Promise<Shift>[] = [];
+        const colSnap = await getDocs(colRef);
+        colSnap.forEach((shift) => {
+        promises.push(parseShift(shift));
+        })
+        const shfits = await Promise.all(promises);
+        return shfits;
+        // probably replace with modal
+    } catch(e) {
+        console.log(e);
+    }
+
+  };
+  /************************************************************* */
 
 /**
  * Updates a shift object with newData.
@@ -79,12 +106,17 @@ export const updateShift = async (houseID: string, shiftID: string, newData: obj
 */
 export const getShift = async (houseID: string, shiftID: string) => {
     // const docRef = doc(firestore, "houses", "EUC", "shifts", "dhWWmgzM1MISFWyblp8J");
-    const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-        return await parseShift(docSnap);
-    } 
-    // probably replace with modal
+    try {
+        const docRef = doc(firestore, "houses", houseID, "shifts", shiftID);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return await parseShift(docSnap);
+        } 
+        // probably replace with modal
+    } catch (error) {
+        console.log(error);
+    }
+    
 }
 
 export const getNumVerified = async (houseID: string, shiftID: string): Promise<number> => {
