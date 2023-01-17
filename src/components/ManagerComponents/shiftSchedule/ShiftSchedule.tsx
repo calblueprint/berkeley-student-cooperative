@@ -6,8 +6,8 @@
   2. Change how House is retrieved using new Danashi User Context. (Functional for now, plugging House context is a little buggy)
   3. styling
 */
-import { getUser } from "../../../firebase/queries/user";
-import React, { useEffect, useState } from "react";
+import { getUser } from '../../../firebase/queries/user'
+import React, { useEffect, useState } from 'react'
 import {
   Table,
   TableBody,
@@ -15,19 +15,19 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from "@mui/material";
-import { getHouse } from "../../../firebase/queries/houseQueries";
-import { Day } from "../../../types/schema";
-import { getNumVerified, getShift } from "../../../firebase/queries/shift";
-import { Shift } from "../../../types/schema";
-import { type } from "os";
-import Select from "react-select";
-import { firestoreAutoId, objectToMap } from "../../../firebase/helpers";
-import Paper from "@mui/material/Paper";
-import { useUserContext } from "../../../context/UserContext";
-import ShiftCard from "../Shiftcard/Shiftcard";
-import AssignShiftcard from "../AssignShiftcard/AssignShiftcard";
-import styles from "./ShiftSchedule.module.css";
+} from '@mui/material'
+import { getHouse } from '../../../firebase/queries/houseQueries'
+import { Day } from '../../../types/schema'
+import { getNumVerified, getShift } from '../../../firebase/queries/shift'
+import { Shift } from '../../../types/schema'
+import { type } from 'os'
+import Select from 'react-select'
+import { firestoreAutoId, objectToMap } from '../../../firebase/helpers'
+import Paper from '@mui/material/Paper'
+import { useUserContext } from '../../../context/UserContext'
+import ShiftCard from '../Shiftcard/Shiftcard'
+import AssignShiftcard from '../AssignShiftcard/AssignShiftcard'
+import styles from './ShiftSchedule.module.css'
 
 /**
  * @remarks
@@ -42,11 +42,11 @@ import styles from "./ShiftSchedule.module.css";
  * 6. In schedule, store table entries in based on which day they're from.
  */
 export const ShiftSchedule = () => {
-  const { authUser, house } = useUserContext();
+  const { authUser, house } = useUserContext()
 
   /* MOST IMPORTANT:  Holds the row components that are loaded onto the table
   Each k: Days, value: List of corresponding components matching a given shift*/
-  const [schedule, setSchedule] = useState(new Map<string, JSX.Element[]>());
+  const [schedule, setSchedule] = useState(new Map<string, JSX.Element[]>())
 
   /*
   This block of code handles the settings of the modal. 
@@ -54,7 +54,7 @@ export const ShiftSchedule = () => {
   Whenever card is opened, shiftID prop is changed for card so correct info pops up
   Every time open is pressed, new information is passed to make a card.
   */
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   /**
    * @remarks
    * Since we are using 1 modal that is dynamic, handleOpen changes the settings
@@ -62,29 +62,29 @@ export const ShiftSchedule = () => {
    * @param shiftID - shiftID of the row being clicked.
    */
   const handleOpen = (shiftID: string) => {
-    setOpen(true);
-    setCurrentShiftCardID(shiftID);
-  };
+    setOpen(true)
+    setCurrentShiftCardID(shiftID)
+  }
 
   const handleClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   // For React Select, all options in dropdown (FRONTEND)
   const dayOptions = [
-    { value: "Monday", label: "Monday" },
-    { value: "Tuesday", label: "Tuesday" },
-    { value: "Wednesday", label: "Wednesday" },
-    { value: "Thursday", label: "Thursday" },
-    { value: "Friday", label: "Friday" },
-    { value: "Saturday", label: "Saturday" },
-    { value: "Sunday", label: "Sunday" },
-  ];
+    { value: 'Monday', label: 'Monday' },
+    { value: 'Tuesday', label: 'Tuesday' },
+    { value: 'Wednesday', label: 'Wednesday' },
+    { value: 'Thursday', label: 'Thursday' },
+    { value: 'Friday', label: 'Friday' },
+    { value: 'Saturday', label: 'Saturday' },
+    { value: 'Sunday', label: 'Sunday' },
+  ]
 
   // For React Select, to dispay Day on dropdown (FRONTEND)
   const [selectedDay, setSelectedDay] = useState<ValueType<OptionType>>(
     dayOptions[0]
-  );
+  )
 
   /**
    * @remarks
@@ -93,21 +93,21 @@ export const ShiftSchedule = () => {
    * @param option - From dayOptions
    */
   const handleDayChange = (option: ValueType<any>) => {
-    setSelectedDay(option);
-    setDailyRows(schedule.get(option.value));
-  };
+    setSelectedDay(option)
+    setDailyRows(schedule.get(option.value))
+  }
 
   //Data used to generate a Shift Row Component in React (FRONTEND)
   type rowData = {
-    name: string;
-    shiftID: string;
+    name: string
+    shiftID: string
     // Converted Time Window to a String
-    timeWindow: string;
-    status: string;
-  };
+    timeWindow: string
+    status: string
+  }
 
   //The Rows that populate the table.  Will change depending on what dropdown day we pick (FRONTEND)
-  const [dailyRows, setDailyRows] = useState<JSX.Element[]>();
+  const [dailyRows, setDailyRows] = useState<JSX.Element[]>()
 
   /**
    * @remarks
@@ -115,28 +115,28 @@ export const ShiftSchedule = () => {
    * Loads the FB data and creates Row Components to display on MUI Table
    */
   const loadScheduleComponents = async () => {
-    let houseFB = await getHouse(authUser.houseID);
-    let tempSchedule = new Map<string, JSX.Element[]>();
+    let houseFB = await getHouse(authUser.houseID)
+    let tempSchedule = new Map<string, JSX.Element[]>()
     //Promise All is important here because we need all Data to be loaded in before setting schedule again.
     //houseFB.Schedule contains the FB schedule.
     Promise.all(
       Object.entries(houseFB.schedule).map(async (entry) => {
         let day = entry[0],
-          shiftIDs = entry[1];
+          shiftIDs = entry[1]
         //getDailyData converts all Firebase Shifts to row Data, only retrieves essential info for a row
-        let dailyData: rowData[] = await getDailyData(day, shiftIDs);
-        let rowComponents: JSX.Element[] = [];
+        let dailyData: rowData[] = await getDailyData(day, shiftIDs)
+        let rowComponents: JSX.Element[] = []
         //Turn all row Data into Row Components
-        convertDataToComponent(dailyData, rowComponents);
-        tempSchedule.set(day, rowComponents);
+        convertDataToComponent(dailyData, rowComponents)
+        tempSchedule.set(day, rowComponents)
       })
     ).then(() => {
       //By Default, day is monday.
-      setDailyRows(tempSchedule.get(Day.Mon));
+      setDailyRows(tempSchedule.get(Day.Mon))
       //Use Dummy Schedule to update the schedule useState
-      setSchedule(tempSchedule);
-    });
-  };
+      setSchedule(tempSchedule)
+    })
+  }
 
   /**
    * Takes shift IDs, retrives Shifts from Firebase, then converts them all to rowData
@@ -150,39 +150,39 @@ export const ShiftSchedule = () => {
   ): Promise<rowData[]> => {
     // May be a redundant line.
     if (shiftIDs == undefined) {
-      return new Array<rowData>();
+      return new Array<rowData>()
     }
-    let shiftPromises: Promise<Shift | undefined>[] = [];
-    setCurrentShiftCardID(shiftIDs[0]);
+    let shiftPromises: Promise<Shift | undefined>[] = []
+    setCurrentShiftCardID(shiftIDs[0])
     shiftIDs.map((id) => {
-      shiftPromises.push(getShift(authUser.houseID, id));
-    });
+      shiftPromises.push(getShift(authUser.houseID, id))
+    })
     //MUST use Promise.all to assure that ALL shifts are loaded in before any loading is done.
-    let shiftObjects = await Promise.all(shiftPromises);
-    let numVerifiedPromises: Promise<number | undefined>[] = [];
+    let shiftObjects = await Promise.all(shiftPromises)
+    let numVerifiedPromises: Promise<number | undefined>[] = []
     //Number Verified is retrieved differently since it's a collection.
     shiftObjects.map((shift) => {
       if (shift != undefined) {
         numVerifiedPromises.push(
           getNumVerified(authUser.houseID, shift.shiftID)
-        );
+        )
       }
-    });
-    let numVerifiedList = await Promise.all(numVerifiedPromises);
-    let rowObjects: rowData[] = [];
+    })
+    let numVerifiedList = await Promise.all(numVerifiedPromises)
+    let rowObjects: rowData[] = []
     shiftObjects.map((shift, index) => {
-      let numVerified = numVerifiedList[index];
+      let numVerified = numVerifiedList[index]
       if (shift != undefined && numVerified != undefined) {
         /**
          * Since verified shifts aren't set up in firebase,
          * can put random numbers in numVerified to test that status bar works
          * */
-        let rowObject = createRowData(shift, numVerified);
-        rowObjects.push(rowObject);
+        let rowObject = createRowData(shift, numVerified)
+        rowObjects.push(rowObject)
       }
-    });
-    return rowObjects;
-  };
+    })
+    return rowObjects
+  }
 
   /**
    * @remarks
@@ -191,51 +191,51 @@ export const ShiftSchedule = () => {
    * @param numVerified - Number of verified shifts
    */
   const createRowData = (shiftFB: Shift, numVerified: number): rowData => {
-    var status;
+    var status
     if (numVerified == 0) {
-      status = "Missing";
+      status = 'Missing'
     } else if (shiftFB.numOfPeople > numVerified) {
-      status = "Incomplete";
+      status = 'Incomplete'
     } else {
-      status = "Complete";
+      status = 'Complete'
     }
     //May be helpful in helper file.
     //Converts a time from Firebase object and makes it legible.
     const parseTime = (time: number) => {
-      let meridian = "AM";
+      let meridian = 'AM'
       if (time == 0) {
-        return "12AM";
+        return '12AM'
       }
       if (time > 1130) {
-        meridian = "PM";
+        meridian = 'PM'
       }
       if (time > 1230) {
-        time = time - 1200;
+        time = time - 1200
       }
-      let timeString = String(time);
-      let hours;
+      let timeString = String(time)
+      let hours
       if (timeString.length > 3) {
-        hours = timeString.slice(0, 2);
+        hours = timeString.slice(0, 2)
       } else {
-        hours = timeString.slice(0, 1);
+        hours = timeString.slice(0, 1)
       }
-      let minutes = timeString.slice(-2);
-      if (minutes == "30") {
-        return hours + ":" + minutes + meridian;
+      let minutes = timeString.slice(-2)
+      if (minutes == '30') {
+        return hours + ':' + minutes + meridian
       }
-      return hours + meridian;
-    };
+      return hours + meridian
+    }
 
-    let startTime = parseTime(shiftFB.timeWindow[0]);
-    let endTime = parseTime(shiftFB.timeWindow[1]);
-    let timeWindow = startTime + " - " + endTime;
+    let startTime = parseTime(shiftFB.timeWindow[0])
+    let endTime = parseTime(shiftFB.timeWindow[1])
+    let timeWindow = startTime + ' - ' + endTime
     return {
       name: shiftFB.name,
       shiftID: shiftFB.shiftID,
       timeWindow: timeWindow,
       status: status,
-    };
-  };
+    }
+  }
 
   /**
    * @remarks
@@ -261,18 +261,18 @@ export const ShiftSchedule = () => {
           <TableCell align="right">{data.status}</TableCell>
         </TableRow>
       )
-    );
-  };
+    )
+  }
 
   useEffect(() => {
-    loadScheduleComponents();
-  }, [authUser]);
+    loadScheduleComponents()
+  }, [authUser])
 
   //ID that will be used for current Card modal.
-  const [currentShiftCardID, setCurrentShiftCardID] = useState("");
+  const [currentShiftCardID, setCurrentShiftCardID] = useState('')
 
   if (dailyRows === undefined) {
-    return <>Still loading...</>;
+    return <>Still loading...</>
   } else {
     return (
       <div>
@@ -302,8 +302,8 @@ export const ShiftSchedule = () => {
           handleClose={handleClose}
         />
       </div>
-    );
+    )
   }
-};
+}
 
-export default ShiftSchedule;
+export default ShiftSchedule

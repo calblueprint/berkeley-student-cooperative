@@ -1,6 +1,6 @@
-import Head from "next/head";
-import Layout from "../../../components/Layout/Layout";
-import ParseCSV from "../../ParseCsv/ParseCsv";
+import Head from 'next/head'
+import Layout from '../../../components/Layout/Layout'
+import ParseCSV from '../../ParseCsv/ParseCsv'
 
 export default function SchedulePage() {
   return (
@@ -22,5 +22,5 @@ export default function SchedulePage() {
         </footer>
       </div>
     </Layout>
-  );
+  )
 }
