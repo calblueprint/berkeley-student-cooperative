@@ -1,6 +1,6 @@
-import { useState } from "react";
-import * as React from "react";
-import styles from "./ShiftCard.module.css";
+import { useState } from 'react'
+import * as React from 'react'
+import styles from './ShiftCard.module.css'
 import {
   Button,
   Dialog,
@@ -9,10 +9,10 @@ import {
   Select,
   TextField,
   Typography,
-} from "@mui/material";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { addShift } from "../../../firebase/queries/shift";
-import Icon from "../../../assets/Icon";
+} from '@mui/material'
+import { SelectChangeEvent } from '@mui/material/Select'
+import { addShift } from '../../../firebase/queries/shift'
+import Icon from '../../../assets/Icon'
 
 const ShiftCard = () => {
   /**
@@ -23,50 +23,50 @@ const ShiftCard = () => {
    * (dialog is the pop-up screen that contains the create shift form)
    */
 
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [members, setMembers] = useState<number>(0);
-  const [hours, setHours] = useState<number>(0);
-  const [startHour, setStartHour] = useState<number>(12);
-  const [startMinute, setStartMinute] = useState<number>(0);
-  const [startAM, setStartAM] = useState<string>("AM");
-  const [endHour, setEndHour] = useState<number>(12);
-  const [endMinute, setEndMinute] = useState<number>(0);
-  const [endAM, setEndAM] = useState<string>("AM");
-  const [buffer, setBuffer] = useState<number>(0);
-  const [description, setDescription] = useState<string>("");
-  const [possibleDays, setPossibleDays] = useState<string[]>([]);
-  const [verification, setVerification] = useState<boolean>(false);
+  const [open, setOpen] = useState(false)
+  const [name, setName] = useState<string>('')
+  const [category, setCategory] = useState<string>('')
+  const [members, setMembers] = useState<number>(0)
+  const [hours, setHours] = useState<number>(0)
+  const [startHour, setStartHour] = useState<number>(12)
+  const [startMinute, setStartMinute] = useState<number>(0)
+  const [startAM, setStartAM] = useState<string>('AM')
+  const [endHour, setEndHour] = useState<number>(12)
+  const [endMinute, setEndMinute] = useState<number>(0)
+  const [endAM, setEndAM] = useState<string>('AM')
+  const [buffer, setBuffer] = useState<number>(0)
+  const [description, setDescription] = useState<string>('')
+  const [possibleDays, setPossibleDays] = useState<string[]>([])
+  const [verification, setVerification] = useState<boolean>(false)
 
   // TODO: import shift categories
   let shiftCategories = [
-    "cook dinner",
-    "clean bathroom",
-    "wash dishes",
-    "clean basement",
-  ];
-  let hoursList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    'cook dinner',
+    'clean bathroom',
+    'wash dishes',
+    'clean basement',
+  ]
+  let hoursList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   let daysList = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-  let verificationOptions = ["Verification required", "No verification"];
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ]
+  let verificationOptions = ['Verification required', 'No verification']
 
   const handleOpen = () => {
     // sets the variable "open" to true to open the dialog
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleClose = () => {
     // sets the variable "open" to false to close the dialog
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const handleSubmit = async () => {
     /**
@@ -85,7 +85,7 @@ const ShiftCard = () => {
     ) {
       // TODO: retrieve house code from user context instead of "EUC"
       await addShift(
-        "EUC",
+        'EUC',
         name,
         description,
         members,
@@ -94,96 +94,96 @@ const ShiftCard = () => {
           parseTime(startHour, startMinute, startAM),
           parseTime(endHour, endMinute, endAM),
         ],
-        "",
+        '',
         hours,
         verification,
         buffer,
         category
-      );
-      clearFields();
-      handleClose();
+      )
+      clearFields()
+      handleClose()
     } else {
-      console.log("Must fill out all the fields to create a shift.");
+      console.log('Must fill out all the fields to create a shift.')
     }
-  };
+  }
 
   const clearFields = () => {
     // resets all useState variables to reset form fields
-    setName("");
-    setCategory("");
-    setMembers(0);
-    setHours(0);
-    setStartHour(12);
-    setStartMinute(0);
-    setStartAM("AM");
-    setEndHour(12);
-    setEndMinute(0);
-    setEndAM("AM");
-    setBuffer(0);
-    setDescription("");
-    setPossibleDays([]);
-    setVerification(false);
-  };
+    setName('')
+    setCategory('')
+    setMembers(0)
+    setHours(0)
+    setStartHour(12)
+    setStartMinute(0)
+    setStartAM('AM')
+    setEndHour(12)
+    setEndMinute(0)
+    setEndAM('AM')
+    setBuffer(0)
+    setDescription('')
+    setPossibleDays([])
+    setVerification(false)
+  }
 
   const closeDialog = () => {
     // clears fields and closes dialog when the 'x' is clicked (top right corner of dialog)
-    clearFields();
-    handleClose();
-  };
+    clearFields()
+    handleClose()
+  }
 
   const handlePossibleDays = (event: SelectChangeEvent<string>) => {
     // onclick handler for multi-select containing "possible days" input
-    let input = event.target.value;
-    setPossibleDays(typeof input === "string" ? input.split(",") : input);
-  };
+    let input = event.target.value
+    setPossibleDays(typeof input === 'string' ? input.split(',') : input)
+  }
 
   const handleMembers = (event: React.ChangeEvent<HTMLInputElement>) => {
     // onclick handler for the number text field input containing number of members
-    let input = event.target.value;
-    let parsed = parseInt(input);
+    let input = event.target.value
+    let parsed = parseInt(input)
     if (input.length == 0 || !isNaN(parsed)) {
-      setMembers(parsed);
+      setMembers(parsed)
     }
-  };
+  }
 
   const handleHours = (event: React.ChangeEvent<HTMLInputElement>) => {
     // onclick handler for the number text field input containing number of hours
-    let input = event.target.value;
-    let parsed = parseInt(input);
+    let input = event.target.value
+    let parsed = parseInt(input)
     if (input.length == 0 || !isNaN(parsed)) {
-      setHours(parsed);
+      setHours(parsed)
     }
-  };
+  }
 
   const handleBuffer = (event: React.ChangeEvent<HTMLInputElement>) => {
     // onclick handler for the number text field input containing number of buffer hours
-    let input = event.target.value;
-    let parsed = parseInt(input);
+    let input = event.target.value
+    let parsed = parseInt(input)
     if (input.length == 0 || !isNaN(parsed)) {
-      setBuffer(parsed);
+      setBuffer(parsed)
     }
-  };
+  }
 
   const handleVerification = (event: SelectChangeEvent<string>) => {
     // onclick handler for select containing "verification" input
-    let input = event.target.value;
-    if (input == "Verification required") {
-      setVerification(true);
+    let input = event.target.value
+    if (input == 'Verification required') {
+      setVerification(true)
     }
-    if (input == "No verification") {
-      setVerification(false);
+    if (input == 'No verification') {
+      setVerification(false)
     }
-  };
+  }
 
   const isValidNumber = (input: number) => {
     // checks to see that a number is a valid input
-    return input > 0 && !isNaN(input);
-  };
+    return input > 0 && !isNaN(input)
+  }
 
   const parseTime = (hour: number, minute: number, AM: string) => {
     // parses time to match our 0-2400 scale for time
-    return AM == "AM" ? hour * 100 + minute : (hour + 12) * 100 + minute;
-  };
+    return AM == 'AM' ? hour * 100 + minute : (hour + 12) * 100 + minute
+  }
 
   return (
     <div>
@@ -205,7 +205,7 @@ const ShiftCard = () => {
                   Create Shift
                 </Typography>
                 <Button onClick={closeDialog} className={styles.close}>
-                  <Icon type={"close"} />
+                  <Icon type={'close'} />
                 </Button>
               </div>
               <hr />
@@ -221,7 +221,7 @@ const ShiftCard = () => {
                 value={name}
                 placeholder="Ex: Basement clean"
                 onChange={(event) => {
-                  setName(event.target.value);
+                  setName(event.target.value)
                 }}
               />
             </div>
@@ -232,7 +232,7 @@ const ShiftCard = () => {
                 placeholder="Ex: basement"
                 value={category}
                 onChange={(event) => {
-                  setCategory(event.target.value);
+                  setCategory(event.target.value)
                 }}
               >
                 {shiftCategories.map((category) => (
@@ -248,7 +248,7 @@ const ShiftCard = () => {
                 <TextField
                   fullWidth
                   placeholder="0"
-                  value={members ? members : ""}
+                  value={members ? members : ''}
                   onChange={handleMembers}
                 />
               </div>
@@ -257,7 +257,7 @@ const ShiftCard = () => {
                 <TextField
                   fullWidth
                   placeholder="0"
-                  value={hours ? hours : ""}
+                  value={hours ? hours : ''}
                   onChange={handleHours}
                 />
               </div>
@@ -284,7 +284,7 @@ const ShiftCard = () => {
                 <Select
                   value={startHour}
                   onChange={(event) => {
-                    setStartHour(event.target.value as number);
+                    setStartHour(event.target.value as number)
                   }}
                 >
                   {hoursList.map((hour) => (
@@ -296,7 +296,7 @@ const ShiftCard = () => {
                 <Select
                   value={startMinute}
                   onChange={(event) => {
-                    setStartMinute(event.target.value as number);
+                    setStartMinute(event.target.value as number)
                   }}
                 >
                   <MenuItem key={0} value={0}>
@@ -309,13 +309,13 @@ const ShiftCard = () => {
                 <Select
                   value={startAM}
                   onChange={(event) => {
-                    setStartAM(event.target.value);
+                    setStartAM(event.target.value)
                   }}
                 >
-                  <MenuItem key={"AM"} value={"AM"}>
+                  <MenuItem key={'AM'} value={'AM'}>
                     AM
                   </MenuItem>
-                  <MenuItem key={"PM"} value={"PM"}>
+                  <MenuItem key={'PM'} value={'PM'}>
                     PM
                   </MenuItem>
                 </Select>
@@ -325,7 +325,7 @@ const ShiftCard = () => {
                 <Select
                   value={endHour}
                   onChange={(event) => {
-                    setEndHour(event.target.value as number);
+                    setEndHour(event.target.value as number)
                   }}
                 >
                   {hoursList.map((hour) => (
@@ -337,7 +337,7 @@ const ShiftCard = () => {
                 <Select
                   value={endMinute}
                   onChange={(event) => {
-                    setEndMinute(event.target.value as number);
+                    setEndMinute(event.target.value as number)
                   }}
                 >
                   <MenuItem key={0} value={0}>
@@ -350,13 +350,13 @@ const ShiftCard = () => {
                 <Select
                   value={endAM}
                   onChange={(event) => {
-                    setEndAM(event.target.value);
+                    setEndAM(event.target.value)
                   }}
                 >
-                  <MenuItem key={"AM"} value={"AM"}>
+                  <MenuItem key={'AM'} value={'AM'}>
                     AM
                   </MenuItem>
-                  <MenuItem key={"PM"} value={"PM"}>
+                  <MenuItem key={'PM'} value={'PM'}>
                     PM
                   </MenuItem>
                 </Select>
@@ -366,7 +366,7 @@ const ShiftCard = () => {
                 <TextField
                   fullWidth
                   placeholder="0"
-                  value={buffer ? buffer : ""}
+                  value={buffer ? buffer : ''}
                   onChange={handleBuffer}
                 />
               </div>
@@ -377,7 +377,7 @@ const ShiftCard = () => {
                 fullWidth
                 placeholder="No verification"
                 value={
-                  verification ? "Verification required" : "No verification"
+                  verification ? 'Verification required' : 'No verification'
                 }
                 onChange={handleVerification}
               >
@@ -396,7 +396,7 @@ const ShiftCard = () => {
                 multiline
                 value={description}
                 onChange={(event) => {
-                  setDescription(event.target.value);
+                  setDescription(event.target.value)
                 }}
               />
             </div>
@@ -412,7 +412,7 @@ const ShiftCard = () => {
         </DialogContent>
       </Dialog>
     </div>
-  );
-};
+  )
+}
 
-export default ShiftCard;
+export default ShiftCard

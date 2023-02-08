@@ -96,7 +96,7 @@
   display: block;
   margin-bottom: 0.5rem;
 }
-.formGroup input[type="text"] {
+.formGroup input[type='text'] {
   width: 100%;
   padding: 10px;
 }
@@ -118,7 +118,7 @@
 }
 @media (max-width: 600px) {
   .grid {
-   width: 100%;
-   flex-direction: column;
+    width: 100%;
+    flex-direction: column;
   }
 }
