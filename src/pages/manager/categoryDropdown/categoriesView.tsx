@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 import {
   addCategory,
   getHouse,
   updateHouse,
-} from "../../../firebase/queries/house";
-import { House } from "../../../types/schema";
-import CategoriesDropdown from "./categoriesDropdown";
-import Button from "@mui/material/Button";
+} from '../../../firebase/queries/house'
+import { House } from '../../../types/schema'
+import CategoriesDropdown from './categoriesDropdown'
+import Button from '@mui/material/Button'
 import {
   Dialog,
   DialogActions,
@@ -17,13 +17,13 @@ import {
   TableBody,
   TableContainer,
   TextField,
-} from "@mui/material";
-import { mapToObject } from "../../../firebase/helpers";
-import styles from "./CategoriesView.module.css";
+} from '@mui/material'
+import { mapToObject } from '../../../firebase/helpers'
+import styles from './CategoriesView.module.css'
 
 type CategoriesViewProps = {
-  houseID: string;
-};
+  houseID: string
+}
 
 const CategoriesView: React.FC<CategoriesViewProps> = ({
   houseID,
@@ -37,52 +37,52 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
    */
 
   // Retrieved house object
-  const [house, setHouse] = useState<House>();
+  const [house, setHouse] = useState<House>()
   // Stores whether the modal to create a new category is opened
-  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [isModalOpened, setIsModalOpened] = useState(false)
   // Stores the new category name
-  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState('')
 
   // Retrieves the house object given the houseID
   const retrieveHouse = async () => {
-    let h = await getHouse(houseID);
-    setHouse(h);
-  };
+    let h = await getHouse(houseID)
+    setHouse(h)
+  }
 
   useEffect(() => {
-    retrieveHouse();
-  }, []);
+    retrieveHouse()
+  }, [])
 
   // Opens modal
   const openModal = () => {
-    setIsModalOpened(true);
-  };
+    setIsModalOpened(true)
+  }
 
   // Updates the newCategoryName state as the user types in
   const handleCategoryNameChange = (event: any) => {
-    setNewCategoryName(event.target.value);
-  };
+    setNewCategoryName(event.target.value)
+  }
 
   // Closes the modal without pushing anything to firebase
   const closeModal = () => {
-    setIsModalOpened(false);
-    setNewCategoryName("");
-  };
+    setIsModalOpened(false)
+    setNewCategoryName('')
+  }
 
   // Uploads the new category to Firebase if the category doesn't exist yet
   const uploadCategory = async () => {
     if (newCategoryName.length == 0) {
-      console.log("Invalid Category Name length");
+      console.log('Invalid Category Name length')
     }
     if (house !== undefined && newCategoryName.length > 0) {
-      let successful = await addCategory(houseID, newCategoryName);
+      let successful = await addCategory(houseID, newCategoryName)
       if (successful) {
-        house.categories.set(newCategoryName, new Map<string, string>());
-        setHouse(house);
+        house.categories.set(newCategoryName, new Map<string, string>())
+        setHouse(house)
       }
     }
-    closeModal();
-  };
+    closeModal()
+  }
 
   return (
     <div className={styles.categoryViewContainer}>
@@ -127,7 +127,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         </Dialog>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CategoriesView;
+export default CategoriesView

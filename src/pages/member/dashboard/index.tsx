@@ -1,12 +1,12 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import styles from "./Dashboard.module.css";
-import Layout from "../../../components/Layout/Layout";
-import AvailabilityInputModal from "../../../components/MemberComponents/AvailabilityEntry/AvailabilityInputModal";
-import { useUserContext } from "../../../context/UserContext";
-import ParseCSV from "../../ParseCsv/ParseCsv";
+import type { NextPage } from 'next'
+import Head from 'next/head'
+import styles from './Dashboard.module.css'
+import Layout from '../../../components/Layout/Layout'
+import AvailabilityInputModal from '../../../components/MemberComponents/AvailabilityEntry/AvailabilityInputModal'
+import { useUserContext } from '../../../context/UserContext'
+import ParseCSV from '../../ParseCsv/ParseCsv'
 const Home: NextPage = () => {
-  const { authUser } = useUserContext();
+  const { authUser } = useUserContext()
 
   return (
     <Layout>
@@ -27,7 +27,7 @@ const Home: NextPage = () => {
         </footer>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

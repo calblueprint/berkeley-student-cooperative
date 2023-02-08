@@ -1,17 +1,17 @@
-import { Button, Dialog, DialogContent, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
-import Icon from "../../../assets/Icon";
-import { getShift } from "../../../firebase/queries/shift";
-import { Shift } from "../../../types/schema";
-import styles from "./AssignShiftcard.module.css";
+import { Button, Dialog, DialogContent, Typography } from '@mui/material'
+import { useState, useEffect } from 'react'
+import Icon from '../../../assets/Icon'
+import { getShift } from '../../../firebase/queries/shift'
+import { Shift } from '../../../types/schema'
+import styles from './AssignShiftcard.module.css'
 
 type AssignShiftcardProps = {
-  shiftID: string;
-  houseID: string;
-  open: boolean;
-  handleClose: any;
-  handleOpen: any;
-};
+  shiftID: string
+  houseID: string
+  open: boolean
+  handleClose: any
+  handleOpen: any
+}
 
 const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
   shiftID,
@@ -20,7 +20,7 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
   handleClose,
   handleOpen,
 }: AssignShiftcardProps) => {
-  const [shift, setShift] = useState<Shift | null>();
+  const [shift, setShift] = useState<Shift | null>()
 
   useEffect(() => {
     /**
@@ -33,11 +33,11 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
      */
 
     const getShiftFB = async () => {
-      const currShift = await getShift(houseID, shiftID);
-      setShift(currShift);
-    };
-    getShiftFB();
-  }, [houseID, shiftID]);
+      const currShift = await getShift(houseID, shiftID)
+      setShift(currShift)
+    }
+    getShiftFB()
+  }, [houseID, shiftID])
 
   /**
    * Returns the hour digit(s) of the time window.
@@ -51,11 +51,11 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
    */
   const parseHour = (timeWindow: number) => {
     if (timeWindow == 1200 || timeWindow == 0) {
-      return 12;
+      return 12
     } else if (timeWindow >= 1000) {
-      return Math.floor(timeWindow / 100) % 12;
-    } else return Math.floor(timeWindow / 10) % 12;
-  };
+      return Math.floor(timeWindow / 100) % 12
+    } else return Math.floor(timeWindow / 10) % 12
+  }
 
   /**
    * Returns the minute digit(s) of the time window.
@@ -69,10 +69,10 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
    */
   const parseMinute = (timeWindow: number) => {
     if (timeWindow % 100 == 0) {
-      return "00";
+      return '00'
     }
-    return timeWindow % 100;
-  };
+    return timeWindow % 100
+  }
 
   /**
    * Returns string displaying whether the time window takes place in the AM or PM.
@@ -85,8 +85,8 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
    *
    */
   const parseAM = (timeWindow: number) => {
-    return timeWindow >= 1200 ? "PM" : "AM";
-  };
+    return timeWindow >= 1200 ? 'PM' : 'AM'
+  }
 
   return shift ? (
     <div>
@@ -105,24 +105,24 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
                 {shift.name.slice(1)}
               </Typography>
               <Button onClick={handleClose} className={styles.close}>
-                <Icon type={"close"} />
+                <Icon type={'close'} />
               </Button>
             </div>
             <div className={styles.assignShiftInfo}>
               <Typography className={styles.infoForShift} variant="body1">
-                +{shift.hours} {shift.hours < 2 ? "hour" : "hours"}
+                +{shift.hours} {shift.hours < 2 ? 'hour' : 'hours'}
               </Typography>
               <Typography className={styles.infoForShift} variant="body1">
-                {shift.possibleDays.join(", ")}
+                {shift.possibleDays.join(', ')}
               </Typography>
               <Typography className={styles.infoForShift} variant="body1">
                 {parseHour(shift.timeWindow[0])}
-                {":"}
+                {':'}
                 {parseMinute(shift.timeWindow[0])}
                 {parseAM(shift.timeWindow[0])}
-                {" - "}
+                {' - '}
                 {parseHour(shift.timeWindow[1])}
-                {":"}
+                {':'}
                 {parseMinute(shift.timeWindow[1])}
                 {parseAM(shift.timeWindow[1])}
               </Typography>
@@ -130,8 +130,8 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
                 {shift.verificationBuffer} hour buffer
               </Typography>
               <Typography className={styles.infoForShift} variant="body1">
-                {shift.numOfPeople}{" "}
-                {shift.numOfPeople < 2 ? "member" : "members"}
+                {shift.numOfPeople}{' '}
+                {shift.numOfPeople < 2 ? 'member' : 'members'}
               </Typography>
             </div>
           </div>
@@ -140,7 +140,7 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
     </div>
   ) : (
     <div />
-  );
-};
+  )
+}
 
-export default AssignShiftcard;
+export default AssignShiftcard

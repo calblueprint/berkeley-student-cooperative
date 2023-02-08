@@ -11,28 +11,28 @@ import {
   TableRow,
   TextField,
   Typography,
-} from "@mui/material";
-import { useState, useEffect } from "react";
-import Icon from "../../../assets/Icon";
-import { useUserContext } from "../../../context/UserContext";
-import { parseTime } from "../../../firebase/helpers";
-import { getHouse } from "../../../firebase/queries/house";
+} from '@mui/material'
+import { useState, useEffect } from 'react'
+import Icon from '../../../assets/Icon'
+import { useUserContext } from '../../../context/UserContext'
+import { parseTime } from '../../../firebase/helpers'
+import { getHouse } from '../../../firebase/queries/house'
 import {
   getShift,
   getVerifiedShifts,
   verifyShift,
-} from "../../../firebase/queries/shift";
-import { getUser } from "../../../firebase/queries/user";
-import { Shift, User, VerifiedShift } from "../../../types/schema";
-import styles from "./ViewShiftcard.module.css";
+} from '../../../firebase/queries/shift'
+import { getUser } from '../../../firebase/queries/user'
+import { Shift, User, VerifiedShift } from '../../../types/schema'
+import styles from './ViewShiftcard.module.css'
 
 type ViewShiftcardProps = {
-  shiftID: string;
-  houseID: string;
-  open: boolean;
-  handleClose: any;
-  handleOpen: any;
-};
+  shiftID: string
+  houseID: string
+  open: boolean
+  handleClose: any
+  handleOpen: any
+}
 
 /**
  * IMPORTANT:  When this component is integrated to table, must move open, setOpen, handleOpen, and handleClose to the table rather than the card itself.
@@ -60,12 +60,12 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   handleClose,
   handleOpen,
 }: ViewShiftcardProps) => {
-  const { authUser, house } = useUserContext();
-  const [shift, setShift] = useState<Shift | null>();
-  const [memberRows, setMemberRows] = useState<JSX.Element[]>();
-  const [verifierPin, setVerifierPin] = useState("");
-  const [userPinMap, setUserPinMap] = useState(new Map<string, string>());
-  const [isMemVerified, setMemVerified] = useState(false);
+  const { authUser, house } = useUserContext()
+  const [shift, setShift] = useState<Shift | null>()
+  const [memberRows, setMemberRows] = useState<JSX.Element[]>()
+  const [verifierPin, setVerifierPin] = useState('')
+  const [userPinMap, setUserPinMap] = useState(new Map<string, string>())
+  const [isMemVerified, setMemVerified] = useState(false)
 
   /**
    * @remarks
@@ -76,19 +76,19 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    * Verifying shift runs a check to assure that the verification is possible, if so, object is added to that collection.
    **/
   useEffect(() => {
-    const today = new Date();
+    const today = new Date()
     const getShiftFB = async () => {
-      if (shiftID != "") {
+      if (shiftID != '') {
         // greg: added this check for an empty shiftID cuz the default state in the MemberShiftView is an empty string
-        const currShift = await getShift(houseID, shiftID);
+        const currShift = await getShift(houseID, shiftID)
         if (currShift != null) {
-          setShift(currShift);
-          await loadMemberRows(currShift.usersAssigned); //Use currShift, instead of shift because of useState delay.
+          setShift(currShift)
+          await loadMemberRows(currShift.usersAssigned) //Use currShift, instead of shift because of useState delay.
         }
       }
-    };
-    getShiftFB();
-  }, [shiftID]); // greg: added this so that the modal grabbed the correct shift info based on the changing currentShiftCard value in MemberShiftView component
+    }
+    getShiftFB()
+  }, [shiftID]) // greg: added this so that the modal grabbed the correct shift info based on the changing currentShiftCard value in MemberShiftView component
 
   /**
    * @remarks
@@ -98,20 +98,20 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    * @param usersAssigned - IDs of members assigned to this Shift
    */
   const loadMemberRows = async (usersAssigned: string[]) => {
-    console.log({ authUser: authUser });
-    let userObjects = await getAssignedUsers(usersAssigned);
-    let tempMemRows = new Array<JSX.Element>();
-    let verShifts = await getVerifiedShifts(houseID, shiftID);
-    let house = await getHouse(houseID);
-    setUserPinMap(house.userPINs);
+    console.log({ authUser: authUser })
+    let userObjects = await getAssignedUsers(usersAssigned)
+    let tempMemRows = new Array<JSX.Element>()
+    let verShifts = await getVerifiedShifts(houseID, shiftID)
+    let house = await getHouse(houseID)
+    setUserPinMap(house.userPINs)
     //Uses list of Users to generate the member rows in table
     userObjects.map((user) => {
       if (user != null) {
-        tempMemRows.push(generateMemRow(user, verShifts));
+        tempMemRows.push(generateMemRow(user, verShifts))
       }
-    });
-    setMemberRows(tempMemRows);
-  };
+    })
+    setMemberRows(tempMemRows)
+  }
 
   /**
    * @remarks
@@ -120,13 +120,13 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    * @returns - List of Users assigned to shift
    */
   const getAssignedUsers = async (usersAssigned: string[]) => {
-    let promises: Promise<User | null>[] = [];
+    let promises: Promise<User | null>[] = []
     usersAssigned.map((userID) => {
-      promises.push(getUser(userID));
-    });
-    let userObjects = await Promise.all(promises);
-    return userObjects;
-  };
+      promises.push(getUser(userID))
+    })
+    let userObjects = await Promise.all(promises)
+    return userObjects
+  }
 
   /**
    * @TODO
@@ -147,23 +147,23 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     user: User,
     verShifts: Map<string, VerifiedShift>
   ) => {
-    let status = "Incomplete";
-    let time = "";
-    let verifiedShift = verShifts.get(user.userID);
-    let username = user.firstName + " " + user.lastName;
-    let authname = authUser.firstName + " " + authUser.lastName;
-    let name = username != authname ? username : "me"; //If member row is the current user, display name as 'me'
-    console.log("Member: ", username, " | VerifiedShift: ", verifiedShift);
+    let status = 'Incomplete'
+    let time = ''
+    let verifiedShift = verShifts.get(user.userID)
+    let username = user.firstName + ' ' + user.lastName
+    let authname = authUser.firstName + ' ' + authUser.lastName
+    let name = username != authname ? username : 'me' //If member row is the current user, display name as 'me'
+    console.log('Member: ', username, ' | VerifiedShift: ', verifiedShift)
     if (verifiedShift != undefined) {
-      status = "Complete";
-      time = verifiedShift.timeStamp;
+      status = 'Complete'
+      time = verifiedShift.timeStamp
       if (!isMemVerified && verifiedShift.shifterID == authUser.userID) {
-        setMemVerified(true); //IF current member is already verified, this useState will disable the verification button
+        setMemVerified(true) //IF current member is already verified, this useState will disable the verification button
       }
     } else {
-      setMemVerified(false); // greg: had to add this here because when modal loaded for a shift that was verified, isVerified never got updated back to false for future modals
+      setMemVerified(false) // greg: had to add this here because when modal loaded for a shift that was verified, isVerified never got updated back to false for future modals
     }
-    console.log("Is mem verified?: ", isMemVerified);
+    console.log('Is mem verified?: ', isMemVerified)
     return (
       <TableRow key={user.userID} className={styles.tableRow}>
         <TableCell component="th" scope="row">
@@ -172,8 +172,8 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
         <TableCell align="right">{time}</TableCell>
         <TableCell align="right">{status}</TableCell>
       </TableRow>
-    );
-  };
+    )
+  }
 
   /**
    * @remarks
@@ -194,17 +194,17 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    * If so, verifyShift is called which creates a verifyShift object in the firebase.
    */
   const handleVerify = () => {
-    let verifierID = userPinMap.get(verifierPin);
-    console.log({ userPinMap, verifierPin });
+    let verifierID = userPinMap.get(verifierPin)
+    console.log({ userPinMap, verifierPin })
     if (verifierID == undefined) {
       //Replace with modal/warning
-      console.log("Invalid PIN");
+      console.log('Invalid PIN')
     } else if (verifierID == authUser.userID) {
-      console.log("Can't verify self!");
+      console.log("Can't verify self!")
     } else {
-      verifyShift(verifierID, authUser.userID, shiftID, houseID);
+      verifyShift(verifierID, authUser.userID, shiftID, houseID)
     }
-  };
+  }
 
   return shift ? (
     <div>
@@ -223,27 +223,27 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
                 {shift.name.slice(1)}
               </Typography>
               <Button onClick={handleClose} className={styles.close}>
-                <Icon type={"close"} />
+                <Icon type={'close'} />
               </Button>
             </div>
             <div className={styles.assignShiftInfo}>
               <Typography className={styles.infoForShift} variant="body1">
-                +{shift.hours} {shift.hours < 2 ? "hour" : "hours"}
+                +{shift.hours} {shift.hours < 2 ? 'hour' : 'hours'}
               </Typography>
               <Typography className={styles.infoForShift} variant="body1">
-                {shift.possibleDays.join(", ")}
+                {shift.possibleDays.join(', ')}
               </Typography>
               <Typography className={styles.infoForShift} variant="body1">
                 {parseTime(shift.timeWindow[0])}
-                {" - "}
+                {' - '}
                 {parseTime(shift.timeWindow[1])}
               </Typography>
               <Typography className={styles.infoForShift} variant="body1">
                 {shift.verificationBuffer} hour buffer
               </Typography>
               <Typography className={styles.infoForShift} variant="body1">
-                {shift.numOfPeople}{" "}
-                {shift.numOfPeople < 2 ? "member" : "members"}
+                {shift.numOfPeople}{' '}
+                {shift.numOfPeople < 2 ? 'member' : 'members'}
               </Typography>
             </div>
             <div className={styles.assignedMembersTable}>
@@ -271,7 +271,7 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
                       type="password"
                       autoComplete="current-password"
                       onChange={(ev) => {
-                        setVerifierPin(ev.target.value);
+                        setVerifierPin(ev.target.value)
                       }}
                     />
                   </div>
@@ -295,7 +295,7 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
     </div>
   ) : (
     <div />
-  );
-};
+  )
+}
 
-export default ViewShiftcard;
+export default ViewShiftcard

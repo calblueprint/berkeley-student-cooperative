@@ -1,49 +1,48 @@
 .component {
-	height: 84%;
-	width: 100%;
-	display: flex;
-	justify-content: center;
+  height: 84%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .container {
-	display: flex;
-	width: 92%;
-	height: 100%;
-	flex-direction: column;
-	justify-content: space-evenly;
+  display: flex;
+  width: 92%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .schedule {
-	background-color: white;
-	max-height: 85%;
+  background-color: white;
+  max-height: 85%;
 }
 
 .status {
-	display: flex;
-	align-items: center;
-	height: 100%;
-	width: 75%;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 75%;
 }
 
 .complete {
-	background-color: #D1FAE5 ;
-	color: #065F46;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 7px;
-	padding-bottom: 7px;
-	border-radius: 5px;
-	font-weight: 600;
+  background-color: #d1fae5;
+  color: #065f46;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 5px;
+  font-weight: 600;
 }
 
 .incomplete {
-	background-color: #FEF3C7;
-	color: #AD6D3C;
-	font-weight: 600;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 7px;
-	padding-bottom: 7px;
-	border-radius: 5px;
+  background-color: #fef3c7;
+  color: #ad6d3c;
+  font-weight: 600;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 5px;
 }
-
