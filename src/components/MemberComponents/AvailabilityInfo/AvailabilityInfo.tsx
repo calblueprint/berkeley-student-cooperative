@@ -1,79 +1,104 @@
-import { Card, CardContent, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
-import { getHouse } from "../../../firebase/queries/house";
-import { getUser } from "../../../firebase/queries/user";
-import { House, User } from "../../../types/schema";
-import styles from "./AvailabilityInfo.module.css";
+import { Card, CardContent, Typography } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { getUser } from '../../../firebase/queries/user'
+import { User } from '../../../types/schema'
+import styles from './AvailabilityInfo.module.css'
 
 type AvailabilityInfoProps = {
-  userID: string;
-};
+  userID: string
+}
 
 const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
   userID,
 }: AvailabilityInfoProps) => {
-  const [user, setUser] = useState<User | null>();
+  /**
+   * Returns a card component to display a member's availability information in the settings page
+   *
+   * @param userID - ID of the member
+   */
+  const [user, setUser] = useState<User | null>()
   let daysList = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ]
 
+  // retrieves user from context
   useEffect(() => {
     const getData = async () => {
-      const currUser = await getUser(userID);
-      setUser(currUser);
-    };
-    getData();
-  }, [userID]);
+      const currUser = await getUser(userID)
+      setUser(currUser)
+    }
+    getData()
+  }, [userID])
 
   const getTime = (day: string) => {
-    let availabilities = user?.availabilities.get(day);
-    let parsedAvailabilities = "";
+    /**
+     * Parses time into a readable format for time windows
+     *
+     * @param day - the string for the day that the availabilities are being retrieved for
+     */
+    let availabilities = user?.availabilities.get(day)
+    let parsedAvailabilities = ''
     if (availabilities) {
       for (let i = 0; i < availabilities.length; i += 2) {
         parsedAvailabilities +=
           parseHour(availabilities[i]) +
-          ":" +
+          ':' +
           parseMinute(availabilities[i]) +
           parseAM(availabilities[i]) +
-          " - " +
+          ' - ' +
           parseHour(availabilities[i + 1]) +
-          ":" +
+          ':' +
           parseMinute(availabilities[i + 1]) +
-          parseAM(availabilities[i + 1]);
+          parseAM(availabilities[i + 1])
         if (i + 2 < availabilities.length) {
-          parsedAvailabilities += ", ";
+          parsedAvailabilities += ', '
         }
       }
-      return parsedAvailabilities;
+      return parsedAvailabilities
     } else {
-      return "N/A";
+      return 'N/A'
     }
-  };
+  }
 
   const parseHour = (timeWindow: number) => {
+    /**
+     * Parses the time value into just the hour value (1230 -> 12)
+     *
+     * @param timeWindow - the time value to be parsed (0 - 2400)
+     */
     if (Math.floor(timeWindow / 100) == 12 || timeWindow == 0) {
-      return 12;
+      return 12
     } else if (timeWindow >= 1000) {
-      return Math.floor(timeWindow / 100) % 12;
-    } else return Math.floor(timeWindow / 100) % 12;
-  };
+      return Math.floor(timeWindow / 100) % 12
+    } else return Math.floor(timeWindow / 100) % 12
+  }
 
   const parseMinute = (timeWindow: number) => {
+    /**
+     * Parses the time value into just the minute value (1230 -> 30)
+     *
+     * @param timeWindow - the time value to be parsed (0 - 2400)
+     */
     if (timeWindow % 100 == 0) {
-      return "00";
+      return '00'
     }
-    return timeWindow % 100;
-  };
+    return timeWindow % 100
+  }
 
   const parseAM = (timeWindow: number) => {
-    return timeWindow >= 1200 ? "PM" : "AM";
-  };
+    /**
+     * Parses the time value into just the AM/PM value (1300 -> PM)
+     *
+     * @param timeWindow - the time value to be parsed (0 - 2400)
+     */
+    return timeWindow >= 1200 ? 'PM' : 'AM'
+  }
 
   return user ? (
     <Card sx={{ width: 550, height: 360 }}>
@@ -93,7 +118,7 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
               variant="subtitle2"
             >
               {day}
-              {": "}
+              {': '}
               {getTime(day)}
             </Typography>
           ))}
@@ -102,7 +127,7 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
     </Card>
   ) : (
     <div></div>
-  );
-};
+  )
+}
 
-export default AvailabilityInfo;
+export default AvailabilityInfo
