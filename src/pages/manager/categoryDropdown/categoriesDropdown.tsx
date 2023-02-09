@@ -1,14 +1,9 @@
 import {
-  Collapse,
   IconButton,
-  MobileStepperClassKey,
   TableCell,
-  TableContainer,
   TableRow,
-  Table,
-  TableBody,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
@@ -51,7 +46,7 @@ const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({
           <IconButton onClick={handleExpand}>
             {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
-          {mapKey +
+          {categoryMap && mapKey +
             ' - ' +
             categoryMap?.size +
             pluralizeShift(categoryMap?.size)}

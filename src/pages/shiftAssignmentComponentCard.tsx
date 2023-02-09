@@ -74,7 +74,7 @@ const ShiftAssignmentComponentCard: React.FC<
     for (let i = 0; i < totalUsersInHouse.length; i++) {
       const userID = totalUsersInHouse[i]
       const userObject = await getUser(userID)
-      if (userObject === null) {
+      if (userObject === null || userObject === undefined) {
         continue
       }
       // if this user has already been assigned to this shift, display them regardless of hours
@@ -221,7 +221,7 @@ const ShiftAssignmentComponentCard: React.FC<
       for (let i = 0; i < selectedRows.length; i++) {
         let userID = selectedRows[i]
         const user = await getUser(userID)
-        if (user === null || user.shiftsAssigned.includes(shiftID)) {
+        if (user === null || user === undefined || user.shiftsAssigned.includes(shiftID)) {
           continue
         }
         let copy = [...user.shiftsAssigned]
