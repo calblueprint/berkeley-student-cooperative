@@ -3,7 +3,7 @@ import { User, Shift } from '../../../../types/schema'
 import { TextField, InputAdornment } from '@mui/material'
 import styles from './MemberShiftView.module.css'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { getShift, getVerifiedShifts } from '../../../../firebase/queries/shift'
+import { getShift } from '../../../../firebase/queries/shift'
 import useWindowDimensions from '../../../../helpers/helpers'
 import { parseTime } from '../../../../firebase/helpers'
 import Icon from '../../../../assets/Icon'
@@ -25,7 +25,7 @@ export const MemberShiftView: React.FunctionComponent<
   MemberShiftScheduleProps
 > = ({ user }) => {
   //height and width of the window; used to calculate col widths in table
-  const { height, width } = useWindowDimensions()
+  const { width } = useWindowDimensions()
 
   //state variable that calculates the total width of table, connected to width
   const [tableWidth, setTableWidth] = useState((width - 197) * 0.92)
@@ -60,7 +60,6 @@ export const MemberShiftView: React.FunctionComponent<
   useEffect(() => {
     //UPDATE THIS LOGIC TO ADJUST TABLE WIDTH W/OUT USEEFFECT?
     setTableWidth((width - 197) * 0.92)
-    console.log(width, height)
   }, [width])
 
   /**
@@ -134,11 +133,11 @@ export const MemberShiftView: React.FunctionComponent<
    */
 
   const getUserShifts = async () => {
-    let promises: Promise<Shift | undefined>[] = []
+    const promises: Promise<Shift | undefined>[] = []
     user.shiftsAssigned.map((shift) => {
       promises.push(getShift(user.houseID, shift))
     })
-    let shiftObjects = await Promise.all(promises)
+    const shiftObjects = await Promise.all(promises)
     return shiftObjects
   }
 
