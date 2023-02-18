@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO: Remove the eslint disable once more of these funcs are used.
 import {
   collection,
   addDoc,
@@ -123,12 +125,12 @@ export const addCategory = async (
   if (colSnap.exists()) {
     const promise: Promise<House> = parseHouse(colSnap)
     const house = await promise
-    var houseCategories = house.categories
+    const houseCategories = house.categories
 
     //checks if category already exists, {} is nested
     if (!houseCategories?.has(newCategory)) {
       // Nested maps -> object
-      let newMap = new Map<string, object>()
+      const newMap = new Map<string, object>()
       houseCategories.forEach((value, key) => {
         newMap.set(key, mapToObject(value))
       })
@@ -177,7 +179,7 @@ export const updateCategory = async (
   if (colSnap.exists()) {
     const promise: Promise<House> = parseHouse(colSnap)
     const house = await promise
-    var houseCategories = objectToMap(house.categories)
+    const houseCategories = objectToMap(house.categories)
 
     //checks if shift is a valid shift object
     if (shift.name && shift.shiftID && shift.category) {
@@ -265,7 +267,7 @@ export const removeShiftFromCategory = async (
   if (colSnap.exists()) {
     const promise: Promise<House> = parseHouse(colSnap)
     const house = await promise
-    var houseCategories = objectToMap(house.categories)
+    const houseCategories = objectToMap(house.categories)
 
     //checks if shift is a valid shift object
     if (shift.name && shift.shiftID && shift.category) {
@@ -317,7 +319,7 @@ export const removeCategory = async (
   if (colSnap.exists()) {
     const promise: Promise<House> = parseHouse(colSnap)
     const house = await promise
-    var houseCategories = objectToMap(house.categories)
+    const houseCategories = objectToMap(house.categories)
 
     //checks if category exists
     if (houseCategories?.has(oldCategory)) {
@@ -336,6 +338,7 @@ export const removeCategory = async (
 }
 
 //parses house document passed in
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const parseHouse = async (doc: any) => {
   const data = doc.data()
   const houseID = doc.id.toString()
@@ -344,8 +347,8 @@ const parseHouse = async (doc: any) => {
   const categories = data.categories
   const schedule = data.schedule
   const userPINs = data.userPINs
-  let categMap = objectToMap(categories)
-  let newMap = new Map<string, Map<string, string>>()
+  const categMap = objectToMap(categories)
+  const newMap = new Map<string, Map<string, string>>()
   categMap.forEach((value, key) => {
     newMap.set(key, objectToMap(value))
   })
