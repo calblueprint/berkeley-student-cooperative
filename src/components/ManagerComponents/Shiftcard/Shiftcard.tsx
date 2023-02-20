@@ -40,14 +40,14 @@ const ShiftCard = () => {
   const [verification, setVerification] = useState<boolean>(false)
 
   // TODO: import shift categories
-  let shiftCategories = [
+  const shiftCategories = [
     'cook dinner',
     'clean bathroom',
     'wash dishes',
     'clean basement',
   ]
-  let hoursList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-  let daysList = [
+  const hoursList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  const daysList = [
     'Monday',
     'Tuesday',
     'Wednesday',
@@ -56,7 +56,7 @@ const ShiftCard = () => {
     'Saturday',
     'Sunday',
   ]
-  let verificationOptions = ['Verification required', 'No verification']
+  const verificationOptions = ['Verification required', 'No verification']
 
   const handleOpen = () => {
     // sets the variable "open" to true to open the dialog
@@ -133,14 +133,14 @@ const ShiftCard = () => {
 
   const handlePossibleDays = (event: SelectChangeEvent<string>) => {
     // onclick handler for multi-select containing "possible days" input
-    let input = event.target.value
+    const input = event.target.value
     setPossibleDays(typeof input === 'string' ? input.split(',') : input)
   }
 
   const handleMembers = (event: React.ChangeEvent<HTMLInputElement>) => {
     // onclick handler for the number text field input containing number of members
-    let input = event.target.value
-    let parsed = parseInt(input)
+    const input = event.target.value
+    const parsed = parseInt(input)
     if (input.length == 0 || !isNaN(parsed)) {
       setMembers(parsed)
     }
@@ -148,8 +148,8 @@ const ShiftCard = () => {
 
   const handleHours = (event: React.ChangeEvent<HTMLInputElement>) => {
     // onclick handler for the number text field input containing number of hours
-    let input = event.target.value
-    let parsed = parseInt(input)
+    const input = event.target.value
+    const parsed = parseInt(input)
     if (input.length == 0 || !isNaN(parsed)) {
       setHours(parsed)
     }
@@ -157,8 +157,8 @@ const ShiftCard = () => {
 
   const handleBuffer = (event: React.ChangeEvent<HTMLInputElement>) => {
     // onclick handler for the number text field input containing number of buffer hours
-    let input = event.target.value
-    let parsed = parseInt(input)
+    const input = event.target.value
+    const parsed = parseInt(input)
     if (input.length == 0 || !isNaN(parsed)) {
       setBuffer(parsed)
     }
@@ -166,7 +166,7 @@ const ShiftCard = () => {
 
   const handleVerification = (event: SelectChangeEvent<string>) => {
     // onclick handler for select containing "verification" input
-    let input = event.target.value
+    const input = event.target.value
     if (input == 'Verification required') {
       setVerification(true)
     }
