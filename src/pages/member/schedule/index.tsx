@@ -4,18 +4,20 @@ import { MemberScheduleHeader } from '../../../components/MemberComponents/Membe
 import { MemberShiftView } from '../../../components/MemberComponents/MemberSchedule/MemberShiftView/MemberShiftView'
 import { useUserContext } from '../../../context/UserContext'
 import { House, User } from '../../../types/schema'
-import styles from './MemberSchedule.module.css'
+// import styles from './MemberSchedule.module.css'
 
 type MemberSchedulePageProps = {
   user?: User
   house?: House
 }
 
-const MemberSchedulePage: React.FC<MemberSchedulePageProps> = ({
-  user,
-  house,
-}) => {
-  const { authUser, signIn, signOutAuth, register } = useUserContext()
+const MemberSchedulePage: React.FC<MemberSchedulePageProps> = (
+  {
+    // user,
+    // house,
+  }
+) => {
+  const { authUser } = useUserContext()
 
   return (
     <Layout>
