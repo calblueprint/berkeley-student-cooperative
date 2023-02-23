@@ -1,8 +1,13 @@
 import {
   getAuth,
   createUserWithEmailAndPassword,
+  getAdditionalUserInfo,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
+  setPersistence,
+  browserSessionPersistence,
+  browserLocalPersistence,
 } from 'firebase/auth'
 import { addUser, getUser } from './user'
 import { useState, useEffect } from 'react'
