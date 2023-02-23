@@ -9,6 +9,7 @@ import ShiftAssignmentTable from './shiftAssignmentTable'
 import Button from '@mui/material/Button'
 import { updateShift } from '../firebase/queries/shift'
 import { convertTimeWindowToTime, pluralizeHours } from '../firebase/helpers'
+import { sortPotentialUsers, findAvailableUsers } from '../firebase/helpers'
 
 type ShiftAssignmentComponentCardProps = {
   day: string
@@ -51,75 +52,6 @@ const ShiftAssignmentComponentCard: React.FC<
     }
   }
 
-  // Helper function to find available users
-  const findAvailableUsers = async (tempShiftObject: Shift) => {
-    const timeWindow = tempShiftObject.timeWindow
-    const shiftStart = timeWindow[0]
-    const shiftEnd = timeWindow[1]
-    const numHours = tempShiftObject.hours
-    const potentialUsers = []
-    const house = await getHouse(houseID)
-    const totalUsersInHouse = house.members
-    if (totalUsersInHouse === null || totalUsersInHouse === undefined) {
-      return []
-    }
-    // Convert the hours of the shift into units of time. Assumes any non-whole hour numbers are 30 minute intervals.
-    // ex. 1.5 -> converted to 130 (used for differences if someone is available between 1030 and 1200, they should be shown)
-    const mult100 = Math.floor(numHours) * 100
-    let thirtyMin = 0
-    if (mult100 != numHours * 100) {
-      thirtyMin = 30
-    }
-
-    for (let i = 0; i < totalUsersInHouse.length; i++) {
-      const userID = totalUsersInHouse[i]
-      const userObject = await getUser(userID)
-      if (userObject === null || userObject === undefined) {
-        continue
-      }
-      // if this user has already been assigned to this shift, display them regardless of hours
-      if (userObject.shiftsAssigned.includes(shiftID)) {
-        potentialUsers.push(userObject)
-        continue
-      }
-      // stores the number of hours that the user still has to complete
-      let assignableHours = userObject.hoursRequired - userObject.hoursAssigned
-      // if they have no hours left to complete, or their number of hours left to complete < the number of hours of the shift, continue
-      if (assignableHours <= 0 || assignableHours < numHours) {
-        continue
-      }
-      const currAvailabilities = userObject.availabilities
-      if (currAvailabilities.has(day)) {
-        const perDayAvailability = currAvailabilities.get(day)
-        if (perDayAvailability === undefined) {
-          continue
-        }
-        // iterate thru every pair of availabilities
-        for (let j = 0; j < perDayAvailability.length; j += 2) {
-          let currStart = perDayAvailability[j]
-          let permEnd = perDayAvailability[j + 1]
-          // The end of this availability window is < the time it takes for the shift to start
-          if (permEnd < shiftStart) {
-            continue
-          }
-          // start either at the beginning of the shift window / beginning of their availability, whichever is later
-          currStart = Math.max(currStart, shiftStart)
-          // The end time given the current start
-          // 1030 + 100 + 30 -> 1160 (still <= 1200) (still works)
-          let newEnd = currStart + mult100 + thirtyMin
-          // The required end will either be the end of the shift or the end of their availabikity
-          let requiredEnd = Math.min(permEnd, shiftEnd)
-          // If the calculated end time is <= required end time, then we can push and don't need to consider any more availabilities
-          if (newEnd <= requiredEnd) {
-            potentialUsers.push(userObject)
-            break
-          }
-        }
-      }
-    }
-    return potentialUsers
-  }
-
   // Helper function to initialize selected users to be, out of potential users, if they've already been assigned, add it to the list and set selected rows
   const setSelectedUsers = (potentialUsers: User[]) => {
     let selectedUsers = []
@@ -135,49 +67,29 @@ const ShiftAssignmentComponentCard: React.FC<
 
   // Method that is called to populate the potentialWorkers and selectedRows state elements
   const populatePotentialWorkersAndSelected = async () => {
+    // Query Set Up
     const tempShiftObject = await getShift(houseID, shiftID)
-    if (tempShiftObject === null || tempShiftObject === undefined) {
-      return
+    const house = await getHouse(houseID);
+    if (tempShiftObject === null || tempShiftObject === undefined || house === null || house === undefined) {
+      return;
     }
-    let potentialUsers = await findAvailableUsers(tempShiftObject)
-    // Sorts on hou
-    potentialUsers.sort((user1, user2) => {
-      if (user1 === undefined || user2 === undefined) {
-        return 0;
+    let allMembersInHouse = house.members;
+    if (allMembersInHouse === null || allMembersInHouse === undefined) {
+      return;
+    }
+    let users = []
+    for (let i = 0; i < allMembersInHouse.length; i++) {
+      let member = allMembersInHouse[i];
+      let userObject = await getUser(member);
+      if (userObject === null || userObject === undefined) {
+        return;
       }
-      // First sort on hours assignable left (hoursRequired - hoursAssigned), prioritizing people with higher hours remaining (user2 - user1)
-      let user1HoursLeft = user1.hoursRequired - user1.hoursAssigned
-      let user2HoursLeft = user2.hoursRequired - user2.hoursAssigned
-      let hoursWeekDiff: number = user2HoursLeft - user1HoursLeft
-      if (hoursWeekDiff != 0) {
-        return hoursWeekDiff
-      }
-
-      let user1Preferences = user1.preferences
-      let user2Preferences = user2.preferences
-      // 1 if 1 is average
-      let user1Pref = 1
-      let user2Pref = 1
-      if (user1Preferences.has(shiftID)) {
-        let curr = user1Preferences.get(shiftID)
-        if (curr !== undefined) {
-          user1Pref = curr
-        }
-      }
-      if (user2Preferences.has(shiftID)) {
-        let curr = user2Preferences.get(shiftID)
-        if (curr !== undefined) {
-          user2Pref = curr
-        }
-      }
-      // Second sort on preferences, prioritizing people with higher preferences (user2 - user1)
-      let prefDiff = user2Pref - user1Pref
-      if (prefDiff != 0) {
-        return prefDiff
-      }
-      // Third sort on hoursRemainingSemester, prioritizing people with higher hoursRemaining (user 2 - user1)
-      return user2.hoursRemainingSemester - user1.hoursRemainingSemester
-    })
+      users.push(userObject);
+    }
+    // helper function call
+    let potentialUsers = findAvailableUsers(tempShiftObject, users, shiftID, day);
+    // helper function call
+    sortPotentialUsers(potentialUsers, shiftID);
     setPotentialWorkers(potentialUsers)
     setSelectedUsers(potentialUsers)
   }
