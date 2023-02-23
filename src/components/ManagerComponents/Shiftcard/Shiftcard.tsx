@@ -13,8 +13,15 @@ import {
 import { SelectChangeEvent } from '@mui/material/Select'
 import { addShift } from '../../../firebase/queries/shift'
 import Icon from '../../../assets/Icon'
+import { House } from '../../../types/schema'
 
-const ShiftCard = () => {
+type ShiftCardProps = {
+  house: House
+}
+
+const ShiftCard: React.FC<ShiftCardProps> = ({
+  house,
+}: ShiftCardProps) => {
   /**
    * Returns a component for managers to create shifts
    *
@@ -22,11 +29,10 @@ const ShiftCard = () => {
    *
    * (dialog is the pop-up screen that contains the create shift form)
    */
-
+  // const [house, setHouse] = useState<House>()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState<string>('')
   const [category, setCategory] = useState<string>('')
-  const [members, setMembers] = useState<number>(0)
   const [hours, setHours] = useState<number>(0)
   const [startHour, setStartHour] = useState<number>(12)
   const [startMinute, setStartMinute] = useState<number>(0)
@@ -39,13 +45,6 @@ const ShiftCard = () => {
   const [possibleDays, setPossibleDays] = useState<string[]>([])
   const [verification, setVerification] = useState<boolean>(false)
 
-  // TODO: import shift categories
-  const shiftCategories = [
-    'cook dinner',
-    'clean bathroom',
-    'wash dishes',
-    'clean basement',
-  ]
   const hoursList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   const daysList = [
     'Monday',
@@ -77,7 +76,6 @@ const ShiftCard = () => {
     if (
       name &&
       description &&
-      isValidNumber(members) &&
       possibleDays.length > 0 &&
       isValidNumber(hours) &&
       isValidNumber(buffer) &&
@@ -88,7 +86,7 @@ const ShiftCard = () => {
         'EUC',
         name,
         description,
-        members,
+        1,
         possibleDays,
         [
           parseTime(startHour, startMinute, startAM),
@@ -111,7 +109,6 @@ const ShiftCard = () => {
     // resets all useState variables to reset form fields
     setName('')
     setCategory('')
-    setMembers(0)
     setHours(0)
     setStartHour(12)
     setStartMinute(0)
@@ -135,15 +132,6 @@ const ShiftCard = () => {
     // onclick handler for multi-select containing "possible days" input
     const input = event.target.value
     setPossibleDays(typeof input === 'string' ? input.split(',') : input)
-  }
-
-  const handleMembers = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // onclick handler for the number text field input containing number of members
-    const input = event.target.value
-    const parsed = parseInt(input)
-    if (input.length == 0 || !isNaN(parsed)) {
-      setMembers(parsed)
-    }
   }
 
   const handleHours = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -235,32 +223,23 @@ const ShiftCard = () => {
                   setCategory(event.target.value)
                 }}
               >
-                {shiftCategories.map((category) => (
+                {Array.from(house.categories.keys())
+                .sort().map((category) => (
                   <MenuItem key={category} value={category}>
                     {category}
                   </MenuItem>
                 ))}
               </Select>
             </div>
-            <div className={styles.flex}>
-              <div className={styles.formField}>
-                <Typography>Members required</Typography>
-                <TextField
-                  fullWidth
-                  placeholder="0"
-                  value={members ? members : ''}
-                  onChange={handleMembers}
-                />
-              </div>
-              <div className={styles.formField}>
-                <Typography>Hours worth</Typography>
-                <TextField
-                  fullWidth
-                  placeholder="0"
-                  value={hours ? hours : ''}
-                  onChange={handleHours}
-                />
-              </div>
+
+            <div className={styles.formField}>
+              <Typography>Hours worth</Typography>
+              <TextField
+                fullWidth
+                placeholder="0"
+                value={hours ? hours : ''}
+                onChange={handleHours}
+              />
             </div>
             <div className={styles.formField}>
               <Typography>Day (select as many as applicable)</Typography>

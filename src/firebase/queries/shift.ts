@@ -14,7 +14,6 @@ import {
   Timestamp,
 } from 'firebase/firestore'
 import { firestoreAutoId, parseTime } from '../helpers'
-import { FirebaseError } from 'firebase/app'
 
 /**
  * Adds a shift. Used when a manager creates a shift.
@@ -169,7 +168,7 @@ export const getNumVerified = async (
 }
 export const getShiftForCategories = async (
   houseID: string,
-  category: string
+  // category: string
 ): Promise<Shift[]> => {
   const colRef = collection(firestore, 'houses', houseID, 'shifts')
   const promises: Promise<Shift>[] = []
