@@ -1,17 +1,11 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import styles from './Layout.module.css'
 import MemberNavbar from '../MemberComponents/Navbar/MemberNavbar'
 import Head from 'next/head'
 import ManagerNavbar from '../ManagerComponents/Navbar/ManagerNavbar'
 import { useUserContext } from '../../context/UserContext'
 
-const Layout = ({
-  children,
-  title,
-}: {
-  children: ReactNode
-  title?: string
-}) => {
+const Layout = ({ children, title }: any) => {
   /**
    * Layout component that formats each page to have the navbar alongisde all other components
    *

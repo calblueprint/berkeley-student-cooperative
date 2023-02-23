@@ -1,14 +1,14 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { createContext, useContext } from 'react'
 import { useFirebaseAuth } from '../firebase/queries/auth'
 import { defaultUser } from '../firebase/queries/user'
 import { defaultHouse } from '../firebase/queries/house'
 
 export const authUserContext = createContext({
-  authUser: defaultUser,
+  authUser: defaultUser, // added
+  // setAuthUser: function(user:any){},  // added
   house: defaultHouse,
-  loading: true,
-  register: (
+  register: async (
     email: string,
     houseID: string,
     lastName: string,
@@ -16,16 +16,12 @@ export const authUserContext = createContext({
     role: string,
     password: string
   ) => {},
-  signIn: (email: string, password: string) => {},
+  signIn: async (email: string, password: string) => {},
   signOutAuth: () => {},
-  deleteUser:  (uid: string) => {},
+  deleteUser: async (uid: string) => {},
 })
 
-export const AuthUserProvider = ({ 
-  children 
-}: {
-  children: ReactNode
-}) => {
+export const AuthUserProvider = ({ children }: any) => {
   const val = useFirebaseAuth()
 
   return (
