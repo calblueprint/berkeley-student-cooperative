@@ -20,6 +20,7 @@ import {
 } from '@mui/material'
 import { mapToObject } from '../../../firebase/helpers'
 import styles from './CategoriesView.module.css'
+import CategoryTable from '../../../components/ManagerComponents/CategoryTable/CategoryTable'
 
 type CategoriesViewProps = {
   houseID: string
@@ -45,7 +46,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
 
   // Retrieves the house object given the houseID
   const retrieveHouse = async () => {
-    let h = await getHouse(houseID)
+    const h = await getHouse(houseID)
     setHouse(h)
   }
 
@@ -75,7 +76,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
       console.log('Invalid Category Name length')
     }
     if (house !== undefined && newCategoryName.length > 0) {
-      let successful = await addCategory(houseID, newCategoryName)
+      const successful = await addCategory(houseID, newCategoryName)
       if (successful) {
         house.categories.set(newCategoryName, new Map<string, string>())
         setHouse(house)
@@ -89,22 +90,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
       <Button onClick={openModal} id={styles.newCategory}>
         New Category
       </Button>
-      <TableContainer>
-        <Table>
-          <TableBody>
-            {house &&
-              Array.from(house.categories.keys())
-                .sort()
-                .map((key, index) => (
-                  <CategoriesDropdown
-                    key={index}
-                    mapKey={key}
-                    categoryMap={house.categories.get(key)}
-                  ></CategoriesDropdown>
-                ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <CategoryTable/>
       {isModalOpened && (
         <Dialog open={isModalOpened} fullWidth={true}>
           <DialogTitle>Create Category</DialogTitle>
