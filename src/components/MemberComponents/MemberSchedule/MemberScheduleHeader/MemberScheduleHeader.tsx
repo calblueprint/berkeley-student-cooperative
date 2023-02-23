@@ -1,5 +1,6 @@
-import React from 'react'
-import { Typography } from '@mui/material'
+import React, { useState, useEffect } from 'react'
+import { User } from '../../../../types/schema'
+import { Typography, Card, TextField, Button } from '@mui/material'
 import styles from './MemberScheduleHeader.module.css'
 import Icon from '../../../../assets/Icon'
 
@@ -9,11 +10,7 @@ type MemberScheduleHeaderProps = {
 
 export const MemberScheduleHeader: React.FunctionComponent<
   MemberScheduleHeaderProps
-> = (
-  {
-    /**member*/
-  }
-) => {
+> = ({ member }) => {
   /**
    * TODO: complete functionality for switching pages between individual and all shifts and date picker
    */
@@ -22,18 +19,12 @@ export const MemberScheduleHeader: React.FunctionComponent<
     <div className={styles.component}>
       <div className={styles.container}>
         <div className={styles.top}>
-          <Typography variant="h3" style={{ color: '#232323' }}>
-            {' '}
-            Schedule{' '}
-          </Typography>
+          <Typography variant="h2"> Schedule </Typography>
         </div>
         <div className={styles.bottom}>
           <div className={styles.pages}>
             <button className={styles.selectedPageButton}>
-              <Typography
-                variant="h6"
-                style={{ fontWeight: 700, color: '#969696' }}
-              >
+              <Typography variant="h6" style={{ fontWeight: 700 }}>
                 {' '}
                 Individual{' '}
               </Typography>
