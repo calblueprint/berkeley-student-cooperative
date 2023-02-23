@@ -1,34 +1,45 @@
-import { createContext, useContext } from "react";
-import { useFirebaseAuth } from "../firebase/queries/auth";
-import { User, House } from "../types/schema";
-import { defaultUser } from "../firebase/queries/user";
-import { defaultHouse } from "../firebase/queries/house";
+import React from 'react'
+import { createContext, useContext } from 'react'
+import { useFirebaseAuth } from '../firebase/queries/auth'
+import { defaultUser } from '../firebase/queries/user'
+import { defaultHouse } from '../firebase/queries/house'
 
-const authUserContext = createContext({
-  authUser: defaultUser,
+export const authUserContext = createContext({
+  authUser: defaultUser, // added
+  // setAuthUser: function(user:any){},  // added
   house: defaultHouse,
   register: async (
     email: string,
     houseID: string,
-    last_name: string,
-    first_name: string,
+    lastName: string,
+    firstName: string,
     role: string,
     password: string
   ) => {},
   signIn: async (email: string, password: string) => {},
   signOutAuth: () => {},
-  establishUserContext: async (uid: string) => {},
   deleteUser: async (uid: string) => {},
-});
+})
 
 export const AuthUserProvider = ({ children }: any) => {
-  const auth = useFirebaseAuth();
-  return (
-    <authUserContext.Provider value={auth}>
-      {" "}
-      {children}{" "}
-    </authUserContext.Provider>
-  );
-};
+  const val = useFirebaseAuth()
 
-export const useUserContext = () => useContext(authUserContext);
+  return (
+    <authUserContext.Provider value={val}>
+      {' '}
+      {
+        /**
+         * When loading is true the authStateChanged() is fetching a user and
+         * false when is done. This allows the children componets to wait for the
+         * user to be fetch. If we proceed without waiting the children componets
+         * try to use a null user which gives an error.
+         * When lodign is true nothing is displayed, but if desired a loding component could
+         * be displayed intead of null.
+         */
+        val['loading'] ? <div>Loading User</div> : children
+      }{' '}
+    </authUserContext.Provider>
+  )
+}
+
+export const useUserContext = () => useContext(authUserContext)

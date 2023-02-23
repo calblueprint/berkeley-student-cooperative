@@ -1,33 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
-import styles from "./Layout.module.css";
-import MemberNavbar from "../MemberComponents/Navbar/MemberNavbar";
-import Head from "next/head";
-import ManagerNavbar from "../ManagerComponents/Navbar/ManagerNavbar";
-import { useRouter } from "next/router";
+import React from 'react'
+import styles from './Layout.module.css'
+import MemberNavbar from '../MemberComponents/Navbar/MemberNavbar'
+import Head from 'next/head'
+import ManagerNavbar from '../ManagerComponents/Navbar/ManagerNavbar'
+import { useUserContext } from '../../context/UserContext'
 
 const Layout = ({ children, title }: any) => {
-  const router = useRouter();
-  const [role, setRole] = useState("member");
+  /**
+   * Layout component that formats each page to have the navbar alongisde all other components
+   *
+   * @param children - automatically passes in the children components that are within <Layout> wrapper
+   * @param title - title of page on web browser tab
+   *
+   * @returns container for layout of page
+   */
 
-  const memoizedRouterChange = useCallback(() => {
-    if (role == "member") {
-      router.push("/member");
-    }
-  }, [role, router]);
+  const { authUser } = useUserContext()
 
-  useEffect(() => {
-    memoizedRouterChange;
-  }, [memoizedRouterChange]);
-
-  const updateURL = () => {
-    if (role == "member") {
-      router.push("/member");
-    }
-  };
-
-  //authUser and loading to auto direct to login?
-
-  return role == "member" ? (
+  return authUser.role == 'Member' || authUser.role == 'member' ? (
     <div className={styles.container}>
       <Head>
         <title>{title}</title>
@@ -47,7 +37,7 @@ const Layout = ({ children, title }: any) => {
       <ManagerNavbar />
       <div className={styles.page}>{children}</div>
     </div>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

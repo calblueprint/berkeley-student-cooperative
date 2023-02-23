@@ -1,130 +1,137 @@
-import * as React from "react";
-import { useRouter } from "next/router";
-import { Drawer, List, ListItem, ListItemText } from "@mui/material";
-import styles from "./ManagerNavbar.module.css";
-import Icon from "../../../assets/Icon";
+import * as React from 'react'
+import { useRouter } from 'next/router'
+import { List, ListItem, ListItemText, Typography } from '@mui/material'
+import styles from './ManagerNavbar.module.css'
+import Icon from '../../../assets/Icon'
+import { useUserContext } from '../../../context/UserContext'
 
 const ManagerNavbar: React.FunctionComponent = () => {
-  const router = useRouter();
+  /**
+   * Returns the navigation bar component for managers
+   *
+   * no params
+   * user is retrieved from the context using useUserContext()
+   *
+   */
+  const router = useRouter()
+  const { authUser, signOutAuth } = useUserContext()
+
+  const userDetails = () => (
+    // Renders user details - name and role
+    <ListItem className={styles.item + ' ' + styles.userDetails}>
+      <Icon type="navProfile" className={styles.icon} />
+      <div>
+        <Typography variant="subtitle1" color={'#FFFFFF'}>
+          {authUser.firstName} {authUser.lastName}
+        </Typography>
+        <Typography variant="subtitle1" color={'#FFFFFF'}>
+          {authUser.role}
+        </Typography>
+      </div>
+    </ListItem>
+  )
+
+  const pages = () => (
+    /**
+     * Renders navigation bar buttons for 3 pages - schedule, planner, house
+     *
+     * schedule is the default page
+     * onClick handler pushes "/manager/[page name]" to the url using router
+     */
+    <List className={styles.pages}>
+      <ListItem
+        button
+        key={'schedule'}
+        onClick={() => {
+          router.push('/manager/schedule')
+        }}
+        className={
+          router.pathname == '/manager/schedule' ? styles.active : styles.item
+        }
+      >
+        <div className={styles.icon}>
+          <Icon type="navSchedule" />
+        </div>
+        <ListItemText
+          primaryTypographyProps={{ fontSize: '18px' }}
+          className={styles.itemText}
+          primary={'Schedule'}
+        />
+      </ListItem>
+      <ListItem
+        button
+        key={'planner'}
+        onClick={() => {
+          router.push('/manager/planner')
+        }}
+        className={
+          router.pathname == '/manager/planner' ? styles.active : styles.item
+        }
+      >
+        <div className={styles.icon}>
+          <Icon type="navPlanner" />
+        </div>
+        <ListItemText
+          primaryTypographyProps={{ fontSize: '18px' }}
+          className={styles.itemText}
+          primary={'Planner'}
+        />
+      </ListItem>
+      <ListItem
+        button
+        key={'house'}
+        onClick={() => {
+          router.push('/manager/house')
+        }}
+        className={
+          router.pathname == '/manager/house' ? styles.active : styles.item
+        }
+      >
+        <div className={styles.icon}>
+          <Icon type="navMembers" />
+        </div>
+        <ListItemText
+          primaryTypographyProps={{ fontSize: '18px' }}
+          className={styles.itemText}
+          primary={'Members'}
+        />
+      </ListItem>
+    </List>
+  )
+
+  const logout = () => (
+    <div className={styles.logout}>
+      <ListItem
+        className={styles.item}
+        button
+        key={'settings'}
+        onClick={() => {
+          // signout MUST happen before pushing the login page, or else there is an error cuz the user context tries to use an empty user
+          signOutAuth()
+          router.push('/login')
+        }}
+      >
+        <Icon type="navLogout" />
+        <ListItemText
+          primaryTypographyProps={{
+            fontSize: '18px',
+            color: '#FFFFFF',
+            fontWeight: 600,
+          }}
+          className={styles.itemText}
+          primary={'Logout'}
+        />
+      </ListItem>
+    </div>
+  )
 
   return (
-    <Drawer
-      anchor="left"
-      variant="permanent"
-      sx={{
-        display: {
-          width: "110px",
-          flexShrink: "0",
-        },
-        "& .MuiDrawer-paper": {
-          boxSizing: "border-box",
-          width: "169px",
-          marginTop: "15%",
-          backgroundColor: "#FFFFFF",
-          border: "solid",
-          color: "white",
-          borderWidth: "1px",
-          borderColor: "#E2E2E2",
-        },
-      }}
-    >
-      <List className={styles.list}>
-        <ListItem
-          button
-          key={"dashboard"}
-          onClick={() => {
-            router.push("/dashboard");
-          }}
-          className={styles.active}
-        >
-          <div className={styles.icon}>
-            <Icon type="navDashboard" />
-          </div>
-          <ListItemText
-            primaryTypographyProps={{ fontSize: "18px" }}
-            className={styles.itemText}
-            primary={"Dashboard"}
-          />
-        </ListItem>
+    <div className={styles.container}>
+      {userDetails()}
+      {pages()}
+      {logout()}
+    </div>
+  )
+}
 
-        <ListItem
-          button
-          key={"planner"}
-          onClick={() => {
-            router.push("/planner");
-          }}
-          className={router.pathname == "/planner" ? styles.active : styles.item}
-        >
-          <div className={styles.icon}>
-            <Icon type="navPlanner" />
-          </div>
-          <ListItemText
-            primaryTypographyProps={{ fontSize: "18px" }}
-            className={styles.itemText}
-            primary={"Planner"}
-          />
-        </ListItem>
-
-        <ListItem
-          button
-          key={"schedule"}
-          onClick={() => {
-            router.push("/schedule");
-          }}
-          className={
-            router.pathname == "/schedule" ? styles.active : styles.item
-          }
-        >
-          <div className={styles.icon}>
-            <Icon type="navSchedule" />
-          </div>
-          <ListItemText
-            primaryTypographyProps={{ fontSize: "18px" }}
-            className={styles.itemText}
-            primary={"Schedule"}
-          />
-        </ListItem>
-
-        <ListItem
-          button
-          key={"house"}
-          onClick={() => {
-            router.push("/house");
-          }}
-          className={router.pathname == "/house" ? styles.active : styles.item}
-        >
-          <div className={styles.icon}>
-            <Icon type="navHouse" />
-          </div>
-          <ListItemText
-            primaryTypographyProps={{ fontSize: "18px" }}
-            className={styles.itemText}
-            primary={"House"}
-          />
-        </ListItem>
-
-        <ListItem
-          button
-          key={"settings"}
-          onClick={() => {
-            router.push("/settings");
-          }}
-          className={
-            router.pathname == "/settings" ? styles.active : styles.item
-          }
-        >
-          <div className={styles.icon}>
-            <Icon type="navSettings" />
-          </div>
-          <ListItemText
-            primaryTypographyProps={{ fontSize: "18px" }}
-            className={styles.itemText}
-            primary={"Settings"}
-          />
-        </ListItem>
-      </List>
-    </Drawer>
-  );
-};
-
-export default ManagerNavbar;
+export default ManagerNavbar

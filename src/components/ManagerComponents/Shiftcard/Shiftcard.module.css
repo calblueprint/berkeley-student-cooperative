@@ -1,42 +1,42 @@
 .shiftBox {
-    padding: 10%;
+  padding: 10%;
 }
 
 .header {
-    padding-bottom: 3%;
+  padding-bottom: 3%;
 }
 
 .title {
-    padding-bottom: 5%;
-    float: left;
-    display: block;
+  padding-bottom: 5%;
+  float: left;
+  display: block;
 }
 
 .close {
-    float: right;
-    padding-bottom: 5%;
-    display: block;
+  float: right;
+  padding-bottom: 5%;
+  display: block;
 }
 
 .formField {
-    width: 100%;
-    padding-bottom: 5%;
-    padding-right: 3%;
-    float: left;
+  width: 100%;
+  padding-bottom: 5%;
+  padding-right: 3%;
+  float: left;
 }
 
 .flex {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
 .submit {
-    float: right;
-    margin-bottom: 10px;
+  float: right;
+  margin-bottom: 10px;
 }
 
 .clear {
-    float: left;
-    margin-bottom: 10px;
+  float: left;
+  margin-bottom: 10px;
 }
