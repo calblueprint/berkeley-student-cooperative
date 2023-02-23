@@ -1,0 +1,47 @@
+.create {
+  height: 100vh;
+  background-color: #f3f5f6;
+}
+
+.logo {
+  padding: 2%;
+}
+
+.card {
+  background-color: #ffffff;
+  width: 45%;
+  height: 70%;
+  margin: auto;
+  border-radius: 10px;
+  margin-top: 1%;
+}
+
+.body {
+  padding: 10%;
+  padding-top: 6%;
+  color: #515151;
+}
+
+.text {
+  padding-bottom: 2%;
+  padding-top: 4%;
+}
+
+.textfield {
+  color: #e2e2e2;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2%;
+}
+
+.button {
+  margin: 3% 0 3% 0;
+}
+
+.pwhelp {
+  color: #a5a5a5;
+}

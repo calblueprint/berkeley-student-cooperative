@@ -1,4 +1,4 @@
-last_name,first_name,email,house
+lastName,firstName,email,house
 Thakur,Akshay,akshay@gmail.com,EUC
 Ortiz,Alvaro,alvaro@gmail.com,EUC
 Thirunarayanan,Anu,anu@gmail.com,EUC
@@ -11,5 +11,6 @@ idk,Jenny,jenny@gmail.com,EUC
 Martinez,Kenneth,kenneth@gmail.com,EUC
 Bhaskaran,Miha,miha@gmail.com,EUC
 idk,Sarah,sarah@gmail.com,EUC
-Bonet,Shannon,shannon@gmail.com
+Bonet,Shannon,shannon@gmail.com,EUC
 Huang,Steven,steven@gmail.com,EUC
+Bonet2,Shannon,shannon2@gmail.com,EUC
