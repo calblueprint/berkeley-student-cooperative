@@ -16,7 +16,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material'
-import { getHouse } from '../../../firebase/queries/houseQueries'
+import { getHouse } from '../../../firebase/queries/house'
 import { Day } from '../../../types/schema'
 import { getNumVerified, getShift } from '../../../firebase/queries/shift'
 import { Shift } from '../../../types/schema'
@@ -115,17 +115,17 @@ export const ShiftSchedule = () => {
    * Loads the FB data and creates Row Components to display on MUI Table
    */
   const loadScheduleComponents = async () => {
-    let houseFB = await getHouse(authUser.houseID)
-    let tempSchedule = new Map<string, JSX.Element[]>()
+    const houseFB = await getHouse(authUser.houseID)
+    const tempSchedule = new Map<string, JSX.Element[]>()
     //Promise All is important here because we need all Data to be loaded in before setting schedule again.
     //houseFB.Schedule contains the FB schedule.
     Promise.all(
       Object.entries(houseFB.schedule).map(async (entry) => {
-        let day = entry[0],
+        const day = entry[0],
           shiftIDs = entry[1]
         //getDailyData converts all Firebase Shifts to row Data, only retrieves essential info for a row
-        let dailyData: rowData[] = await getDailyData(day, shiftIDs)
-        let rowComponents: JSX.Element[] = []
+        const dailyData: rowData[] = await getDailyData(day, shiftIDs)
+        const rowComponents: JSX.Element[] = []
         //Turn all row Data into Row Components
         convertDataToComponent(dailyData, rowComponents)
         tempSchedule.set(day, rowComponents)
@@ -152,14 +152,14 @@ export const ShiftSchedule = () => {
     if (shiftIDs == undefined) {
       return new Array<rowData>()
     }
-    let shiftPromises: Promise<Shift | undefined>[] = []
+    const shiftPromises: Promise<Shift | undefined>[] = []
     setCurrentShiftCardID(shiftIDs[0])
     shiftIDs.map((id) => {
       shiftPromises.push(getShift(authUser.houseID, id))
     })
     //MUST use Promise.all to assure that ALL shifts are loaded in before any loading is done.
-    let shiftObjects = await Promise.all(shiftPromises)
-    let numVerifiedPromises: Promise<number | undefined>[] = []
+    const shiftObjects = await Promise.all(shiftPromises)
+    const numVerifiedPromises: Promise<number | undefined>[] = []
     //Number Verified is retrieved differently since it's a collection.
     shiftObjects.map((shift) => {
       if (shift != undefined) {
@@ -168,16 +168,16 @@ export const ShiftSchedule = () => {
         )
       }
     })
-    let numVerifiedList = await Promise.all(numVerifiedPromises)
-    let rowObjects: rowData[] = []
+    const numVerifiedList = await Promise.all(numVerifiedPromises)
+    const rowObjects: rowData[] = []
     shiftObjects.map((shift, index) => {
-      let numVerified = numVerifiedList[index]
+      const numVerified = numVerifiedList[index]
       if (shift != undefined && numVerified != undefined) {
         /**
          * Since verified shifts aren't set up in firebase,
          * can put random numbers in numVerified to test that status bar works
          * */
-        let rowObject = createRowData(shift, numVerified)
+        const rowObject = createRowData(shift, numVerified)
         rowObjects.push(rowObject)
       }
     })
@@ -191,7 +191,7 @@ export const ShiftSchedule = () => {
    * @param numVerified - Number of verified shifts
    */
   const createRowData = (shiftFB: Shift, numVerified: number): rowData => {
-    var status
+    let status
     if (numVerified == 0) {
       status = 'Missing'
     } else if (shiftFB.numOfPeople > numVerified) {
@@ -212,23 +212,23 @@ export const ShiftSchedule = () => {
       if (time > 1230) {
         time = time - 1200
       }
-      let timeString = String(time)
+      const timeString = String(time)
       let hours
       if (timeString.length > 3) {
         hours = timeString.slice(0, 2)
       } else {
         hours = timeString.slice(0, 1)
       }
-      let minutes = timeString.slice(-2)
+      const minutes = timeString.slice(-2)
       if (minutes == '30') {
         return hours + ':' + minutes + meridian
       }
       return hours + meridian
     }
 
-    let startTime = parseTime(shiftFB.timeWindow[0])
-    let endTime = parseTime(shiftFB.timeWindow[1])
-    let timeWindow = startTime + ' - ' + endTime
+    const startTime = parseTime(shiftFB.timeWindow[0])
+    const endTime = parseTime(shiftFB.timeWindow[1])
+    const timeWindow = startTime + ' - ' + endTime
     return {
       name: shiftFB.name,
       shiftID: shiftFB.shiftID,
