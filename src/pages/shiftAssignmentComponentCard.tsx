@@ -74,7 +74,7 @@ const ShiftAssignmentComponentCard: React.FC<
     for (let i = 0; i < totalUsersInHouse.length; i++) {
       const userID = totalUsersInHouse[i]
       const userObject = await getUser(userID)
-      if (userObject === null) {
+      if (userObject === null || userObject === undefined) {
         continue
       }
       // if this user has already been assigned to this shift, display them regardless of hours
@@ -140,9 +140,11 @@ const ShiftAssignmentComponentCard: React.FC<
       return
     }
     let potentialUsers = await findAvailableUsers(tempShiftObject)
-
     // Sorts on hou
     potentialUsers.sort((user1, user2) => {
+      if (user1 === undefined || user2 === undefined) {
+        return 0;
+      }
       // First sort on hours assignable left (hoursRequired - hoursAssigned), prioritizing people with higher hours remaining (user2 - user1)
       let user1HoursLeft = user1.hoursRequired - user1.hoursAssigned
       let user2HoursLeft = user2.hoursRequired - user2.hoursAssigned
@@ -221,11 +223,14 @@ const ShiftAssignmentComponentCard: React.FC<
       for (let i = 0; i < selectedRows.length; i++) {
         let userID = selectedRows[i]
         const user = await getUser(userID)
-        if (user === null || user.shiftsAssigned.includes(shiftID)) {
+        if (user === null || user === undefined || user.shiftsAssigned.includes(shiftID)) {
           continue
         }
         let copy = [...user.shiftsAssigned]
         copy.push(shiftID)
+        if (user === undefined) {
+          continue;
+        }
         let newHours = user.hoursAssigned
         if (shiftObject !== undefined) {
           newHours += shiftObject.hours
