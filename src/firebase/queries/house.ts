@@ -357,6 +357,7 @@ const parseHouse = async (doc: any) => {
     categories: newMap,
     members: members,
     address: address,
+    // schedule somehow already a map
     schedule: schedule,
     userPINs: objectToMap(userPINs),
   }
