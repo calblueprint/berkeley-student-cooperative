@@ -37,8 +37,6 @@ export const UnassignedTabContent = () => {
       if (!response) {
         setShifts([])
       } else {
-        console.log('HELLO')
-        console.log(response)
         // format data here before setting the data (in this case, shifts)
         setShifts(response)
       }
