@@ -26,10 +26,25 @@ const headCells: HeadCell<Shift>[] = [
   },
 ]
 
+const filters = [
+  'all',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday',
+]
+
 export const UnassignedTabContent = () => {
   const { house } = useUserContext()
 
   const [shifts, setShifts] = useState<Shift[] | undefined>([])
+  const [displayShifts, setDisplayShifts] = useState<Shift[] | undefined>(
+    shifts
+  )
+  const [filterBy, setFilterBy] = useState<string>(filters[0])
 
   useEffect(() => {
     async function fetchShifts() {
@@ -46,9 +61,12 @@ export const UnassignedTabContent = () => {
     fetchShifts()
   }, [house])
 
+  useEffect(() => {}, [filterBy])
+
   return (
     <>
       <UnassignedShiftList />
+      <Button onClick={handleFilterChange}></Button>
       <SortedTable data={shifts} headCells={headCells} isCheckable={false} />
     </>
   )
