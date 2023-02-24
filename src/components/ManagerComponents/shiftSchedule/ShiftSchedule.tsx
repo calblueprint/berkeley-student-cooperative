@@ -16,7 +16,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material'
-import { getHouse } from '../../../firebase/queries/houseQueries'
+import { getHouse } from '../../../firebase/queries/house'
 import { Day } from '../../../types/schema'
 import { getNumVerified, getShift } from '../../../firebase/queries/shift'
 import { Shift } from '../../../types/schema'
