@@ -94,7 +94,7 @@ export const UnassignedShiftList = () => {
   };
 
   const handleDayChange = (event: SelectChangeEvent) => {
-    let day = event.target.value as string;
+    const day = event.target.value as string;
     setSelectedDay(event.target.value as string);
     console.log(day);
     setDailyRows([])
@@ -117,22 +117,22 @@ export const UnassignedShiftList = () => {
       if (time > 1230) {
         time = time - 1200;
       }
-      let timeString = String(time);
+      const timeString = String(time);
       let hours;
       if (timeString.length > 3) {
         hours = timeString.slice(0, 2);
       } else {
         hours = timeString.slice(0, 1);
       }
-      let minutes = timeString.slice(-2);
+      const minutes = timeString.slice(-2);
       if (minutes == "30") {
         return hours + ":" + minutes + meridian;
       }
       return hours + meridian;
     };
-    let startTime = parseTime(shiftFB.timeWindow[0]);
-    let endTime = parseTime(shiftFB.timeWindow[1]);
-    let timeWindow = startTime + " - " + endTime;
+    const startTime = parseTime(shiftFB.timeWindow[0]);
+    const endTime = parseTime(shiftFB.timeWindow[1]);
+    const timeWindow = startTime + " - " + endTime;
     let displayHours = "";
     if (shiftFB.hours == 1) {
       displayHours = " hour";
@@ -170,11 +170,11 @@ export const UnassignedShiftList = () => {
 
   const insertCompToSchedule = (day: string, rowShift: rowData) => {
     const comp = convertDataToComponent(rowShift);
-    let tempSchedule = schedule;
+    const tempSchedule = schedule;
     if (tempSchedule.has(day)) {
-      let componetArray = tempSchedule.get(day);
+      const componetArray = tempSchedule.get(day);
       if (componetArray == undefined) {
-        let componets: JSX.Element[] = [];
+        const componets: JSX.Element[] = [];
         componets.push(comp);
         tempSchedule.set(day, componets);
       } else {
@@ -191,7 +191,7 @@ export const UnassignedShiftList = () => {
         }
       }
     } else {
-      let componets: JSX.Element[] = [];
+      const componets: JSX.Element[] = [];
       componets.push(comp);
       tempSchedule.set(day, componets);
     }
@@ -202,7 +202,7 @@ export const UnassignedShiftList = () => {
     Loads FB data and creates Row Components to display on MUI Table
     (BACKEND -> FRONTEND) */
   const loadScheduleComponents = async () => {
-    let shifts = await getAllShift(authUser.houseID);
+    const shifts = await getAllShift(authUser.houseID);
     // let shifts = shifts[]
     console.log(shifts);
 
@@ -217,11 +217,11 @@ export const UnassignedShiftList = () => {
         // if no shift has been assigned them add the componets to all posible days
         if (shift.usersAssigned.length == 0) {
           for (let i = 0; i < shift.possibleDays.length; i++) {
-            let day = shift.possibleDays[i];
+            const day = shift.possibleDays[i];
             insertCompToSchedule(day, rowShift);
           }
         } else {
-          let day = shift.assignedDay;
+          const day = shift.assignedDay;
           insertCompToSchedule(day, rowShift);
         }
       });
