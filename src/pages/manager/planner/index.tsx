@@ -4,7 +4,7 @@ import { useState } from 'react'
 import CategoriesView from '../categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
 import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
-import UnassignedShiftList from '../../../components/ManagerComponents/UnassignedShiftsList/UnassignedShiftsList'
+import { UnassignedTabContent } from './UnassignedTabContent'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -65,7 +65,7 @@ export default function SchedulePage() {
           </Tabs>
         </Box>
         <TabPanel value={currPage} index={0}>
-          <UnassignedShiftList />
+          <UnassignedTabContent />
         </TabPanel>
         <TabPanel value={currPage} index={1}>
           <ShiftSchedule />
