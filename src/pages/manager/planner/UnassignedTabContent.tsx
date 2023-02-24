@@ -70,6 +70,8 @@ export const UnassignedTabContent = () => {
     setFilterBy(event.target.value)
   }
 
+  // runs when the component mounts and when the house changes
+  // ALL the shifts (unfiltered)
   useEffect(() => {
     async function fetchShifts() {
       const response = await getAllShifts(house.houseID)
@@ -78,18 +80,24 @@ export const UnassignedTabContent = () => {
       } else {
         // format data here before setting the data (in this case, shifts)
         setShifts(
-          response.map((shift) => {
-            const time1 = formatMilitaryTime(shift.timeWindow[0])
-            const time2 = formatMilitaryTime(shift.timeWindow[1])
-            shift.timeWindowDisplay = time1 + ' - ' + time2
-            return shift
-          })
+          response
+            .filter((shift) => {
+              return shift.usersAssigned?.length == 0
+            })
+            .map((shift) => {
+              const time1 = formatMilitaryTime(shift.timeWindow[0])
+              const time2 = formatMilitaryTime(shift.timeWindow[1])
+              shift.timeWindowDisplay = time1 + ' - ' + time2
+              return shift
+            })
         )
       }
     }
     fetchShifts()
   }, [house])
 
+  // runs when the component mounts and when filterBy or shifts changes
+  // the filtered shifts (filtered by day)
   useEffect(() => {
     setDisplayShifts(
       filterBy === filters[0]
