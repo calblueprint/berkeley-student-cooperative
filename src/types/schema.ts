@@ -34,6 +34,8 @@ export type User = {
 }
 
 export type Shift = {
+  // optional id attribute for table stuff
+  id?: string
   // Name of the shift
   name: string
   // ID of the shift (not stored in Firebase, attached to shift)

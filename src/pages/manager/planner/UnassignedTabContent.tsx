@@ -88,6 +88,7 @@ export const UnassignedTabContent = () => {
               const time1 = formatMilitaryTime(shift.timeWindow[0])
               const time2 = formatMilitaryTime(shift.timeWindow[1])
               shift.timeWindowDisplay = time1 + ' - ' + time2
+              shift.id = shift.shiftID
               return shift
             })
         )
