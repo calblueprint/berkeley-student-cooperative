@@ -3,19 +3,43 @@ import UnassignedShiftList from '../../../components/ManagerComponents/Unassigne
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { useUserContext } from '../../../context/UserContext'
 import { getAllShifts } from '../../../firebase/queries/shift'
-import { Shift } from '../../../interfaces/interfaces'
+import { HeadCell, Shift } from '../../../interfaces/interfaces'
+
+const headCells: HeadCell<Shift>[] = [
+  {
+    id: 'name',
+    isNumeric: false,
+    label: 'Shift Name',
+    isSortable: true,
+  },
+  {
+    id: 'timeWindow',
+    isNumeric: false,
+    label: 'Time',
+    isSortable: false,
+  },
+  {
+    id: 'hours',
+    isNumeric: true,
+    label: 'Value',
+    isSortable: true,
+  },
+]
 
 export const UnassignedTabContent = () => {
-  const [authUser, house] = useUserContext()
+  const { house } = useUserContext()
 
   const [shifts, setShifts] = useState<Shift[] | undefined>([])
 
   useEffect(() => {
     async function fetchShifts() {
-      const response = await getAllShifts(house)
+      const response = await getAllShifts(house.houseID)
       if (!response) {
         setShifts([])
       } else {
+        console.log('HELLO')
+        console.log(response)
+        // format data here before setting the data (in this case, shifts)
         setShifts(response)
       }
     }
@@ -25,7 +49,7 @@ export const UnassignedTabContent = () => {
   return (
     <>
       <UnassignedShiftList />
-      <SortedTable data={shifts} headCells={} isCheckable={false} />
+      <SortedTable data={shifts} headCells={headCells} isCheckable={false} />
     </>
   )
 }
