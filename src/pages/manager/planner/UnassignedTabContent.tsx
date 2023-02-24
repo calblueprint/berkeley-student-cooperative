@@ -13,7 +13,7 @@ const headCells: HeadCell<Shift>[] = [
     isSortable: true,
   },
   {
-    id: 'timeWindow',
+    id: 'timeWindowDisplay',
     isNumeric: false,
     label: 'Time',
     isSortable: false,
@@ -46,6 +46,24 @@ export const UnassignedTabContent = () => {
   )
   const [filterBy, setFilterBy] = useState<string>(filters[0])
 
+  function formatMilitaryTime(militaryTime: number): string {
+    const hour = Math.floor(militaryTime / 100)
+    const minute = militaryTime % 100
+    const isPM = hour >= 12
+
+    // Convert hour to 12-hour format
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12
+
+    // Add leading zero to minute if needed
+    const formattedMinute = minute < 10 ? `0${minute}` : `${minute}`
+
+    // Add AM/PM indicator
+    const ampm = isPM ? 'PM' : 'AM'
+
+    // Return formatted time string
+    return `${formattedHour}:${formattedMinute}${ampm}`
+  }
+
   useEffect(() => {
     async function fetchShifts() {
       const response = await getAllShifts(house.houseID)
@@ -53,21 +71,43 @@ export const UnassignedTabContent = () => {
         setShifts([])
       } else {
         console.log('HELLO')
+
         console.log(response)
         // format data here before setting the data (in this case, shifts)
-        setShifts(response)
+        setShifts(
+          response.map((shift) => {
+            const time1 = formatMilitaryTime(shift.timeWindow[0])
+            const time2 = formatMilitaryTime(shift.timeWindow[1])
+            shift.timeWindowDisplay = time1 + ' - ' + time2
+            return shift
+          })
+        )
       }
     }
     fetchShifts()
   }, [house])
 
-  useEffect(() => {}, [filterBy])
+  useEffect(() => {
+    setDisplayShifts(
+      filterBy === filters[0]
+        ? shifts
+        : shifts?.filter((shift) =>
+            shift.possibleDays
+              .map((day) => day.toLocaleLowerCase())
+              .includes(filterBy)
+          )
+    )
+  }, [filterBy, shifts])
 
   return (
     <>
       <UnassignedShiftList />
       <Button onClick={handleFilterChange}></Button>
-      <SortedTable data={shifts} headCells={headCells} isCheckable={false} />
+      <SortedTable
+        data={displayShifts}
+        headCells={headCells}
+        isCheckable={false}
+      />
     </>
   )
 }

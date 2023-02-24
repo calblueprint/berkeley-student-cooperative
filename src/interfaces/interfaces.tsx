@@ -48,6 +48,8 @@ export interface Shift {
   numOfPeople: number
   // Time window that this shift must be done in [startTime, endTime]
   timeWindow: number[]
+  // Display for timeWindow
+  timeWindowDisplay: string
   // Day that the shift is assigned
   assignedDay: string
   // Hours earned for a user

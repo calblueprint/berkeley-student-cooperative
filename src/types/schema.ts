@@ -46,6 +46,8 @@ export type Shift = {
   numOfPeople: number
   // Time window that this shift must be done in [startTime, endTime]
   timeWindow: number[]
+  // property to display timeWindow
+  timeWindowDisplay: string
   // Day that the shift is assigned
   assignedDay: string
   // Hours earned for a user
