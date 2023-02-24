@@ -1,3 +1,4 @@
+import { MenuItem, Select } from '@mui/material'
 import { useEffect, useState } from 'react'
 import UnassignedShiftList from '../../../components/ManagerComponents/UnassignedShiftsList/UnassignedShiftsList'
 import SortedTable from '../../../components/shared/tables/SortedTable'
@@ -64,7 +65,13 @@ export const UnassignedTabContent = () => {
   return (
     <>
       <UnassignedShiftList />
-      <Button onClick={handleFilterChange}></Button>
+      <Select value={setFilterBy} onChange={handleFilterBy}>
+        {filters.map((day) => (
+          <MenuItem key={day} value={day}>
+            {day}
+          </MenuItem>
+        ))}
+      </Select>
       <SortedTable data={shifts} headCells={headCells} isCheckable={false} />
     </>
   )
