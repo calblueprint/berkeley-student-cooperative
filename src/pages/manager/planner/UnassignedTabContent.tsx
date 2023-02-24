@@ -82,6 +82,7 @@ export const UnassignedTabContent = () => {
             const time1 = formatMilitaryTime(shift.timeWindow[0])
             const time2 = formatMilitaryTime(shift.timeWindow[1])
             shift.timeWindowDisplay = time1 + ' - ' + time2
+
             return shift
           })
         )
@@ -104,7 +105,7 @@ export const UnassignedTabContent = () => {
 
   return (
     <>
-      <UnassignedShiftList />
+      {/* <UnassignedShiftList /> */}
       <Select value={filterBy} onChange={handleFilterChange}>
         {filters.map((day) => (
           <MenuItem key={day} value={day}>
