@@ -1,3 +1,4 @@
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useEffect, useState } from 'react'
 import UnassignedShiftList from '../../../components/ManagerComponents/UnassignedShiftsList/UnassignedShiftsList'
 import SortedTable from '../../../components/shared/tables/SortedTable'
@@ -64,15 +65,17 @@ export const UnassignedTabContent = () => {
     return `${formattedHour}:${formattedMinute}${ampm}`
   }
 
+  const handleFilterChange = (event: SelectChangeEvent) => {
+    console.log(event.target.value)
+    setFilterBy(event.target.value)
+  }
+
   useEffect(() => {
     async function fetchShifts() {
       const response = await getAllShifts(house.houseID)
       if (!response) {
         setShifts([])
       } else {
-        console.log('HELLO')
-
-        console.log(response)
         // format data here before setting the data (in this case, shifts)
         setShifts(
           response.map((shift) => {
@@ -102,7 +105,13 @@ export const UnassignedTabContent = () => {
   return (
     <>
       <UnassignedShiftList />
-      <Button onClick={handleFilterChange}></Button>
+      <Select value={filterBy} onChange={handleFilterChange}>
+        {filters.map((day) => (
+          <MenuItem key={day} value={day}>
+            {day}
+          </MenuItem>
+        ))}
+      </Select>
       <SortedTable
         data={displayShifts}
         headCells={headCells}
