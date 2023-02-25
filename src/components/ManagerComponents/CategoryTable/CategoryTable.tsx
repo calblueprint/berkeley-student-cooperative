@@ -6,6 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import {useState, useEffect} from 'react';
 
 
 // type CategoryTableProps = {
@@ -16,33 +17,29 @@ import TableRow from "@mui/material/TableRow";
 // };
 
 const CategoryTable = () => {
+    useEffect(() => {
+        console.log("hey there.")
+    }, [])
+
  
-  return (
+    return (
     <div>
-      <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+        <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
         <Table stickyHeader aria-label="sticky table">
-          <TableHead>
+            <TableHead>
             <TableRow>
-              <TableCell padding="checkbox" />
-              Hey
+                <TableCell>Insert Category Here:</TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            
-                <TableCell padding="none">
-                    Hey? with uncertainty
-                  <Checkbox
-                    color="primary"
-                    // checked={selectedRows.includes(row.id)}
-                    
-                  />
-                </TableCell>
-                
-          </TableBody>
+            </TableHead>
+            <TableBody>
+            <TableRow>
+                <TableCell>Cooking Shift or Idk</TableCell>
+            </TableRow>    
+            </TableBody>
         </Table>
-      </TableContainer>
+        </TableContainer>
     </div>
-  );
+    );
 };
 
 export default CategoryTable;
