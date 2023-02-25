@@ -48,15 +48,17 @@ export const getAllHouses = async () => {
  * @public
  *
  */
-export const getHouse = async (houseID: string) => {
-  const docRef = doc(firestore, 'houses', houseID)
-  const colSnap = await getDoc(docRef)
-
-  const promise: Promise<House> = parseHouse(colSnap)
-  const house = await promise
-  return house
+export const getHouse = async (houseID: string): Promise<House> => {
+  try {
+    const docRef = await doc(firestore, 'houses', houseID)
+    const colSnap = await getDoc(docRef)
+    const house = await parseHouse(colSnap)
+    return house
+  } catch (e) {
+    console.warn(e)
+    throw e
+  }
 }
-
 /**
  * Updates a house's address on the firebase.
  *
@@ -336,6 +338,7 @@ export const removeCategory = async (
 }
 
 //parses house document passed in
+
 const parseHouse = async (doc: any) => {
   const data = doc.data()
   const houseID = doc.id.toString()
@@ -354,7 +357,8 @@ const parseHouse = async (doc: any) => {
     categories: newMap,
     members: members,
     address: address,
-    schedule: objectToMap(schedule),
+    // schedule somehow already a map
+    schedule: schedule,
     userPINs: objectToMap(userPINs),
   }
   return house as House
