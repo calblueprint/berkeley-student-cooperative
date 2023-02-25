@@ -51,10 +51,10 @@ const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({
           <IconButton onClick={handleExpand}>
             {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
-          {mapKey +
+          {categoryMap !== undefined && mapKey +
             ' - ' +
             categoryMap?.size +
-            pluralizeShift(categoryMap?.size)}
+            pluralizeShift(categoryMap.size)}
         </TableCell>
       </TableRow>
 
