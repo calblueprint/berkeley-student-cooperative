@@ -1,15 +1,15 @@
-import { Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
-import { useUserContext } from "../../context/UserContext";
-import { useRouter } from "next/router";
-import { emailRegex } from "../../firebase/helpers";
-import Image from "next/image";
-import BscLogo from "../../assets/bsclogo.png";
-import styles from "./CreateAccount.module.css";
+import { Button, TextField, Typography } from '@mui/material'
+import { useState } from 'react'
+import { useUserContext } from '../../context/UserContext'
+import { useRouter } from 'next/router'
+import { emailRegex } from '../../firebase/helpers'
+import Image from 'next/image'
+import BscLogo from '../../assets/bsclogo.png'
+import styles from './CreateAccount.module.css'
 import {
   getRowOfCSV,
   updateRowOfCSV,
-} from "../../firebase/queries/authorizedUsers";
+} from '../../firebase/queries/authorizedUsers'
 
 /**
  * Page that's used to create an account for a member that has never
@@ -21,69 +21,69 @@ import {
  */
 
 const CreateAccountPage = () => {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const { authUser, register } = useUserContext();
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const { authUser, register } = useUserContext()
 
   const login = () => {
-    router.push("/login");
-  };
+    router.push('/login')
+  }
 
   // Updates name as the name field is edited
   const handleEmailChange = (event: any) => {
-    setEmail(event.target.value);
-  };
+    setEmail(event.target.value)
+  }
 
   // Updates email as the email field is edited
   const handlePasswordChange = (event: any) => {
-    setPassword(event.target.value);
-  };
+    setPassword(event.target.value)
+  }
 
   // Updates password as the password field is edited
   const handleConfirmPasswordChange = (event: any) => {
-    setConfirmPassword(event.target.value);
-  };
+    setConfirmPassword(event.target.value)
+  }
 
   const handleSubmit = async () => {
     // Check if email is valid
     if (!emailRegex.test(email)) {
-      console.log("Invalid Email");
-      return;
+      console.log('Invalid Email')
+      return
     }
     // Check if password length is >= 6
     if (password.length < 6) {
-      console.log("Password must be 6 characters or longer");
-      return;
+      console.log('Password must be 6 characters or longer')
+      return
     }
     // Check if confirm = password
     if (password !== confirmPassword) {
-      console.log("Passwords don't match");
-      return;
+      console.log("Passwords don't match")
+      return
     }
     // Invalid if email not in CSV
-    let csvInformation = await getRowOfCSV(email);
+    let csvInformation = await getRowOfCSV(email)
     if (csvInformation === null) {
-      console.log("Invalid email");
-      return;
+      console.log('Invalid email')
+      return
     }
     // Cannot create duplicate accounts
     if (csvInformation.accountCreated) {
-      console.log("Account already created. Log in instead.");
-      return;
+      console.log('Account already created. Log in instead.')
+      return
     }
     // Invalid CSV input
     if (csvInformation.houseID === undefined) {
-      console.log("Invalid house ID");
-      return;
+      console.log('Invalid house ID')
+      return
     }
     if (
       csvInformation.firstName === undefined ||
       csvInformation.lastName === undefined
     ) {
-      console.log("Invalid name");
-      return;
+      console.log('Invalid name')
+      return
     }
     try {
       await register(
@@ -91,15 +91,15 @@ const CreateAccountPage = () => {
         csvInformation.houseID,
         csvInformation.firstName,
         csvInformation.lastName,
-        "member",
+        'member',
         password
-      );
+      )
       let newData = {
         accountCreated: true,
-      };
-      await updateRowOfCSV(email, newData);
+      }
+      await updateRowOfCSV(email, newData)
 
-      router.push("/member/dashboard");
+      router.push('/member/dashboard')
 
       /******************* */
       // register(
@@ -124,9 +124,9 @@ const CreateAccountPage = () => {
       //   .catch((e) => console.log(e));
       /******************* */
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  };
+  }
 
   return (
     <div>
@@ -198,7 +198,7 @@ const CreateAccountPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreateAccountPage;
+export default CreateAccountPage

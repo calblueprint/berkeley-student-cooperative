@@ -1,12 +1,12 @@
-import { Card, CardContent, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
-import { getUser } from "../../../firebase/queries/user";
-import { User } from "../../../types/schema";
-import styles from "../SettingsInfo/SettingsInfo.module.css";
+import { Card, CardContent, Typography } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { getUser } from '../../../firebase/queries/user'
+import { User } from '../../../types/schema'
+import styles from '../SettingsInfo/SettingsInfo.module.css'
 
 type DocumentsInfoProps = {
-  userID: string;
-};
+  userID: string
+}
 
 const DocumentsInfo: React.FC<DocumentsInfoProps> = ({
   userID,
@@ -16,16 +16,16 @@ const DocumentsInfo: React.FC<DocumentsInfoProps> = ({
    *
    * @param userID - ID of the member
    */
-  const [user, setUser] = useState<User | null>();
+  const [user, setUser] = useState<User | null>()
 
   // retrieves user from context
   useEffect(() => {
     const getData = async () => {
-      const currUser = await getUser(userID);
-      setUser(currUser);
-    };
-    getData();
-  }, [userID]);
+      const currUser = await getUser(userID)
+      setUser(currUser)
+    }
+    getData()
+  }, [userID])
 
   return user ? (
     <Card sx={{ width: 550, height: 360 }}>
@@ -42,7 +42,7 @@ const DocumentsInfo: React.FC<DocumentsInfoProps> = ({
     </Card>
   ) : (
     <div></div>
-  );
-};
+  )
+}
 
-export default DocumentsInfo;
+export default DocumentsInfo

@@ -1,20 +1,20 @@
-import { Box, Tab, Tabs, Typography } from "@mui/material";
-import React from "react";
-import Layout from "../../../components/Layout/Layout";
-import AvailabilityInfo from "../../../components/MemberComponents/AvailabilityInfo/AvailabilityInfo";
-import SettingsInfo from "../../../components/MemberComponents/SettingsInfo/SettingsInfo";
-import TaskPreferenceInfo from "../../../components/MemberComponents/TaskPreferenceInfo/TaskPreferenceInfo";
-import { useUserContext } from "../../../context/UserContext";
-import styles from "./Settings.module.css";
+import { Box, Tab, Tabs, Typography } from '@mui/material'
+import React from 'react'
+import Layout from '../../../components/Layout/Layout'
+import AvailabilityInfo from '../../../components/MemberComponents/AvailabilityInfo/AvailabilityInfo'
+import SettingsInfo from '../../../components/MemberComponents/SettingsInfo/SettingsInfo'
+import TaskPreferenceInfo from '../../../components/MemberComponents/TaskPreferenceInfo/TaskPreferenceInfo'
+import { useUserContext } from '../../../context/UserContext'
+import styles from './Settings.module.css'
 
 interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
+  children?: React.ReactNode
+  index: number
+  value: number
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = props
 
   return (
     <div
@@ -30,29 +30,29 @@ function TabPanel(props: TabPanelProps) {
         </Box>
       )}
     </div>
-  );
+  )
 }
 
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
+    'aria-controls': `simple-tabpanel-${index}`,
+  }
 }
 
 export default function SettingsPage() {
-  const { authUser } = useUserContext();
-  const [value, setValue] = React.useState(0);
+  const { authUser } = useUserContext()
+  const [value, setValue] = React.useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+    setValue(newValue)
+  }
 
   return (
     <Layout>
       <Typography variant="h4">Settings</Typography>
-      <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange}>
             <Tab label="Information" {...a11yProps(0)} />
             <Tab label="Availability" {...a11yProps(1)} />
@@ -70,5 +70,5 @@ export default function SettingsPage() {
         </TabPanel>
       </Box>
     </Layout>
-  );
+  )
 }

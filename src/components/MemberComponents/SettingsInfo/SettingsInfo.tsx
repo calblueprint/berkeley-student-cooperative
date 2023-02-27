@@ -6,17 +6,17 @@ import {
   DialogContent,
   TextField,
   Typography,
-} from "@mui/material";
-import { useState, useEffect } from "react";
-import { getHouse } from "../../../firebase/queries/house";
-import { getUser, updateUser } from "../../../firebase/queries/user";
-import { generatePinNumber } from "../../../firebase/helpers";
-import { House, User } from "../../../types/schema";
-import styles from "./SettingsInfo.module.css";
+} from '@mui/material'
+import { useState, useEffect } from 'react'
+import { getHouse } from '../../../firebase/queries/house'
+import { getUser, updateUser } from '../../../firebase/queries/user'
+import { generatePinNumber } from '../../../firebase/helpers'
+import { House, User } from '../../../types/schema'
+import styles from './SettingsInfo.module.css'
 
 type SettingsInfoProps = {
-  userID: string;
-};
+  userID: string
+}
 
 const SettingsInfo: React.FC<SettingsInfoProps> = ({
   userID,
@@ -26,54 +26,54 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
    *
    * @param userID - ID of the member
    */
-  const [user, setUser] = useState<User | null>();
-  const [house, setHouse] = useState<House | null>();
-  const [editing, setEditing] = useState<boolean>(false);
-  const [name, setName] = useState<string | null>();
-  const [email, setEmail] = useState<string | null>();
-  const [pin, setPin] = useState<number | null>();
-  let star = "*";
+  const [user, setUser] = useState<User | null>()
+  const [house, setHouse] = useState<House | null>()
+  const [editing, setEditing] = useState<boolean>(false)
+  const [name, setName] = useState<string | null>()
+  const [email, setEmail] = useState<string | null>()
+  const [pin, setPin] = useState<number | null>()
+  let star = '*'
 
   useEffect(() => {
     // retrieves user from context
     const getData = async () => {
-      const currUser = await getUser(userID);
-      setUser(currUser);
-    };
-    getData();
-  }, [userID]);
+      const currUser = await getUser(userID)
+      setUser(currUser)
+    }
+    getData()
+  }, [userID])
 
   useEffect(() => {
-    setName(user?.firstName + " " + user?.lastName);
-    setEmail(user?.email);
-    setPin(user?.pinNumber);
+    setName(user?.firstName + ' ' + user?.lastName)
+    setEmail(user?.email)
+    setPin(user?.pinNumber)
     const getData = async () => {
       if (user) {
-        const currHouse = await getHouse(user.houseID);
-        setHouse(currHouse);
+        const currHouse = await getHouse(user.houseID)
+        setHouse(currHouse)
       }
-    };
-    getData();
-  }, [user]);
+    }
+    getData()
+  }, [user])
 
   const handleOpen = () => {
-    setEditing(true);
-  };
+    setEditing(true)
+  }
 
   const handleClose = () => {
-    setEditing(false);
-  };
+    setEditing(false)
+  }
 
   const resetPin = async () => {
-    let newPin = generatePinNumber(5);
-    setPin(newPin);
+    let newPin = generatePinNumber(5)
+    setPin(newPin)
     let newData = {
       pinNumber: newPin,
-    };
-    if (user) {
-      await updateUser(user.userID, newData);
     }
-  };
+    if (user) {
+      await updateUser(user.userID, newData)
+    }
+  }
 
   return user && house ? (
     <div>
@@ -95,7 +95,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
                 fullWidth
                 value={name}
                 onChange={(event) => {
-                  setName(event.target.value);
+                  setName(event.target.value)
                 }}
               />
               <Typography className={styles.bodyTitle} variant="h5">
@@ -106,7 +106,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
                 fullWidth
                 value={email}
                 onChange={(event) => {
-                  setEmail(event.target.value);
+                  setEmail(event.target.value)
                 }}
               />
               <Typography className={styles.bodyTitle} variant="h5">
@@ -154,7 +154,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
               fullWidth
               value={name}
               onChange={(event) => {
-                setName(event.target.value);
+                setName(event.target.value)
               }}
             />
             <Typography className={styles.bodyTitle} variant="h5">
@@ -166,7 +166,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
               fullWidth
               value={email}
               onChange={(event) => {
-                setEmail(event.target.value);
+                setEmail(event.target.value)
               }}
             />
             <Typography className={styles.bodyTitle} variant="h5">
@@ -201,7 +201,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
     </div>
   ) : (
     <div></div>
-  );
-};
+  )
+}
 
-export default SettingsInfo;
+export default SettingsInfo

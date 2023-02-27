@@ -1,29 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 import {
   addCategory,
   getHouse,
-  updateHouse,
-} from "../../../firebase/queries/house";
-import { House } from "../../../types/schema";
-import CategoriesDropdown from "./categoriesDropdown";
-import Button from "@mui/material/Button";
+} from '../../../firebase/queries/house'
+import { House } from '../../../types/schema'
+import CategoriesDropdown from './categoriesDropdown'
+import Button from '@mui/material/Button'
 import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
   Table,
   TableBody,
   TableContainer,
   TextField,
-} from "@mui/material";
-import { mapToObject } from "../../../firebase/helpers";
-import styles from "./CategoriesView.module.css";
+  Typography,
+} from '@mui/material'
+import Icon from '../../../assets/Icon'
+
+import styles from './CategoriesView.module.css'
 
 type CategoriesViewProps = {
-  houseID: string;
-};
+  houseID: string
+}
 
 const CategoriesView: React.FC<CategoriesViewProps> = ({
   houseID,
@@ -37,53 +35,52 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
    */
 
   // Retrieved house object
-  const [house, setHouse] = useState<House>();
+  const [house, setHouse] = useState<House>()
   // Stores whether the modal to create a new category is opened
-  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [isModalOpened, setIsModalOpened] = useState(false)
   // Stores the new category name
-  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState('')
 
   // Retrieves the house object given the houseID
-  const retrieveHouse = async () => {
-    let h = await getHouse(houseID);
-    setHouse(h);
-  };
-
   useEffect(() => {
-    retrieveHouse();
-  }, []);
+    const retrieveHouse = async () => {
+      const h = await getHouse(houseID)
+      setHouse(h)
+    }
+    retrieveHouse()
+  }, [houseID])
 
   // Opens modal
   const openModal = () => {
-    setIsModalOpened(true);
-  };
-
-  // Updates the newCategoryName state as the user types in
-  const handleCategoryNameChange = (event: any) => {
-    setNewCategoryName(event.target.value);
-  };
+    setIsModalOpened(true)
+  }
 
   // Closes the modal without pushing anything to firebase
   const closeModal = () => {
-    setIsModalOpened(false);
-    setNewCategoryName("");
-  };
+    setIsModalOpened(false)
+    clearFields()
+  }
+
+    // Clears fields
+    const clearFields = () => {
+      setNewCategoryName('')
+    }
 
   // Uploads the new category to Firebase if the category doesn't exist yet
   const uploadCategory = async () => {
     if (newCategoryName.length == 0) {
-      console.log("Invalid Category Name length");
+      console.log('Invalid Category Name length')
     }
     if (house !== undefined && newCategoryName.length > 0) {
-      let successful = await addCategory(houseID, newCategoryName);
+      const successful = await addCategory(houseID, newCategoryName)
       if (successful) {
-        house.categories.set(newCategoryName, new Map<string, string>());
-        setHouse(house);
+        house.categories.set(newCategoryName, new Map<string, string>())
+        setHouse(house)
       }
     }
-    closeModal();
-  };
-
+    closeModal()
+  }
+  
   return (
     <div className={styles.categoryViewContainer}>
       <Button onClick={openModal} id={styles.newCategory}>
@@ -106,28 +103,54 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         </Table>
       </TableContainer>
       {isModalOpened && (
-        <Dialog open={isModalOpened} fullWidth={true}>
-          <DialogTitle>Create Category</DialogTitle>
+        <Dialog
+          fullWidth
+          maxWidth="md"
+          open={isModalOpened}
+          onClose={closeModal}
+          className={styles.dialog}
+        >
           <DialogContent>
-            <DialogContentText>Category Name</DialogContentText>
-            <TextField
-              autoFocus
-              value={newCategoryName}
-              onChange={handleCategoryNameChange}
-              margin="dense"
-              id="name"
-              fullWidth
-              variant="standard"
-            />
+            <div className={styles.shiftBox}>
+              <div className={styles.header}>
+                <div className={styles.flex}>
+                  <Typography className={styles.title} variant="h4">
+                    Create Category
+                  </Typography>
+                  <Button onClick={closeModal} className={styles.close}>
+                    <Icon type={'close'} />
+                  </Button>
+                </div>
+                <hr />
+              </div>
+              <div className={styles.formField}>
+                <div>
+                  <Typography className={styles.name}>Category name</Typography>
+                </div>
+                <TextField
+                  className={styles.textfield}
+                  fullWidth
+                  value={newCategoryName}
+                  placeholder="Ex: Basement clean"
+                  onChange={(event) => {
+                    setNewCategoryName(event.target.value)
+                  }}
+                />
+              </div>
+              <div>
+                <Button onClick={uploadCategory} className={styles.submit}>
+                  Save
+                </Button>
+                <Button onClick={clearFields} className={styles.clear}>
+                  Clear
+                </Button>
+              </div>
+            </div>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={closeModal}>Cancel</Button>
-            <Button onClick={uploadCategory}>Create New Category</Button>
-          </DialogActions>
         </Dialog>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CategoriesView;
+export default CategoriesView

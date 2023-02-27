@@ -8,14 +8,14 @@ import {
   setPersistence,
   browserSessionPersistence,
   browserLocalPersistence,
-} from "firebase/auth";
-import { addUser, getUser } from "./user";
-import { useState, useEffect } from "react";
-import { defaultUser } from "./user";
-import { defaultHouse } from "./house";
-import { doc, deleteDoc } from "firebase/firestore";
-import { firestore } from "../clientApp";
-import { getHouse } from "./house";
+} from 'firebase/auth'
+import { addUser, getUser } from './user'
+import { useState, useEffect } from 'react'
+import { defaultUser } from './user'
+import { defaultHouse } from './house'
+import { doc, deleteDoc } from 'firebase/firestore'
+import { firestore } from '../clientApp'
+import { getHouse } from './house'
 
 //managers don't have to register.  House will be matched to email
 //userID is going to get generated in register.
@@ -42,13 +42,13 @@ export const useFirebaseAuth = () => {
    */
 
   // retreives firebase auth
-  const auth = getAuth();
+  const auth = getAuth()
 
   // state var for authUser (current signed in user)
-  const [authUser, setAuthUser] = useState(defaultUser);
+  const [authUser, setAuthUser] = useState(defaultUser)
 
   // state var for house of current signed in user
-  const [house, setHouse] = useState(defaultHouse);
+  const [house, setHouse] = useState(defaultHouse)
 
   /**
    *  @brif This variabel signals the authUserContext.Provider if authStateChange() function is
@@ -58,13 +58,13 @@ export const useFirebaseAuth = () => {
    *
    *  @param setLoading sets the state of Loading
    */
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
 
   // useEffect that calls authStateChanged() everytime the auth state is changed (refresh, signIn, navigating pages)
   useEffect(() => {
-    const refresh = auth.onAuthStateChanged(authStateChanged);
-    return () => refresh();
-  }, []);
+    const refresh = auth.onAuthStateChanged(authStateChanged)
+    return () => refresh()
+  }, [])
 
   const register = async (
     email: string,
@@ -92,22 +92,22 @@ export const useFirebaseAuth = () => {
       // calling firebase function to create a new user with email and password
       createUserWithEmailAndPassword(auth, email, password).then(
         (userCredential) => {
-          const user = userCredential.user;
-          console.log("Created User:", user);
+          const user = userCredential.user
+          console.log('Created User:', user)
           // adding user with given parameters to firebase Users collection
           addUser(email, houseID, lastName, firstName, role, user.uid).then(
             () => {
-              establishUserContext(user.uid);
+              establishUserContext(user.uid)
             }
-          );
+          )
         }
-      );
+      )
     } catch (e) {
-      console.log("ERROR");
-      console.error(e);
-      throw e;
+      console.log('ERROR')
+      console.error(e)
+      throw e
     }
-  };
+  }
 
   const signIn = async (email: string, password: string) => {
     /**
@@ -120,21 +120,21 @@ export const useFirebaseAuth = () => {
      * @returns void
      */
     try {
-      console.log("Email: ", email, " Password: ", password);
+      console.log('Email: ', email, ' Password: ', password)
 
       // firebase signIn function with email and passoword
       signInWithEmailAndPassword(auth, email, password).then(
         (userCredential) => {
-          const userID = userCredential.user.uid;
-          establishUserContext(userID);
+          const userID = userCredential.user.uid
+          establishUserContext(userID)
         }
-      );
+      )
     } catch (e) {
-      console.log("Error Logging In");
-      console.error(e);
-      throw e;
+      console.log('Error Logging In')
+      console.error(e)
+      throw e
     }
-  };
+  }
 
   const establishUserContext = async (uid: string): Promise<void> => {
     /**
@@ -148,24 +148,24 @@ export const useFirebaseAuth = () => {
     try {
       getUser(uid).then((userFromDoc) => {
         if (userFromDoc != null) {
-          console.log("USER FROM FIREBASE: ", userFromDoc);
-          setAuthUser(userFromDoc);
+          console.log('USER FROM FIREBASE: ', userFromDoc)
+          setAuthUser(userFromDoc)
           getHouse(userFromDoc.houseID).then((houseFromDoc) => {
-            console.log("HOUSE FROM FIREBASE:", houseFromDoc);
-            setHouse(houseFromDoc);
+            console.log('HOUSE FROM FIREBASE:', houseFromDoc)
+            setHouse(houseFromDoc)
 
             /** Once setAuthUser and setHouse completed, we can signal the authUserContext.Provider to proceed */
-            setLoading(false);
-          });
+            setLoading(false)
+          })
         } else {
-          console.log("user does not exist");
+          console.log('user does not exist')
 
           /** Signal authUserContext.Provider to proceed  */
-          setLoading(false);
+          setLoading(false)
         }
-      });
+      })
     } catch (e) {}
-  };
+  }
 
   const signOutAuth = async (): Promise<void> => {
     /**
@@ -176,29 +176,29 @@ export const useFirebaseAuth = () => {
      * @returns void
      */
     try {
-      await signOut(auth);
-      setAuthUser(defaultUser);
-      setHouse(defaultHouse);
-      console.log("Signed Out!!");
+      await signOut(auth)
+      setAuthUser(defaultUser)
+      setHouse(defaultHouse)
+      console.log('Signed Out!!')
     } catch (e) {
-      console.error(e);
-      throw e;
+      console.error(e)
+      throw e
     }
-  };
+  }
 
   // function that is called in useEffect every time the auth state is changed (refresh, signin, signout, etc)
   const authStateChanged = async (authState: any) => {
     if (!authState) {
-      setAuthUser(defaultUser);
+      setAuthUser(defaultUser)
 
       /* If authState is false then no user fetching is needed. Signal authUserContext.Provider to proceed  */
-      setLoading(false);
-      return;
+      setLoading(false)
+      return
     }
 
     // call user context to update authUser and house to the current authState
-    await establishUserContext(authState.uid);
-  };
+    await establishUserContext(authState.uid)
+  }
 
   const deleteUser = async (uid: string): Promise<void> => {
     /**
@@ -208,8 +208,8 @@ export const useFirebaseAuth = () => {
      *
      * @returns void
      */
-    await deleteDoc(doc(firestore, "users", uid));
-  };
+    await deleteDoc(doc(firestore, 'users', uid))
+  }
 
   return {
     authUser,
@@ -220,5 +220,5 @@ export const useFirebaseAuth = () => {
     signOutAuth,
     establishUserContext,
     deleteUser,
-  };
-};
+  }
+}
