@@ -1,13 +1,13 @@
-import { Card, CardContent, Typography } from "@mui/material";
-import router from "next/router";
-import { useState, useEffect } from "react";
-import { getUser } from "../../../firebase/queries/user";
-import { User } from "../../../types/schema";
-import styles from "../SettingsInfo/SettingsInfo.module.css";
+import { Card, CardContent, Typography } from '@mui/material'
+import router from 'next/router'
+import { useState, useEffect } from 'react'
+import { getUser } from '../../../firebase/queries/user'
+import { User } from '../../../types/schema'
+import styles from '../SettingsInfo/SettingsInfo.module.css'
 
 type TaskPreferenceInfoProps = {
-  userID: string;
-};
+  userID: string
+}
 
 const TaskPreferenceInfo: React.FC<TaskPreferenceInfoProps> = ({
   userID,
@@ -17,16 +17,16 @@ const TaskPreferenceInfo: React.FC<TaskPreferenceInfoProps> = ({
    *
    * @param userID - ID of the member
    */
-  const [user, setUser] = useState<User | null>();
+  const [user, setUser] = useState<User | null>()
 
   // retrieves user from context
   useEffect(() => {
     const getData = async () => {
-      const currUser = await getUser(userID);
-      setUser(currUser);
-    };
-    getData();
-  }, [userID]);
+      const currUser = await getUser(userID)
+      setUser(currUser)
+    }
+    getData()
+  }, [userID])
 
   return user ? (
     <Card sx={{ width: 550, height: 360 }}>
@@ -38,7 +38,7 @@ const TaskPreferenceInfo: React.FC<TaskPreferenceInfoProps> = ({
         <div className={styles.body}>
           <button
             onClick={() => {
-              router.push("/member/preferences/memberPreferences");
+              router.push('/member/preferences/memberPreferences')
             }}
           >
             Fill Out Preferences
@@ -48,7 +48,7 @@ const TaskPreferenceInfo: React.FC<TaskPreferenceInfoProps> = ({
     </Card>
   ) : (
     <div></div>
-  );
-};
+  )
+}
 
-export default TaskPreferenceInfo;
+export default TaskPreferenceInfo

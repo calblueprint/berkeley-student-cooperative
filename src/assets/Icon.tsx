@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 /**
  * Returns an icon component
@@ -8,18 +8,18 @@ import React from "react";
  * used as <Icon type={"close"} />
  */
 export type IconType =
-  | "close"
-  | "search"
-  | "navDashboard"
-  | "navSchedule"
-  | "navHouse"
-  | "navSettings"
-  | "navPlanner"
-  | "navProfile"
-  | "navLogout"
-  | "leftArrow"
-  | "rightArrow"
-  | "navMembers";
+  | 'close'
+  | 'search'
+  | 'navDashboard'
+  | 'navSchedule'
+  | 'navHouse'
+  | 'navSettings'
+  | 'navPlanner'
+  | 'navProfile'
+  | 'navLogout'
+  | 'leftArrow'
+  | 'rightArrow'
+  | 'navMembers'
 
 const IconSvgs: Record<IconType, React.ReactElement> = {
   close: (
@@ -190,15 +190,15 @@ const IconSvgs: Record<IconType, React.ReactElement> = {
       />
     </svg>
   ),
-};
+}
 type Props = {
-  className?: string;
-  type: IconType;
-};
+  className?: string
+  type: IconType
+}
 const Icon: React.FC<Props> = ({ className, type }: Props) => {
   return React.cloneElement(IconSvgs[type], {
     className,
-  });
-};
+  })
+}
 
-export default Icon;
+export default Icon
