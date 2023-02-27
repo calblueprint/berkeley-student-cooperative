@@ -6,6 +6,24 @@ import { useUserContext } from '../../../context/UserContext'
 import { getAllShifts } from '../../../firebase/queries/shift'
 import { HeadCell, Shift } from '../../../interfaces/interfaces'
 
+const fakeShifts: Shift[] = [
+  {
+    shiftID: 'gregqueen',
+    name: 'wash romeo',
+    description: 'gregy weggy will clean romeo',
+    possibleDays: ['Monday', 'Friday'],
+    numOfPeople: 1,
+    timeWindow: [12, 14],
+    assignedDay: '',
+    hours: 2,
+    verification: true,
+    usersAssigned: [],
+    timeWindowDisplay: '',
+    verificationBuffer: 1,
+    category: 'cleaning',
+  },
+]
+
 const headCells: HeadCell<Shift>[] = [
   {
     id: 'name',
@@ -74,7 +92,8 @@ export const UnassignedTabContent = () => {
   // ALL the shifts (unfiltered)
   useEffect(() => {
     async function fetchShifts() {
-      const response = await getAllShifts(house.houseID)
+      //   const response = await getAllShifts(house.houseID)
+      const response = fakeShifts
       if (!response) {
         setShifts([])
       } else {
