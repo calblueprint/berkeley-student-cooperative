@@ -13,7 +13,7 @@ const fakeShifts: Shift[] = [
     description: 'gregy weggy will clean romeo',
     possibleDays: ['Monday', 'Friday'],
     numOfPeople: 1,
-    timeWindow: [12, 14],
+    timeWindow: [1200, 1400],
     assignedDay: '',
     hours: 2,
     verification: true,
@@ -24,6 +24,7 @@ const fakeShifts: Shift[] = [
   },
 ]
 
+//**  */
 const headCells: HeadCell<Shift>[] = [
   {
     id: 'name',
