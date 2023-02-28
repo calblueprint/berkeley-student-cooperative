@@ -5,6 +5,7 @@ import CategoriesView from '../categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
 import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
 import { UnassignedTabContent } from './UnassignedTabContent'
+import Testing from './Testing'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -66,6 +67,7 @@ export default function SchedulePage() {
         </Box>
         <TabPanel value={currPage} index={0}>
           <UnassignedTabContent />
+          <Testing />
         </TabPanel>
         <TabPanel value={currPage} index={1}>
           <ShiftSchedule />

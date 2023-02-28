@@ -15,7 +15,7 @@ const headCells: HeadCell<Shift>[] = [
   },
   {
     id: 'timeWindowDisplay',
-    isNumeric: false,
+    isNumeric: true,
     label: 'Time',
     isSortable: false,
   },
