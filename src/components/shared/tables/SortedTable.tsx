@@ -13,18 +13,21 @@ import { visuallyHidden } from '@mui/utils'
 import { getComparator, stableSort, Order } from '../../../utils/utils'
 import { HeadCell } from '../../../interfaces/interfaces'
 import uuid from 'react-uuid'
+import { EntityId, Dictionary } from '@reduxjs/toolkit'
 
-type TWithId<T> = T & { id: string }
+// type TWithId<T> = T & { id: string }
 
 export default function SortedTable<
-  T extends { [key in keyof T]: string | number }
+  T extends { [key in keyof T]: string | number | string[] | number[] }
 >({
-  data: rows,
+  data: ids,
+  entities,
   headCells,
   isCheckable,
   handleRowClick,
 }: {
-  data: TWithId<T>[]
+  data: EntityId[]
+  entities: Dictionary<T>
   headCells: HeadCell<T>[]
   isCheckable: boolean
   handleRowClick?: (event: React.MouseEvent<unknown>, id: string) => void
@@ -102,19 +105,24 @@ export default function SortedTable<
     </TableHead>
   )
 
-  const body = stableSort(rows, getComparator(order, orderBy)).map(
-    (row, index) => {
-      const isItemSelected = isSelected(row.id)
+  const body = stableSort(ids, entities, getComparator(order, orderBy)).map(
+    (entityId, index) => {
+      const id: string = entityId as string
+      const isItemSelected = isSelected(id)
       const labelId = `enhanced-table-checkbox-${index}`
 
+      const row = entities[id]
+      if (!row) {
+        return null
+      }
       return (
         <TableRow
           hover
-          onClick={(event) => handleClick(event, row.id)}
+          onClick={(event) => handleClick(event, id)}
           role="checkbox"
           aria-checked={isItemSelected}
           tabIndex={-1}
-          key={row.id}
+          key={id}
           selected={isItemSelected}
         >
           {headCells.map((cell, i) => {
