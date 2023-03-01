@@ -72,7 +72,7 @@ const baseQuery = fetchBaseQuery({
       headers: { 'Content-Type': 'application/json' },
     }
 
-    const { url, method, body } = input
+    const { method, url, body } = input
 
     const pathArray = url
       .split('fakeUrl')[1]
@@ -80,7 +80,7 @@ const baseQuery = fetchBaseQuery({
       .filter((p: string) => p.length > 0)
 
     let isCollection = false
-    console.log(pathArray)
+    // console.log(pathArray)
     if (pathArray.length === 0) {
       return new Response(
         JSON.stringify({
@@ -157,7 +157,7 @@ const baseQuery = fetchBaseQuery({
               id: pathArray[pathArray.length - 1],
             })
 
-            console.log(resObj)
+            // console.log(resObj)
             //** Return the resObj wrapped in a Response object */
             return new Response(JSON.stringify({ data: resObj }), okStatus)
           }

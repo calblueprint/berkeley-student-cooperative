@@ -2,11 +2,12 @@ import { createSelector, createEntityAdapter } from '@reduxjs/toolkit'
 import { Shift } from '../../types/schema'
 import { apiSlice } from '../api/apiSlice'
 import { RootState } from '../store'
+import { formatMilitaryTime } from '../../utils/utils'
 
 type result = { data: Shift; id: string }
 type transformResponse = { data: result[] }
 
-const shiftsAdapter = createEntityAdapter({})
+const shiftsAdapter = createEntityAdapter<Shift>({})
 
 const initialState = shiftsAdapter.getInitialState()
 
@@ -17,15 +18,21 @@ export const shiftsApiSlice = apiSlice.injectEndpoints({
         url: `houses/${houseId}/shifts`,
         method: 'GET',
         validateStatus: (response, result) => {
-          console.log('response: ', response, ' -- result: ', result)
+          // console.log('response: ', response, ' -- result: ', result)
           return response.status === 200 && !result.isError
         },
       }),
       //   keepUnusedDataFor: 60,
       transformResponse: (responseData: transformResponse) => {
-        console.log('[transformResponse] responseData: ', responseData)
+        // console.log('[transformResponse] responseData: ', responseData)
         const loaddedShifts = responseData?.data.map((entity) => {
           entity.data.id = entity.id
+          if (!entity.data.timeWindowDisplay) {
+            entity.data.timeWindowDisplay =
+              formatMilitaryTime(entity.data.timeWindow[0]) +
+              ' - ' +
+              formatMilitaryTime(entity.data.timeWindow[1])
+          }
           return entity.data
         })
         console.debug(loaddedShifts)
