@@ -1,11 +1,23 @@
-import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import {
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from '@mui/material'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import Grid from '@mui/material/Unstable_Grid2'
+import { styled } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
 // import UnassignedShiftList from '../../../components/ManagerComponents/UnassignedShiftsList/UnassignedShiftsList'
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { useUserContext } from '../../../context/UserContext'
 // import { getAllShifts } from '../../../firebase/queries/shift'
-import { HeadCell, Shift } from '../../../interfaces/interfaces'
+import { HeadCell, Shift, User } from '../../../interfaces/interfaces'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
+import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 
 const headCells: HeadCell<Shift & { [key in keyof Shift]: string | number }>[] =
@@ -41,17 +53,55 @@ const filters = [
   'sunday',
 ]
 
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}))
+
 export const UnassignedTabContent = () => {
   const { house } = useUserContext()
   const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
     house?.houseID
   )
 
+  const {
+    data: users,
+    // isLoading: isUsersLoading,
+    // isSuccess: isUsersSuccess,
+    // isError: isUsersError,
+  } = useGetUsersQuery({})
+
+  const [open, setOpen] = useState(false)
+  const [modalShift, setModalShift] = useState<Shift>()
+  const [modalUser, setModalUser] = useState<User>()
   const [shifts, setShifts] = useState<EntityId[] | undefined>([])
   const [displayShifts, setDisplayShifts] = useState<EntityId[] | undefined>(
     shifts
   )
   const [filterBy, setFilterBy] = useState<string>(filters[0])
+
+  const handleRowClick = (
+    event: React.MouseEvent<unknown>,
+    shiftId: EntityId
+  ) => {
+    console.log('event: ', event, 'shift: ', shiftId)
+    const shift = data?.entities[shiftId]
+    setModalShift(shift)
+    if (shift && shift.usersAssigned && shift.usersAssigned[0]) {
+      setModalUser(users?.entities[shift.usersAssigned[0]])
+    }
+    handleOpen()
+  }
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
 
   const handleFilterChange = (event: SelectChangeEvent) => {
     console.log(event.target.value)
@@ -60,11 +110,13 @@ export const UnassignedTabContent = () => {
 
   useEffect(() => {
     if (isSuccess && data) {
-      setShifts(
-        data.ids?.filter(
-          (id: EntityId) => data.entities[id]?.usersAssigned?.length === 0
-        )
-      )
+      setShifts(data.ids)
+
+      // setShifts(
+      //   data.ids?.filter(
+      //     (id: EntityId) => data.entities[id]?.usersAssigned?.length === 0
+      //   )
+      // )
     }
   }, [isSuccess, data])
 
@@ -108,7 +160,63 @@ export const UnassignedTabContent = () => {
           }
           headCells={headCells}
           isCheckable={false}
+          handleRowClick={handleRowClick}
         />
+        <Dialog
+          fullWidth
+          maxWidth="md"
+          open={open}
+          onClose={handleClose}
+          className="dialog"
+        >
+          <DialogTitle variant="h4" component="h2">
+            <Box sx={{ flexGrow: 1 }}>
+              <Grid container spacing={2}>
+                <Grid xs={12}>{modalShift?.name}</Grid>
+                <Grid xs={4}>
+                  <Item>{`${modalShift?.hours} Hours`}</Item>
+                </Grid>
+                <Grid xs={4}>
+                  <Item>
+                    {modalShift?.possibleDays.reduce(
+                      (previosValue, currentValue) => {
+                        if (previosValue === '') {
+                          return currentValue
+                        } else {
+                          return previosValue + ' , ' + currentValue
+                        }
+                      },
+                      ''
+                    )}
+                  </Item>
+                </Grid>
+                <Grid xs={4}>
+                  <Item>{modalShift?.timeWindowDisplay}</Item>
+                </Grid>
+                <Grid textAlign="left" xs={12}>
+                  <Item sx={{ textAlign: 'left', fontSize: 'large' }}>
+                    {modalUser ? modalUser.firstName : `No user assigned`}
+                  </Item>
+                </Grid>
+              </Grid>
+            </Box>
+          </DialogTitle>
+          <DialogContent>
+            <Paper>
+              <SortedTable
+                data={users?.ids as EntityId[]}
+                entities={
+                  users?.entities as Dictionary<
+                    Shift & { [key in keyof Shift]: string | number }
+                  >
+                }
+                headCells={headCells}
+                isCheckable={false}
+                handleRowClick={handleRowClick}
+              />
+            </Paper>
+          </DialogContent>
+        </Dialog>
       </>
     )
   }
