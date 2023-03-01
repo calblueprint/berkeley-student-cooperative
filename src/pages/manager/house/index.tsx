@@ -11,7 +11,7 @@ export default function SchedulePage() {
           <meta name="description" content="Next.js firebase Workshift app" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <p>This is the house page.</p>
+        {/* <p>This is the house page.</p> */}
         <main>
           <ParseCSV />
         </main>

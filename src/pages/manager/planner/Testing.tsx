@@ -1,4 +1,7 @@
 import React from 'react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 import type { RootState } from '../../../store/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { decrement, increment } from '../../../store/slices/counterSlice'
@@ -19,23 +22,21 @@ const Testing = () => {
   } else {
     return (
       <>
-        <div>
-          <div>
-            <button
-              aria-label="Increment value"
-              onClick={() => dispatch(increment())}
-            >
-              Increment
-            </button>
-            <span>{count}</span>
-            <button
-              aria-label="Decrement value"
-              onClick={() => dispatch(decrement())}
-            >
-              Decrement
-            </button>
-          </div>
-        </div>
+        <Box>
+          <Button
+            aria-label="Increment value"
+            onClick={() => dispatch(increment())}
+          >
+            Increment
+          </Button>
+          <Typography color="black">{count}</Typography>
+          <Button
+            aria-label="Decrement value"
+            onClick={() => dispatch(decrement())}
+          >
+            Decrement
+          </Button>
+        </Box>
       </>
     )
   }
