@@ -1,6 +1,6 @@
-import internal from 'stream'
-
-export type User = {
+export interface User {
+  // this id attribute is for the table stuff
+  id?: string
   // ID of the user (not stored in Firebase, attached to user)
   userID: string
   // Role of the user
@@ -33,8 +33,8 @@ export type User = {
   preferences: Map<string, number>
 }
 
-export type Shift = {
-  // optional id attribute for table stuff
+export interface Shift {
+  // this id attribute is for the table stuff
   id?: string
   // Name of the shift
   name: string
@@ -48,7 +48,7 @@ export type Shift = {
   numOfPeople: number
   // Time window that this shift must be done in [startTime, endTime]
   timeWindow: number[]
-  // property to display timeWindow
+  // Display for timeWindow
   timeWindowDisplay: string
   // Day that the shift is assigned
   assignedDay: string
@@ -63,35 +63,10 @@ export type Shift = {
   category: string
 }
 
-export type VerifiedShift = {
-  autoID: string
-  timeStamp: string
-  shifterID: string
-  verifierID: string
-}
-
-export type House = {
-  houseID: string
-  categories: Map<string, Map<string, string>>
-  members: string[] | null
-  address: string
-  schedule: Map<string, string[]>
-  userPINs: Map<string, string>
-}
-
-export enum Day {
-  Mon = 'Monday',
-  Tue = 'Tuesday',
-  Wed = 'Wednesday',
-  Thu = 'Thursday',
-  Fri = 'Friday',
-  Sat = 'Saturday',
-  Sun = 'Sunday',
-}
-export type RowOfCSV = {
-  email: string
-  firstName: string
-  lastName: string
-  houseID: string
-  accountCreated: boolean
+// passing in any data type
+export interface HeadCell<T extends { [key in keyof T]: string | number }> {
+  id: keyof T
+  label: string
+  isNumeric: boolean
+  isSortable: boolean
 }

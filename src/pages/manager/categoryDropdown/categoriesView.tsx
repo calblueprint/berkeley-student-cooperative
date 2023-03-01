@@ -2,23 +2,21 @@ import { useEffect, useState } from 'react'
 import {
   addCategory,
   getHouse,
-  updateHouse,
 } from '../../../firebase/queries/house'
 import { House } from '../../../types/schema'
 import CategoriesDropdown from './categoriesDropdown'
 import Button from '@mui/material/Button'
 import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
   Table,
   TableBody,
   TableContainer,
   TextField,
+  Typography,
 } from '@mui/material'
-import { mapToObject } from '../../../firebase/helpers'
+import Icon from '../../../assets/Icon'
+
 import styles from './CategoriesView.module.css'
 import CategoryTable from '../../../components/ManagerComponents/CategoryTable/CategoryTable'
 
@@ -45,30 +43,29 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
   const [newCategoryName, setNewCategoryName] = useState('')
 
   // Retrieves the house object given the houseID
-  const retrieveHouse = async () => {
-    const h = await getHouse(houseID)
-    setHouse(h)
-  }
-
   useEffect(() => {
+    const retrieveHouse = async () => {
+      const h = await getHouse(houseID)
+      setHouse(h)
+    }
     retrieveHouse()
-  }, [])
+  }, [houseID])
 
   // Opens modal
   const openModal = () => {
     setIsModalOpened(true)
   }
 
-  // Updates the newCategoryName state as the user types in
-  const handleCategoryNameChange = (event: any) => {
-    setNewCategoryName(event.target.value)
-  }
-
   // Closes the modal without pushing anything to firebase
   const closeModal = () => {
     setIsModalOpened(false)
-    setNewCategoryName('')
+    clearFields()
   }
+
+    // Clears fields
+    const clearFields = () => {
+      setNewCategoryName('')
+    }
 
   // Uploads the new category to Firebase if the category doesn't exist yet
   const uploadCategory = async () => {
@@ -84,7 +81,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     }
     closeModal()
   }
-
+  
   return (
     <div className={styles.categoryViewContainer}>
       <Button onClick={openModal} id={styles.newCategory}>
@@ -92,24 +89,50 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
       </Button>
       <CategoryTable/>
       {isModalOpened && (
-        <Dialog open={isModalOpened} fullWidth={true}>
-          <DialogTitle>Create Category</DialogTitle>
+        <Dialog
+          fullWidth
+          maxWidth="md"
+          open={isModalOpened}
+          onClose={closeModal}
+          className={styles.dialog}
+        >
           <DialogContent>
-            <DialogContentText>Category Name</DialogContentText>
-            <TextField
-              autoFocus
-              value={newCategoryName}
-              onChange={handleCategoryNameChange}
-              margin="dense"
-              id="name"
-              fullWidth
-              variant="standard"
-            />
+            <div className={styles.shiftBox}>
+              <div className={styles.header}>
+                <div className={styles.flex}>
+                  <Typography className={styles.title} variant="h4">
+                    Create Category
+                  </Typography>
+                  <Button onClick={closeModal} className={styles.close}>
+                    <Icon type={'close'} />
+                  </Button>
+                </div>
+                <hr />
+              </div>
+              <div className={styles.formField}>
+                <div>
+                  <Typography className={styles.name}>Category name</Typography>
+                </div>
+                <TextField
+                  className={styles.textfield}
+                  fullWidth
+                  value={newCategoryName}
+                  placeholder="Ex: Basement clean"
+                  onChange={(event) => {
+                    setNewCategoryName(event.target.value)
+                  }}
+                />
+              </div>
+              <div>
+                <Button onClick={uploadCategory} className={styles.submit}>
+                  Save
+                </Button>
+                <Button onClick={clearFields} className={styles.clear}>
+                  Clear
+                </Button>
+              </div>
+            </div>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={closeModal}>Cancel</Button>
-            <Button onClick={uploadCategory}>Create New Category</Button>
-          </DialogActions>
         </Dialog>
       )}
     </div>

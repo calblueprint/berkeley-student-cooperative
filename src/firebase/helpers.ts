@@ -1,4 +1,4 @@
-import { User } from '../types/schema'
+import { Shift, User } from '../types/schema'
 
 // Used to convert a map to an object uploadable to Firebase
 export const mapToObject = (map: Map<any, any>): Object => {
@@ -195,3 +195,102 @@ export const firestoreAutoId = (): string => {
 export const emailRegex = new RegExp(
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 )
+
+export const sortPotentialUsers = (potentialUsers: User[], shiftID: string) => {
+  potentialUsers.sort((user1, user2) => {
+    if (user1 === undefined || user2 === undefined) {
+      return 0;
+    }
+    // First sort on hours assignable left (hoursRequired - hoursAssigned), prioritizing people with higher hours remaining (user2 - user1)
+    let user1HoursLeft = user1.hoursRequired - user1.hoursAssigned
+    let user2HoursLeft = user2.hoursRequired - user2.hoursAssigned
+    let hoursWeekDiff: number = user2HoursLeft - user1HoursLeft
+    if (hoursWeekDiff != 0) {
+      return hoursWeekDiff
+    }
+
+    let user1Preferences = user1.preferences
+    let user2Preferences = user2.preferences
+    // 1 if 1 is average
+    let user1Pref = 1
+    let user2Pref = 1
+    if (user1Preferences.has(shiftID)) {
+      let curr = user1Preferences.get(shiftID)
+      if (curr !== undefined) {
+        user1Pref = curr
+      }
+    }
+    if (user2Preferences.has(shiftID)) {
+      let curr = user2Preferences.get(shiftID)
+      if (curr !== undefined) {
+        user2Pref = curr
+      }
+    }
+    // Second sort on preferences, prioritizing people with higher preferences (user2 - user1)
+    let prefDiff = user2Pref - user1Pref
+    if (prefDiff != 0) {
+      return prefDiff
+    }
+    // Third sort on hoursRemainingSemester, prioritizing people with higher hoursRemaining (user 2 - user1)
+    return user2.hoursRemainingSemester - user1.hoursRemainingSemester
+  })
+};
+
+export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: User[], shiftID: string, day: string) => {
+  const timeWindow = tempShiftObject.timeWindow
+  const shiftStart = timeWindow[0]
+  const shiftEnd = timeWindow[1]
+  const numHours = tempShiftObject.hours
+  const potentialUsers = []
+  
+  // Convert the hours of the shift into units of time. Assumes any non-whole hour numbers are 30 minute intervals.
+  // ex. 1.5 -> converted to 130 (used for differences if someone is available between 1030 and 1200, they should be shown)
+  const mult100 = Math.floor(numHours) * 100
+  let thirtyMin = 0
+  if (mult100 != numHours * 100) {
+    thirtyMin = 30
+  }
+  for (let i = 0; i < totalUsersInHouse.length; i++) {
+    const userObject = totalUsersInHouse[i]
+    // if this user has already been assigned to this shift, display them regardless of hours
+    if (userObject.shiftsAssigned.includes(shiftID)) {
+      potentialUsers.push(userObject)
+      continue
+    }
+    // stores the number of hours that the user still has to complete
+    let assignableHours = userObject.hoursRequired - userObject.hoursAssigned
+    // if they have no hours left to complete, or their number of hours left to complete < the number of hours of the shift, continue
+    if (assignableHours <= 0 || assignableHours < numHours) {
+      continue
+    }
+    const currAvailabilities = userObject.availabilities
+    if (currAvailabilities.has(day)) {
+      const perDayAvailability = currAvailabilities.get(day)
+      if (perDayAvailability === undefined) {
+        continue
+      }
+      // iterate thru every pair of availabilities
+      for (let j = 0; j < perDayAvailability.length; j += 2) {
+        let currStart = perDayAvailability[j]
+        let permEnd = perDayAvailability[j + 1]
+        // The end of this availability window is < the time it takes for the shift to start
+        if (permEnd < shiftStart) {
+          continue
+        }
+        // start either at the beginning of the shift window / beginning of their availability, whichever is later
+        currStart = Math.max(currStart, shiftStart)
+        // The end time given the current start
+        // 1030 + 100 + 30 -> 1160 (still <= 1200) (still works)
+        let newEnd = currStart + mult100 + thirtyMin
+        // The required end will either be the end of the shift or the end of their availabikity
+        let requiredEnd = Math.min(permEnd, shiftEnd)
+        // If the calculated end time is <= required end time, then we can push and don't need to consider any more availabilities
+        if (newEnd <= requiredEnd) {
+          potentialUsers.push(userObject)
+          break
+        }
+      }
+    }
+  }
+  return potentialUsers;
+}

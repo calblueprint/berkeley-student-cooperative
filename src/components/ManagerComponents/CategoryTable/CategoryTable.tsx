@@ -7,18 +7,34 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import {useState, useEffect} from 'react';
-
-
-// type CategoryTableProps = {
-//   users: User[];
-//   shiftID: string;
-//   selectedRows: string[];
-//   setSelectedRows: React.Dispatch<React.SetStateAction<string[]>>;
-// };
+import { getCategories } from "../../../firebase/queries/house";
 
 const CategoryTable = () => {
     useEffect(() => {
+        const [houseCategories, setHouseCategories] = useState<Map<string, (Map<string, string[]>)> | undefined>(undefined)
         console.log("hey there.")
+        getCategories('EUC').then((category) => {
+            
+            const mapHolder = new Map<string, (Map<string, string[]>)>();
+            
+            // let preferences = authUser.preferences;
+            const preferenceMap = new Map<string, string>();
+            
+            category.forEach((value, key) => {
+                const inMapHold = value
+                
+                const categoriesMap = new Map<string, string[]>();
+                inMapHold.forEach((val, k) => { 
+                    if(val && k){
+                       
+                        categoriesMap.set("prefer goes here", [val, k]);
+                    }
+                    
+                });
+                
+                 mapHolder.set(key,categoriesMap )
+            })
+            console.log("prefMap after loop", preferenceMap)
     }, [])
 
  
