@@ -5,11 +5,11 @@ import Typography from '@mui/material/Typography'
 import type { RootState } from '../../../store/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { decrement, increment } from '../../../store/slices/counterSlice'
-import { useGetHousesQuery } from '../../../store/api/apiSlice'
+import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 
 const Testing = () => {
   const count = useSelector((state: RootState) => state.counter.value)
-  const { data, isLoading } = useGetHousesQuery('houses/EUC/shifts')
+  const { data, isLoading } = useGetShiftsQuery('EUC')
   const dispatch = useDispatch()
 
   React.useEffect(() => {
