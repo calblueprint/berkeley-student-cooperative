@@ -5,6 +5,8 @@ import SortedTable from '../../../components/shared/tables/SortedTable'
 import { useUserContext } from '../../../context/UserContext'
 import { getAllShifts } from '../../../firebase/queries/shift'
 import { HeadCell, Shift } from '../../../interfaces/interfaces'
+import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
+import { useDispatch, useSelector } from '@reduxjs/toolkit'
 
 const headCells: HeadCell<Shift>[] = [
   {
@@ -40,6 +42,8 @@ const filters = [
 
 export const UnassignedTabContent = () => {
   const { house } = useUserContext()
+  const { data, isLoading, isSuccess, isError, error } =
+    useGetShiftsQuery('EUC')
 
   const [shifts, setShifts] = useState<Shift[] | undefined>([])
   const [displayShifts, setDisplayShifts] = useState<Shift[] | undefined>(

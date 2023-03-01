@@ -4,7 +4,7 @@ import { useState } from 'react'
 import CategoriesView from '../categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
 import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
-import { UnassignedTabContent } from './UnassignedTabContent'
+import { UnassignedTabContent } from './NewUnassignedTabContent'
 import Testing from './Testing'
 
 interface TabPanelProps {
@@ -46,7 +46,7 @@ export default function SchedulePage() {
   const [currPage, setCurrPage] = useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(authUser)
+    // console.log(authUser)
     setCurrPage(newValue)
   }
 

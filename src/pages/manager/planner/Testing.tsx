@@ -13,8 +13,8 @@ const Testing = () => {
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    console.log('isLoading =', isLoading)
-    console.log(data)
+    // console.log('isLoading =', isLoading)
+    // console.log(data)
   }, [isLoading, data])
 
   if (isLoading) {
