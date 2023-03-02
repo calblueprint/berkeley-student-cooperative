@@ -98,15 +98,22 @@ export const UnassignedTabContent = () => {
     // isError: isUsersError,
   } = useGetUsersQuery({})
 
+  //** Modal stuff */
   const [open, setOpen] = useState(false)
+  //** State variables that pass the selected item's info from the table to the modal */
   const [modalShift, setModalShift] = useState<Shift>()
   const [modalUser, setModalUser] = useState<User>()
+  //** end Modal stuff */
+
+  //** Table stuff */
   const [shifts, setShifts] = useState<EntityId[] | undefined>([])
   const [displayShifts, setDisplayShifts] = useState<EntityId[] | undefined>(
     shifts
   )
   const [filterBy, setFilterBy] = useState<string>(filters[0])
+  //** end Table stuff */
 
+  //** this function handles passing the info from selected item from table to the modal that pops open */
   const handleRowClick = (
     event: React.MouseEvent<unknown>,
     shiftId: EntityId
@@ -119,6 +126,7 @@ export const UnassignedTabContent = () => {
     }
     handleOpen()
   }
+
   const handleClose = () => {
     setOpen(false)
   }
@@ -186,6 +194,8 @@ export const UnassignedTabContent = () => {
           isCheckable={false}
           handleRowClick={handleRowClick}
         />
+        {/* Everything below is just to test the redux user api */}
+        {/* When creating the actual card, it should be in it's own file that will get connecte here. */}
         <Dialog
           fullWidth
           maxWidth="md"
