@@ -15,14 +15,22 @@ import { HeadCell } from '../../../interfaces/interfaces'
 import uuid from 'react-uuid'
 
 type TWithId<T> = T & { id: string }
-
+//TODO:  !!!!!!!!!!!DO NOT USE USEEFFECT ON HOUSE OR USERCONTEXT!!!!!!!!!!!!!!!!!!!!
+/**
+ * Andrei's Notes:
+ * Sorted Table mainly lifted from MUI Sorting & Selecting
+ *
+ * @param param0
+ * @returns
+ */
 export default function SortedTable<
+  //To generalize the table to take in any type of data.  Shifts, Members, or Availabilities
   T extends { [key in keyof T]: string | number }
 >({
   data: rows,
-  headCells,
-  isCheckable,
-  handleRowClick,
+  headCells, //What goes in the header
+  isCheckable, //If it has checkable
+  handleRowClick, //Do we need it to pop open a modal?
 }: {
   data: TWithId<T>[]
   headCells: HeadCell<T>[]
@@ -42,6 +50,7 @@ export default function SortedTable<
     setOrderBy(property)
   }
 
+  //Handles the clicking of a row.  Can use this to open a modal.
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
     if (isCheckable) {
       const selectedIndex = selected.indexOf(id)
@@ -67,6 +76,7 @@ export default function SortedTable<
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1
 
+  //Sets up the column names of the table.
   const head = (
     <TableHead>
       <TableRow>
@@ -102,6 +112,7 @@ export default function SortedTable<
     </TableHead>
   )
 
+  //Takes the rows (DATA) and and maps them into Table Rows.
   const body = stableSort(rows, getComparator(order, orderBy)).map(
     (row, index) => {
       const isItemSelected = isSelected(row.id)

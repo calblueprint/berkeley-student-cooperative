@@ -61,6 +61,8 @@ export interface Shift {
   usersAssigned: string[]
   // Category of work that the shift belongs to
   category: string
+  // Status of the task.
+  status: string
 }
 
 // passing in any data type

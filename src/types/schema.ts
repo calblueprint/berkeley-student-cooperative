@@ -61,6 +61,8 @@ export type Shift = {
   usersAssigned: string[]
   // Category of work that the shift belongs to
   category: string
+  // Completion status
+  status: string
 }
 
 export type VerifiedShift = {
