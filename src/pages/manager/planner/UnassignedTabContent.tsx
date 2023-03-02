@@ -75,6 +75,7 @@ export const UnassignedTabContent = () => {
   useEffect(() => {
     async function fetchShifts() {
       const response = await getAllShifts(house.houseID)
+      console.log("query", response, house.houseID)
       if (!response) {
         setShifts([])
       } else {
@@ -95,6 +96,7 @@ export const UnassignedTabContent = () => {
       }
     }
     fetchShifts()
+    console.log("shifts", shifts)
   }, [house])
 
   // runs when the component mounts and when filterBy or shifts changes
@@ -109,6 +111,8 @@ export const UnassignedTabContent = () => {
               .includes(filterBy)
           )
     )
+    console.log("shifts", shifts)
+
   }, [filterBy, shifts])
 
   return (

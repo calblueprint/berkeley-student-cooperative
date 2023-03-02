@@ -10,6 +10,7 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
   updateDoc,
+  getDocs,
 } from 'firebase/firestore'
 import { mapToObject, objectToMap } from '../helpers'
 import { getHouse, updateHouse } from './house'
@@ -143,6 +144,27 @@ export const deleteUser = async (userID: string) => {
   }
   await deleteDoc(doc(firestore, 'users', userID))
 }
+
+/************************************************************* */
+/** This function gets all shifts from a house with houseID */
+export const getAllUsers = async (houseID: string) => {
+  try {
+    // const docRef = doc(firestore, "houses", "EUC", "shifts", "dhWWmgzM1MISFWyblp8J");
+    const colRef = collection(firestore, 'houses', houseID, 'users')
+
+    const promises: Promise<User>[] = []
+    const colSnap = await getDocs(colRef)
+    colSnap.forEach((user) => {
+      promises.push(parseUser(user))
+    })
+    const users = await Promise.all(promises)
+    return users
+    // probably replace with modal
+  } catch (e) {
+    console.log(e)
+  }
+}
+/************************************************************* */
 
 export const defaultUser: User = {
   userID: '',
