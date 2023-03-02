@@ -5,6 +5,7 @@ import SortedTable from '../../../components/shared/tables/SortedTable'
 import { useUserContext } from '../../../context/UserContext'
 import { getAllShifts } from '../../../firebase/queries/shift'
 import { HeadCell, Shift } from '../../../interfaces/interfaces'
+import ShiftAssignmentComponentCard from '../../shiftAssignmentComponentCard'
 
 const headCells: HeadCell<Shift>[] = [
   {
@@ -113,6 +114,7 @@ export const UnassignedTabContent = () => {
 
   return (
     <>
+      <ShiftAssignmentComponentCard day = "Monday" houseID = "EUC" shiftID = "HEK5HlHqssGORikn4v0N"/>
       {/* <UnassignedShiftList /> */}
       <Select value={filterBy} onChange={handleFilterChange}>
         {filters.map((day) => (
