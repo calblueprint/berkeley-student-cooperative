@@ -93,8 +93,7 @@ export const UnassignedTabContent = () => {
   // ALL the shifts (unfiltered)
   useEffect(() => {
     async function fetchShifts() {
-      //   const response = await getAllShifts(house.houseID)
-      const response = fakeShifts
+      const response = await getAllShifts(house.houseID)
       if (!response) {
         setShifts([])
       } else {
