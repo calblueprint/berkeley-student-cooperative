@@ -24,7 +24,6 @@ const fakeShifts: Shift[] = [
   },
 ]
 
-//**  */
 const headCells: HeadCell<Shift>[] = [
   {
     id: 'name',
