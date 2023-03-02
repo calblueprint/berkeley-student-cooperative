@@ -31,6 +31,10 @@ export type User = {
   availabilities: Map<string, number[]>
   // Map of preferences (taskID: (0/1/2 (higher number = greater preference)))
   preferences: Map<string, number>
+  // For showing in the table
+  preference?: string
+  hoursUnassigned?: number
+  fullName?: string
 }
 
 export type Shift = {

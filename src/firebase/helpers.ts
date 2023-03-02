@@ -197,7 +197,7 @@ export const emailRegex = new RegExp(
 )
 
 export const sortPotentialUsers = (potentialUsers: User[], shiftID: string) => {
-  potentialUsers.sort((user1, user2) => {
+  let sorted = potentialUsers.sort((user1, user2) => {
     if (user1 === undefined || user2 === undefined) {
       return 0;
     }
@@ -206,6 +206,7 @@ export const sortPotentialUsers = (potentialUsers: User[], shiftID: string) => {
     let user2HoursLeft = user2.hoursRequired - user2.hoursAssigned
     let hoursWeekDiff: number = user2HoursLeft - user1HoursLeft
     if (hoursWeekDiff != 0) {
+      console.log(hoursWeekDiff);
       return hoursWeekDiff
     }
 
@@ -234,6 +235,7 @@ export const sortPotentialUsers = (potentialUsers: User[], shiftID: string) => {
     // Third sort on hoursRemainingSemester, prioritizing people with higher hoursRemaining (user 2 - user1)
     return user2.hoursRemainingSemester - user1.hoursRemainingSemester
   })
+  return sorted;
 };
 
 export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: User[], shiftID: string, day: string) => {

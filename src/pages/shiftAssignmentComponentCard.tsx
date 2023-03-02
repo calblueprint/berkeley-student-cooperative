@@ -1,21 +1,43 @@
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 import { getShift } from '../firebase/queries/shift'
-import { User, Shift, House } from '../types/schema'
+import { User, Shift } from '../types/schema'
 import { useEffect } from 'react'
 import { getHouse } from '../firebase/queries/house'
 import { updateUser, getUser } from '../firebase/queries/user'
-import ShiftAssignmentTable from './shiftAssignmentTable'
 import Button from '@mui/material/Button'
 import { updateShift } from '../firebase/queries/shift'
 import { convertTimeWindowToTime, pluralizeHours } from '../firebase/helpers'
 import { sortPotentialUsers, findAvailableUsers } from '../firebase/helpers'
-
+import SortedTable from '../components/shared/tables/SortedTable'
+import { numericToStringPreference } from '../firebase/helpers'
 type ShiftAssignmentComponentCardProps = {
   day: string
   houseID: string
   shiftID: string
 }
+
+// id = attribute name in schema
+const headCells: HeadCell<Shift>[] = [
+  {
+    id: 'fullName',
+    isNumeric: false,
+    label: 'Available Users',
+    isSortable: false,
+  },
+  {
+    id: 'hoursUnassigned',
+    isNumeric: true,
+    label: 'Unassigned Hours',
+    isSortable: true,
+  },
+  {
+    id: 'preference',
+    isNumeric: false,
+    label: 'Preference',
+    isSortable: true,
+  },
+]
 
 const ShiftAssignmentComponentCard: React.FC<
   ShiftAssignmentComponentCardProps
@@ -39,12 +61,33 @@ const ShiftAssignmentComponentCard: React.FC<
   // Stores the users that the manager has selected so far to complete this shift
   const [selectedRows, setSelectedRows] = useState<string[]>([])
 
+  const [potentialWorkersDisplay, setPotentialWorkersVariable] = useState<User[]>();
+ 
   // On page load, retrieves the shift and sets the shift Object and also populates the potentialWorkers + selectedRows arrays
   useEffect(() => {
-    retrieveShift()
-    populatePotentialWorkersAndSelected()
-  }, [])
-
+    const callbackFunction = async () => {
+      await retrieveShift()
+      let users = await populatePotentialWorkersAndSelected()
+      if (users !== undefined) {
+        setPotentialWorkerDisplay(users);
+      }
+    }
+    callbackFunction();
+  }, []) 
+ 
+  const setPotentialWorkerDisplay = (users: User[]) => {
+    let copy = [];
+    for (let i = 0; i < users.length; i++) {
+      let worker = users[i];
+      worker.fullName = worker.firstName + " " + worker.lastName;
+      worker.preference = numericToStringPreference(worker, shiftID);
+      worker.hoursUnassigned = worker.hoursRequired - worker.hoursAssigned;
+      copy.push(worker);
+    }
+    copy = sortPotentialUsers(copy, shiftID);
+    setPotentialWorkersVariable(copy);
+  }
+ 
   const retrieveShift = async () => {
     const shift = await getShift(houseID, shiftID)
     if (shift != null) {
@@ -88,10 +131,9 @@ const ShiftAssignmentComponentCard: React.FC<
     }
     // helper function call
     let potentialUsers = findAvailableUsers(tempShiftObject, users, shiftID, day);
-    // helper function call
-    sortPotentialUsers(potentialUsers, shiftID);
     setPotentialWorkers(potentialUsers)
     setSelectedUsers(potentialUsers)
+    return potentialUsers;
   }
 
   // Function called when assign is clicked to update the backend
@@ -178,6 +220,7 @@ const ShiftAssignmentComponentCard: React.FC<
     }
   }
 
+  console.log(potentialWorkersDisplay)
   return (
     <div className={styles.container}>
       <h3>{shiftObject?.name}</h3>
@@ -192,7 +235,7 @@ const ShiftAssignmentComponentCard: React.FC<
               shiftObject.timeWindow[0],
               shiftObject.timeWindow[1]
             )}
-        </div>
+        </div> 
         <div className="shiftAssignmentHeaderEntry">
           {shiftObject && pluralizeHours(shiftObject.verificationBuffer)}
         </div>
@@ -200,12 +243,14 @@ const ShiftAssignmentComponentCard: React.FC<
           {shiftObject && shiftObject.category}
         </div>
       </div>
-      <ShiftAssignmentTable
-        users={potentialWorkers}
-        shiftID={shiftID}
-        selectedRows={selectedRows}
-        setSelectedRows={setSelectedRows}
-      />
+      {potentialWorkersDisplay &&
+        <SortedTable 
+          data = {potentialWorkersDisplay}
+          headCells = {headCells}
+          isCheckable = {true}
+          // handle row click here???
+        />
+      }
       <Button onClick={updateUserAndShiftObjects}>Save</Button>
     </div>
   )
