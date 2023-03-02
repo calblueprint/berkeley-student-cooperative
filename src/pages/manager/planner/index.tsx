@@ -4,7 +4,7 @@ import { useState } from 'react'
 import CategoriesView from '../categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
 import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
-import { UnassignedTabContent } from './NewUnassignedTabContent'
+import { UnassignedTabContent } from './UnassignedTabContent'
 import Testing from './Testing'
 
 interface TabPanelProps {
