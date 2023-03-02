@@ -6,6 +6,24 @@ import { useUserContext } from '../../../context/UserContext'
 import { getAllShifts } from '../../../firebase/queries/shift'
 import { HeadCell, Shift } from '../../../interfaces/interfaces'
 
+const fakeShifts: Shift[] = [
+  {
+    shiftID: 'gregqueen',
+    name: 'wash romeo',
+    description: 'gregy weggy will clean romeo',
+    possibleDays: ['Monday', 'Friday'],
+    numOfPeople: 1,
+    timeWindow: [1200, 1400],
+    assignedDay: '',
+    hours: 2,
+    verification: true,
+    usersAssigned: [],
+    timeWindowDisplay: '',
+    verificationBuffer: 1,
+    category: 'cleaning',
+  },
+]
+
 const headCells: HeadCell<Shift>[] = [
   {
     id: 'name',
