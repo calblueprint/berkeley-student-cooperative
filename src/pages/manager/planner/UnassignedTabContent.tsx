@@ -20,27 +20,51 @@ import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 
-const headCells: HeadCell<Shift & { [key in keyof Shift]: string | number }>[] =
-  [
-    {
-      id: 'name',
-      isNumeric: false,
-      label: 'Shift Name',
-      isSortable: true,
-    },
-    {
-      id: 'timeWindowDisplay',
-      isNumeric: true,
-      label: 'Time',
-      isSortable: false,
-    },
-    {
-      id: 'hours',
-      isNumeric: true,
-      label: 'Value',
-      isSortable: true,
-    },
-  ]
+const shiftHeadCells: HeadCell<
+  Shift & { [key in keyof Shift]: string | number }
+>[] = [
+  {
+    id: 'name',
+    isNumeric: false,
+    label: 'Shift Name',
+    isSortable: true,
+  },
+  {
+    id: 'timeWindowDisplay',
+    isNumeric: true,
+    label: 'Time',
+    isSortable: false,
+  },
+  {
+    id: 'hours',
+    isNumeric: true,
+    label: 'Value',
+    isSortable: true,
+  },
+]
+
+const userHeadCells: HeadCell<
+  Shift & { [key in keyof Shift]: string | number }
+>[] = [
+  {
+    id: 'email',
+    isNumeric: false,
+    label: 'Email',
+    isSortable: true,
+  },
+  {
+    id: 'hoursRequired',
+    isNumeric: true,
+    label: 'Hours Required',
+    isSortable: true,
+  },
+  {
+    id: 'hoursAssigned',
+    isNumeric: true,
+    label: 'Value',
+    isSortable: true,
+  },
+]
 
 const filters = [
   'all',
@@ -158,7 +182,7 @@ export const UnassignedTabContent = () => {
               Shift & { [key in keyof Shift]: string | number }
             >
           }
-          headCells={headCells}
+          headCells={shiftHeadCells}
           isCheckable={false}
           handleRowClick={handleRowClick}
         />
@@ -210,7 +234,7 @@ export const UnassignedTabContent = () => {
                     Shift & { [key in keyof Shift]: string | number }
                   >
                 }
-                headCells={headCells}
+                headCells={userHeadCells}
                 isCheckable={false}
                 handleRowClick={handleRowClick}
               />
