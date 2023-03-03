@@ -4,7 +4,7 @@ import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/S
 export default function SchedulePage() {
   return (
     <Layout>
-      <p>This is the schedule page.</p>
+      <h2>This is the schedule page.</h2>
       <ShiftSchedule />
     </Layout>
   )
