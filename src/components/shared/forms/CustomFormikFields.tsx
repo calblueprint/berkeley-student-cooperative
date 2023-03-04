@@ -1,3 +1,5 @@
+import React from 'react'
+// import ReactDOM from 'react-dom'
 import { useField } from 'formik'
 import {
   TextField,
@@ -8,8 +10,7 @@ import {
   MenuItem,
 } from '@mui/material'
 
-// will fix typescript errors later lol
-export const TextInput = (label: string, ...props) => {
+export const TextInput = ({ label, ...props }) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
   // which we can spread on <input>. We can use field meta to show an error
   // message if the field is invalid and it has been touched (i.e. visited)

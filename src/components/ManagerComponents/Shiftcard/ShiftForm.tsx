@@ -1,10 +1,8 @@
 import { Formik, Form } from 'formik'
-import { Stack, Button } from '@mui/material'
+import { Stack, Button, TimePiker } from '@mui/material'
+import dayjs, { Dayjs } from 'dayjs';
 import * as Yup from 'yup'
-import {
-  TextInput,
-  SelectInput,
-} from '../../shared/tables/customFormikFields/CustomFormikFields'
+import { TextInput, SelectInput } from '../../shared/forms/CustomFormikFields'
 import {
   selectShiftById,
   useAddNewShiftMutation,
@@ -20,12 +18,13 @@ const ShiftSchema = Yup.object({
   name: Yup.string()
     .required('Name is required')
     .min(1, 'Name must have at least 1 characters'),
-  category: Yup.string()
-    .required('Cagegory is required')
-    .min(3, 'Last name must have at least 3 characters'),
-  credit_hours: Yup.number().required('Hours credit is required'),
-  posible_days: Yup.array().of(Yup.string()),
   description: Yup.string(),
+  posibleDays: Yup.array().of(Yup.string()),
+  timeWindowStartTime: Yup.date(),
+  timeWindowEndTime: Yup.date(),
+  category: Yup.string().required('Cagegory is required'),
+  hours: Yup.number().required('Hours credit is required'),
+  verificationBuffer: Yup.number(),
 })
 
 const daysList = [
@@ -38,10 +37,35 @@ const daysList = [
   'Sunday',
 ]
 
+// {
+
+//   // Name of the shift
+//   name: string
+
+//   description: string
+//   // Possible days that the shift can be done on
+//   possibleDays: string[]
+//   // Time window that this shift must be done in [startTime, endTime]
+//   timeWindow: {startTime: string, endTime: string}
+//   // property to display timeWindow
+//   timeWindowDisplay: string
+//   // Day that the shift is assigned
+//   assignedDay: string
+//   // Hours earned for a user
+//   hours: number
+//   // Number of hours since end time that you are allowed to verify a shift for
+//   verificationBuffer: number
+//   // Users assigned to the shift
+//   usersAssigned: string[]
+//   // Category of work that the shift belongs to
+//   category: string
+// }
+
 const Shift = {
   name: '',
   category: '',
   posible_days: [],
+  timeWindowStartTime: 
   credit_hours: '',
   despription: '',
 }
@@ -55,10 +79,10 @@ const ShiftForm = ({
   shiftId?: string
   isNewShift: boolean
 }) => {
-  const { authUser, house } = useUserContext()
-  const [currentShift, setCurrentShift] = React.useState(Shift)
+  // const { authUser, house } = useUserContext()
+  // const [currentShift, setCurrentShift] = React.useState(Shift)
 
-  const shiftCategories = getCategories(house.houseID) //TODO: use redux api slice once implemented
+  // const shiftCategories = getCategories(house.houseID) //TODO: use redux api slice once implemented
 
   //* Get API helpers to create or update a shift
   const [
@@ -84,18 +108,10 @@ const ShiftForm = ({
     selectShiftById(state, shiftId ? shiftId : '')
   )
 
-  React.useEffect(() => {
-    if (shift) {
-      setCurrentShift(shift)
-      console.log('Shift: ', shift)
-    }
-  }, [shift])
-
   const onSubmit = async (values, formikBag) => {
-    const { name, category, credit_hours, day, description, posible_days } =
-      values
+    const { name, category, credit_hours, description, posible_days } = values
     console.log(values)
-    const dayString = posible_days.join('')
+    // const dayString = posible_days.join('')
     let result
     if (isNewShift || !shiftId) {
       result = await addNewShift({
@@ -108,7 +124,7 @@ const ShiftForm = ({
       })
     } else {
       result = await updateShift({
-        id: taskId,
+        id: shiftId,
         name,
         category,
         credit_hours,
@@ -125,13 +141,13 @@ const ShiftForm = ({
   return (
     <>
       <Formik
-        validationSchema={TaskSchema}
+        validationSchema={ShiftSchema}
         initialValues={{
-          name: task ? task.name : Task.name,
-          category: task ? task.category : Task.category,
-          credit_hours: task ? task.credit_hours : Task.credit_hours,
-          posible_days: task ? task.posible_days : Task.posible_days,
-          description: task ? task.description : Task.posible_days,
+          name: shift ? shift.name : Shift.name,
+          category: shift ? shift.category : Shift.category,
+          credit_hours: shift ? shift.credit_hours : Shift.credit_hours,
+          posible_days: shift ? shift.posible_days : Shift.posible_days,
+          description: shift ? shift.description : Shift.posible_days,
         }}
         onSubmit={onSubmit}
       >
@@ -158,6 +174,13 @@ const ShiftForm = ({
               error={touched.category && errors.category ? true : false}
               helpertext={touched.category && errors.category}
               options={shiftCategories}
+            />
+
+            <TimePicker
+              label="Select time"
+              value={selectedTime}
+              onChange={handleTimeChange}
+              minutesStep={30}
             />
 
             <TextInput
@@ -203,7 +226,7 @@ const ShiftForm = ({
                 color="primary"
                 disabled={isSubmitting}
               >
-                {isNewTask || !taskId ? 'Submit' : 'Update'}
+                {isNewShift || !shiftId ? 'Submit' : 'Update'}
               </Button>
               <Button
                 fullWidth
@@ -221,4 +244,4 @@ const ShiftForm = ({
   )
 }
 
-export default TaskForm
+export default ShiftForm
