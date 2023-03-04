@@ -1,3 +1,4 @@
+import { Dictionary, EntityId } from '@reduxjs/toolkit'
 import { Shift, User } from '../types/schema'
 
 // Used to convert a map to an object uploadable to Firebase
@@ -196,8 +197,10 @@ export const emailRegex = new RegExp(
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 )
 
-export const sortPotentialUsers = (potentialUsers: User[], shiftID: string) => {
-  let sorted = potentialUsers.sort((user1, user2) => {
+export const sortPotentialUsers = (dict: Dictionary<User>, totalUsersInHouse: EntityId[], shiftID: string) => {
+  let sorted = totalUsersInHouse.sort((uid1, uid2) => {
+    let user1 = dict[uid1];
+    let user2 = dict[uid2];
     if (user1 === undefined || user2 === undefined) {
       return 0;
     }
@@ -238,13 +241,13 @@ export const sortPotentialUsers = (potentialUsers: User[], shiftID: string) => {
   return sorted;
 };
 
-export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: User[], shiftID: string, day: string) => {
+export const findAvailableUsers = (tempShiftObject: Shift, dict: Dictionary<User>, totalUsersInHouse: EntityId[], shiftID: string, day: string) => {
   const timeWindow = tempShiftObject.timeWindow
   const shiftStart = timeWindow[0]
   const shiftEnd = timeWindow[1]
   const numHours = tempShiftObject.hours
   const potentialUsers = []
-  
+  const ids = [];
   // Convert the hours of the shift into units of time. Assumes any non-whole hour numbers are 30 minute intervals.
   // ex. 1.5 -> converted to 130 (used for differences if someone is available between 1030 and 1200, they should be shown)
   const mult100 = Math.floor(numHours) * 100
@@ -253,9 +256,13 @@ export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: Us
     thirtyMin = 30
   }
   for (let i = 0; i < totalUsersInHouse.length; i++) {
-    const userObject = totalUsersInHouse[i]
+    const userObject = dict[totalUsersInHouse[i]];
+    if (userObject === undefined) {
+      continue;
+    }
     // if this user has already been assigned to this shift, display them regardless of hours
     if (userObject.shiftsAssigned.includes(shiftID)) {
+      ids.push(totalUsersInHouse[i])
       potentialUsers.push(userObject)
       continue
     }
@@ -288,11 +295,12 @@ export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: Us
         let requiredEnd = Math.min(permEnd, shiftEnd)
         // If the calculated end time is <= required end time, then we can push and don't need to consider any more availabilities
         if (newEnd <= requiredEnd) {
+          ids.push(totalUsersInHouse[i])
           potentialUsers.push(userObject)
           break
         }
       }
     }
   }
-  return potentialUsers;
+  return ids;
 }
