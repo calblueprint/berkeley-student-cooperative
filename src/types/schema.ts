@@ -1,6 +1,7 @@
-import internal from 'stream'
+// import internal from 'stream'
 
 export type User = {
+  id?: string
   // ID of the user (not stored in Firebase, attached to user)
   userID: string
   // Role of the user
