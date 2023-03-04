@@ -19,7 +19,6 @@ import { HeadCell, Shift, User } from '../../../interfaces/interfaces'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
-import ShiftCard from '../../../components/ManagerComponents/Shiftcard/Shiftcard'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -29,18 +28,21 @@ const shiftHeadCells: HeadCell<
     isNumeric: false,
     label: 'Shift Name',
     isSortable: true,
+    align: 'left',
   },
   {
     id: 'timeWindowDisplay',
     isNumeric: true,
     label: 'Time',
     isSortable: false,
+    align: 'left',
   },
   {
     id: 'hours',
     isNumeric: true,
     label: 'Value',
     isSortable: true,
+    align: 'left',
   },
 ]
 
@@ -52,18 +54,21 @@ const userHeadCells: HeadCell<
     isNumeric: false,
     label: 'Email',
     isSortable: true,
+    align: 'left',
   },
   {
     id: 'hoursRequired',
     isNumeric: true,
     label: 'Hours Required',
     isSortable: true,
+    align: 'left',
   },
   {
     id: 'hoursAssigned',
     isNumeric: true,
     label: 'Value',
     isSortable: true,
+    align: 'left',
   },
 ]
 
@@ -119,7 +124,7 @@ export const UnassignedTabContent = () => {
     event: React.MouseEvent<unknown>,
     shiftId: EntityId
   ) => {
-    console.log('event: ', event, 'shift: ', shiftId)
+    // console.log('event: ', event, 'shift: ', shiftId)
     const shift = data?.entities[shiftId]
     setModalShift(shift)
     if (shift && shift.usersAssigned && shift.usersAssigned[0]) {
@@ -143,20 +148,20 @@ export const UnassignedTabContent = () => {
 
   useEffect(() => {
     if (isSuccess && data) {
-      setShifts(data.ids)
+      // setShifts(data.ids)
 
-      // setShifts(
-      //   data.ids?.filter(
-      //     (id: EntityId) => data.entities[id]?.usersAssigned?.length === 0
-      //   )
-      // )
+      setShifts(
+        data.ids?.filter(
+          (id: EntityId) => data.entities[id]?.usersAssigned?.length === 0
+        )
+      )
     }
   }, [isSuccess, data])
 
   // runs when the component mounts and when filterBy or shifts changes
   // the filtered shifts (filtered by day)
   useEffect(() => {
-    console.log('Changing filters')
+    // console.log('Changing filters')
 
     setDisplayShifts(
       filterBy === filters[0]
@@ -185,7 +190,7 @@ export const UnassignedTabContent = () => {
           ))}
         </Select>
         <SortedTable
-          data={displayShifts as EntityId[]}
+          ids={displayShifts as EntityId[]}
           entities={
             data?.entities as Dictionary<
               Shift & { [key in keyof Shift]: string | number }
@@ -193,6 +198,7 @@ export const UnassignedTabContent = () => {
           }
           headCells={shiftHeadCells}
           isCheckable={false}
+          isSortable={true}
           handleRowClick={handleRowClick}
         />
         {/* Everything below is just to test the redux user api */}
@@ -239,7 +245,7 @@ export const UnassignedTabContent = () => {
           <DialogContent>
             <Paper>
               <SortedTable
-                data={users?.ids as EntityId[]}
+                ids={users?.ids as EntityId[]}
                 entities={
                   users?.entities as Dictionary<
                     Shift & { [key in keyof Shift]: string | number }
@@ -247,12 +253,12 @@ export const UnassignedTabContent = () => {
                 }
                 headCells={userHeadCells}
                 isCheckable={false}
+                isSortable={false}
                 handleRowClick={handleRowClick}
               />
             </Paper>
           </DialogContent>
         </Dialog>
-        <ShiftCard/>
       </>
     )
   }
