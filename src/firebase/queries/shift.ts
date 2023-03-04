@@ -167,6 +167,7 @@ export const getShiftForCategories = async (
 }
 
 export const getNumVerified = async (
+  //TODO: Andrei will remove me bc I am useless.  AFTER switching to new redux tables.
   houseID: string,
   shiftID: string
 ): Promise<number> => {
