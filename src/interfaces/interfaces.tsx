@@ -71,4 +71,5 @@ export interface HeadCell<
   label: string
   isNumeric: boolean
   isSortable: boolean
+  align: 'left' | 'center' | 'right' | 'justify' | 'inherit' | undefined
 }
