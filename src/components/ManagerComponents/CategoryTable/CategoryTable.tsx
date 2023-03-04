@@ -10,9 +10,10 @@ import {useState, useEffect} from 'react';
 import { getCategories } from "../../../firebase/queries/house";
 
 const CategoryTable = () => {
+    const [houseCategories, setHouseCategories] = useState<Map<string, (Map<string, string[]>)> | undefined>(undefined)
+    console.log("hey there.")
     useEffect(() => {
-        const [houseCategories, setHouseCategories] = useState<Map<string, (Map<string, string[]>)> | undefined>(undefined)
-        console.log("hey there.")
+        
         getCategories('EUC').then((category) => {
             
             const mapHolder = new Map<string, (Map<string, string[]>)>();
@@ -35,8 +36,9 @@ const CategoryTable = () => {
                  mapHolder.set(key,categoriesMap )
             })
             console.log("prefMap after loop", preferenceMap)
+        })
     }, [])
-
+    
  
     return (
     <div>

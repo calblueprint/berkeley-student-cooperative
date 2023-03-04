@@ -19,6 +19,7 @@ import { HeadCell, Shift, User } from '../../../interfaces/interfaces'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import ShiftCard from '../../../components/ManagerComponents/Shiftcard/Shiftcard'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -251,6 +252,7 @@ export const UnassignedTabContent = () => {
             </Paper>
           </DialogContent>
         </Dialog>
+        <ShiftCard/>
       </>
     )
   }
