@@ -11,6 +11,8 @@ import { convertTimeWindowToTime, pluralizeHours } from '../firebase/helpers'
 import { sortPotentialUsers, findAvailableUsers } from '../firebase/helpers'
 import SortedTable from '../components/shared/tables/SortedTable'
 import { numericToStringPreference } from '../firebase/helpers'
+import { EntityId, Dictionary } from '@reduxjs/toolkit'
+
 type ShiftAssignmentComponentCardProps = {
   day: string
   houseID: string
@@ -24,18 +26,21 @@ const headCells: HeadCell<Shift>[] = [
     isNumeric: false,
     label: 'Available Users',
     isSortable: false,
+    align: 'left'
   },
   {
     id: 'hoursUnassigned',
     isNumeric: true,
     label: 'Unassigned Hours',
     isSortable: true,
+    align: 'left'
   },
   {
     id: 'preference',
     isNumeric: false,
     label: 'Preference',
     isSortable: true,
+    align: 'left'
   },
 ]
 
@@ -248,6 +253,7 @@ const ShiftAssignmentComponentCard: React.FC<
           data = {potentialWorkersDisplay}
           headCells = {headCells}
           isCheckable = {true}
+          isSortable = {false}
           // handle row click here???
         />
       }
