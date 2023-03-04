@@ -67,3 +67,22 @@ export function formatMilitaryTime(militaryTime: number): string {
   // Return formatted time string
   return `${formattedHour}:${formattedMinute}${ampm}`
 }
+
+export const streamToObject = async (body: ReadableStream) => {
+  if (!body || !(body instanceof ReadableStream)) throw new Error()
+
+  const convert = async (stream: ReadableStream) => {
+    let text = ''
+    const reader = stream.getReader()
+    let chunk = await reader.read()
+
+    while (!chunk.done) {
+      text += new TextDecoder('utf-8').decode(chunk.value)
+      chunk = await reader.read()
+    }
+    return JSON.parse(text)
+  }
+  const data = await convert(body)
+
+  return data
+}

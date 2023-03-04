@@ -10,6 +10,7 @@ import {
   QuerySnapshot,
   DocumentSnapshot,
 } from 'firebase/firestore'
+import { streamToObject } from '../../utils/utils'
 
 // export type BaseQueryFn<
 //   Args = any,
@@ -183,8 +184,10 @@ const baseQuery = fetchBaseQuery({
             )
           }
 
+          const data = await streamToObject(body)
+
           //** Create a new document with the given BODY */
-          const newDoc = await addDoc(collection(firestore, path), body)
+          const newDoc = await addDoc(collection(firestore, path), data)
 
           //** Add resObj to the resObj array */
           resObj.push({ data: newDoc, id: newDoc.id.toString() })

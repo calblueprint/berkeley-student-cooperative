@@ -1,6 +1,12 @@
 import { Formik, Form } from 'formik'
-import { Stack, Button, TimePiker } from '@mui/material'
-import dayjs, { Dayjs } from 'dayjs';
+import { Stack, Button } from '@mui/material'
+import { TimePicker } from '@mui/x-date-pickers/TimePicker'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
+import { Timestamp } from 'firebase/firestore'
+
+import dayjs, { Dayjs } from 'dayjs'
 import * as Yup from 'yup'
 import { TextInput, SelectInput } from '../../shared/forms/CustomFormikFields'
 import {
@@ -8,9 +14,9 @@ import {
   useAddNewShiftMutation,
   useUpdateShiftMutation,
 } from '../../../store/apiSlices/shiftApiSlice'
-import { getCategories } from '../../../firebase/queries/house'
+// import { getCategories } from '../../../firebase/queries/house'
 import { useSelector } from 'react-redux'
-import { useUserContext } from '../../../context/UserContext'
+// import { useUserContext } from '../../../context/UserContext'
 
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
 //** Here, we are defining what kind of inputs we are expecting and attaching error msgs for when the input is not what we want. */
@@ -35,6 +41,13 @@ const daysList = [
   'Friday',
   'Saturday',
   'Sunday',
+]
+
+const shiftCategories = [
+  'cook dinner',
+  'clean bathroom',
+  'wash dishes',
+  'clean basement',
 ]
 
 // {
@@ -64,10 +77,12 @@ const daysList = [
 const Shift = {
   name: '',
   category: '',
-  posible_days: [],
-  timeWindowStartTime: 
-  credit_hours: '',
+  possibleDays: [],
+  timeWindowStartTime: Timestamp.now(),
+  timeWindowEndTime: Timestamp.now(),
+  hours: '',
   despription: '',
+  verificationBuffer: '',
 }
 
 const ShiftForm = ({
@@ -109,28 +124,43 @@ const ShiftForm = ({
   )
 
   const onSubmit = async (values, formikBag) => {
-    const { name, category, credit_hours, description, posible_days } = values
-    console.log(values)
-    // const dayString = posible_days.join('')
+    console.log('Submiting ShiftForm: ', values)
+    const {
+      name,
+      category,
+      hours,
+      description,
+      posibleDays,
+      timeWindowStartTime,
+      timeWindowEndTime,
+      verificationBuffer,
+    } = values
+    console.log(timeWindowEndTime.toDate())
+    console.log(Timestamp.fromDate(timeWindowEndTime.toDate()))
+    // const dayString = posibleDays.join('')
     let result
+    const timeWindow = {
+      starTime: 'time', //Timestamp.fromDate(timeWindowStartTime.toDate()),
+      timeWindowEndTime: 'after time', //Timestamp.fromDate(timeWindowEndTime.toDate()),
+    }
+    const data = { data: {}, houseId: '', shiftId: '' }
+    data.data = {
+      name,
+      category,
+      hours,
+      posibleDays,
+      description,
+      timeWindow,
+      verificationBuffer,
+      // created_by: '63d0eca7e8e159c2bf0a57e6',
+    }
+    data.houseId = 'EUC'
+    data.shiftId = shiftId
+
     if (isNewShift || !shiftId) {
-      result = await addNewShift({
-        name,
-        category,
-        credit_hours,
-        posible_days,
-        description,
-        created_by: '63d0eca7e8e159c2bf0a57e6',
-      })
+      result = await addNewShift(data)
     } else {
-      result = await updateShift({
-        id: shiftId,
-        name,
-        category,
-        credit_hours,
-        posible_days,
-        description,
-      })
+      result = await updateShift(data)
     }
     console.log(result)
 
@@ -145,13 +175,22 @@ const ShiftForm = ({
         initialValues={{
           name: shift ? shift.name : Shift.name,
           category: shift ? shift.category : Shift.category,
-          credit_hours: shift ? shift.credit_hours : Shift.credit_hours,
-          posible_days: shift ? shift.posible_days : Shift.posible_days,
-          description: shift ? shift.description : Shift.posible_days,
+          hours: shift ? shift.hours : Shift.hours,
+          timeWindowStartTime: shift
+            ? shift.timeWindow.startTime
+            : Shift.timeWindowStartTime,
+          timeWindowEndTime: shift
+            ? shift.timeWindow.endTime
+            : Shift.timeWindowEndTime,
+          posibleDays: shift ? shift.possibleDays : Shift.possibleDays,
+          description: shift ? shift.description : Shift.possibleDays,
+          verificationBuffer: shift
+            ? shift.verificationBuffer
+            : Shift.verificationBuffer,
         }}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting, touched, errors, values }) => (
+        {({ isSubmitting, touched, errors, values, setFieldValue }) => (
           <Form>
             <TextInput
               name="name"
@@ -175,34 +214,48 @@ const ShiftForm = ({
               helpertext={touched.category && errors.category}
               options={shiftCategories}
             />
-
-            <TimePicker
-              label="Select time"
-              value={selectedTime}
-              onChange={handleTimeChange}
-              minutesStep={30}
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <MobileTimePicker
+                label="Start Window Time"
+                minutesStep={30}
+                value={values.timeWindowStartTime}
+                onChange={(newValue) =>
+                  setFieldValue('timeWindowStartTime', newValue)
+                }
+                // defaultValue={dayjs('2022-04-17T15:30')}
+              />
+              <MobileTimePicker
+                label="End Window Time"
+                minutesStep={30}
+                value={values.timeWindowEndTime}
+                onChange={(newValue) => {
+                  // console.log('endWindowTime', newValue?.toLocaleString())
+                  setFieldValue('timeWindowEndTime', newValue)
+                }}
+                // defaultValue={dayjs('2022-04-17T15:30')}
+              />
+            </LocalizationProvider>
 
             <TextInput
-              name="credit_hours"
+              name="hours"
               label="Credit Hours For Shift"
               margin="normal"
               fullWidth
-              value={values.credit_hours}
-              error={touched.credit_hours && errors.credit_hours ? true : false}
-              helperText={touched.credit_hours && errors.credit_hours}
+              value={values.hours}
+              error={touched.hours && errors.hours ? true : false}
+              helperText={touched.hours && errors.hours}
             />
 
             <SelectInput
-              name="posible_days"
-              label="Day"
+              name="posibleDays"
+              label="Posible Days"
               margin="dense"
-              labelid="posible_days"
-              id="posible_days"
+              labelid="posibleDays"
+              id="posibleDays"
               fullWidth
-              value={values.posible_days}
-              error={touched.posible_days && errors.posible_days ? true : false}
-              helpertext={touched.posible_days && errors.posible_days}
+              value={values.posibleDays}
+              error={touched.posibleDays && errors.posibleDays ? true : false}
+              helpertext={touched.posibleDays && errors.posibleDays}
               options={daysList}
               multiple
             />

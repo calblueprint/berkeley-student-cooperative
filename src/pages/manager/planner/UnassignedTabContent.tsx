@@ -19,6 +19,7 @@ import { HeadCell, Shift, User } from '../../../interfaces/interfaces'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import ShiftCard from '../../../components/ManagerComponents/Shiftcard/Shiftcard'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -182,6 +183,7 @@ export const UnassignedTabContent = () => {
     return (
       <>
         {/* <UnassignedShiftList /> */}
+
         <Select value={filterBy} onChange={handleFilterChange}>
           {filters.map((day) => (
             <MenuItem key={day} value={day}>
@@ -189,6 +191,7 @@ export const UnassignedTabContent = () => {
             </MenuItem>
           ))}
         </Select>
+        <ShiftCard />
         <SortedTable
           ids={displayShifts as EntityId[]}
           entities={

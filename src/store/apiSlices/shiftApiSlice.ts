@@ -49,7 +49,7 @@ export const shiftsApiSlice = apiSlice.injectEndpoints({
     }),
     addNewShift: builder.mutation({
       query: (data) => ({
-        url: `houses/${data.houseId}`,
+        url: `houses/${data.houseId}/shifts`,
         method: 'POST',
         body: {
           ...data.data,
