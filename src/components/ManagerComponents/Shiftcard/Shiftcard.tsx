@@ -68,7 +68,11 @@ const ShiftCard = () => {
           </Button>
         </DialogTitle>
         <DialogContent>
-          <ShiftForm setOpen={setOpen} isNewShift={true} />
+          <ShiftForm
+            setOpen={setOpen}
+            shiftId="3InBjF0Nz81DClddjZ1b"
+            isNewShift={false}
+          />
         </DialogContent>
       </Dialog>
     </React.Fragment>

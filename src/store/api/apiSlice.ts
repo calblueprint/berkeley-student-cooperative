@@ -111,9 +111,8 @@ const baseQuery = fetchBaseQuery({
           //** Check weather the request is a collection or a document */
           if (isCollection) {
             //** If the query is a collection, get the full collection from the firebase */
-            const querySnapshot: QuerySnapshot<unknown> = await getDocs(
-              collection(firestore, path)
-            )
+            const query = collection(firestore, path)
+            const querySnapshot: QuerySnapshot<unknown> = await getDocs(query)
 
             // console.log('Collection SnapShot.docs: ', querySnapshot.docs)
             //** Verify that the object exist */
@@ -130,6 +129,7 @@ const baseQuery = fetchBaseQuery({
             querySnapshot.forEach((doc) => {
               // doc.data() is never undefined for query doc snapshots
               const data = doc.data()
+              // console.log(data)
               resObj.push({ data: data, id: doc.id.toString() })
               // console.log(doc.id, ' => ', doc.data())
             })
@@ -184,10 +184,10 @@ const baseQuery = fetchBaseQuery({
             )
           }
 
-          const data = await streamToObject(body)
+          const postData = await streamToObject(body)
 
           //** Create a new document with the given BODY */
-          const newDoc = await addDoc(collection(firestore, path), data)
+          const newDoc = await addDoc(collection(firestore, path), postData)
 
           //** Add resObj to the resObj array */
           resObj.push({ data: newDoc, id: newDoc.id.toString() })
@@ -216,8 +216,10 @@ const baseQuery = fetchBaseQuery({
             )
           }
 
+          const patchData = await streamToObject(body)
+
           //** Patch document with new data */
-          const updatedDoc = await updateDoc(doc(firestore, path), { ...body })
+          const updatedDoc = await updateDoc(doc(firestore, path), patchData)
 
           //** Add resObj to the resObj array and return it */
           return new Response(
@@ -240,7 +242,7 @@ const baseQuery = fetchBaseQuery({
 
 export const apiSlice = createApi({
   baseQuery,
-  // tagTypes: ['Shift', 'User'],
+  tagTypes: ['Shift', 'User'],
   endpoints: () => ({}),
 })
 

@@ -16,6 +16,7 @@ import {
 } from '../../../store/apiSlices/shiftApiSlice'
 // import { getCategories } from '../../../firebase/queries/house'
 import { useSelector } from 'react-redux'
+import React from 'react'
 // import { useUserContext } from '../../../context/UserContext'
 
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
@@ -140,8 +141,8 @@ const ShiftForm = ({
     // const dayString = posibleDays.join('')
     let result
     const timeWindow = {
-      starTime: 'time', //Timestamp.fromDate(timeWindowStartTime.toDate()),
-      timeWindowEndTime: 'after time', //Timestamp.fromDate(timeWindowEndTime.toDate()),
+      starTime: Timestamp.fromDate(timeWindowStartTime.toDate()),
+      timeWindowEndTime: Timestamp.fromDate(timeWindowEndTime.toDate()),
     }
     const data = { data: {}, houseId: '', shiftId: '' }
     data.data = {
@@ -152,6 +153,8 @@ const ShiftForm = ({
       description,
       timeWindow,
       verificationBuffer,
+      usersAssigned: [],
+      numOfPeople: 1,
       // created_by: '63d0eca7e8e159c2bf0a57e6',
     }
     data.houseId = 'EUC'
@@ -167,6 +170,10 @@ const ShiftForm = ({
     // formikBag.resetForm()
     setOpen(false)
   }
+
+  React.useEffect(() => {
+    console.log(shift)
+  }, [shift])
 
   return (
     <>

@@ -80,9 +80,9 @@ export const streamToObject = async (body: ReadableStream) => {
       text += new TextDecoder('utf-8').decode(chunk.value)
       chunk = await reader.read()
     }
-    return JSON.parse(text)
+    return await JSON.parse(text)
   }
-  const data = await convert(body)
+  const data = convert(body)
 
   return data
 }
