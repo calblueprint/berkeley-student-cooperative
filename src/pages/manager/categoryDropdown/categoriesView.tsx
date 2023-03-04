@@ -87,7 +87,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
       <Button onClick={openModal} id={styles.newCategory}>
         New Category
       </Button>
-      <CategoryTable/>
+      {/* <CategoryTable/> */}
       {isModalOpened && (
         <Dialog
           fullWidth
