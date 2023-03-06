@@ -82,9 +82,9 @@ const Shift = {
   possibleDays: [],
   timeWindowStartTime: dayjs(),
   timeWindowEndTime: dayjs(),
-  hours: '',
+  hours: 0,
   despription: '',
-  verificationBuffer: '',
+  verificationBuffer: 0,
   assignedUser: '',
 }
 
@@ -207,7 +207,7 @@ const ShiftForm = ({
             ? shift.timeWindow[1] // TODO: convert military time to type TimePicker
             : Shift.timeWindowEndTime,
           posibleDays: shift ? shift.possibleDays : Shift.possibleDays,
-          description: shift ? shift.description : Shift.possibleDays,
+          description: shift ? shift.description : Shift.despription,
           verificationBuffer: shift
             ? shift.verificationBuffer
             : Shift.verificationBuffer,
