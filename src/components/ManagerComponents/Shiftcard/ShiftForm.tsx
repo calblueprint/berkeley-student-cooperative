@@ -17,6 +17,7 @@ import {
 // import { getCategories } from '../../../firebase/queries/house'
 import { useSelector } from 'react-redux'
 import React from 'react'
+import { formatMilitaryTime } from '../../../utils/utils'
 // import { useUserContext } from '../../../context/UserContext'
 
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
@@ -136,7 +137,7 @@ const ShiftForm = ({
       timeWindowStartTime: Dayjs
       timeWindowEndTime: Dayjs
       verificationBuffer: number
-      assignedUser: string
+      //   assignedUser: string
     },
     formikBag: any
   ) => {
@@ -150,17 +151,21 @@ const ShiftForm = ({
       timeWindowStartTime,
       timeWindowEndTime,
       verificationBuffer,
-      assignedUser,
+      //   assignedUser,
     } = values
 
+    const num = 1900
     const startTime = Number(timeWindowStartTime.format('HHmm'))
     const endTime = Number(timeWindowEndTime.format('HHmm'))
 
     console.log(dayjs('1900', 'HHmm').format('HHmm'))
+    console.log(dayjs(num.toString(), 'HHmm'))
 
     // const dayString = posibleDays.join('')
     let result
     const timeWindow = [startTime, endTime]
+    const timeWindowDisplay =
+      formatMilitaryTime(startTime) + ' - ' + formatMilitaryTime(endTime)
     const data = { data: {}, houseId: '', shiftId: '' }
     data.data = {
       name,
@@ -170,22 +175,23 @@ const ShiftForm = ({
       description,
       timeWindow,
       verificationBuffer,
-      assignedUser,
+      timeWindowDisplay,
+      //   assignedUser,
 
       // created_by: '63d0eca7e8e159c2bf0a57e6',
     }
     data.houseId = 'EUC'
-    data.shiftId = shiftId
+    data.shiftId = shiftId ? shiftId : ''
+    console.log('data: ', data)
+    if (isNewShift || !shiftId) {
+      result = await addNewShift(data)
+    } else {
+      result = await updateShift(data)
+    }
+    console.log(result)
 
-    // if (isNewShift || !shiftId) {
-    //   result = await addNewShift(data)
-    // } else {
-    //   result = await updateShift(data)
-    // }
-    // console.log(result)
-
-    // // formikBag.resetForm()
-    // setOpen(false)
+    // formikBag.resetForm()
+    setOpen(false)
   }
 
   React.useEffect(() => {
@@ -201,17 +207,19 @@ const ShiftForm = ({
           category: shift ? shift.category : Shift.category,
           hours: shift ? shift.hours : Shift.hours,
           timeWindowStartTime: shift
-            ? shift.timeWindow[0] // TODO: convert military time to type TimePicker
+            ? dayjs(shift.timeWindow[0].toString(), 'HHmm') // TODO: convert military time to type TimePicker
             : Shift.timeWindowStartTime,
           timeWindowEndTime: shift
-            ? shift.timeWindow[1] // TODO: convert military time to type TimePicker
+            ? dayjs(shift.timeWindow[1].toString(), 'HHmm') // TODO: convert military time to type TimePicker
             : Shift.timeWindowEndTime,
           posibleDays: shift ? shift.possibleDays : Shift.possibleDays,
           description: shift ? shift.description : Shift.despription,
           verificationBuffer: shift
             ? shift.verificationBuffer
             : Shift.verificationBuffer,
-          assignedUser: shift ? shift.assignedUser : Shift.assignedUser,
+          //   assignedUser: shift
+          //     ? (shift.assignedUser as string)
+          //     : Shift.assignedUser,
         }}
         onSubmit={onSubmit}
       >
@@ -269,6 +277,22 @@ const ShiftForm = ({
               value={values.hours}
               error={touched.hours && errors.hours ? true : false}
               helperText={touched.hours && errors.hours}
+            />
+
+            <TextInput
+              name="verificationBuffer"
+              label="Buffer Hours"
+              margin="normal"
+              fullWidth
+              value={values.verificationBuffer}
+              error={
+                touched.verificationBuffer && errors.verificationBuffer
+                  ? true
+                  : false
+              }
+              helperText={
+                touched.verificationBuffer && errors.verificationBuffer
+              }
             />
 
             <SelectInput
