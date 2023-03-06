@@ -16,9 +16,21 @@ import {
   Typography,
 } from '@mui/material'
 import Icon from '../../../assets/Icon'
+import AddIcon from '@mui/icons-material/Add';
 
 import styles from './CategoriesView.module.css'
 import CategoryTable from '../../../components/ManagerComponents/CategoryTable/CategoryTable'
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1B202D',
+    },
+    secondary: {
+      main: '#FFFFFF',
+    },
+  },
+});
 
 type CategoriesViewProps = {
   houseID: string
@@ -81,12 +93,17 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     }
     closeModal()
   }
-  
+  const buttonStyling = { backgroundColor: "#1B202D", borderRadius: 1, marginBottom: 2}
   return (
     <div className={styles.categoryViewContainer}>
-      <Button onClick={openModal} id={styles.newCategory}>
+      <ThemeProvider theme={theme}>
+
+      
+      <Button onClick={openModal}  color='secondary' sx={ buttonStyling } className={styles.newCategory}>
         New Category
+        <AddIcon sx={{fontSize: 19, marginLeft: .5, paddingBottom: .2}}/>
       </Button>
+      </ThemeProvider>
       <CategoryTable/>
       {isModalOpened && (
         <Dialog
@@ -96,6 +113,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
           onClose={closeModal}
           className={styles.dialog}
         >
+          
           <DialogContent>
             <div className={styles.shiftBox}>
               <div className={styles.header}>
