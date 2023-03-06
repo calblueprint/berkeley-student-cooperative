@@ -10,6 +10,7 @@ import SortedTable from '../../../components/shared/tables/SortedTable'
 import { Shift } from '../../../types/schema'
 import { HeadCell } from '../../../interfaces/interfaces'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import ShiftCardTest from '../../../components/ManagerComponents/Shiftcard/ShiftCardTest'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -124,6 +125,7 @@ const ReduxTesting = () => {
   return (
     <React.Fragment>
       <Counter />
+      <ShiftCardTest />
       <ShiftTesting />
     </React.Fragment>
   )
