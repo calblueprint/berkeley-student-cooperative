@@ -3,8 +3,9 @@ import Layout from '../../../components/Layout/Layout'
 import { useState } from 'react'
 import CategoriesView from '../categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
-import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
 import { UnassignedTabContent } from './UnassignedTabContent'
+import Testing from './Testing'
+import { Schedule } from '../schedule/Schedule'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -23,11 +24,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   )
 }
@@ -49,7 +46,7 @@ export default function SchedulePage() {
   const [currPage, setCurrPage] = useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(authUser)
+    // console.log(authUser)
     setCurrPage(newValue)
   }
 
@@ -66,9 +63,10 @@ export default function SchedulePage() {
         </Box>
         <TabPanel value={currPage} index={0}>
           <UnassignedTabContent />
+          <Testing />
         </TabPanel>
         <TabPanel value={currPage} index={1}>
-          <ShiftSchedule />
+          <Schedule individualFiltered={false} isManager={true} />
         </TabPanel>
         <TabPanel value={currPage} index={2}>
           <CategoriesView houseID={authUser.houseID} />

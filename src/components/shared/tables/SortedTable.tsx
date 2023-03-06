@@ -1,58 +1,142 @@
+//** Material UI Components */
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import { visuallyHidden } from '@mui/utils'
-import { getComparator, stableSort, Order } from '../../../utils/utils'
-import { HeadCell } from '../../../interfaces/interfaces'
-import uuid from 'react-uuid'
+import TableRow from '@mui/material/TableRow'
+import { styled } from '@mui/material/styles'
+import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 
-type TWithId<T> = T & { id: string }
-//TODO:  !!!!!!!!!!!DO NOT USE USEEFFECT ON HOUSE OR USERCONTEXT!!!!!!!!!!!!!!!!!!!!
+//** Custom Utility functions */
+import { getComparator, stableSort, Order } from '../../../utils/utils'
+
+//** Interfaces */
+import { HeadCell } from '../../../interfaces/interfaces'
+
+//** React Package */
+import uuid from 'react-uuid'
+import { EntityId, Dictionary } from '@reduxjs/toolkit'
+
+//** Custom function that styles the tableCell component from materials ui */
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    // backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.black,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}))
+
+//** Custom function that styles the TableRow component from materials ui */
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}))
+
 /**
- * Andrei's Notes:
- * Sorted Table mainly lifted from MUI Sorting & Selecting
+ * Returns the average of two numbers.
  *
- * @param param0
- * @returns
+ * @param data - An array of elements of type T
+ * @param headCells - An array of objects containing the header information for each column
+ * @param isCheckable - A boolean value that defines is the items of the table should be checkable or not
+ * @optionalparam handleRowClick - An optional function that handles the clicking of a row item
+ * @returns A sortable table with items of type T organized into columns described by headCells
+ *
+ * @example
+ * Here is an example of the headCells array:
+ * const headCells: HeadCell<Shift>[] = [
+ *   {
+ *     id: 'name',            // this references the 'name' attribute in the shift objects
+ *     isNumeric: false,      // true if the column's content is numeric
+ *     label: 'Shift Name',   // this will be the column's title displayed in the table
+ *     isSortable: true,      // true if the column's content is sortable
+ *   },
+ *   {
+ *     id: 'timeWindowDisplay',
+ *     isNumeric: false,
+ *     label: 'Time',
+ *     isSortable: false,
+ *   },
+ *   {
+ *     id: 'hours',
+ *     isNumeric: true,
+ *     label: 'Value',
+ *     isSortable: true,
+ *   },
+ * ]
+ *
  */
 export default function SortedTable<
-  //To generalize the table to take in any type of data.  Shifts, Members, or Availabilities
-  T extends { [key in keyof T]: string | number }
+  T extends { [key in keyof T]: string | number | string[] | number[] }
 >({
-  data: rows,
-  headCells, //What goes in the header
-  isCheckable, //If it has checkable
-  handleRowClick, //Do we need it to pop open a modal?
+  ids,
+  entities,
+  headCells,
+  isCheckable,
+  isSortable,
+  handleRowClick,
 }: {
-  data: TWithId<T>[]
+  ids: EntityId[]
+  entities: Dictionary<T>
   headCells: HeadCell<T>[]
   isCheckable: boolean
+  isSortable: boolean
   handleRowClick?: (event: React.MouseEvent<unknown>, id: string) => void
 }) {
+  // stores whether the order is ascending or descending
   const [order, setOrder] = React.useState<Order>('asc')
+
+  // stores which by which column the table is being sorted by
+  // (atm, the initial state is the first column, which might not be ideal)
   const [orderBy, setOrderBy] = React.useState<keyof T>(headCells[0].id)
+
+  // stores the items in the table that haeve been selected (applicable when isCheckable= true)
   const [selected, setSelected] = React.useState<readonly string[]>([])
 
+  /**
+   * @description Handles the user request for sorting the able by a column
+   * @param event - contains the information of a given event
+   * @param property - the 'id' from headCells of a columm
+   *
+   * @returns void
+   */
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof T
   ) => {
+    // true when request is for ascending and false for when the request is for descending
     const isAsc = orderBy === property && order === 'asc'
+
+    // updates the state of the order
     setOrder(isAsc ? 'desc' : 'asc')
+
+    // updates the property that the table is being sorted by
     setOrderBy(property)
   }
 
-  //Handles the clicking of a row.  Can use this to open a modal.
+  /**
+   * @description This function handles when a user clicks a row in the table
+   * @param event - contains the information of a given event
+   * @param id - the selected element's id (e.g., the firebase id of a shift object)
+   *
+   * @returns void
+   */
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    // checks if this table is checkable
     if (isCheckable) {
+      // this checks if the item is being checked or unchecked and updates the selected state mentioned above
       const selectedIndex = selected.indexOf(id)
       let newSelected: readonly string[] = []
 
@@ -71,23 +155,25 @@ export default function SortedTable<
 
       setSelected(newSelected)
     }
+    // this is what is passed into the optional handleRowClick function mentioned above
     handleRowClick ? handleRowClick(event, id) : null
   }
 
+  // true when a row with an element ID, id, has been selected and false when the row with an element ID, id, is not selected
   const isSelected = (id: string) => selected.indexOf(id) !== -1
 
-  //Sets up the column names of the table.
+  // this is the header element displayed at the top of the table
   const head = (
     <TableHead>
       <TableRow>
         {headCells.map((headCell) => (
-          <TableCell
+          <StyledTableCell
             key={uuid()}
-            align={headCell.isNumeric ? 'right' : 'left'}
+            align={headCell.align}
             padding={'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            {headCell.isSortable ? (
+            {headCell.isSortable && isSortable ? (
               <TableSortLabel
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
@@ -105,60 +191,77 @@ export default function SortedTable<
             ) : (
               headCell.label
             )}
-          </TableCell>
+          </StyledTableCell>
         ))}
-        {isCheckable ? <TableCell padding="checkbox"></TableCell> : null}
+        {isCheckable ? (
+          <StyledTableCell padding="checkbox"></StyledTableCell>
+        ) : null}
       </TableRow>
     </TableHead>
   )
 
-  //Takes the rows (DATA) and and maps them into Table Rows.
-  const body = stableSort(rows, getComparator(order, orderBy)).map(
-    (row, index) => {
-      const isItemSelected = isSelected(row.id)
-      const labelId = `enhanced-table-checkbox-${index}`
+  let entityIds: EntityId[] = []
+  if (isSortable) {
+    entityIds = stableSort(ids, entities, getComparator(order, orderBy))
+  } else {
+    entityIds = ids
+  }
 
-      return (
-        <TableRow
-          hover
-          onClick={(event) => handleClick(event, row.id)}
-          role="checkbox"
-          aria-checked={isItemSelected}
-          tabIndex={-1}
-          key={row.id}
-          selected={isItemSelected}
-        >
-          {headCells.map((cell, i) => {
-            if (i == 0) {
-              return (
-                <TableCell key={uuid()} component="th" id={labelId} scope="row">
-                  {row[cell.id]}
-                </TableCell>
-              )
-            } else {
-              return (
-                <TableCell key={uuid()} align="right">
-                  {row[cell.id]}
-                </TableCell>
-              )
-            }
-          })}
+  const body = entityIds?.map((entityId, index) => {
+    const id: string = entityId as string
+    const isItemSelected = isSelected(id)
+    const labelId = `enhanced-table-checkbox-${index}`
 
-          {isCheckable ? (
-            <TableCell padding="checkbox">
-              <Checkbox
-                color="primary"
-                checked={isItemSelected}
-                inputProps={{
-                  'aria-labelledby': labelId,
-                }}
-              />
-            </TableCell>
-          ) : null}
-        </TableRow>
-      )
+    const row = entities[id]
+    if (!row) {
+      return null
     }
-  )
+    return (
+      <StyledTableRow
+        hover
+        onClick={(event) => handleClick(event, id)}
+        role="checkbox"
+        aria-checked={isItemSelected}
+        tabIndex={-1}
+        key={id}
+        selected={isItemSelected}
+      >
+        {headCells.map((cell, i) => {
+          if (i == 0) {
+            return (
+              <StyledTableCell
+                key={uuid()}
+                component="th"
+                id={labelId}
+                scope="row"
+                align={cell.align}
+              >
+                {row[cell.id]}
+              </StyledTableCell>
+            )
+          } else {
+            return (
+              <StyledTableCell key={uuid()} align={cell.align}>
+                {row[cell.id]}
+              </StyledTableCell>
+            )
+          }
+        })}
+
+        {isCheckable ? (
+          <StyledTableCell padding="checkbox">
+            <Checkbox
+              color="primary"
+              checked={isItemSelected}
+              inputProps={{
+                'aria-labelledby': labelId,
+              }}
+            />
+          </StyledTableCell>
+        ) : null}
+      </StyledTableRow>
+    )
+  })
 
   return (
     <Box sx={{ width: '100%' }}>

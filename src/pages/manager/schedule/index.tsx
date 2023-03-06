@@ -1,11 +1,8 @@
 import { Tabs, Tab, Box, Typography } from '@mui/material'
 import Layout from '../../../components/Layout/Layout'
 import { useState } from 'react'
-import CategoriesView from '../categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
-import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
 import { Schedule } from './Schedule'
-import { truncate } from 'fs/promises'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -60,20 +57,16 @@ export default function SchedulePage() {
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={currPage} onChange={handleChange}>
-            <Tab label="Unassigned" {...a11yProps(0)} />
-            <Tab label="Assigned" {...a11yProps(1)} />
-            <Tab label="Categories" {...a11yProps(2)} />
+            <Tab label="All" {...a11yProps(0)} />
+            <Tab label="Individual" {...a11yProps(1)} />
           </Tabs>
         </Box>
         <TabPanel value={currPage} index={0}>
-          <Schedule isManager={false} />
+          <Schedule individualFiltered={false} isManager={true} />
           {/* <UnassignedTabContent /> */}
         </TabPanel>
         <TabPanel value={currPage} index={1}>
-          <ShiftSchedule />
-        </TabPanel>
-        <TabPanel value={currPage} index={2}>
-          <CategoriesView houseID={authUser.houseID} />
+          <Schedule individualFiltered={true} isManager={true} />
         </TabPanel>
       </Box>
     </Layout>
