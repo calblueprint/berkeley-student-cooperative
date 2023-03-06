@@ -97,6 +97,20 @@ export type VerifiedShift = {
   verifierID: string
 }
 
+// TODO: add date, verifiedAt, and unverifiedBy attributes
+export type ScheduledShift = {
+  id: string
+  shiftID: string
+  // date: dateObj? string?
+  assignedUser: string
+  status: string
+  options: string
+  verifiedBy: string
+  // verifiedAt: dateObj? timestampObj? string?
+  // unverifiedAt: dateObj? timestampObj? string?
+  penaltyHours: number
+}
+
 export type House = {
   houseID: string
   categories: { string: string[] }
