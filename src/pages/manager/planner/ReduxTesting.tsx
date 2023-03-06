@@ -94,12 +94,13 @@ const ShiftTesting = () => {
     }
   }, [isSuccess, dataShifts, isError, error])
 
+  let content = null
   if (isLoading) {
-    return <Box>is Loading...</Box>
+    content = <Box>is Loading...</Box>
   } else if (isError) {
-    return <React.Fragment>is Error...</React.Fragment>
+    content = <React.Fragment>is Error...</React.Fragment>
   } else if (isSuccess) {
-    return (
+    content = (
       <React.Fragment>
         <SortedTable
           ids={dataShifts.ids as EntityId[]}
@@ -116,6 +117,7 @@ const ShiftTesting = () => {
       </React.Fragment>
     )
   }
+  return content
 }
 
 const ReduxTesting = () => {
