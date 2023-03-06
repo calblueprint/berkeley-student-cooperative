@@ -8,14 +8,6 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 
-const initialValues = {
-  name: '',
-  category: '',
-  credit_hours: '',
-  day: '',
-  description: '',
-}
-
 function ShiftCardTest() {
   const [open, setOpen] = useState(false)
   // const [shiftValues, setShiftValues] = useState(null)

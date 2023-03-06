@@ -22,16 +22,17 @@ import React from 'react'
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
 //** Here, we are defining what kind of inputs we are expecting and attaching error msgs for when the input is not what we want. */
 const ShiftSchema = Yup.object({
-  name: Yup.string()
-    .required('Name is required')
-    .min(1, 'Name must have at least 1 characters'),
+  name: Yup.string(),
+  // .required('Name is required')
+  // .min(1, 'Name must have at least 1 characters'),
   description: Yup.string(),
   posibleDays: Yup.array().of(Yup.string()),
   timeWindowStartTime: Yup.date(),
   timeWindowEndTime: Yup.date(),
-  category: Yup.string().required('Cagegory is required'),
-  hours: Yup.number().required('Hours credit is required'),
+  category: Yup.string(), //.required('Cagegory is required'),
+  hours: Yup.number(), //.required('Hours credit is required'),
   verificationBuffer: Yup.number(),
+  assignedUser: Yup.string(),
 })
 
 const daysList = [
@@ -84,6 +85,7 @@ const Shift = {
   hours: '',
   despription: '',
   verificationBuffer: '',
+  assignedUser: '',
 }
 
 const ShiftForm = ({
@@ -124,7 +126,20 @@ const ShiftForm = ({
     selectShiftById(state, shiftId ? shiftId : '')
   )
 
-  const onSubmit = async (values, formikBag) => {
+  const onSubmit = async (
+    values: {
+      name: string
+      category: string
+      hours: number
+      description: string
+      posibleDays: []
+      timeWindowStartTime: Dayjs
+      timeWindowEndTime: Dayjs
+      verificationBuffer: number
+      assignedUser: string
+    },
+    formikBag: any
+  ) => {
     console.log('Submiting ShiftForm: ', values)
     const {
       name,
@@ -135,31 +150,32 @@ const ShiftForm = ({
       timeWindowStartTime,
       timeWindowEndTime,
       verificationBuffer,
+      assignedUser,
     } = values
 
-    console.log(timeWindowEndTime.toDate())
-    console.log(Timestamp.fromDate(timeWindowEndTime.toDate()))
+    const startTime = Number(timeWindowStartTime.format('HHmm'))
+    const endTime = Number(timeWindowEndTime.format('HHmm'))
+
+    console.log(dayjs('1900', 'HHmm').format('HHmm'))
+
     // const dayString = posibleDays.join('')
     let result
-    const timeWindow = {
-      starTime: Timestamp.fromDate(timeWindowStartTime.toDate()),
-      timeWindowEndTime: Timestamp.fromDate(timeWindowEndTime.toDate()),
+    const timeWindow = [startTime, endTime]
+    const data = { data: {}, houseId: '', shiftId: '' }
+    data.data = {
+      name,
+      category,
+      hours,
+      posibleDays,
+      description,
+      timeWindow,
+      verificationBuffer,
+      assignedUser,
+
+      // created_by: '63d0eca7e8e159c2bf0a57e6',
     }
-    // const data = { data: {}, houseId: '', shiftId: '' }
-    // data.data = {
-    //   name,
-    //   category,
-    //   hours,
-    //   posibleDays,
-    //   description,
-    //   timeWindow,
-    //   verificationBuffer,
-    //   usersAssigned: [],
-    //   numOfPeople: 1,
-    //   // created_by: '63d0eca7e8e159c2bf0a57e6',
-    // }
-    // data.houseId = 'EUC'
-    // data.shiftId = shiftId
+    data.houseId = 'EUC'
+    data.shiftId = shiftId
 
     // if (isNewShift || !shiftId) {
     //   result = await addNewShift(data)
@@ -195,6 +211,7 @@ const ShiftForm = ({
           verificationBuffer: shift
             ? shift.verificationBuffer
             : Shift.verificationBuffer,
+          assignedUser: shift ? shift.assignedUser : Shift.assignedUser,
         }}
         onSubmit={onSubmit}
       >
