@@ -13,7 +13,8 @@ import SortedTable from '../components/shared/tables/SortedTable'
 import { numericToStringPreference } from '../firebase/helpers'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import { useGetUsersQuery } from '../store/apiSlices/userApiSlice'
-import { selectShiftById } from '../store/apiSlices/shiftApiSlice'
+import { selectShiftById, useGetShiftsQuery } from '../store/apiSlices/shiftApiSlice'
+import { useSelector } from 'react-redux'
 type ShiftAssignmentComponentCardProps = {
   day: string
   houseID: string
@@ -72,22 +73,35 @@ const ShiftAssignmentComponentCard: React.FC<
 
   // Store shiftObject
   const {
-    data: shiftObject,
+    data: shiftObjectList,
     isLoading: isShiftLoading,
     isSuccess: isShiftSuccess,
     isError: isShiftError
-  } = selectShiftById(state, shiftID)
+  } = useGetShiftsQuery({})
+
+  // const shiftObject = useSelector((state) =>
+  //   selectShiftById(state, shiftID ? shiftID : '')
+  // )
 
   // Stores the list of potential worker IDs eligible to do this shift
   const [potentialWorkersID, setPotentialWorkersID] = useState<EntityId[] | undefined>([])
+  const [shiftObject, setShiftObject] = useState<Shift|undefined>([]);
   // Stores the users that the manager has selected so far to complete this shift
   // const [selectedRows, setSelectedRows] = useState<string[]>([]) (SELECTED ROWS IS DONE)
  
   // On page load, retrieves the shift and sets the shift Object and also populates the potentialWorkers + selectedRows arrays
   useEffect(() => {
-    filterIDsByHouseAndAvailability();
-    sortAndAddFieldsToUsers();
-  }, []) 
+    console.log(shiftObjectList);
+    if (isUsersSuccess && isShiftSuccess) {
+      console.log(potentialWorkersID);
+      console.log(shiftObjectList);
+      setShiftObject(shiftObjectList.entities[shiftID]);
+      filterIDsByHouseAndAvailability();
+      sortAndAddFieldsToUsers();
+      console.log(potentialWorkersID);
+      console.log(shiftObject);
+    }
+  }, [isUsersSuccess, isShiftSuccess]) 
  
   // update ids of worker display ids
   const sortAndAddFieldsToUsers = () => {
@@ -204,27 +218,28 @@ const ShiftAssignmentComponentCard: React.FC<
   // }
 
   return (
+    // <div className={styles.container}>
+    //   <h3>{shiftObject?.name}</h3>
+    //   <div id="shiftAssignmentHeaderFlex">
+    //     <div className="shiftAssignmentHeaderEntry">
+    //       {shiftObject && pluralizeHours(shiftObject.hours)}
+    //     </div>
+    //     <div className="shiftAssignmentHeaderEntry">{day}</div>
+    //     <div className="shiftAssignmentHeaderEntry">
+    //       {shiftObject &&
+    //         convertTimeWindowToTime(
+    //           shiftObject.timeWindow[0],
+    //           shiftObject.timeWindow[1]
+    //         )}
+    //     </div> 
+    //     <div className="shiftAssignmentHeaderEntry">
+    //       {shiftObject && pluralizeHours(shiftObject.verificationBuffer)}
+    //     </div>
+    //     <div className="shiftAssignmentHeaderEntry">
+    //       {shiftObject && shiftObject.category}
+    //     </div>
+    //   </div>
     <div className={styles.container}>
-      <h3>{shiftObject?.name}</h3>
-      <div id="shiftAssignmentHeaderFlex">
-        <div className="shiftAssignmentHeaderEntry">
-          {shiftObject && pluralizeHours(shiftObject.hours)}
-        </div>
-        <div className="shiftAssignmentHeaderEntry">{day}</div>
-        <div className="shiftAssignmentHeaderEntry">
-          {shiftObject &&
-            convertTimeWindowToTime(
-              shiftObject.timeWindow[0],
-              shiftObject.timeWindow[1]
-            )}
-        </div> 
-        <div className="shiftAssignmentHeaderEntry">
-          {shiftObject && pluralizeHours(shiftObject.verificationBuffer)}
-        </div>
-        <div className="shiftAssignmentHeaderEntry">
-          {shiftObject && shiftObject.category}
-        </div>
-      </div>
       {potentialWorkersID &&
         <SortedTable 
           data = {potentialWorkersID}
