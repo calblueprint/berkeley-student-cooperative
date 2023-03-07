@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 
-function ShiftCardTest() {
+function ShiftCardTest({ shiftId }: { shiftId?: string }) {
   const [open, setOpen] = useState(false)
   // const [shiftValues, setShiftValues] = useState(null)
   const handleClose = () => {
@@ -37,7 +37,7 @@ function ShiftCardTest() {
         <DialogContent>
           <ShiftForm
             setOpen={setOpen}
-            // shiftId='6401c47de8d154aa9ccf5d93'
+            shiftId={shiftId} //'6401c47de8d154aa9ccf5d93'
             isNewShift={true}
           />
         </DialogContent>

@@ -5,7 +5,10 @@ import Typography from '@mui/material/Typography'
 import type { RootState } from '../../../store/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { decrement, increment } from '../../../store/slices/counterSlice'
-import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
+import {
+  selectAllShifts,
+  useGetShiftsQuery,
+} from '../../../store/apiSlices/shiftApiSlice'
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { Shift } from '../../../types/schema'
 import { HeadCell } from '../../../interfaces/interfaces'
@@ -82,8 +85,13 @@ const ShiftTesting = () => {
     error,
   } = useGetShiftsQuery('EUC')
 
+  const [selectedShiftId, setSelectedShiftId] = React.useState<
+    string | undefined
+  >()
+
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
     console.log('ShiftId: ', id)
+    setSelectedShiftId(id)
   }
 
   React.useEffect(() => {
@@ -95,6 +103,12 @@ const ShiftTesting = () => {
     }
   }, [isSuccess, dataShifts, isError, error])
 
+  React.useEffect(() => {
+    if (selectedShiftId) {
+      console.log('Selected Shift: ', selectedShiftId)
+    }
+  }, [selectedShiftId])
+
   let content = null
   if (isLoading) {
     content = <Box>is Loading...</Box>
@@ -103,6 +117,7 @@ const ShiftTesting = () => {
   } else if (isSuccess) {
     content = (
       <React.Fragment>
+        <ShiftCardTest shiftId={selectedShiftId} />
         <SortedTable
           ids={dataShifts.ids as EntityId[]}
           entities={
@@ -125,7 +140,7 @@ const ReduxTesting = () => {
   return (
     <React.Fragment>
       <Counter />
-      <ShiftCardTest />
+
       <ShiftTesting />
     </React.Fragment>
   )
