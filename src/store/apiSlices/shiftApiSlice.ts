@@ -38,24 +38,24 @@ export const shiftsApiSlice = apiSlice.injectEndpoints({
         console.debug(loaddedShifts)
         return shiftsAdapter.setAll(initialState, loaddedShifts)
       },
-      //   providesTags: (result, error, arg) => {
-      //     if (result?.ids) {
-      //       return [
-      //         { type: 'Shift', id: 'LIST' },
-      //         ...result.ids.map((id) => ({ type: 'Shift', id })),
-      //       ]
-      //     } else return [{ type: 'Shift', id: 'LIST' }]
-      //   },
+      providesTags: (result) => {
+        if (result?.ids) {
+          return [
+            { type: 'Shift', id: 'LIST' },
+            ...result.ids.map((id) => ({ type: 'Shift' as const, id })),
+          ]
+        } else return [{ type: 'Shift', id: 'LIST' }]
+      },
     }),
     addNewShift: builder.mutation({
       query: (data) => ({
-        url: `houses/${data.houseId}`,
+        url: `houses/${data.houseId}/shifts`,
         method: 'POST',
         body: {
           ...data.data,
         },
       }),
-      //   invalidatesTags: [{ type: 'Shift', id: 'LIST' }],
+      invalidatesTags: [{ type: 'Shift', id: 'LIST' }],
     }),
     updateShift: builder.mutation({
       query: (data) => ({
@@ -65,7 +65,7 @@ export const shiftsApiSlice = apiSlice.injectEndpoints({
           ...data.data,
         },
       }),
-      //   invalidatesTags: (result, error, arg) => [{ type: 'Shift', id: arg.id }],
+      invalidatesTags: (result, error, arg) => [{ type: 'Shift', id: arg.id }],
     }),
     // deleteShift: builder.mutation({
     //   query: ({ id }) => ({
