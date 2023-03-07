@@ -5,15 +5,13 @@ import Typography from '@mui/material/Typography'
 import type { RootState } from '../../../store/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { decrement, increment } from '../../../store/slices/counterSlice'
-import {
-  selectAllShifts,
-  useGetShiftsQuery,
-} from '../../../store/apiSlices/shiftApiSlice'
+import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { Shift } from '../../../types/schema'
 import { HeadCell } from '../../../interfaces/interfaces'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
-import ShiftCardTest from '../../../components/ManagerComponents/Shiftcard/ShiftCardTest'
+import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
+import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -85,6 +83,7 @@ const ShiftTesting = () => {
     error,
   } = useGetShiftsQuery('EUC')
 
+  const [openCard, setOpenCard] = React.useState<boolean>(false)
   const [selectedShiftId, setSelectedShiftId] = React.useState<
     string | undefined
   >()
@@ -92,6 +91,7 @@ const ShiftTesting = () => {
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
     console.log('ShiftId: ', id)
     setSelectedShiftId(id)
+    setOpenCard(true)
   }
 
   React.useEffect(() => {
@@ -117,7 +117,7 @@ const ShiftTesting = () => {
   } else if (isSuccess) {
     content = (
       <React.Fragment>
-        <ShiftCardTest shiftId={selectedShiftId} />
+        <NewShiftCardTest shiftId={selectedShiftId} />
         <SortedTable
           ids={dataShifts.ids as EntityId[]}
           entities={
@@ -129,6 +129,11 @@ const ShiftTesting = () => {
           isCheckable={false}
           isSortable={true}
           handleRowClick={handleClick}
+        />
+        <EditShiftCardTest
+          shiftId={selectedShiftId}
+          setOpen={setOpenCard}
+          open={openCard}
         />
       </React.Fragment>
     )

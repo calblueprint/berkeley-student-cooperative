@@ -91,7 +91,8 @@ export const selectShiftsResult = shiftsApiSlice.endpoints.getShifts.select({})
 // creates memoized selector
 const selectShiftsData = createSelector(
   selectShiftsResult,
-  (shiftsResult) => shiftsResult.data // normalized state object with ids & entries
+  (shiftsResult) => shiftsResult.data
+  // normalized state object with ids & entries
 )
 
 // getSelectors creates these selector and we rename them with aliases using destructing
@@ -100,6 +101,8 @@ export const {
   selectById: selectShiftById,
   selectIds: selectShiftIds,
   // Pass in a selector that return the shift slice of a state
-} = shiftsAdapter.getSelectors(
-  (state: RootState) => selectShiftsData(state) ?? initialState
-)
+} = shiftsAdapter.getSelectors((state: RootState) => {
+  console.log(state)
+  console.log(selectShiftsData(state))
+  return selectShiftsData(state) ?? initialState
+})
