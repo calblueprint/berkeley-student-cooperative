@@ -1,10 +1,8 @@
 import { Formik, Form } from 'formik'
 import { Stack, Button } from '@mui/material'
-import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
-import { Timestamp } from 'firebase/firestore'
 
 import dayjs, { Dayjs } from 'dayjs'
 import * as Yup from 'yup'
@@ -18,6 +16,7 @@ import {
 import { useSelector } from 'react-redux'
 import React from 'react'
 import { formatMilitaryTime } from '../../../utils/utils'
+import { RootState } from '../../../store/store'
 // import { useUserContext } from '../../../context/UserContext'
 
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
@@ -123,7 +122,7 @@ const ShiftForm = ({
     },
   ] = useUpdateShiftMutation()
 
-  const shift = useSelector((state) =>
+  const shift = useSelector((state: RootState) =>
     selectShiftById(state, shiftId ? shiftId : '')
   )
 
