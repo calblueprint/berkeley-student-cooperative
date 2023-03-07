@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 
-function ShiftCardTest({ shiftId }: { shiftId?: string }) {
+function NewShiftCardTest({ shiftId }: { shiftId?: string }) {
   const [open, setOpen] = useState(false)
   // const [shiftValues, setShiftValues] = useState(null)
   const handleClose = () => {
@@ -45,4 +45,4 @@ function ShiftCardTest({ shiftId }: { shiftId?: string }) {
     </>
   )
 }
-export default ShiftCardTest
+export default NewShiftCardTest
