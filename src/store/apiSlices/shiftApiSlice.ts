@@ -1,11 +1,11 @@
-import { createSelector, createEntityAdapter } from '@reduxjs/toolkit'
+import { createSelector, createEntityAdapter, EntityId } from '@reduxjs/toolkit'
 import { Shift } from '../../types/schema'
 import { apiSlice } from '../api/apiSlice'
 import { RootState } from '../store'
 import { formatMilitaryTime } from '../../utils/utils'
 
-type result = { data: Shift; id: string }
-type transformResponse = { data: result[] }
+// type result = { data: Shift; id: string }
+// type transformResponse = { data: result[] }
 
 const shiftsAdapter = createEntityAdapter<Shift>({})
 
@@ -17,23 +17,26 @@ export const shiftsApiSlice = apiSlice.injectEndpoints({
       query: (houseId) => ({
         url: `houses/${houseId}/shifts`,
         method: 'GET',
-        validateStatus: (response, result) => {
-          // console.log('response: ', response, ' -- result: ', result)
-          return response.status === 200 && !result.isError
-        },
+        data: { body: 'hello world' },
+        params: { queryType: 'shifts' },
+        // validateStatus: (response, result) => {
+        //   console.log('response: ', response, ' -- result: ', result)
+        //   return response.status === 200 && !result.isError
+        // },
       }),
-      //   keepUnusedDataFor: 60,
-      transformResponse: (responseData: transformResponse) => {
+      // keepUnusedDataFor: 60,
+      transformResponse: (responseData: Shift[]) => {
         // console.log('[transformResponse] responseData: ', responseData)
-        const loaddedShifts = responseData?.data.map((entity) => {
-          entity.data.id = entity.id
-          if (!entity.data.timeWindowDisplay) {
-            entity.data.timeWindowDisplay =
-              formatMilitaryTime(entity.data.timeWindow[0]) +
+        const loaddedShifts = responseData.map((entity) => {
+          // console.log('[loaddedShifts] entity: ', entity)
+          entity.id = entity.id
+          if (!entity.timeWindowDisplay) {
+            entity.timeWindowDisplay =
+              formatMilitaryTime(entity.timeWindow[0]) +
               ' - ' +
-              formatMilitaryTime(entity.data.timeWindow[1])
+              formatMilitaryTime(entity.timeWindow[1])
           }
-          return entity.data
+          return entity
         })
         console.debug(loaddedShifts)
         return shiftsAdapter.setAll(initialState, loaddedShifts)
@@ -86,23 +89,52 @@ export const {
 } = shiftsApiSlice
 
 // returns the query result object
-export const selectShiftsResult = shiftsApiSlice.endpoints.getShifts.select({})
+// export const selectShiftsResult = shiftsApiSlice.endpoints.getShifts.select('EUC')
 
-// creates memoized selector
-const selectShiftsData = createSelector(
-  selectShiftsResult,
-  (shiftsResult) => shiftsResult.data
-  // normalized state object with ids & entries
-)
+// export const selectShiftsResult = (queryParameter: string) =>
+//   shiftsApiSlice.endpoints.getShifts.select(queryParameter)
+
+// // creates memoized selector
+// const selectShiftsData = createSelector(
+//   selectShiftsResult,
+//   (shiftsResult) => shiftsResult.data
+//   // normalized state object with ids & entries
+// )
+
+// // Creates memoized selector to get normalized state based on the query parameter
+// export const selectShiftsData = createSelector(
+//   (state: RootState, queryParameter: string) =>
+//     shiftsApiSlice.endpoints.getShifts.select(queryParameter)(state),
+//   (shiftsResult) => shiftsResult.data ?? initialState.entities
+// )
 
 // getSelectors creates these selector and we rename them with aliases using destructing
-export const {
-  selectAll: selectAllShifts,
-  selectById: selectShiftById,
-  selectIds: selectShiftIds,
-  // Pass in a selector that return the shift slice of a state
-} = shiftsAdapter.getSelectors((state: RootState) => {
-  console.log(state)
-  console.log(selectShiftsData(state))
-  return selectShiftsData(state) ?? initialState
-})
+// export const {
+//   selectAll: selectAllShifts,
+//   // selectById: selectShiftById,
+//   selectIds: selectShiftIds,
+//   // Pass in a selector that return the shift slice of a state
+// } = shiftsAdapter.getSelectors((state: RootState) => {
+//   return selectShiftsData(state) ?? initialState
+// })
+
+// export const selectShiftsById = (queryParameter: string) =>
+//   createSelector(
+//     (state: RootState) => selectShiftsData(state, queryParameter),
+//     (shifts) => shiftsAdapter.getSelectors((state)=> ).selectById
+//   );
+
+// Creates memoized selector to get normalized state based on the query parameter
+export const selectShiftsData = createSelector(
+  (state: RootState, queryParameter: string) =>
+    shiftsApiSlice.endpoints.getShifts.select(queryParameter)(state),
+  (shiftsResult) => shiftsResult.data ?? initialState
+)
+
+// Creates memoized selector to get a shift by its ID based on the query parameter
+export const selectShiftById = (queryParameter: string) =>
+  createSelector(
+    (state: RootState) => selectShiftsData(state, queryParameter),
+    (_, shiftId: EntityId) => shiftId,
+    (data, shiftId) => data.entities[shiftId]
+  )
