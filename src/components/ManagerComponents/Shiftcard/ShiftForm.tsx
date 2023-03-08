@@ -17,6 +17,8 @@ import { useSelector } from 'react-redux'
 import React from 'react'
 import { formatMilitaryTime } from '../../../utils/utils'
 import { RootState } from '../../../store/store'
+import { EntityId } from '@reduxjs/toolkit'
+import { Shift } from '../../../types/schema'
 // import { useUserContext } from '../../../context/UserContext'
 
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
@@ -26,7 +28,7 @@ const ShiftSchema = Yup.object({
   // .required('Name is required')
   // .min(1, 'Name must have at least 1 characters'),
   description: Yup.string(),
-  posibleDays: Yup.array().of(Yup.string()),
+  possibleDays: Yup.array().of(Yup.string()),
   timeWindowStartTime: Yup.date(),
   timeWindowEndTime: Yup.date(),
   category: Yup.string(), //.required('Cagegory is required'),
@@ -122,8 +124,8 @@ const ShiftForm = ({
     },
   ] = useUpdateShiftMutation()
 
-  const shift = useSelector((state: RootState) =>
-    selectShiftById(state, shiftId ? shiftId : '')
+  const shift: Shift = useSelector((state: RootState) =>
+    selectShiftById('EUC')(state, shiftId as EntityId)
   )
 
   const onSubmit = async (
@@ -132,7 +134,7 @@ const ShiftForm = ({
       category: string
       hours: number
       description: string
-      posibleDays: []
+      possibleDays: string[]
       timeWindowStartTime: Dayjs
       timeWindowEndTime: Dayjs
       verificationBuffer: number
@@ -146,7 +148,7 @@ const ShiftForm = ({
       category,
       hours,
       description,
-      posibleDays,
+      possibleDays,
       timeWindowStartTime,
       timeWindowEndTime,
       verificationBuffer,
@@ -160,7 +162,7 @@ const ShiftForm = ({
     console.log(dayjs('1900', 'HHmm').format('HHmm'))
     console.log(dayjs(num.toString(), 'HHmm'))
 
-    // const dayString = posibleDays.join('')
+    // const dayString = possibleDays.join('')
     let result
     const timeWindow = [startTime, endTime]
     const timeWindowDisplay =
@@ -170,7 +172,7 @@ const ShiftForm = ({
       name,
       category,
       hours,
-      posibleDays,
+      possibleDays,
       description,
       timeWindow,
       verificationBuffer,
@@ -206,12 +208,12 @@ const ShiftForm = ({
           category: shift ? shift.category : Shift.category,
           hours: shift ? shift.hours : Shift.hours,
           timeWindowStartTime: shift
-            ? dayjs(shift.timeWindow[0].toString(), 'HHmm') // TODO: convert military time to type TimePicker
+            ? dayjs() //shift.timeWindow[0].toString(), 'HHmm') // TODO: convert military time to type TimePicker
             : Shift.timeWindowStartTime,
           timeWindowEndTime: shift
-            ? dayjs(shift.timeWindow[1].toString(), 'HHmm') // TODO: convert military time to type TimePicker
+            ? dayjs() //shift.timeWindow[1].toString(), 'HHmm') // TODO: convert military time to type TimePicker
             : Shift.timeWindowEndTime,
-          posibleDays: shift ? shift.possibleDays : Shift.possibleDays,
+          possibleDays: shift ? shift.possibleDays : Shift.possibleDays,
           description: shift ? shift.description : Shift.despription,
           verificationBuffer: shift
             ? shift.verificationBuffer
@@ -295,15 +297,15 @@ const ShiftForm = ({
             />
 
             <SelectInput
-              name="posibleDays"
+              name="possibleDays"
               label="Posible Days"
               margin="dense"
-              labelid="posibleDays"
-              id="posibleDays"
+              labelid="possibleDays"
+              id="possibleDays"
               fullWidth
-              value={values.posibleDays}
-              error={touched.posibleDays && errors.posibleDays ? true : false}
-              helpertext={touched.posibleDays && errors.posibleDays}
+              value={values.possibleDays as Array<string>}
+              error={touched.possibleDays && errors.possibleDays ? true : false}
+              helpertext={touched.possibleDays && errors.possibleDays}
               options={daysList}
               multiple
             />
