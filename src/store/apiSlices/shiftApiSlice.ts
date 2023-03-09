@@ -4,9 +4,6 @@ import { apiSlice } from '../api/apiSlice'
 import { RootState } from '../store'
 import { formatMilitaryTime } from '../../utils/utils'
 
-// type result = { data: Shift; id: string }
-// type transformResponse = { data: result[] }
-
 const shiftsAdapter = createEntityAdapter<Shift>({})
 
 const initialState = shiftsAdapter.getInitialState()
@@ -88,42 +85,6 @@ export const {
   //   useDeleteShiftMutation,
 } = shiftsApiSlice
 
-// returns the query result object
-// export const selectShiftsResult = shiftsApiSlice.endpoints.getShifts.select('EUC')
-
-// export const selectShiftsResult = (queryParameter: string) =>
-//   shiftsApiSlice.endpoints.getShifts.select(queryParameter)
-
-// // creates memoized selector
-// const selectShiftsData = createSelector(
-//   selectShiftsResult,
-//   (shiftsResult) => shiftsResult.data
-//   // normalized state object with ids & entries
-// )
-
-// // Creates memoized selector to get normalized state based on the query parameter
-// export const selectShiftsData = createSelector(
-//   (state: RootState, queryParameter: string) =>
-//     shiftsApiSlice.endpoints.getShifts.select(queryParameter)(state),
-//   (shiftsResult) => shiftsResult.data ?? initialState.entities
-// )
-
-// getSelectors creates these selector and we rename them with aliases using destructing
-// export const {
-//   selectAll: selectAllShifts,
-//   // selectById: selectShiftById,
-//   selectIds: selectShiftIds,
-//   // Pass in a selector that return the shift slice of a state
-// } = shiftsAdapter.getSelectors((state: RootState) => {
-//   return selectShiftsData(state) ?? initialState
-// })
-
-// export const selectShiftsById = (queryParameter: string) =>
-//   createSelector(
-//     (state: RootState) => selectShiftsData(state, queryParameter),
-//     (shifts) => shiftsAdapter.getSelectors((state)=> ).selectById
-//   );
-
 // Creates memoized selector to get normalized state based on the query parameter
 const selectShiftsData = createSelector(
   (state: RootState, queryParameter: string) =>
@@ -135,6 +96,7 @@ const selectShiftsData = createSelector(
 export const selectShiftById = (queryParameter: string) =>
   createSelector(
     (state: RootState) => selectShiftsData(state, queryParameter),
-    (_, shiftId: EntityId) => shiftId,
-    (data, shiftId) => data.entities[shiftId]
+    (_: unknown, shiftId: EntityId) => shiftId,
+    (data: { entities: { [x: string]: unknown } }, shiftId: string | number) =>
+      data.entities[shiftId]
   )

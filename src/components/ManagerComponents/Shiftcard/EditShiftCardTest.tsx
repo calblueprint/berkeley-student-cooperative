@@ -14,16 +14,6 @@ function EditShiftCardTest({
   setOpen: (value: React.SetStateAction<boolean>) => void
   open: boolean
 }) {
-  //   const [open, setOpen] = useState(false)
-  // const [shiftValues, setShiftValues] = useState(null)
-  //   const handleClose = () => {
-  //     setOpen(false)
-  //   }
-
-  //   const handleOpen = () => {
-  //     setOpen(true)
-  //   }
-
   console
     .log
     // useSelector((state: RootState) => selectShiftsResult(state.api.queries))
