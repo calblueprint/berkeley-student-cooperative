@@ -1,4 +1,4 @@
-import { Formik, Form } from 'formik'
+import { Formik, Form, Field } from 'formik'
 import { Stack, Button } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -24,20 +24,21 @@ import { Shift } from '../../../types/schema'
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
 //** Here, we are defining what kind of inputs we are expecting and attaching error msgs for when the input is not what we want. */
 const ShiftSchema = Yup.object({
-  name: Yup.string(),
-  // .required('Name is required')
-  // .min(1, 'Name must have at least 1 characters'),
+  name: Yup.string()
+    .required('Name is required')
+    .min(1, 'Name must have at least 1 characters'),
   description: Yup.string(),
   possibleDays: Yup.array().of(Yup.string()),
   timeWindowStartTime: Yup.date(),
   timeWindowEndTime: Yup.date(),
-  category: Yup.string(), //.required('Cagegory is required'),
+  category: Yup.string().required('Cagegory is required'),
   hours: Yup.number(), //.required('Hours credit is required'),
   verificationBuffer: Yup.number(),
   assignedUser: Yup.string(),
 })
 
 const daysList = [
+  '',
   'Monday',
   'Tuesday',
   'Wednesday',
@@ -78,7 +79,7 @@ const shiftCategories = [
 //   category: string
 // }
 
-const Shift = {
+const emptyShift = {
   name: '',
   category: '',
   possibleDays: [],
@@ -155,12 +156,12 @@ const ShiftForm = ({
       //   assignedUser,
     } = values
 
-    const num = 1900
+    // const num = 1900
     const startTime = Number(timeWindowStartTime.format('HHmm'))
     const endTime = Number(timeWindowEndTime.format('HHmm'))
 
-    console.log(dayjs('1900', 'HHmm').format('HHmm'))
-    console.log(dayjs(num.toString(), 'HHmm'))
+    // console.log(dayjs('1900', 'HHmm').format('HHmm'))
+    // console.log(dayjs(num.toString(), 'HHmm'))
 
     // const dayString = possibleDays.join('')
     let result
@@ -191,7 +192,7 @@ const ShiftForm = ({
     }
     console.log(result)
 
-    // formikBag.resetForm()
+    formikBag.resetForm()
     setOpen(false)
   }
 
@@ -204,49 +205,42 @@ const ShiftForm = ({
       <Formik
         validationSchema={ShiftSchema}
         initialValues={{
-          name: shift ? shift.name : Shift.name,
-          category: shift ? shift.category : Shift.category,
-          hours: shift ? shift.hours : Shift.hours,
+          name: shift ? shift.name : emptyShift.name,
+          category: shift ? shift.category : emptyShift.category,
+          hours: shift ? shift.hours : emptyShift.hours,
           timeWindowStartTime: shift
             ? dayjs() //shift.timeWindow[0].toString(), 'HHmm') // TODO: convert military time to type TimePicker
-            : Shift.timeWindowStartTime,
+            : emptyShift.timeWindowStartTime,
           timeWindowEndTime: shift
             ? dayjs() //shift.timeWindow[1].toString(), 'HHmm') // TODO: convert military time to type TimePicker
-            : Shift.timeWindowEndTime,
-          possibleDays: shift ? shift.possibleDays : Shift.possibleDays,
-          description: shift ? shift.description : Shift.despription,
+            : emptyShift.timeWindowEndTime,
+          possibleDays: shift ? shift.possibleDays : emptyShift.possibleDays,
+          description: shift ? shift.description : emptyShift.despription,
           verificationBuffer: shift
             ? shift.verificationBuffer
-            : Shift.verificationBuffer,
+            : emptyShift.verificationBuffer,
           //   assignedUser: shift
           //     ? (shift.assignedUser as string)
-          //     : Shift.assignedUser,
+          //     : emptyShift.assignedUser,
         }}
         onSubmit={onSubmit}
       >
         {({ isSubmitting, touched, errors, values, setFieldValue }) => (
           <Form>
-            <TextInput
-              name="name"
-              label="Shift Name"
-              margin="normal"
-              fullWidth
-              value={values.name}
-              error={touched.name && errors.name ? true : false}
-              helperText={touched.name && errors.name}
-            />
+            <TextInput name="name" label="Shift Name" />
 
             <SelectInput
               name="category"
               label="Category"
-              margin="dense"
               labelid="category"
               id="category"
-              fullWidth
-              value={values.category}
-              error={touched.category && errors.category ? true : false}
-              helpertext={touched.category && errors.category}
+              // margin="dense"
+              // fullWidth
               options={shiftCategories}
+              multiselect={false}
+              // value={values.category}
+              // error={touched.category && errors.category ? true : false}
+              // helpertext={touched.category && errors.category}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <MobileTimePicker
@@ -270,57 +264,23 @@ const ShiftForm = ({
               />
             </LocalizationProvider>
 
-            <TextInput
-              name="hours"
-              label="Credit Hours For Shift"
-              margin="normal"
-              fullWidth
-              value={values.hours}
-              error={touched.hours && errors.hours ? true : false}
-              helperText={touched.hours && errors.hours}
-            />
+            <TextInput name="hours" label="Credit Hours For Shift" />
 
-            <TextInput
-              name="verificationBuffer"
-              label="Buffer Hours"
-              margin="normal"
-              fullWidth
-              value={values.verificationBuffer}
-              error={
-                touched.verificationBuffer && errors.verificationBuffer
-                  ? true
-                  : false
-              }
-              helperText={
-                touched.verificationBuffer && errors.verificationBuffer
-              }
-            />
+            <TextInput name="verificationBuffer" label="Buffer Hours" />
 
             <SelectInput
               name="possibleDays"
               label="Posible Days"
-              margin="dense"
               labelid="possibleDays"
               id="possibleDays"
-              fullWidth
-              value={values.possibleDays as Array<string>}
-              error={touched.possibleDays && errors.possibleDays ? true : false}
-              helpertext={touched.possibleDays && errors.possibleDays}
+              // value={values.possibleDays as Array<string>}
+              // error={touched.possibleDays && errors.possibleDays ? true : false}
+              // helpertext={touched.possibleDays && errors.possibleDays}
               options={daysList}
-              multiple
+              multiselect={true}
             />
 
-            <TextInput
-              name="description"
-              label="Description"
-              margin="normal"
-              fullWidth
-              multiline
-              rows={4}
-              value={values.description}
-              error={touched.description && errors.description ? true : false}
-              helperText={touched.description && errors.description}
-            />
+            <TextInput name="description" label="Description" />
             <Stack direction="row" alignItems="center" spacing={2}>
               <Button
                 type="submit"
