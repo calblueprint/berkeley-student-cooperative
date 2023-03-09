@@ -24,7 +24,7 @@ type ShiftAssignmentComponentCardProps = {
 // id = attribute name in schema
 const headCells: HeadCell<Shift>[] = [
   {
-    id: 'fullName',
+    id: 'displayName',
     isNumeric: false,
     label: 'Available Users',
     isSortable: false,
@@ -85,7 +85,7 @@ const ShiftAssignmentComponentCard: React.FC<
 
   // Stores the list of potential worker IDs eligible to do this shift
   const [potentialWorkersID, setPotentialWorkersID] = useState<EntityId[] | undefined>([])
-  const [shiftObject, setShiftObject] = useState<Shift|undefined>([]);
+  const [shiftObject, setShiftObject] = useState<Shift|undefined>();
   // Stores the users that the manager has selected so far to complete this shift
   // const [selectedRows, setSelectedRows] = useState<string[]>([]) (SELECTED ROWS IS DONE)
  
@@ -116,7 +116,7 @@ const ShiftAssignmentComponentCard: React.FC<
       if (worker === undefined) {
         continue;
       }
-      worker.fullName = worker.firstName + " " + worker.lastName;
+      worker.displayName = worker.firstName + " " + worker.lastName;
       worker.preference = numericToStringPreference(worker, shiftID);
       worker.hoursUnassigned = worker.hoursRequired - worker.hoursAssigned;
     }
