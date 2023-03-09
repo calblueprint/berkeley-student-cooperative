@@ -125,7 +125,7 @@ export const {
 //   );
 
 // Creates memoized selector to get normalized state based on the query parameter
-export const selectShiftsData = createSelector(
+const selectShiftsData = createSelector(
   (state: RootState, queryParameter: string) =>
     shiftsApiSlice.endpoints.getShifts.select(queryParameter)(state),
   (shiftsResult) => shiftsResult.data ?? initialState
