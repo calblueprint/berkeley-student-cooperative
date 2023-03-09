@@ -141,6 +141,73 @@ const ShiftTesting = () => {
   return content
 }
 
+const UserTesting = () => {
+  const {
+    data: dataUsers,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetUsersQuery('EUC')
+
+  const [openCard, setOpenCard] = React.useState<boolean>(false)
+  const [selectedUserId, setSelectedUserId] = React.useState<
+    string | undefined
+  >()
+
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    console.log('UserId: ', id)
+    setSelectedUserId(id)
+    setOpenCard(true)
+  }
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      console.log('Users Entity: ', dataUsers)
+    }
+    if (isError) {
+      console.log('Error: ', error)
+    }
+  }, [isSuccess, dataUsers, isError, error])
+
+  React.useEffect(() => {
+    if (selectedUserId) {
+      console.log('Selected User: ', selectedUserId)
+    }
+  }, [selectedUserId])
+
+  let content = null
+  if (isLoading) {
+    content = <Box>is Loading...</Box>
+  } else if (isError) {
+    content = <React.Fragment>is Error...</React.Fragment>
+  } else if (isSuccess) {
+    content = (
+      <React.Fragment>
+        <NewUserCardTest userId={selectedUserId} />
+        <SortedTable
+          ids={dataUsers.ids as EntityId[]}
+          entities={
+            dataUsers?.entities as Dictionary<
+              User & { [key in keyof User]: string | number }
+            >
+          }
+          headCells={userHeadCells}
+          isCheckable={false}
+          isSortable={true}
+          handleRowClick={handleClick}
+        />
+        <EditUserCardTest
+          userId={selectedUserId}
+          setOpen={setOpenCard}
+          open={openCard}
+        />
+      </React.Fragment>
+    )
+  }
+  return content
+}
+
 const ReduxTesting = () => {
   return (
     <React.Fragment>
