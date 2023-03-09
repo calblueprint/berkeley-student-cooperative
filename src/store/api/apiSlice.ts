@@ -78,7 +78,7 @@ const customBaseQuery: BaseQueryFn<
     url: string
     method: string
     body: object
-    params: object
+    // params: object
   }) => {
     // console.log('method: ', method)
     // console.log('url: ', url)
@@ -182,12 +182,12 @@ const customBaseQuery: BaseQueryFn<
 
           //** Create a new document with the given BODY */
           const newDoc = await addDoc(collection(firestore, path), body)
-
+          // console.log(newDoc)
           //** Add resObj to the resObj array */
-          resObj.push({ ...newDoc })
+          // resObj.push({ newDoc.id.toString() })
 
           //** Return the resObj wrapped in a Response object */
-          return { data: resObj }
+          return { data: 'success' } //resObj }
 
         case 'PATCH':
           //** Verify that the path is a document  */
