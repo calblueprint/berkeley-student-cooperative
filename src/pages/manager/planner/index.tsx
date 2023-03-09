@@ -4,7 +4,7 @@ import { useState } from 'react'
 import CategoriesView from '../categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
 import { UnassignedTabContent } from './UnassignedTabContent'
-import Testing from './Testing'
+import ReduxTesting from './ReduxTesting'
 import { Schedule } from '../schedule/Schedule'
 
 interface TabPanelProps {
@@ -62,8 +62,8 @@ export default function SchedulePage() {
           </Tabs>
         </Box>
         <TabPanel value={currPage} index={0}>
-          <UnassignedTabContent />
-          <Testing />
+          {/* <UnassignedTabContent /> */}
+          <ReduxTesting />
         </TabPanel>
         <TabPanel value={currPage} index={1}>
           <Schedule individualFiltered={false} isManager={true} />
