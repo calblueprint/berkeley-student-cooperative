@@ -128,7 +128,7 @@ const UserForm = ({
   ] = useUpdateUserMutation()
 
   const user: User = useSelector(
-    (state: RootState) => selectUserById('')(state, userId as EntityId) as User
+    (state: RootState) => selectUserById(state, userId as EntityId) as User
   )
 
   const onSubmit = async (
@@ -136,7 +136,7 @@ const UserForm = ({
     formikBag: FormikHelpers<FormikValues>
   ) => {
     // console.log('Submiting UserForm: ', values)
-    const { name } = values
+    const { firstName, lastName, displayName, email } = values
 
     // console.log(dayjs('1900', 'HHmm').format('HHmm'))
     // const num = 1900
@@ -147,7 +147,10 @@ const UserForm = ({
 
     const data = { data: {}, houseId: '', userId: '' }
     data.data = {
-      name,
+      firstName,
+      lastName,
+      displayName,
+      email,
     }
     data.houseId = 'EUC'
     data.userId = userId ? userId : ''
@@ -182,11 +185,12 @@ const UserForm = ({
         }}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting, values, setFieldValue }) => (
+        {({ isSubmitting }) => (
           <Form>
             <TextInput name="firstName" label="First Name" />
             <TextInput name="lastName" label="Last Name" />
             <TextInput name="displayName" label="Display Name" />
+            <TextInput name="email" label="Email" />
 
             <Stack direction="row" alignItems="center" spacing={2}>
               <Button

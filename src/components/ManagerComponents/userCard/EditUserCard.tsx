@@ -11,11 +11,6 @@ function EditUserCardTest({
   setOpen: (value: React.SetStateAction<boolean>) => void
   open: boolean
 }) {
-  console
-    .log
-    // useSelector((state: RootState) => selectUsersResult(state.api.queries))
-    () //console.log(state))) //selectUsersResult(state)))
-
   React.useEffect(() => {
     // console.log(selectUsersResult((state) => state))
   }, [])
