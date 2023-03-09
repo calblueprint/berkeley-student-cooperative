@@ -64,9 +64,12 @@ export interface Shift {
 }
 
 // passing in any data type
-export interface HeadCell<T extends { [key in keyof T]: string | number }> {
+export interface HeadCell<
+  T extends { [key in keyof T]: string | number | string[] | number[] }
+> {
   id: keyof T
   label: string
   isNumeric: boolean
   isSortable: boolean
+  align: 'left' | 'center' | 'right' | 'justify' | 'inherit' | undefined
 }

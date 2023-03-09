@@ -1,5 +1,5 @@
 import { firestore } from '../clientApp'
-import { User } from '../../types/schema'
+import { House, User } from '../../types/schema'
 import {
   doc,
   collection,
@@ -15,6 +15,8 @@ import {
 import { mapToObject, objectToMap } from '../helpers'
 import { getHouse, updateHouse } from './house'
 import { generatePinNumber } from '../helpers'
+import { useState } from 'react'
+import { userAgent } from 'next/server'
 
 /**
  * Adds a user to a house and generates a pin for them. Called through auth register when a user creates their account.
@@ -40,7 +42,7 @@ export const addUser = async (
   // do {
   //     var pinNumber = generatePinNumber(5);
   // } while (currHouseMap.has(pinNumber));
-  let pinNumber = generatePinNumber(5)
+  const pinNumber = generatePinNumber(5)
   await setDoc(doc(firestore, 'users', userID), {
     availabilities: mapToObject(new Map<string, number[]>()),
     email: email,
@@ -65,7 +67,7 @@ export const addUser = async (
     members.push(userID)
   }
   // currHouseMap.set(pinNumber, userID);
-  let newData = {
+  const newData = {
     members: currHouse.members,
     // userPINs: currHouseMap
   }
@@ -147,20 +149,26 @@ export const deleteUser = async (userID: string) => {
 
 /************************************************************* */
 /** This function gets all shifts from a house with houseID */
-export const getAllUsers = async (houseID: string) => {
+export const getAllUsers = async (house: House) => {
   try {
-    // const docRef = doc(firestore, "houses", "EUC", "shifts", "dhWWmgzM1MISFWyblp8J");
-    const colRef = collection(firestore, 'houses', houseID, 'users')
+    const memberIDs = house.members
+    if (memberIDs === null || memberIDs === undefined) {
+      return []
+    } else {
+      const members = <User[]>([])
 
-    const promises: Promise<User>[] = []
-    const colSnap = await getDocs(colRef)
-    colSnap.forEach((user) => {
-      promises.push(parseUser(user))
-    })
-    const users = await Promise.all(promises)
-    return users
-    // probably replace with modal
-  } catch (e) {
+      for (let i = 0; i < memberIDs.length; i++) {
+        const userID = memberIDs[i];
+        const userObject = await getUser(userID);
+        if (userObject === null || userObject == undefined) {
+          continue;
+        } else {
+          // setMembers(members.concat(userObject))
+          members.push(userObject)
+        }
+    }
+    return members
+  }} catch (e) {
     console.log(e)
   }
 }

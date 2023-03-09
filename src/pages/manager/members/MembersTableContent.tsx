@@ -1,83 +1,87 @@
-import { useEffect, useState } from "react"
-import SortedTable from "../../../components/shared/tables/SortedTable"
-import { useUserContext } from "../../../context/UserContext"
-import { getAllUsers } from "../../../firebase/queries/user"
-import { HeadCell, User } from "../../../interfaces/interfaces"
+import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import { useEffect, useState } from 'react'
+import SortedTable from '../../../components/shared/tables/SortedTable'
+import { useUserContext } from '../../../context/UserContext'
+import { HeadCell } from '../../../interfaces/interfaces'
+import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
+import { User } from '../../../types/schema'
 
-const headCells: HeadCell<User>[] = [
-    {
-      id: 'firstName',
-      isNumeric: false,
-      label: 'Member Name',
-      isSortable: true,
-    },
-    {
-      id: 'totalFines',
-      isNumeric: true,
-      label: 'Fine',
-      isSortable: false,
-    },
-    {
-      id: 'email',
-      isNumeric: false,
-      label: 'Email',
-      isSortable: false,
-    },
-  ]
+const headCells: HeadCell<User & { [key in keyof User]: string | number }>[] = [
+  {
+    id: 'firstName',
+    isNumeric: false,
+    label: 'Member Name',
+    isSortable: true,
+    align: 'left',
+  },
+  {
+    id: 'totalFines',
+    isNumeric: true,
+    label: 'Fine',
+    isSortable: false,
+    align: 'left',
+  },
+  {
+    id: 'email',
+    isNumeric: false,
+    label: 'Email',
+    isSortable: false,
+    align: 'left',
+  },
+]
 
-  export const MembersTableContent = () => {
-    const { house } = useUserContext()
-  
-    const [members, setMembers] = useState<User[] | undefined>([])
-    // const [displayMembers, setDisplayMembers] = useState<User[] | undefined>(
-    //   members
-    // )
-  
-  
-    // runs when the component mounts and when the house changes
-    // ALL the shifts (unfiltered)
-    useEffect(() => {
-      async function fetchShifts() {
-        const response = await getAllUsers(house.houseID)
-        if (!response) {
-          setMembers([])
-        } else {
-          // format data here before setting the data (in this case, shifts)
-          setMembers(
-            response
-            //   .filter((member) => {
-            //     return member.usersAssigned?.length == 0
-            //   })
-            //   .map((shift) => {
-            //     const time1 = formatMilitaryTime(shift.timeWindow[0])
-            //     const time2 = formatMilitaryTime(shift.timeWindow[1])
-            //     shift.timeWindowDisplay = time1 + ' - ' + time2
-            //     shift.id = shift.shiftID
-            //     return shift
-            //   })
-          )
-        }
-      }
-      fetchShifts()
-    }, [house])
-  
-    // runs when the component mounts and when filterBy or shifts changes
-    // the filtered shifts (filtered by day)
-    // useEffect(() => {
-    //   setDisplayShifts(
-    //     filterBy === filters[0]
-    //       ? shifts
-    //       : shifts?.filter((shift) =>
-    //           shift.possibleDays
-    //             .map((day) => day.toLocaleLowerCase())
-    //             .includes(filterBy)
-    //         )
-    //   )
-    // }, [filterBy, shifts])
-  
+export const MembersTableContent = () => {
+  const { house } = useUserContext()
+  const { data, isLoading, isSuccess, isError } = useGetUsersQuery(
+    house?.houseID
+  )
+  console.log(house, data, isLoading, isSuccess, isError)
+
+  // TODO: connect marcos' modal
+  // //** Modal stuff */
+  // const [open, setOpen] = useState(false)
+  // //** State variables that pass the selected item's info from the table to the modal */
+  // const [modalShift, setModalShift] = useState<Shift>()
+  // const [modalUser, setModalUser] = useState<User>()
+  // //** end Modal stuff */
+
+  // TODO: filter by search
+  // //** Table stuff */
+  // const [displayShifts, setDisplayShifts] = useState<EntityId[] | undefined>(
+  //   shifts
+  // )
+  // const [filterBy, setFilterBy] = useState<string>(filters[0])
+  // //** end Table stuff */
+
+  const [members, setMembers] = useState<EntityId[] | undefined>([])
+
+  // runs when the component mounts and when the house changes
+  // ALL the shifts (unfiltered)
+  // useEffect(() => {
+  //   async function fetchUsers() {
+  //     const response = await getAllUsers(house)
+  //     if (!response) {
+  //       setMembers([])
+  //     } else {
+  //       setMembers(response)
+  //     }
+  //   }
+  //   fetchUsers()
+  // }, [house])
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      setMembers(data.ids)
+    }
+  }, [isSuccess, data])
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  } else if (isError) {
+    return <div>Error</div>
+  } else {
     return (
       <>
-        {/* <UnassignedShiftList /> */}
         {/* <Select value={filterBy} onChange={handleFilterChange}>
           {filters.map((day) => (
             <MenuItem key={day} value={day}>
@@ -86,10 +90,17 @@ const headCells: HeadCell<User>[] = [
           ))}
         </Select> */}
         <SortedTable
-          data={members}
+          ids={members as EntityId[]}
+          entities={
+            data?.entities as Dictionary<
+              User & { [key in keyof User]: string | number }
+            >
+          }
           headCells={headCells}
           isCheckable={false}
+          isSortable={false}
         />
       </>
     )
   }
+}
