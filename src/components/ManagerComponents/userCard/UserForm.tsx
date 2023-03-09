@@ -128,8 +128,7 @@ const UserForm = ({
   ] = useUpdateUserMutation()
 
   const user: User = useSelector(
-    (state: RootState) =>
-      selectUserById('EUC')(state, userId as EntityId) as User
+    (state: RootState) => selectUserById('')(state, userId as EntityId) as User
   )
 
   const onSubmit = async (

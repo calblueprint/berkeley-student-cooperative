@@ -6,12 +6,16 @@ import type { RootState } from '../../../store/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { decrement, increment } from '../../../store/slices/counterSlice'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
+import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { Shift } from '../../../types/schema'
 import { HeadCell } from '../../../interfaces/interfaces'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
 import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
+import NewUserCard from '../../../components/ManagerComponents/userCard/NewUserCard'
+import EditUserCard from '../../../components/ManagerComponents/userCard/EditUserCard'
+import { User } from '../../../types/schema'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -34,6 +38,32 @@ const shiftHeadCells: HeadCell<
     id: 'hours',
     isNumeric: true,
     label: 'Value',
+    isSortable: true,
+    align: 'left',
+  },
+]
+
+const userHeadCells: HeadCell<
+  User & { [key in keyof User]: string | number }
+>[] = [
+  {
+    id: 'displayName',
+    isNumeric: false,
+    label: 'User Name',
+    isSortable: true,
+    align: 'left',
+  },
+  {
+    id: 'firstName',
+    isNumeric: true,
+    label: 'First Name',
+    isSortable: true,
+    align: 'left',
+  },
+  {
+    id: 'lastName',
+    isNumeric: true,
+    label: 'Last Name',
     isSortable: true,
     align: 'left',
   },
@@ -148,7 +178,7 @@ const UserTesting = () => {
     isSuccess,
     isError,
     error,
-  } = useGetUsersQuery('EUC')
+  } = useGetUsersQuery({})
 
   const [openCard, setOpenCard] = React.useState<boolean>(false)
   const [selectedUserId, setSelectedUserId] = React.useState<
@@ -184,7 +214,7 @@ const UserTesting = () => {
   } else if (isSuccess) {
     content = (
       <React.Fragment>
-        <NewUserCardTest userId={selectedUserId} />
+        <NewUserCard userId={selectedUserId} />
         <SortedTable
           ids={dataUsers.ids as EntityId[]}
           entities={
@@ -197,7 +227,7 @@ const UserTesting = () => {
           isSortable={true}
           handleRowClick={handleClick}
         />
-        <EditUserCardTest
+        <EditUserCard
           userId={selectedUserId}
           setOpen={setOpenCard}
           open={openCard}
@@ -214,6 +244,7 @@ const ReduxTesting = () => {
       <Counter />
 
       <ShiftTesting />
+      <UserTesting />
     </React.Fragment>
   )
 }
