@@ -70,7 +70,7 @@ const ShiftAssignmentComponentCard: React.FC<
     isLoading: isUsersLoading,
     isSuccess: isUsersSuccess,
     isError: isUsersError
-  } = useGetUsersQuery({})
+  } = useGetUsersQuery({houseID})
 
   const shiftObject = useSelector((state: RootState) =>
     selectShiftById('EUC')(state, shiftID as EntityId) as Shift
@@ -83,13 +83,9 @@ const ShiftAssignmentComponentCard: React.FC<
  
   // On page load, retrieves the shift and sets the shift Object and also populates the potentialWorkers + selectedRows arrays
   useEffect(() => {
-    console.log(isUsersSuccess);
     if (isUsersSuccess) {
       filterIDsByHouseAndAvailability();
-      console.log(shiftObject);
       sortAndAddFieldsToUsers();
-      console.log(potentialWorkersID);
-      console.log(shiftObject);
     }
   }, [isUsersSuccess]) 
  
