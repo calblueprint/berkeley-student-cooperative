@@ -37,7 +37,7 @@ function NewShiftCardTest({ shiftId }: { shiftId?: string }) {
         <DialogContent>
           <ShiftForm
             setOpen={setOpen}
-            shiftId={shiftId} //'6401c47de8d154aa9ccf5d93'
+            // shiftId={shiftId} //'6401c47de8d154aa9ccf5d93'
             isNewShift={true}
           />
         </DialogContent>
