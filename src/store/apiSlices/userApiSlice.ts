@@ -10,8 +10,8 @@ const initialState = usersAdapter.getInitialState()
 export const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
-      query: (houseId) => ({
-        url: `houses/${houseId}/users`,
+      query: () => ({
+        url: `users`,
         method: 'GET',
         data: { body: 'hello world' },
         params: { queryType: 'users' },
@@ -42,7 +42,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     }),
     addNewUser: builder.mutation({
       query: (data) => ({
-        url: `houses/${data.houseId}/users`,
+        url: `users`,
         method: 'POST',
         body: {
           ...data.data,
@@ -52,7 +52,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     }),
     updateUser: builder.mutation({
       query: (data) => ({
-        url: `houses/${data.houseId}/users/${data.userId}`,
+        url: `users/${data.userId}`,
         method: 'PATCH',
         body: {
           ...data.data,
