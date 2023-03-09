@@ -15,6 +15,7 @@ import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import { useGetUsersQuery } from '../store/apiSlices/userApiSlice'
 import { selectShiftById, useGetShiftsQuery } from '../store/apiSlices/shiftApiSlice'
 import { useSelector } from 'react-redux'
+import { RootState } from '../store/store'
 type ShiftAssignmentComponentCardProps = {
   day: string
   houseID: string
@@ -71,37 +72,26 @@ const ShiftAssignmentComponentCard: React.FC<
     isError: isUsersError
   } = useGetUsersQuery({})
 
-  // Store shiftObject
-  const {
-    data: shiftObjectList,
-    isLoading: isShiftLoading,
-    isSuccess: isShiftSuccess,
-    isError: isShiftError
-  } = useGetShiftsQuery({})
-
-  // const shiftObject = useSelector((state) =>
-  //   selectShiftById(state, shiftID ? shiftID : '')
-  // )
+  const shiftObject = useSelector((state: RootState) =>
+    selectShiftById('EUC')(state, shiftID as EntityId) as Shift
+  )
 
   // Stores the list of potential worker IDs eligible to do this shift
   const [potentialWorkersID, setPotentialWorkersID] = useState<EntityId[] | undefined>([])
-  const [shiftObject, setShiftObject] = useState<Shift|undefined>();
   // Stores the users that the manager has selected so far to complete this shift
   // const [selectedRows, setSelectedRows] = useState<string[]>([]) (SELECTED ROWS IS DONE)
  
   // On page load, retrieves the shift and sets the shift Object and also populates the potentialWorkers + selectedRows arrays
   useEffect(() => {
-    console.log(shiftObjectList);
-    if (isUsersSuccess && isShiftSuccess) {
-      console.log(potentialWorkersID);
-      console.log(shiftObjectList);
-      setShiftObject(shiftObjectList.entities[shiftID]);
+    console.log(isUsersSuccess);
+    if (isUsersSuccess) {
       filterIDsByHouseAndAvailability();
+      console.log(shiftObject);
       sortAndAddFieldsToUsers();
       console.log(potentialWorkersID);
       console.log(shiftObject);
     }
-  }, [isUsersSuccess, isShiftSuccess]) 
+  }, [isUsersSuccess]) 
  
   // update ids of worker display ids
   const sortAndAddFieldsToUsers = () => {
@@ -118,7 +108,11 @@ const ShiftAssignmentComponentCard: React.FC<
       }
       worker.displayName = worker.firstName + " " + worker.lastName;
       worker.preference = numericToStringPreference(worker, shiftID);
-      worker.hoursUnassigned = worker.hoursRequired - worker.hoursAssigned;
+      if (worker.hoursRequired === undefined) {
+        worker.hoursUnassigned = 0;
+      } else {
+        worker.hoursUnassigned = worker.hoursRequired - worker.hoursAssigned;
+      }
     }
   }
 
@@ -135,8 +129,8 @@ const ShiftAssignmentComponentCard: React.FC<
 
   // Function called when assign is clicked to update the backend
   const updateUserAndShiftObjects = async () => {
-    await updateUserObjects()
-    await updateShiftObject()
+    // await updateUserObjects()
+    // await updateShiftObject()
     // Refetch so not using stale data (may or may not remove, depending on use) (PROB NEED TO CHANGE STALE DATA)
     // retrieveShift()
     // populatePotentialWorkersAndSelected()

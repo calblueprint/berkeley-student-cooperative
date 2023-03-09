@@ -74,8 +74,9 @@ export const numericToStringPreference = (
   numberToText.set(0, 'dislikes')
   numberToText.set(1, '')
   numberToText.set(2, 'prefers')
-  if (user.preferences.has(shiftID)) {
-    let numericalPreference = user.preferences.get(shiftID)
+  if (shiftID in user.preferences) {
+    let p: any = user.preferences;
+    let numericalPreference = p[shiftID];
     if (
       numericalPreference !== undefined &&
       numberToText.has(numericalPreference)
@@ -205,38 +206,33 @@ export const sortPotentialUsers = (dict: Dictionary<User>, totalUsersInHouse: En
       return 0;
     }
     // First sort on hours assignable left (hoursRequired - hoursAssigned), prioritizing people with higher hours remaining (user2 - user1)
-    let user1HoursLeft = user1.hoursRequired - user1.hoursAssigned
-    let user2HoursLeft = user2.hoursRequired - user2.hoursAssigned
+    let user1HoursLeft = 5 - user1.hoursAssigned
+    let user2HoursLeft = 5 - user2.hoursAssigned
     let hoursWeekDiff: number = user2HoursLeft - user1HoursLeft
     if (hoursWeekDiff != 0) {
       console.log(hoursWeekDiff);
       return hoursWeekDiff
     }
 
-    let user1Preferences = user1.preferences
-    let user2Preferences = user2.preferences
+    let user1Preferences:any = user1.preferences
+    let user2Preferences:any = user2.preferences
     // 1 if 1 is average
     let user1Pref = 1
     let user2Pref = 1
-    if (user1Preferences.has(shiftID)) {
-      let curr = user1Preferences.get(shiftID)
+    if (shiftID in user1Preferences) {
+      let curr = user1Preferences[shiftID];
       if (curr !== undefined) {
         user1Pref = curr
       }
     }
-    if (user2Preferences.has(shiftID)) {
-      let curr = user2Preferences.get(shiftID)
+    if (shiftID in user2Preferences) {
+      let curr = user2Preferences[shiftID];
       if (curr !== undefined) {
         user2Pref = curr
       }
     }
     // Second sort on preferences, prioritizing people with higher preferences (user2 - user1)
-    let prefDiff = user2Pref - user1Pref
-    if (prefDiff != 0) {
-      return prefDiff
-    }
-    // Third sort on hoursRemainingSemester, prioritizing people with higher hoursRemaining (user 2 - user1)
-    return user2.hoursRemainingSemester - user1.hoursRemainingSemester
+    return user2Pref - user1Pref
   })
   return sorted;
 };
@@ -261,20 +257,20 @@ export const findAvailableUsers = (tempShiftObject: Shift, dict: Dictionary<User
       continue;
     }
     // if this user has already been assigned to this shift, display them regardless of hours
-    if (userObject.shiftsAssigned.includes(shiftID)) {
+    if (userObject.shiftsAssigned !== undefined && shiftID in userObject.shiftsAssigned) {
       ids.push(totalUsersInHouse[i])
       potentialUsers.push(userObject)
       continue
     }
     // stores the number of hours that the user still has to complete
-    let assignableHours = userObject.hoursRequired - userObject.hoursAssigned
+    let assignableHours = 5 - userObject.hoursAssigned
     // if they have no hours left to complete, or their number of hours left to complete < the number of hours of the shift, continue
     if (assignableHours <= 0 || assignableHours < numHours) {
       continue
     }
-    const currAvailabilities = userObject.availabilities
-    if (currAvailabilities.has(day)) {
-      const perDayAvailability = currAvailabilities.get(day)
+    const currAvailabilities:any = userObject.availabilities
+    if (day in currAvailabilities) {
+      const perDayAvailability = currAvailabilities[day]
       if (perDayAvailability === undefined) {
         continue
       }
