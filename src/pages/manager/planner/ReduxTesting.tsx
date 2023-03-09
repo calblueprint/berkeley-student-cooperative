@@ -10,6 +10,8 @@ import SortedTable from '../../../components/shared/tables/SortedTable'
 import { Shift } from '../../../types/schema'
 import { HeadCell } from '../../../interfaces/interfaces'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
+import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -81,8 +83,15 @@ const ShiftTesting = () => {
     error,
   } = useGetShiftsQuery('EUC')
 
+  const [openCard, setOpenCard] = React.useState<boolean>(false)
+  const [selectedShiftId, setSelectedShiftId] = React.useState<
+    string | undefined
+  >()
+
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
     console.log('ShiftId: ', id)
+    setSelectedShiftId(id)
+    setOpenCard(true)
   }
 
   React.useEffect(() => {
@@ -94,6 +103,12 @@ const ShiftTesting = () => {
     }
   }, [isSuccess, dataShifts, isError, error])
 
+  React.useEffect(() => {
+    if (selectedShiftId) {
+      console.log('Selected Shift: ', selectedShiftId)
+    }
+  }, [selectedShiftId])
+
   let content = null
   if (isLoading) {
     content = <Box>is Loading...</Box>
@@ -102,6 +117,7 @@ const ShiftTesting = () => {
   } else if (isSuccess) {
     content = (
       <React.Fragment>
+        <NewShiftCardTest shiftId={selectedShiftId} />
         <SortedTable
           ids={dataShifts.ids as EntityId[]}
           entities={
@@ -114,6 +130,11 @@ const ShiftTesting = () => {
           isSortable={true}
           handleRowClick={handleClick}
         />
+        <EditShiftCardTest
+          shiftId={selectedShiftId}
+          setOpen={setOpenCard}
+          open={openCard}
+        />
       </React.Fragment>
     )
   }
@@ -124,6 +145,7 @@ const ReduxTesting = () => {
   return (
     <React.Fragment>
       <Counter />
+
       <ShiftTesting />
     </React.Fragment>
   )
