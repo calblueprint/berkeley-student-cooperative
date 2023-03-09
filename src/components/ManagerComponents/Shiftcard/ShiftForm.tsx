@@ -1,4 +1,4 @@
-import { Formik, Form, Field } from 'formik'
+import { Formik, Form, FormikHelpers, FormikValues } from 'formik'
 import { Stack, Button } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -29,10 +29,10 @@ const ShiftSchema = Yup.object({
     .min(1, 'Name must have at least 1 characters'),
   description: Yup.string(),
   possibleDays: Yup.array().of(Yup.string()),
-  timeWindowStartTime: Yup.date(),
-  timeWindowEndTime: Yup.date(),
+  timeWindowStartTime: Yup.date().required('Start time is required'),
+  timeWindowEndTime: Yup.date().required('End time is required'),
   category: Yup.string().required('Cagegory is required'),
-  hours: Yup.number(), //.required('Hours credit is required'),
+  hours: Yup.number().required('Hours credit is required'),
   verificationBuffer: Yup.number(),
   assignedUser: Yup.string(),
 })
@@ -54,30 +54,6 @@ const shiftCategories = [
   'wash dishes',
   'clean basement',
 ]
-
-// {
-
-//   // Name of the shift
-//   name: string
-
-//   description: string
-//   // Possible days that the shift can be done on
-//   possibleDays: string[]
-//   // Time window that this shift must be done in [startTime, endTime]
-//   timeWindow: {startTime: string, endTime: string}
-//   // property to display timeWindow
-//   timeWindowDisplay: string
-//   // Day that the shift is assigned
-//   assignedDay: string
-//   // Hours earned for a user
-//   hours: number
-//   // Number of hours since end time that you are allowed to verify a shift for
-//   verificationBuffer: number
-//   // Users assigned to the shift
-//   usersAssigned: string[]
-//   // Category of work that the shift belongs to
-//   category: string
-// }
 
 const emptyShift = {
   name: '',
@@ -109,41 +85,42 @@ const ShiftForm = ({
   const [
     addNewShift,
     {
-      isLoading: isLoadingNewShift,
-      isSuccess: isSuccessNewShift,
-      isError: isErrorNewShift,
-      error: errorNewShift,
+      // isLoading: isLoadingNewShift,
+      // isSuccess: isSuccessNewShift,
+      // isError: isErrorNewShift,
+      // error: errorNewShift,
     },
   ] = useAddNewShiftMutation()
   const [
     updateShift,
     {
-      isLoading: isLoadingUpdateShift,
-      isSuccess: isSuccessUpdateShift,
-      isError: isErrorUpdateShift,
-      error: errorUpdateShift,
+      // isLoading: isLoadingUpdateShift,
+      // isSuccess: isSuccessUpdateShift,
+      // isError: isErrorUpdateShift,
+      // error: errorUpdateShift,
     },
   ] = useUpdateShiftMutation()
 
-  const shift: Shift = useSelector((state: RootState) =>
-    selectShiftById('EUC')(state, shiftId as EntityId)
+  const shift: Shift = useSelector(
+    (state: RootState) =>
+      selectShiftById('EUC')(state, shiftId as EntityId) as Shift
   )
 
   const onSubmit = async (
-    values: {
-      name: string
-      category: string
-      hours: number
-      description: string
-      possibleDays: string[]
-      timeWindowStartTime: Dayjs
-      timeWindowEndTime: Dayjs
-      verificationBuffer: number
-      //   assignedUser: string
-    },
-    formikBag: any
+    values: FormikValues,
+    //  : {
+    //   name: string
+    //   category: string
+    //   hours: number
+    //   description: string
+    //   possibleDays: string[]
+    //   timeWindowStartTime: Dayjs
+    //   timeWindowEndTime: Dayjs
+    //   verificationBuffer: number
+    // },
+    formikBag: FormikHelpers<FormikValues>
   ) => {
-    console.log('Submiting ShiftForm: ', values)
+    // console.log('Submiting ShiftForm: ', values)
     const {
       name,
       category,
@@ -153,14 +130,13 @@ const ShiftForm = ({
       timeWindowStartTime,
       timeWindowEndTime,
       verificationBuffer,
-      //   assignedUser,
     } = values
 
-    // const num = 1900
     const startTime = Number(timeWindowStartTime.format('HHmm'))
     const endTime = Number(timeWindowEndTime.format('HHmm'))
 
     // console.log(dayjs('1900', 'HHmm').format('HHmm'))
+    // const num = 1900
     // console.log(dayjs(num.toString(), 'HHmm'))
 
     // const dayString = possibleDays.join('')
@@ -178,27 +154,26 @@ const ShiftForm = ({
       timeWindow,
       verificationBuffer,
       timeWindowDisplay,
-      //   assignedUser,
-
-      // created_by: '63d0eca7e8e159c2bf0a57e6',
     }
     data.houseId = 'EUC'
     data.shiftId = shiftId ? shiftId : ''
-    console.log('data: ', data)
+    // console.log('data: ', data)
     if (isNewShift || !shiftId) {
       result = await addNewShift(data)
     } else {
       result = await updateShift(data)
     }
-    console.log(result)
+    if (result) {
+      console.log('success with shift: ', result)
+    }
 
     formikBag.resetForm()
     setOpen(false)
   }
 
-  React.useEffect(() => {
-    console.log(shift)
-  }, [shift])
+  // React.useEffect(() => {
+  //   console.log('This is the selected shift', shift)
+  // }, [shift])
 
   return (
     <>
@@ -209,23 +184,24 @@ const ShiftForm = ({
           category: shift ? shift.category : emptyShift.category,
           hours: shift ? shift.hours : emptyShift.hours,
           timeWindowStartTime: shift
-            ? dayjs() //shift.timeWindow[0].toString(), 'HHmm') // TODO: convert military time to type TimePicker
+            ? dayjs(shift.timeWindow[0].toString(), 'HHmm') // TODO: convert military time to type TimePicker
             : emptyShift.timeWindowStartTime,
           timeWindowEndTime: shift
-            ? dayjs() //shift.timeWindow[1].toString(), 'HHmm') // TODO: convert military time to type TimePicker
+            ? dayjs(shift.timeWindow[1].toString(), 'HHmm') // TODO: convert military time to type TimePicker
             : emptyShift.timeWindowEndTime,
-          possibleDays: shift ? shift.possibleDays : emptyShift.possibleDays,
+          possibleDays: shift
+            ? shift.possibleDays
+              ? shift.possibleDays
+              : []
+            : emptyShift.possibleDays,
           description: shift ? shift.description : emptyShift.despription,
           verificationBuffer: shift
             ? shift.verificationBuffer
             : emptyShift.verificationBuffer,
-          //   assignedUser: shift
-          //     ? (shift.assignedUser as string)
-          //     : emptyShift.assignedUser,
         }}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting, touched, errors, values, setFieldValue }) => (
+        {({ isSubmitting, values, setFieldValue }) => (
           <Form>
             <TextInput name="name" label="Shift Name" />
 
@@ -234,13 +210,8 @@ const ShiftForm = ({
               label="Category"
               labelid="category"
               id="category"
-              // margin="dense"
-              // fullWidth
               options={shiftCategories}
               multiselect={false}
-              // value={values.category}
-              // error={touched.category && errors.category ? true : false}
-              // helpertext={touched.category && errors.category}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <MobileTimePicker
@@ -250,17 +221,14 @@ const ShiftForm = ({
                 onChange={(newValue) =>
                   setFieldValue('timeWindowStartTime', newValue)
                 }
-                // defaultValue={dayjs('2022-04-17T15:30')}
               />
               <MobileTimePicker
                 label="End Window Time"
                 minutesStep={30}
                 value={values.timeWindowEndTime}
                 onChange={(newValue) => {
-                  // console.log('endWindowTime', newValue?.toLocaleString())
                   setFieldValue('timeWindowEndTime', newValue)
                 }}
-                // defaultValue={dayjs('2022-04-17T15:30')}
               />
             </LocalizationProvider>
 
@@ -273,9 +241,6 @@ const ShiftForm = ({
               label="Posible Days"
               labelid="possibleDays"
               id="possibleDays"
-              // value={values.possibleDays as Array<string>}
-              // error={touched.possibleDays && errors.possibleDays ? true : false}
-              // helpertext={touched.possibleDays && errors.possibleDays}
               options={daysList}
               multiselect={true}
             />
