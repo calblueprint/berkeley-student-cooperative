@@ -257,7 +257,8 @@ export const findAvailableUsers = (tempShiftObject: Shift, dict: Dictionary<User
       continue;
     }
     // if this user has already been assigned to this shift, display them regardless of hours
-    if (userObject.shiftsAssigned !== undefined && shiftID in userObject.shiftsAssigned) {
+    // console.log(shiftID in userObject.assignedScheduledShifts);
+    if (userObject.assignedScheduledShifts !== undefined && userObject.assignedScheduledShifts.includes(shiftID)) {
       ids.push(totalUsersInHouse[i])
       potentialUsers.push(userObject)
       continue
