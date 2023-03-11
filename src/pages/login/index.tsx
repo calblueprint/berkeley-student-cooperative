@@ -12,6 +12,7 @@ import { useContext, useEffect, useState } from 'react'
 import { useFirebaseAuth } from '../../firebase/queries/auth'
 import Layout from '../../components/Layout/Layout'
 import { useRouter } from 'next/router'
+import { useLoginMutation } from '../../store/apiSlices/authApiSlice'
 
 export default function LoginPage() {
   /**
@@ -24,11 +25,23 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const { signIn, authUser, register } = useFirebaseAuth()
 
-  const login = async () => {
+  const [
+    login,
+    {
+      isLoading: loginLoading,
+      isSuccess: loginSuccess,
+      isError: loginError,
+      error: errorLoggingIn,
+    },
+  ] = useLoginMutation({})
+
+  const login2 = async () => {
     // tries to log in with given credentials
-    if (email.length > 0 && password.length > 0) {
-      await signIn(email, password)
-    }
+    // if (email.length > 0 && password.length > 0) {
+    //   await signIn(email, password)
+    // }
+    // console.log('email: ', email, ' password: ', password)
+    login({ email, password })
   }
 
   // pushes the router to the member/manager default page if the user is set in the context
@@ -94,7 +107,7 @@ export default function LoginPage() {
               variant="contained"
               fullWidth
               disableElevation
-              onClick={login}
+              onClick={login2}
             >
               Login
             </Button>

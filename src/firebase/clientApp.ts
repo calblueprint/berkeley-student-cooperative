@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { Analytics, getAnalytics } from 'firebase/analytics'
 import { Firestore, getFirestore } from 'firebase/firestore'
-import { Auth, getAuth } from 'firebase/auth'
+import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -25,6 +25,7 @@ if (firebaseConfig?.projectId) {
   // Access Firebase services using shorthand notation
   firestore = getFirestore(firebaseApp) // HOVER OVER GETFIREBASE FOR RETURN TYPE
   auth = getAuth(firebaseApp)
+  // connectAuthEmulator(auth, 'http://localhost:9099')
 }
 
 export { firestore, analytics, auth }
