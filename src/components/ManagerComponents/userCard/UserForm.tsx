@@ -1,9 +1,8 @@
 import { Formik, Form, FormikHelpers, FormikValues } from 'formik'
 import { Stack, Button } from '@mui/material'
 
-import dayjs from 'dayjs'
 import * as Yup from 'yup'
-import { TextInput, SelectInput } from '../../shared/forms/CustomFormikFields'
+import { TextInput } from '../../shared/forms/CustomFormikFields'
 import {
   selectUserById,
   useAddNewUserMutation,
@@ -20,38 +19,26 @@ import { User } from '../../../types/schema'
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
 //** Here, we are defining what kind of inputs we are expecting and attaching error msgs for when the input is not what we want. */
 const UserSchema = Yup.object({
-  firstName: Yup.string(),
-  lastName: Yup.string(),
-  displayName: Yup.string().required('Display Name is required'),
-  email: Yup.string(),
-  role: Yup.string(),
-  houseID: Yup.string(),
-  hoursAssigned: Yup.number(),
-  pinNumber: Yup.number(),
-  assignedScheduledShifts: Yup.array().of(Yup.string()),
-  weekMissedHours: Yup.number(),
-  weekPenaltyHours: Yup.number(),
-  runningTotalMissedHours: Yup.number(),
-  runningTotalPenatlyHours: Yup.number(),
+  firstName: Yup.string()
+    .required('First name is required')
+    .min(1, 'Name must have at least 1 characters'),
+  lastName: Yup.string()
+    .required('Last name is required')
+    .min(1, 'Name must have at least 1 characters'),
+  // displayName: Yup.string().required('Display Name is required'),
+  email: Yup.string()
+    .required('Email is required')
+    .min(1, 'Name must have at least 1 characters'),
+  // role: Yup.string(),
+  // houseID: Yup.string(),
+  // hoursAssigned: Yup.number(),
+  // pinNumber: Yup.number(),
+  // assignedScheduledShifts: Yup.array().of(Yup.string()),
+  // weekMissedHours: Yup.number(),
+  // weekPenaltyHours: Yup.number(),
+  // runningTotalMissedHours: Yup.number(),
+  // runningTotalPenatlyHours: Yup.number(),
 })
-
-const daysList = [
-  '',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-]
-
-const userCategories = [
-  'cook dinner',
-  'clean bathroom',
-  'wash dishes',
-  'clean basement',
-]
 
 const emptyUser = {
   // Role of the user
@@ -102,11 +89,6 @@ const UserForm = ({
   userId?: string
   isNewUser: boolean
 }) => {
-  // const { authUser, house } = useUserContext()
-  // const [currentUser, setCurrentUser] = React.useState(User)
-
-  // const userCategories = getCategories(house.houseID) //TODO: use redux api slice once implemented
-
   //* Get API helpers to create or update a user
   const [
     addNewUser,
@@ -136,7 +118,7 @@ const UserForm = ({
     formikBag: FormikHelpers<FormikValues>
   ) => {
     // console.log('Submiting UserForm: ', values)
-    const { firstName, lastName, displayName, email } = values
+    const { firstName, lastName, email } = values
 
     // console.log(dayjs('1900', 'HHmm').format('HHmm'))
     // const num = 1900
@@ -149,10 +131,9 @@ const UserForm = ({
     data.data = {
       firstName,
       lastName,
-      displayName,
       email,
     }
-    data.houseId = 'EUC'
+    data.houseId = 'EUC' // TODO: use houseState later
     data.userId = userId ? userId : ''
     // console.log('data: ', data)
     if (isNewUser || !userId) {
@@ -179,9 +160,7 @@ const UserForm = ({
         initialValues={{
           firstName: user ? user.firstName : emptyUser.firstName,
           lastName: user ? user.lastName : emptyUser.lastName,
-          displayName: user ? user.displayName : emptyUser.displayName,
           email: user ? user.email : emptyUser.email,
-          role: user ? user.role : emptyUser.role,
         }}
         onSubmit={onSubmit}
       >
@@ -189,27 +168,30 @@ const UserForm = ({
           <Form>
             <TextInput name="firstName" label="First Name" />
             <TextInput name="lastName" label="Last Name" />
-            <TextInput name="displayName" label="Display Name" />
             <TextInput name="email" label="Email" />
 
-            <Stack direction="row" alignItems="center" spacing={2}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="flex-end"
+              spacing={2}
+            >
               <Button
                 type="submit"
-                fullWidth
                 variant="contained"
                 color="primary"
                 disabled={isSubmitting}
               >
-                {isNewUser || !userId ? 'Submit' : 'Update'}
+                {isNewUser || !userId ? 'Submit' : 'Save'}
               </Button>
-              <Button
+              {/* <Button
                 fullWidth
                 variant="outlined"
                 color="primary"
                 onClick={() => setOpen(false)}
               >
                 Cancel
-              </Button>
+              </Button> */}
             </Stack>
           </Form>
         )}

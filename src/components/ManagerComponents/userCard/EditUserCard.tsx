@@ -24,7 +24,7 @@ function EditUserCardTest({
         className="dialog"
       >
         <DialogTitle variant="h4" component="h2">
-          Update User
+          Edit information
         </DialogTitle>
         <DialogContent>
           <UserForm
