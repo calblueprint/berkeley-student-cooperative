@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  margin-left: 0px;
+  justify-content: space-between;
+  padding-bottom: 5%;
+}
+.box {
+  padding: 3%;
+  width: 100%;
+}
+.info {
+  padding-top: 3%;
+  padding-bottom: 3%;
+  display: grid;
+}
+.save {
+  background-color: #1a202c;
+  color: white;
+  float: right;
+  margin-bottom: 10px;
+  display: inline-block;
+}

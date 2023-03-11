@@ -1,14 +1,15 @@
+import { TextField } from '@mui/material'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
+import EditMemberInfoCard from '../../../components/ManagerComponents/EditMemberInfoCard/EditMemberInfoCard'
 import SortedTable from '../../../components/shared/tables/SortedTable'
-import { useUserContext } from '../../../context/UserContext'
 import { HeadCell } from '../../../interfaces/interfaces'
 import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { User } from '../../../types/schema'
 
 const headCells: HeadCell<User & { [key in keyof User]: string | number }>[] = [
   {
-    id: 'firstName',
+    id: 'displayName',
     isNumeric: false,
     label: 'Member Name',
     isSortable: true,
@@ -31,50 +32,69 @@ const headCells: HeadCell<User & { [key in keyof User]: string | number }>[] = [
 ]
 
 export const MembersTableContent = () => {
-  const { house } = useUserContext()
-  const { data, isLoading, isSuccess, isError } = useGetUsersQuery(
-    house?.houseID
-  )
-  console.log(house, data, isLoading, isSuccess, isError)
+  const { data, isLoading, isSuccess, isError } = useGetUsersQuery({})
 
-  // TODO: connect marcos' modal
-  // //** Modal stuff */
-  // const [open, setOpen] = useState(false)
-  // //** State variables that pass the selected item's info from the table to the modal */
-  // const [modalShift, setModalShift] = useState<Shift>()
-  // const [modalUser, setModalUser] = useState<User>()
-  // //** end Modal stuff */
-
-  // TODO: filter by search
-  // //** Table stuff */
-  // const [displayShifts, setDisplayShifts] = useState<EntityId[] | undefined>(
-  //   shifts
-  // )
-  // const [filterBy, setFilterBy] = useState<string>(filters[0])
-  // //** end Table stuff */
+  //** Modal stuff */
+  const [open, setOpen] = useState(false)
+  //** State variables that pass the selected item's info from the table to the modal */
+  const [modalMemberID, setModalMemberID] = useState<string>()
+  //** end Modal stuff */
 
   const [members, setMembers] = useState<EntityId[] | undefined>([])
+  const [filterBy, setFilterBy] = useState<string>('')
+  const [displayMembers, setDisplayMembers] = useState<EntityId[] | undefined>(
+    members
+  )
 
-  // runs when the component mounts and when the house changes
-  // ALL the shifts (unfiltered)
-  // useEffect(() => {
-  //   async function fetchUsers() {
-  //     const response = await getAllUsers(house)
-  //     if (!response) {
-  //       setMembers([])
-  //     } else {
-  //       setMembers(response)
-  //     }
-  //   }
-  //   fetchUsers()
-  // }, [house])
+  const isIn = (memberID: EntityId) => {
+    return data?.entities[memberID]?.displayName
+      ?.toLowerCase()
+      .includes(filterBy.toLowerCase())
+  }
+
+  const isMember = (memberID: EntityId) => {
+    return data?.entities[memberID]?.role == 'Member'
+  }
+
+  const resetDisplayMembers = () => {
+    if (members) {
+      setDisplayMembers(members.filter(isMember))
+    }
+  }
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  const handleRowClick = (
+    event: React.MouseEvent<unknown>,
+    memberID: EntityId
+  ) => {
+    const member = data?.entities[memberID]
+    setModalMemberID(member?.id)
+    handleOpen()
+  }
 
   useEffect(() => {
     if (isSuccess && data) {
       setMembers(data.ids)
+      setDisplayMembers(members)
     }
   }, [isSuccess, data])
 
+  useEffect(() => {
+    if (members) {
+      resetDisplayMembers()
+    }
+  }, [members])
+
+  useEffect(() => {
+    if (filterBy.length > 0) {
+      setDisplayMembers(members?.filter(isIn))
+    } else {
+      resetDisplayMembers()
+    }
+  }, [filterBy])
   if (isLoading) {
     return <div>Loading...</div>
   } else if (isError) {
@@ -82,15 +102,15 @@ export const MembersTableContent = () => {
   } else {
     return (
       <>
-        {/* <Select value={filterBy} onChange={handleFilterChange}>
-          {filters.map((day) => (
-            <MenuItem key={day} value={day}>
-              {day}
-            </MenuItem>
-          ))}
-        </Select> */}
+        <TextField
+          value={filterBy}
+          placeholder="Search"
+          onChange={(event) => {
+            setFilterBy(event.target.value)
+          }}
+        ></TextField>
         <SortedTable
-          ids={members as EntityId[]}
+          ids={displayMembers as EntityId[]}
           entities={
             data?.entities as Dictionary<
               User & { [key in keyof User]: string | number }
@@ -99,6 +119,12 @@ export const MembersTableContent = () => {
           headCells={headCells}
           isCheckable={false}
           isSortable={false}
+          handleRowClick={handleRowClick}
+        />
+        <EditMemberInfoCard
+          memberID={modalMemberID}
+          open={open}
+          setOpen={setOpen}
         />
       </>
     )
