@@ -231,6 +231,6 @@ const customBaseQuery: BaseQueryFn<
 
 export const apiSlice = createApi({
   baseQuery: customBaseQuery,
-  tagTypes: ['Shift', 'User'],
+  tagTypes: ['Shift', 'User', 'House'],
   endpoints: () => ({}),
 })
