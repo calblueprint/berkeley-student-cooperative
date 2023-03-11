@@ -6,6 +6,7 @@ import { useUserContext } from '../../../context/UserContext'
 import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
 import { UnassignedTabContent } from './UnassignedTabContent'
 import ReduxTesting from './ReduxTesting'
+import { AssignedTabContent } from './AssignedTabContent'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -66,7 +67,7 @@ export default function SchedulePage() {
           <ReduxTesting />
         </TabPanel>
         <TabPanel value={currPage} index={1}>
-          <ShiftSchedule />
+          <AssignedTabContent />
         </TabPanel>
         <TabPanel value={currPage} index={2}>
           <CategoriesView houseID={authUser.houseID} />
