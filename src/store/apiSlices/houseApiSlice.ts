@@ -27,12 +27,6 @@ export const housesApiSlice = apiSlice.injectEndpoints({
         const loadedHouses = responseData.map((entity) => {
           // console.log('[loaddedShifts] entity: ', entity)
           entity.id = entity.id
-          if (!entity.timeWindowDisplay) {
-            entity.timeWindowDisplay =
-              formatMilitaryTime(entity.timeWindow[0]) +
-              ' - ' +
-              formatMilitaryTime(entity.timeWindow[1])
-          }
           return entity
         })
         console.debug(loadedHouses)
