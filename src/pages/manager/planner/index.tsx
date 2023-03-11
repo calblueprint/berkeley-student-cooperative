@@ -3,9 +3,8 @@ import Layout from '../../../components/Layout/Layout'
 import { useState } from 'react'
 import CategoriesView from '../categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
-import { UnassignedTabContent } from './UnassignedTabContent'
 import ReduxTesting from './ReduxTesting'
-import { Schedule } from '../schedule/Schedule'
+import { Schedule } from '../../../components/shared/tables/schedule/Schedule'
 
 interface TabPanelProps {
   children?: React.ReactNode

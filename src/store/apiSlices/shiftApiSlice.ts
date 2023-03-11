@@ -33,8 +33,8 @@ export const shiftsApiSlice = apiSlice.injectEndpoints({
               ' - ' +
               formatMilitaryTime(entity.timeWindow[1])
           }
-          entity.data.status = 'PLACEHOLDER' //Will be used while status is reorganized
-          return entity.data
+          entity.status = 'PLACEHOLDER' //Will be used while status is reorganized
+          return entity
         })
         console.debug(loaddedShifts)
         return shiftsAdapter.setAll(initialState, loaddedShifts)

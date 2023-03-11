@@ -60,38 +60,38 @@ const shiftHeadCells: HeadCell<
   },
 ]
 
-const userHeadCells: HeadCell<
-  Shift & { [key in keyof Shift]: string | number }
->[] = [
-  {
-    id: 'email',
-    isNumeric: false,
-    label: 'Email',
-    isSortable: true,
-    align: 'left',
-  },
-  {
-    id: 'hoursRequired',
-    isNumeric: true,
-    label: 'Hours Required',
-    isSortable: true,
-    align: 'left',
-  },
-  {
-    id: 'hoursAssigned',
-    isNumeric: true,
-    label: 'Value',
-    isSortable: true,
-    align: 'left',
-  },
-  {
-    id: 'Status',
-    isNumeric: true,
-    label: 'status',
-    isSortable: true,
-    align: 'left',
-  },
-]
+// const userHeadCells: HeadCell<
+//   Shift & { [key in keyof Shift]: string | number }
+// >[] = [
+//   {
+//     id: 'email',
+//     isNumeric: false,
+//     label: 'Email',
+//     isSortable: true,
+//     align: 'left',
+//   },
+//   {
+//     id: 'hoursRequired',
+//     isNumeric: true,
+//     label: 'Hours Required',
+//     isSortable: true,
+//     align: 'left',
+//   },
+//   {
+//     id: 'hoursAssigned',
+//     isNumeric: true,
+//     label: 'Value',
+//     isSortable: true,
+//     align: 'left',
+//   },
+//   {
+//     id: 'Status',
+//     isNumeric: true,
+//     label: 'status',
+//     isSortable: true,
+//     align: 'left',
+//   },
+// ]
 
 const filters = [
   'all',
@@ -181,12 +181,16 @@ export const Schedule = ({ individualFiltered, isManager }: scheduleProps) => {
       setTargetId(authUser.userID)
     } else {
       users?.ids?.map((id: EntityId) => {
-        let fullName =
-          users.entities[id]?.firstName + ' ' + users?.entities[id]?.lastName
-        fullName = fullName.toLocaleLowerCase()
-        console.log({ fullName: fullName })
+        //Andrei: For now, the search bar will look for an exact hit, firstname + lastname.  LMK if you want this changed
+        /**
+         * Additional features that could be added, based on Sami searchbar
+         * - timeout check on input after 3 characters inputted or 100ms idle
+         * - show-suggested feature of names
+         * - partial matches based on first or last name
+         * NOTE: assignedUser had to be manually inputted into firebase.
+         */
+        const fullName = users.entities[id]?.displayName?.toLocaleLowerCase()
         if (fullName === targetName.toLocaleLowerCase()) {
-          console.log({ targetName: targetName, targetId: targetId })
           setTargetId(id + '')
         }
       })
@@ -195,7 +199,6 @@ export const Schedule = ({ individualFiltered, isManager }: scheduleProps) => {
 
   useEffect(() => {
     if (isSuccess && data) {
-      console.log({ data: data, users: users })
       setShifts(data.ids)
       if (individualFiltered) {
         setShifts(
@@ -260,9 +263,6 @@ export const Schedule = ({ individualFiltered, isManager }: scheduleProps) => {
             <Button variant="contained" onClick={findTargetId}>
               search
             </Button>
-            {/* <IconButton type="submit" aria-label="search">
-             <SearchIcon style={{ fill: 'blue' }} />
-           </IconButton> */}
           </div>
         ) : (
           <div></div>
@@ -281,7 +281,7 @@ export const Schedule = ({ individualFiltered, isManager }: scheduleProps) => {
         />
         {/* Everything below is just to test the redux user api */}
         {/* When creating the actual card, it should be in it's own file that will get connecte here. */}
-        <Dialog
+        {/* <Dialog
           fullWidth
           maxWidth="md"
           open={open}
@@ -336,7 +336,7 @@ export const Schedule = ({ individualFiltered, isManager }: scheduleProps) => {
               />
             </Paper>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
       </>
     )
   }
