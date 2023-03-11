@@ -3,9 +3,8 @@ import Layout from '../../../components/Layout/Layout'
 import { useState } from 'react'
 import CategoriesView from '../categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
-import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
-import { UnassignedTabContent } from './UnassignedTabContent'
-import Testing from './Testing'
+import ReduxTesting from './ReduxTesting'
+import { Schedule } from '../../../components/shared/tables/schedule/Schedule'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -62,11 +61,11 @@ export default function SchedulePage() {
           </Tabs>
         </Box>
         <TabPanel value={currPage} index={0}>
-          <UnassignedTabContent />
-          <Testing />
+          {/* <UnassignedTabContent /> */}
+          <ReduxTesting />
         </TabPanel>
         <TabPanel value={currPage} index={1}>
-          <ShiftSchedule />
+          <Schedule individualFiltered={false} isManager={true} />
         </TabPanel>
         <TabPanel value={currPage} index={2}>
           <CategoriesView houseID={authUser.houseID} />

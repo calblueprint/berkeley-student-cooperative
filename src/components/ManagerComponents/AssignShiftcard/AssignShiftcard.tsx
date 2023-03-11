@@ -9,7 +9,9 @@ type AssignShiftcardProps = {
   shiftID: string
   houseID: string
   open: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleClose: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleOpen: any
 }
 
@@ -18,6 +20,7 @@ const AssignShiftcard: React.FC<AssignShiftcardProps> = ({
   houseID,
   open,
   handleClose,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleOpen,
 }: AssignShiftcardProps) => {
   const [shift, setShift] = useState<Shift | null>()

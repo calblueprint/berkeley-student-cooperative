@@ -6,7 +6,6 @@
   2. Change how House is retrieved using new Danashi User Context. (Functional for now, plugging House context is a little buggy)
   3. styling
 */
-import { getUser } from '../../../firebase/queries/user'
 import React, { useEffect, useState } from 'react'
 import {
   Table,
@@ -20,12 +19,9 @@ import { getHouse } from '../../../firebase/queries/house'
 import { Day } from '../../../types/schema'
 import { getNumVerified, getShift } from '../../../firebase/queries/shift'
 import { Shift } from '../../../types/schema'
-import { type } from 'os'
 import Select from 'react-select'
-import { firestoreAutoId, objectToMap } from '../../../firebase/helpers'
 import Paper from '@mui/material/Paper'
 import { useUserContext } from '../../../context/UserContext'
-import ShiftCard from '../Shiftcard/Shiftcard'
 import AssignShiftcard from '../AssignShiftcard/AssignShiftcard'
 import styles from './ShiftSchedule.module.css'
 
@@ -42,7 +38,7 @@ import styles from './ShiftSchedule.module.css'
  * 6. In schedule, store table entries in based on which day they're from.
  */
 export const ShiftSchedule = () => {
-  const { authUser, house } = useUserContext()
+  const { authUser } = useUserContext()
 
   /* MOST IMPORTANT:  Holds the row components that are loaded onto the table
   Each k: Days, value: List of corresponding components matching a given shift*/
@@ -82,9 +78,8 @@ export const ShiftSchedule = () => {
   ]
 
   // For React Select, to dispay Day on dropdown (FRONTEND)
-  const [selectedDay, setSelectedDay] = useState<ValueType<OptionType>>(
-    dayOptions[0]
-  )
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const [selectedDay, setSelectedDay] = useState<any>(dayOptions[0])
 
   /**
    * @remarks
@@ -92,7 +87,7 @@ export const ShiftSchedule = () => {
    * must rerender the table rows to fit that day
    * @param option - From dayOptions
    */
-  const handleDayChange = (option: ValueType<any>) => {
+  const handleDayChange = (option: { value: string }) => {
     setSelectedDay(option)
     setDailyRows(schedule.get(option.value))
   }
@@ -266,7 +261,7 @@ export const ShiftSchedule = () => {
 
   useEffect(() => {
     loadScheduleComponents()
-  }, [authUser])
+  })
 
   //ID that will be used for current Card modal.
   const [currentShiftCardID, setCurrentShiftCardID] = useState('')

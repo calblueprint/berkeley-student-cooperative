@@ -5,20 +5,27 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Button,
+  TextField,
 } from '@mui/material'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Unstable_Grid2'
 import { styled } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
-// import UnassignedShiftList from '../../../components/ManagerComponents/UnassignedShiftsList/UnassignedShiftsList'
-import SortedTable from '../../../components/shared/tables/SortedTable'
-import { useUserContext } from '../../../context/UserContext'
-// import { getAllShifts } from '../../../firebase/queries/shift'
-import { HeadCell, Shift, User } from '../../../interfaces/interfaces'
-import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
-import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
+import SortedTable from '../SortedTable'
+import { useUserContext } from '../../../../context/UserContext'
+import { HeadCell } from '../../../../interfaces/interfaces'
+import { useGetShiftsQuery } from '../../../../store/apiSlices/shiftApiSlice'
+import { useGetUsersQuery } from '../../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import { Shift, User } from '../../../../types/schema'
+
+/***
+ *  Andrei's Notes
+ *
+ *
+ */
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -44,33 +51,47 @@ const shiftHeadCells: HeadCell<
     isSortable: true,
     align: 'left',
   },
+  {
+    id: 'status',
+    isNumeric: false,
+    label: 'Status',
+    isSortable: true,
+    align: 'left',
+  },
 ]
 
-const userHeadCells: HeadCell<
-  Shift & { [key in keyof Shift]: string | number }
->[] = [
-  {
-    id: 'email',
-    isNumeric: false,
-    label: 'Email',
-    isSortable: true,
-    align: 'left',
-  },
-  {
-    id: 'hoursRequired',
-    isNumeric: true,
-    label: 'Hours Required',
-    isSortable: true,
-    align: 'left',
-  },
-  {
-    id: 'hoursAssigned',
-    isNumeric: true,
-    label: 'Value',
-    isSortable: true,
-    align: 'left',
-  },
-]
+// const userHeadCells: HeadCell<
+//   Shift & { [key in keyof Shift]: string | number }
+// >[] = [
+//   {
+//     id: 'email',
+//     isNumeric: false,
+//     label: 'Email',
+//     isSortable: true,
+//     align: 'left',
+//   },
+//   {
+//     id: 'hoursRequired',
+//     isNumeric: true,
+//     label: 'Hours Required',
+//     isSortable: true,
+//     align: 'left',
+//   },
+//   {
+//     id: 'hoursAssigned',
+//     isNumeric: true,
+//     label: 'Value',
+//     isSortable: true,
+//     align: 'left',
+//   },
+//   {
+//     id: 'Status',
+//     isNumeric: true,
+//     label: 'status',
+//     isSortable: true,
+//     align: 'left',
+//   },
+// ]
 
 const filters = [
   'all',
@@ -91,8 +112,17 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }))
 
-export const UnassignedTabContent = () => {
-  const { house } = useUserContext()
+type scheduleProps = {
+  individualFiltered: boolean
+  isManager: boolean
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const Schedule = ({ individualFiltered, isManager }: scheduleProps) => {
+  const [targetName, setTargetName] = useState('')
+  const [targetId, setTargetId] = useState('')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { house, authUser } = useUserContext()
   const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
     house?.houseID
   )
@@ -127,8 +157,8 @@ export const UnassignedTabContent = () => {
     // console.log('event: ', event, 'shift: ', shiftId)
     const shift = data?.entities[shiftId]
     setModalShift(shift)
-    if (shift && shift.usersAssigned && shift.usersAssigned[0]) {
-      setModalUser(users?.entities[shift.usersAssigned[0]])
+    if (shift && shift.assignedUser) {
+      setModalUser(users?.entities[shift.assignedUser])
     }
     handleOpen()
   }
@@ -146,23 +176,45 @@ export const UnassignedTabContent = () => {
     setFilterBy(event.target.value)
   }
 
+  const findTargetId = () => {
+    if (!isManager) {
+      setTargetId(authUser.userID)
+    } else {
+      users?.ids?.map((id: EntityId) => {
+        //Andrei: For now, the search bar will look for an exact hit, firstname + lastname.  LMK if you want this changed
+        /**
+         * Additional features that could be added, based on Sami searchbar
+         * - timeout check on input after 3 characters inputted or 100ms idle
+         * - show-suggested feature of names
+         * - partial matches based on first or last name
+         * NOTE: assignedUser had to be manually inputted into firebase.
+         */
+        const fullName = users.entities[id]?.displayName?.toLocaleLowerCase()
+        if (fullName === targetName.toLocaleLowerCase()) {
+          setTargetId(id + '')
+        }
+      })
+    }
+  }
+
   useEffect(() => {
     if (isSuccess && data) {
-      // setShifts(data.ids)
-
-      setShifts(
-        data.ids?.filter(
-          (id: EntityId) => data.entities[id]?.usersAssigned?.length === 0
+      setShifts(data.ids)
+      if (individualFiltered) {
+        setShifts(
+          data.ids?.filter(
+            (id: EntityId) => data.entities[id]?.assignedUser == targetId
+          )
         )
-      )
+      }
     }
-  }, [isSuccess, data])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, data, targetId])
 
   // runs when the component mounts and when filterBy or shifts changes
   // the filtered shifts (filtered by day)
   useEffect(() => {
     // console.log('Changing filters')
-
     setDisplayShifts(
       filterBy === filters[0]
         ? shifts
@@ -189,11 +241,37 @@ export const UnassignedTabContent = () => {
             </MenuItem>
           ))}
         </Select>
+        {isManager && !individualFiltered ? (
+          <Button variant="contained">Quick Shift (WIP) </Button>
+        ) : (
+          <div></div>
+        )}
+        {isManager && individualFiltered ? (
+          <div>
+            <TextField
+              id="search-bar"
+              className="text"
+              value={targetName}
+              onChange={(e) => {
+                setTargetName(e.target.value)
+              }}
+              label="search"
+              variant="outlined"
+              placeholder="Search..."
+              size="small"
+            />
+            <Button variant="contained" onClick={findTargetId}>
+              search
+            </Button>
+          </div>
+        ) : (
+          <div></div>
+        )}
         <SortedTable
           ids={displayShifts as EntityId[]}
           entities={
             data?.entities as Dictionary<
-              Shift & { [key in keyof Shift]: string | number } //Typescript requirement.  They keys are keys of shift, the objects are Shift.
+              Shift & { [key in keyof Shift]: string | number } //Typescript requirement.  The keys are keys of shift, the objects are Shift.
             >
           }
           headCells={shiftHeadCells}
@@ -203,7 +281,7 @@ export const UnassignedTabContent = () => {
         />
         {/* Everything below is just to test the redux user api */}
         {/* When creating the actual card, it should be in it's own file that will get connecte here. */}
-        <Dialog
+        {/* <Dialog
           fullWidth
           maxWidth="md"
           open={open}
@@ -258,7 +336,7 @@ export const UnassignedTabContent = () => {
               />
             </Paper>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
       </>
     )
   }

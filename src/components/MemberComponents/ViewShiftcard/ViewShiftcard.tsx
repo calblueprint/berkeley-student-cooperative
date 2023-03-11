@@ -30,7 +30,9 @@ type ViewShiftcardProps = {
   shiftID: string
   houseID: string
   open: boolean
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   handleClose: any
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   handleOpen: any
 }
 
@@ -58,9 +60,10 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   houseID,
   open,
   handleClose,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleOpen,
 }: ViewShiftcardProps) => {
-  const { authUser, house } = useUserContext()
+  const { authUser } = useUserContext()
   const [shift, setShift] = useState<Shift | null>()
   const [memberRows, setMemberRows] = useState<JSX.Element[]>()
   const [verifierPin, setVerifierPin] = useState('')
@@ -76,7 +79,6 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    * Verifying shift runs a check to assure that the verification is possible, if so, object is added to that collection.
    **/
   useEffect(() => {
-    const today = new Date()
     const getShiftFB = async () => {
       if (shiftID != '') {
         // greg: added this check for an empty shiftID cuz the default state in the MemberShiftView is an empty string
@@ -88,6 +90,8 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
       }
     }
     getShiftFB()
+    //disabling for this line because the suggested deps would cause an infinite loop, they're changed by the callback.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shiftID]) // greg: added this so that the modal grabbed the correct shift info based on the changing currentShiftCard value in MemberShiftView component
 
   /**
@@ -99,10 +103,10 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    */
   const loadMemberRows = async (usersAssigned: string[]) => {
     console.log({ authUser: authUser })
-    let userObjects = await getAssignedUsers(usersAssigned)
-    let tempMemRows = new Array<JSX.Element>()
-    let verShifts = await getVerifiedShifts(houseID, shiftID)
-    let house = await getHouse(houseID)
+    const userObjects = await getAssignedUsers(usersAssigned)
+    const tempMemRows = new Array<JSX.Element>()
+    const verShifts = await getVerifiedShifts(houseID, shiftID)
+    const house = await getHouse(houseID)
     setUserPinMap(house.userPINs)
     //Uses list of Users to generate the member rows in table
     userObjects.map((user) => {
@@ -120,11 +124,12 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    * @returns - List of Users assigned to shift
    */
   const getAssignedUsers = async (usersAssigned: string[]) => {
-    let promises: Promise<User | null>[] = []
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    const promises: Promise<any>[] = []
     usersAssigned.map((userID) => {
       promises.push(getUser(userID))
     })
-    let userObjects = await Promise.all(promises)
+    const userObjects = await Promise.all(promises)
     return userObjects
   }
 
@@ -149,10 +154,10 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
   ) => {
     let status = 'Incomplete'
     let time = ''
-    let verifiedShift = verShifts.get(user.userID)
-    let username = user.firstName + ' ' + user.lastName
-    let authname = authUser.firstName + ' ' + authUser.lastName
-    let name = username != authname ? username : 'me' //If member row is the current user, display name as 'me'
+    const verifiedShift = verShifts.get(user.userID)
+    const username = user.firstName + ' ' + user.lastName
+    const authname = authUser.firstName + ' ' + authUser.lastName
+    const name = username != authname ? username : 'me' //If member row is the current user, display name as 'me'
     console.log('Member: ', username, ' | VerifiedShift: ', verifiedShift)
     if (verifiedShift != undefined) {
       status = 'Complete'
@@ -194,7 +199,7 @@ const ViewShiftcard: React.FC<ViewShiftcardProps> = ({
    * If so, verifyShift is called which creates a verifyShift object in the firebase.
    */
   const handleVerify = () => {
-    let verifierID = userPinMap.get(verifierPin)
+    const verifierID = userPinMap.get(verifierPin)
     console.log({ userPinMap, verifierPin })
     if (verifierID == undefined) {
       //Replace with modal/warning

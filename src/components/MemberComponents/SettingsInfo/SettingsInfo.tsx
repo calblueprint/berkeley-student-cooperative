@@ -32,7 +32,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
   const [name, setName] = useState<string | null>()
   const [email, setEmail] = useState<string | null>()
   const [pin, setPin] = useState<number | null>()
-  let star = '*'
+  const star = '*'
 
   useEffect(() => {
     // retrieves user from context
@@ -65,9 +65,9 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
   }
 
   const resetPin = async () => {
-    let newPin = generatePinNumber(5)
+    const newPin = generatePinNumber(5)
     setPin(newPin)
-    let newData = {
+    const newData = {
       pinNumber: newPin,
     }
     if (user) {
@@ -117,7 +117,6 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
                 className={styles.textfield}
                 fullWidth
                 value={star.repeat(10)}
-                onChange={(event) => {}}
               />
               <Typography className={styles.bodyTitle} variant="h5">
                 Pin Code
@@ -128,7 +127,6 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
                   className={styles.textfield}
                   fullWidth
                   value={pin}
-                  onChange={(event) => {}}
                 />
                 <Button onClick={resetPin}>Reset</Button>
               </div>
@@ -177,7 +175,6 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
               className={styles.textfield}
               fullWidth
               value={star.repeat(10)}
-              onChange={(event) => {}}
             />
             <Typography className={styles.bodyTitle} variant="h5">
               Pin Code
@@ -187,7 +184,6 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
               className={styles.textfield}
               fullWidth
               value={pin}
-              onChange={(event) => {}}
             />
           </div>
           <hr className={styles.line} />

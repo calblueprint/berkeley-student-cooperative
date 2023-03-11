@@ -1,11 +1,73 @@
+import { Tabs, Tab, Box, Typography } from '@mui/material'
 import Layout from '../../../components/Layout/Layout'
-import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
+import { useState } from 'react'
+import { useUserContext } from '../../../context/UserContext'
+import { Schedule } from '../../../components/shared/tables/schedule/Schedule'
+interface TabPanelProps {
+  children?: React.ReactNode
+  index: number
+  value: number
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  )
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  }
+}
 
 export default function SchedulePage() {
+  /**
+   * Allows for navigation between unassigned shifts, assigned shifts, and the category view page. Used in the planner view.
+   * @returns SchedulePage
+   */
+  const { authUser } = useUserContext()
+
+  const [currPage, setCurrPage] = useState(0)
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    console.log(authUser)
+    setCurrPage(newValue)
+  }
+
   return (
     <Layout>
-      <h2>This is the schedule page.</h2>
-      <ShiftSchedule />
+      <Typography variant="h4">Settings</Typography>
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={currPage} onChange={handleChange}>
+            <Tab label="All" {...a11yProps(0)} />
+            <Tab label="Individual" {...a11yProps(1)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={currPage} index={0}>
+          <Schedule individualFiltered={false} isManager={true} />
+          {/* <UnassignedTabContent /> */}
+        </TabPanel>
+        <TabPanel value={currPage} index={1}>
+          <Schedule individualFiltered={true} isManager={true} />
+        </TabPanel>
+      </Box>
     </Layout>
   )
 }
