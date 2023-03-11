@@ -14,6 +14,8 @@ const firebaseConfig = {
 }
 
 // Initialize Firebase
+
+console.log('fbconfig is', firebaseConfig)
 const firebaseApp = initializeApp(firebaseConfig)
 let analytics: Analytics, firestore: Firestore, auth: Auth // TYPES!! Imported from Firebase!
 

@@ -2,8 +2,7 @@ import { Tabs, Tab, Box, Typography } from '@mui/material'
 import Layout from '../../../components/Layout/Layout'
 import { useState } from 'react'
 import { useUserContext } from '../../../context/UserContext'
-import { Schedule } from './Schedule'
-
+import { Schedule } from '../../../components/shared/tables/schedule/Schedule'
 interface TabPanelProps {
   children?: React.ReactNode
   index: number

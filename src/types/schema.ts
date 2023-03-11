@@ -66,7 +66,7 @@ export type Shift = {
   possibleDays: string[]
   // Number of people who can be assigned to this shift
   // TODO: remove this because all shifts will have only one user
-  numOfPeople?: number
+  // numOfPeople?: number
   // Time window that this shift must be done in [startTime, endTime]
   timeWindow: number[]
   // property to display timeWindow
@@ -79,16 +79,17 @@ export type Shift = {
   verificationBuffer: number
   // Users assigned to the shift
   // TODO: remove this because all shifts will have only one user
-  usersAssigned?: string[]
+  // usersAssigned?: string[]
   // Category of work that the shift belongs to
   category: string
 
   //** new attributes below */
 
   // User assigned to the shift
+  //From Andrei:  Make non-optional, set to undefined.
   assignedUser?: string
   // Completion status
-  status: string
+  status: string //With schema change, just check
 }
 
 // TODO: remove this because we are no longer using this

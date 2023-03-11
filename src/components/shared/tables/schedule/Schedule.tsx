@@ -13,14 +13,19 @@ import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Unstable_Grid2'
 import { styled } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
-// import UnassignedShiftList from '../../../components/ManagerComponents/UnassignedShiftsList/UnassignedShiftsList'
-import SortedTable from '../../../components/shared/tables/SortedTable'
-import { useUserContext } from '../../../context/UserContext'
-// import { getAllShifts } from '../../../firebase/queries/shift'
-import { HeadCell, Shift, User } from '../../../interfaces/interfaces'
-import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
-import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
+import SortedTable from '../SortedTable'
+import { useUserContext } from '../../../../context/UserContext'
+import { HeadCell } from '../../../../interfaces/interfaces'
+import { useGetShiftsQuery } from '../../../../store/apiSlices/shiftApiSlice'
+import { useGetUsersQuery } from '../../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import { Shift, User } from '../../../../types/schema'
+
+/***
+ *  Andrei's Notes
+ *
+ *
+ */
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -152,8 +157,8 @@ export const Schedule = ({ individualFiltered, isManager }: scheduleProps) => {
     // console.log('event: ', event, 'shift: ', shiftId)
     const shift = data?.entities[shiftId]
     setModalShift(shift)
-    if (shift && shift.usersAssigned && shift.usersAssigned[0]) {
-      setModalUser(users?.entities[shift.usersAssigned[0]])
+    if (shift && shift.assignedUser) {
+      setModalUser(users?.entities[shift.assignedUser])
     }
     handleOpen()
   }
@@ -190,11 +195,12 @@ export const Schedule = ({ individualFiltered, isManager }: scheduleProps) => {
 
   useEffect(() => {
     if (isSuccess && data) {
+      console.log({ data: data, users: users })
       setShifts(data.ids)
       if (individualFiltered) {
         setShifts(
-          data.ids?.filter((id: EntityId) =>
-            data.entities[id]?.usersAssigned.includes(targetId)
+          data.ids?.filter(
+            (id: EntityId) => data.entities[id]?.assignedUser == targetId
           )
         )
       }
@@ -206,7 +212,6 @@ export const Schedule = ({ individualFiltered, isManager }: scheduleProps) => {
   // the filtered shifts (filtered by day)
   useEffect(() => {
     // console.log('Changing filters')
-
     setDisplayShifts(
       filterBy === filters[0]
         ? shifts
