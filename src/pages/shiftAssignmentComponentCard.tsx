@@ -12,10 +12,14 @@ import { sortPotentialUsers, findAvailableUsers } from '../firebase/helpers'
 import SortedTable from '../components/shared/tables/SortedTable'
 import { numericToStringPreference } from '../firebase/helpers'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
-import { useGetUsersQuery } from '../store/apiSlices/userApiSlice'
-import { selectShiftById, useGetShiftsQuery } from '../store/apiSlices/shiftApiSlice'
+import { useGetUsersQuery, useUpdateUserMutation } from '../store/apiSlices/userApiSlice'
+import { selectShiftById, useUpdateShiftMutation } from '../store/apiSlices/shiftApiSlice'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store/store'
+
+// waiting on sorted table to only allow selecting 1 checkbox at a time
+// pass in something that's been selected
+
 type ShiftAssignmentComponentCardProps = {
   day: string
   houseID: string
@@ -72,171 +76,192 @@ const ShiftAssignmentComponentCard: React.FC<
     isError: isUsersError
   } = useGetUsersQuery({houseID})
 
+  const [
+    updateShift,
+    {
+      // isLoading: isLoadingUpdateShift,
+      // isSuccess: isSuccessUpdateShift,
+      // isError: isErrorUpdateShift,
+      // error: errorUpdateShift,
+    },
+  ] = useUpdateShiftMutation()
+
+  const [
+    updateUser,
+    {
+      // isLoading: isLoadingUpdateShift,
+      // isSuccess: isSuccessUpdateShift,
+      // isError: isErrorUpdateShift,
+      // error: errorUpdateShift,
+    },
+  ] = useUpdateUserMutation();
+
   const shiftObject = useSelector((state: RootState) =>
     selectShiftById('EUC')(state, shiftID as EntityId) as Shift
   )
 
-  // Stores the list of potential worker IDs eligible to do this shift
   const [potentialWorkersID, setPotentialWorkersID] = useState<EntityId[] | undefined>([])
-  // Stores the users that the manager has selected so far to complete this shift
-  // const [selectedRows, setSelectedRows] = useState<string[]>([]) (SELECTED ROWS IS DONE)
- 
+  const [displayEntities, setDisplayEntities] = useState<Dictionary<User>>();
+  const [assignedUserID, setAssignedUserID] = useState<string>("");
+  
   // On page load, retrieves the shift and sets the shift Object and also populates the potentialWorkers + selectedRows arrays
   useEffect(() => {
     if (isUsersSuccess) {
-      filterIDsByHouseAndAvailability();
-      sortAndAddFieldsToUsers();
+      let userIDs = filterIDsByHouseAndAvailability();
+      sortAndAddFieldsToUsers(userIDs);
     }
   }, [isUsersSuccess]) 
+
+  useEffect(() => {
+    let userIDs = filterIDsByHouseAndAvailability();
+    sortAndAddFieldsToUsers(userIDs);
+  }, []) 
  
+  const filterIDsByHouseAndAvailability = () => {
+    let workersInHouse = usersObject?.ids.filter(
+        (id: EntityId) => usersObject?.entities[id]?.houseID == houseID
+      );
+    if (shiftObject.assignedUser !== undefined && shiftObject.assignedUser !== "") {
+      setAssignedUserID(shiftObject.assignedUser);
+    }
+    if (usersObject !== undefined && workersInHouse !== undefined) {
+      return findAvailableUsers(shiftObject, usersObject.entities, workersInHouse, shiftID, day);
+    }
+    return [];
+  }
+
   // update ids of worker display ids
-  const sortAndAddFieldsToUsers = () => {
-    if (potentialWorkersID === undefined || usersObject === undefined) {
+  const sortAndAddFieldsToUsers = (userIDs: EntityId[]) => {
+    if (userIDs === undefined || usersObject === undefined) {
       return;
     }
-    let copy = sortPotentialUsers(usersObject.entities, potentialWorkersID, shiftID); //ids
+    let copy = sortPotentialUsers(usersObject.entities, userIDs, shiftID); //ids
     setPotentialWorkersID(copy);
-    for (let i = 0; i < potentialWorkersID.length; i++) {
-      let id = potentialWorkersID[i];
-      let worker = usersObject.entities[id];
+    // makes a deepcopy of entities so we can modify them
+    let newDictionary: {[id: string]: User | undefined} = JSON.parse(JSON.stringify(usersObject.entities));
+    for (let key in newDictionary) {
+      newDictionary[key] = newDictionary[key] as User
+    }
+    for (let i = 0; i < copy.length; i++) {
+      let id = copy[i];
+      let worker: User|undefined = newDictionary[id];
       if (worker === undefined) {
         continue;
       }
       worker.displayName = worker.firstName + " " + worker.lastName;
       worker.preference = numericToStringPreference(worker, shiftID);
-      if (worker.hoursRequired === undefined) {
-        worker.hoursUnassigned = 0;
-      } else {
-        worker.hoursUnassigned = worker.hoursRequired - worker.hoursAssigned;
-      }
+      worker.hoursUnassigned = 5 - worker.hoursAssigned;
     }
+    setDisplayEntities(newDictionary);
   }
 
-  const filterIDsByHouseAndAvailability = () => {
-    let workersInHouse = usersObject?.ids.filter(
-        (id: EntityId) => usersObject?.entities[id]?.houseID == houseID
-      );
-    if (usersObject !== undefined && workersInHouse !== undefined) {
-      let avail = findAvailableUsers(shiftObject, usersObject.entities, workersInHouse, shiftID, day);
-      setPotentialWorkersID(avail);
-    }
-  }
 
 
   // Function called when assign is clicked to update the backend
   const updateUserAndShiftObjects = async () => {
-    // await updateUserObjects()
-    // await updateShiftObject()
-    // Refetch so not using stale data (may or may not remove, depending on use) (PROB NEED TO CHANGE STALE DATA)
-    // retrieveShift()
-    // populatePotentialWorkersAndSelected()
+    let originallyAssignedUserID = shiftObject.assignedUser;
+    if (originallyAssignedUserID === undefined) {
+      originallyAssignedUserID = "";
+    }
+    if (originallyAssignedUserID === assignedUserID || usersObject === undefined) {
+      console.log("no change");
+      return;
+    }
+    if (originallyAssignedUserID !== "") {
+      // UPDATE OLD USER
+      // clear the shift id from the user's list of shifts (assignedScheduleShifts) + decrease their assigned hours
+      let originalUser = usersObject.entities[originallyAssignedUserID];
+      if (originalUser !== undefined) {
+        let originalAssignedShifts = originalUser.assignedScheduledShifts;
+        if (originalAssignedShifts === undefined) {
+          originalAssignedShifts = [];
+        }
+        let originalUserShiftsCopy = [...originalAssignedShifts];
+        let index = originalUserShiftsCopy.indexOf(shiftID, 0);
+        if (index > -1) {
+          originalUserShiftsCopy.splice(index, 1);
+        }
+        let originalUserAssignedHours = originalUser.hoursAssigned;
+        let originalUserNewHours = originalUserAssignedHours - shiftObject.hours;
+        console.log(originalUserNewHours);
+        let dataToUpdateOldUser = { data: {}, houseId: houseID, userId: originallyAssignedUserID }
+        dataToUpdateOldUser.data = {
+          hoursAssigned: originalUserNewHours,
+          assignedScheduledShifts: originalUserShiftsCopy
+        }
+        await updateUser(dataToUpdateOldUser);
+      }
+    }
+
+    // UPDATE SHIFT
+    // update assigned Day and assignedUser
+    // decrease the number of hours of this shift to their hoursAssigned
+    let dataToUpdateShift = { data: {}, houseId: houseID, shiftId: shiftID}
+    if (assignedUserID === "") {
+      dataToUpdateShift.data = {
+        assignedDay: "",
+        assignedUser: ""
+      }
+    } else {
+      dataToUpdateShift.data = {
+        assignedDay: day,
+        assignedUser: assignedUserID
+      }
+    }
+    await updateShift(dataToUpdateShift);
+
+    // UPDATE NEW USER
+    // increase their hours and push it onto the list
+    if (assignedUserID === "") {
+      console.log("No new user assigned");
+      return;
+    }
+    let newUser = usersObject.entities[assignedUserID];
+    if (newUser === undefined) {
+      console.log("undefined id for new user");
+      return;
+    }
+    let newUserAssignedShifts = newUser.assignedScheduledShifts;
+    if (newUserAssignedShifts === undefined) {
+      newUserAssignedShifts = [];
+    }
+    let newUserShiftsCopy = [...newUserAssignedShifts];
+    let index = newUserShiftsCopy.indexOf(shiftID, 0);
+    if (index == -1) {
+      newUserShiftsCopy.push(shiftID);
+    }
+    let newAssignedHours = newUser.hoursAssigned + shiftObject.hours;
+    console.log(newAssignedHours);
+    let dataToUpdateNewUser = { data: {}, houseId: houseID, userId: assignedUserID }
+    dataToUpdateNewUser.data = {
+      hoursAssigned: newAssignedHours,
+      assignedScheduledShifts: newUserShiftsCopy
+    }
+    await updateUser(dataToUpdateNewUser);
   }
 
-  // Updates the user objects by clearing all people assigned to the shift
-  // const updateUserObjects = async () => {
-  //   // hoursAssigned
-  //   // clear prior
-  //   if (
-  //     shiftObject !== undefined &&
-  //     selectedRows.length <= shiftObject.numOfPeople
-  //   ) {
-  //     // Decreases hours assigned for all of the workers who are assigned, but not included in the selected rows list (they were removed)
-  //     for (let i = 0; i < potentialWorkers.length; i++) {
-  //       let user = potentialWorkers[i]
-  //       if (
-  //         user.shiftsAssigned.includes(shiftID) &&
-  //         !selectedRows.includes(user.userID)
-  //       ) {
-  //         let copy = [...user.shiftsAssigned]
-  //         let index = copy.indexOf(shiftID)
-  //         copy.splice(index, 1)
-  //         let newHours = user.hoursAssigned
-  //         if (shiftObject !== undefined) {
-  //           newHours -= shiftObject.hours
-  //         }
-  //         let newData = {
-  //           shiftsAssigned: copy,
-  //           hoursAssigned: newHours,
-  //         }
-  //         await updateUser(user.userID, newData)
-  //       }
-  //     }
-  //     for (let i = 0; i < selectedRows.length; i++) {
-  //       let userID = selectedRows[i]
-  //       const user = await getUser(userID)
-  //       if (user === null || user === undefined || user.shiftsAssigned.includes(shiftID)) {
-  //         continue
-  //       }
-  //       let copy = [...user.shiftsAssigned]
-  //       copy.push(shiftID)
-  //       if (user === undefined) {
-  //         continue;
-  //       }
-  //       let newHours = user.hoursAssigned
-  //       if (shiftObject !== undefined) {
-  //         newHours += shiftObject.hours
-  //       }
-  //       let newData = {
-  //         shiftsAssigned: copy,
-  //         hoursAssigned: newHours,
-  //       }
-  //       await updateUser(userID, newData)
-  //     }
-  //   } else {
-  //     // replace w modal
-  //     console.log('Too many people selected')
-  //   }
-  // }
-
-  // Updates the shiftObject with the assigned day and the people assigned to that shift
-  // If 0 selected rows, reset day to ""
-  // const updateShiftObject = async () => {
-  //   if (
-  //     shiftObject !== undefined &&
-  //     selectedRows.length <= shiftObject.numOfPeople
-  //   ) {
-  //     let assignedDay = day
-  //     if (selectedRows.length == 0) {
-  //       assignedDay = ''
-  //     }
-  //     let newData = {
-  //       usersAssigned: selectedRows,
-  //       assignedDay: assignedDay,
-  //     }
-  //     await updateShift(houseID, shiftID, newData)
-  //   }
-  // }
+  const updateAssignedUser = (event: React.MouseEvent<unknown>, id: string) => {
+    if (id === assignedUserID) {
+      console.log("untoggle");
+      setAssignedUserID("");
+    } else {
+      setAssignedUserID(id);
+    }
+  }
 
   return (
-    // <div className={styles.container}>
-    //   <h3>{shiftObject?.name}</h3>
-    //   <div id="shiftAssignmentHeaderFlex">
-    //     <div className="shiftAssignmentHeaderEntry">
-    //       {shiftObject && pluralizeHours(shiftObject.hours)}
-    //     </div>
-    //     <div className="shiftAssignmentHeaderEntry">{day}</div>
-    //     <div className="shiftAssignmentHeaderEntry">
-    //       {shiftObject &&
-    //         convertTimeWindowToTime(
-    //           shiftObject.timeWindow[0],
-    //           shiftObject.timeWindow[1]
-    //         )}
-    //     </div> 
-    //     <div className="shiftAssignmentHeaderEntry">
-    //       {shiftObject && pluralizeHours(shiftObject.verificationBuffer)}
-    //     </div>
-    //     <div className="shiftAssignmentHeaderEntry">
-    //       {shiftObject && shiftObject.category}
-    //     </div>
-    //   </div>
     <div className={styles.container}>
-      {potentialWorkersID &&
+      {potentialWorkersID && displayEntities && 
         <SortedTable 
-          data = {potentialWorkersID}
+          ids = {potentialWorkersID as EntityId[]}
+          entities = {displayEntities as Dictionary<
+              User & {[key in keyof User]: string | number}
+            >}
           headCells = {headCells}
           isCheckable = {true}
           isSortable = {false}
           // handle row click here???
+          handleRowClick = {updateAssignedUser}
         />
       }
       <Button onClick={updateUserAndShiftObjects}>Save</Button>
