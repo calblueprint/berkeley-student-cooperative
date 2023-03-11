@@ -1,4 +1,4 @@
-import { createSelector, createEntityAdapter, EntityId } from '@reduxjs/toolkit'
+import { createSelector, createEntityAdapter } from '@reduxjs/toolkit'
 import { User } from '../../types/schema'
 import { apiSlice } from '../api/apiSlice'
 import { RootState } from '../store'
@@ -78,18 +78,37 @@ export const {
   //   useDeleteUserMutation,
 } = usersApiSlice
 
-// Creates memoized selector to get normalized state based on the query parameter
+// returns the query result object
+export const selectUsersResult = usersApiSlice.endpoints.getUsers.select({})
+
+// creates memoized selector
 const selectUsersData = createSelector(
-  (state: RootState, queryParameter: string) =>
-    usersApiSlice.endpoints.getUsers.select(queryParameter)(state),
-  (usersResult) => usersResult.data ?? initialState
+  selectUsersResult,
+  (usersResult) => usersResult.data // normalized state object with ids & entries
 )
 
-// Creates memoized selector to get a user by its ID based on the query parameter
-export const selectUserById = (queryParameter: string) =>
-  createSelector(
-    (state: RootState) => selectUsersData(state, queryParameter),
-    (_: unknown, userId: EntityId) => userId,
-    (data: { entities: { [x: string]: unknown } }, userId: string | number) =>
-      data.entities[userId]
-  )
+// getSelectors creates these selector and we rename them with aliases using destructing
+export const {
+  selectAll: selectAllUsers,
+  selectById: selectUserById,
+  selectIds: selectUserIds,
+  // Pass in a selector that return the user slice of a state
+} = usersAdapter.getSelectors(
+  (state: RootState) => selectUsersData(state) ?? initialState
+)
+
+// // Creates memoized selector to get normalized state based on the query parameter
+// const selectUsersData = createSelector(
+//   (state: RootState, queryParameter: string) =>
+//     usersApiSlice.endpoints.getUsers.select(queryParameter)(state),
+//   (usersResult) => usersResult.data ?? initialState
+// )
+
+// // Creates memoized selector to get a user by its ID based on the query parameter
+// export const selectUserById = (queryParameter: string) =>
+//   createSelector(
+//     (state: RootState) => selectUsersData(state, queryParameter),
+//     (_: unknown, userId: EntityId) => userId,
+//     (data: { entities: { [x: string]: unknown } }, userId: string | number) =>
+//       data.entities[userId]
+//   )
