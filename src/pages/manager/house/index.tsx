@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Layout from '../../../components/Layout/Layout'
 import ParseCSV from '../../ParseCsv/ParseCsv'
+import EditMemberInfoCard from '../../../components/ManagerComponents/EditMemberInfoCard/EditMemberInfoCard'
 
 export default function SchedulePage() {
   return (
@@ -14,6 +15,7 @@ export default function SchedulePage() {
         {/* <p>This is the house page.</p> */}
         <main>
           <ParseCSV />
+          <EditMemberInfoCard memberID={'xginQB6SVVZupuGNowwtxurjdk12'} />
         </main>
         <footer>
           <a href="#" rel="noopener noreferrer">
