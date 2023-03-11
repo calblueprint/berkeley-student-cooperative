@@ -19,6 +19,7 @@ import { RootState } from '../store/store'
 
 // waiting on sorted table to only allow selecting 1 checkbox at a time
 // pass in something that's been selected
+// somehow need to refetch on update
 
 type ShiftAssignmentComponentCardProps = {
   day: string
@@ -26,7 +27,7 @@ type ShiftAssignmentComponentCardProps = {
   shiftID: string
 }
 
-// id = attribute name in schema
+
 const headCells: HeadCell<Shift>[] = [
   {
     id: 'displayName',
@@ -68,7 +69,7 @@ const ShiftAssignmentComponentCard: React.FC<
    * @returns ShiftAssignmentComponentCard
    */
 
-  // Store potentialWorkersObject
+  // Store usersObject (access a user object from usersObject.entities[userID])
   const {
     data: usersObject,
     isLoading: isUsersLoading,
@@ -96,13 +97,18 @@ const ShiftAssignmentComponentCard: React.FC<
     },
   ] = useUpdateUserMutation();
 
+  // Stores the shiftObject of the give shift
   const shiftObject = useSelector((state: RootState) =>
-    selectShiftById('EUC')(state, shiftID as EntityId) as Shift
+    selectShiftById(houseID)(state, shiftID as EntityId) as Shift
   )
 
+  // Stores the entity id's of users who could potentially work this shift (will include )
   const [potentialWorkersID, setPotentialWorkersID] = useState<EntityId[] | undefined>([])
+  // Stores the displayEntities (with the added fields of preference, displayName, and hoursUnassigned)
   const [displayEntities, setDisplayEntities] = useState<Dictionary<User>>();
+  // Stores the user that will be assigned to the shift if Save button is clicked (if it's "", no one is assigned)
   const [assignedUserID, setAssignedUserID] = useState<string>("");
+  const hoursRequired = 5;
   
   // On page load, retrieves the shift and sets the shift Object and also populates the potentialWorkers + selectedRows arrays
   useEffect(() => {
@@ -111,12 +117,8 @@ const ShiftAssignmentComponentCard: React.FC<
       sortAndAddFieldsToUsers(userIDs);
     }
   }, [isUsersSuccess]) 
-
-  useEffect(() => {
-    let userIDs = filterIDsByHouseAndAvailability();
-    sortAndAddFieldsToUsers(userIDs);
-  }, []) 
  
+  // Returns the user IDs of users in the house that are available, sets the assignedUserID based on if the shiftObject has an assigned user
   const filterIDsByHouseAndAvailability = () => {
     let workersInHouse = usersObject?.ids.filter(
         (id: EntityId) => usersObject?.entities[id]?.houseID == houseID
@@ -130,12 +132,13 @@ const ShiftAssignmentComponentCard: React.FC<
     return [];
   }
 
-  // update ids of worker display ids
+  // Sorts the potential workers and sets the state
+  // Makes a deepcopy of the entities to add optional fields for display (sets displayEntities)
   const sortAndAddFieldsToUsers = (userIDs: EntityId[]) => {
     if (userIDs === undefined || usersObject === undefined) {
       return;
     }
-    let copy = sortPotentialUsers(usersObject.entities, userIDs, shiftID); //ids
+    let copy = sortPotentialUsers(usersObject.entities, userIDs, shiftID);
     setPotentialWorkersID(copy);
     // makes a deepcopy of entities so we can modify them
     let newDictionary: {[id: string]: User | undefined} = JSON.parse(JSON.stringify(usersObject.entities));
@@ -150,14 +153,16 @@ const ShiftAssignmentComponentCard: React.FC<
       }
       worker.displayName = worker.firstName + " " + worker.lastName;
       worker.preference = numericToStringPreference(worker, shiftID);
-      worker.hoursUnassigned = 5 - worker.hoursAssigned;
+      worker.hoursUnassigned = hoursRequired - worker.hoursAssigned;
     }
     setDisplayEntities(newDictionary);
   }
 
 
-
-  // Function called when assign is clicked to update the backend
+  // Called to update the shift and user objects in the backend
+  // Updates the user originally assigned to the shift (if there exists one)
+  // Updates the shift object
+  // Updates the user newly assigned to the shift (if there exists one)
   const updateUserAndShiftObjects = async () => {
     let originallyAssignedUserID = shiftObject.assignedUser;
     if (originallyAssignedUserID === undefined) {
@@ -172,6 +177,7 @@ const ShiftAssignmentComponentCard: React.FC<
       // clear the shift id from the user's list of shifts (assignedScheduleShifts) + decrease their assigned hours
       let originalUser = usersObject.entities[originallyAssignedUserID];
       if (originalUser !== undefined) {
+        // Update shift list
         let originalAssignedShifts = originalUser.assignedScheduledShifts;
         if (originalAssignedShifts === undefined) {
           originalAssignedShifts = [];
@@ -181,9 +187,9 @@ const ShiftAssignmentComponentCard: React.FC<
         if (index > -1) {
           originalUserShiftsCopy.splice(index, 1);
         }
+        // Update hours
         let originalUserAssignedHours = originalUser.hoursAssigned;
         let originalUserNewHours = originalUserAssignedHours - shiftObject.hours;
-        console.log(originalUserNewHours);
         let dataToUpdateOldUser = { data: {}, houseId: houseID, userId: originallyAssignedUserID }
         dataToUpdateOldUser.data = {
           hoursAssigned: originalUserNewHours,
@@ -221,6 +227,7 @@ const ShiftAssignmentComponentCard: React.FC<
       console.log("undefined id for new user");
       return;
     }
+    // Update list
     let newUserAssignedShifts = newUser.assignedScheduledShifts;
     if (newUserAssignedShifts === undefined) {
       newUserAssignedShifts = [];
@@ -230,8 +237,9 @@ const ShiftAssignmentComponentCard: React.FC<
     if (index == -1) {
       newUserShiftsCopy.push(shiftID);
     }
+
+    // Update hours
     let newAssignedHours = newUser.hoursAssigned + shiftObject.hours;
-    console.log(newAssignedHours);
     let dataToUpdateNewUser = { data: {}, houseId: houseID, userId: assignedUserID }
     dataToUpdateNewUser.data = {
       hoursAssigned: newAssignedHours,
@@ -240,9 +248,11 @@ const ShiftAssignmentComponentCard: React.FC<
     await updateUser(dataToUpdateNewUser);
   }
 
+  // Sets the state variable of the currently assigned variable
+  // If the last row clicked is the same as the assignedUserID, it untoggled them from being assigned
   const updateAssignedUser = (event: React.MouseEvent<unknown>, id: string) => {
     if (id === assignedUserID) {
-      console.log("untoggle");
+      console.log("Untoggling the current user");
       setAssignedUserID("");
     } else {
       setAssignedUserID(id);
@@ -260,7 +270,6 @@ const ShiftAssignmentComponentCard: React.FC<
           headCells = {headCells}
           isCheckable = {true}
           isSortable = {false}
-          // handle row click here???
           handleRowClick = {updateAssignedUser}
         />
       }
