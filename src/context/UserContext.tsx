@@ -3,6 +3,8 @@ import { createContext, useContext } from 'react'
 import { useFirebaseAuth } from '../firebase/queries/auth'
 import { defaultUser } from '../firebase/queries/user'
 import { defaultHouse } from '../firebase/queries/house'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '../firebase/clientApp'
 
 export const authUserContext = createContext({
   authUser: defaultUser, // added
@@ -40,6 +42,19 @@ export const AuthUserProvider = ({ children }: any) => {
       }{' '}
     </authUserContext.Provider>
   )
+}
+
+export const AuthState = () => {
+  const monitorAuthState = async () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('Auth state changed: ' + user)
+      }
+    })
+  }
+
+  monitorAuthState()
+  return <React.Fragment></React.Fragment>
 }
 
 export const useUserContext = () => useContext(authUserContext)
