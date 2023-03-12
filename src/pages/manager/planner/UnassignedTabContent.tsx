@@ -173,10 +173,6 @@ export const UnassignedTabContent = () => {
     )
   }, [filterBy, shifts, data])
 
-  console.log(displayShifts);
-  console.log(data?.entities as Dictionary<
-    Shift & { [key in keyof Shift]: string | number }
-  >)
   if (isLoading) {
     return <div>Loading...</div>
   } else if (isError) {
