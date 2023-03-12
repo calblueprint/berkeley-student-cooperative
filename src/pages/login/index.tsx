@@ -13,6 +13,9 @@ import { useFirebaseAuth } from '../../firebase/queries/auth'
 import Layout from '../../components/Layout/Layout'
 import { useRouter } from 'next/router'
 import { useLoginMutation } from '../../store/apiSlices/authApiSlice'
+import { selectCurrentUser } from '../../store/slices/authSlice'
+import { useSelector } from 'react-redux'
+import { User } from '../../types/schema'
 
 export default function LoginPage() {
   /**
@@ -23,7 +26,8 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { signIn, authUser, register } = useFirebaseAuth()
+  // const { signIn, authUser, register } = useFirebaseAuth()
+  const authUser: User = useSelector(selectCurrentUser)
 
   const [
     login,
@@ -46,7 +50,7 @@ export default function LoginPage() {
 
   // pushes the router to the member/manager default page if the user is set in the context
   useEffect(() => {
-    if (authUser.userID != '') {
+    if (authUser) {
       if (authUser.role == 'Member' || authUser.role == 'member') {
         router.push('/member/dashboard')
       } else {
@@ -59,7 +63,7 @@ export default function LoginPage() {
   const createAccount = () => {
     router.push('/createAccount')
   }
-  return authUser.userID != '' ? (
+  return authUser ? (
     <Layout />
   ) : (
     <div className={styles.login}>
