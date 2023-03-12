@@ -10,6 +10,17 @@ import {
   QuerySnapshot,
   DocumentSnapshot,
 } from 'firebase/firestore'
+import type { BaseQueryFn } from '@reduxjs/toolkit/query'
+
+// import { streamToObject } from '../../utils/utils'
+// import { Shift, User, House } from '../../types/schema'
+
+// type Arg = {
+//   url: string
+//   method: string
+//   data: object
+//   params: object
+// }
 
 // export type BaseQueryFn<
 //   Args = any,
@@ -52,42 +63,36 @@ import {
 //   | { error: unknown; data?: undefined }
 //   | null
 //   | undefined
-const baseQuery = fetchBaseQuery({
-  baseUrl: 'fakeUrl',
-  fetchFn: async (input: Response) => {
-    //input: RequestInfo, init: RequestInit | undefined) => {
-    // console.log('INPUT: ', input)
-    // console.log('INIT: ', init)
-    // console.log('ARGS: ', api)
-    // const resErr: MyResponse = { error: {} }
-    // const resOk: MyResponse = { data: new Response() }
 
-    const resObj: { data: unknown; id: string }[] = []
-    const okStatus = {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    }
-    const errStatus = {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    }
+const customBaseQuery: BaseQueryFn<
+  unknown, // Args
+  unknown // Result
+> = (arg) => {
+  // console.log(arg)
+  const result = async ({
+    url,
+    method,
+    body,
+  }: // params,
+  {
+    url: string
+    method: string
+    body: object
+    // params: object
+  }) => {
+    // console.log('method: ', method)
+    // console.log('url: ', url)
+    // console.log('data: ', body)
+    // console.log('params: ', params)
 
-    const { method, url, body } = input
-
-    const pathArray = url
-      .split('fakeUrl')[1]
-      .split('/')
-      .filter((p: string) => p.length > 0)
-
+    const pathArray = url.split('/').filter((p: string) => p.length > 0)
+    const resObj: unknown[] = []
     let isCollection = false
     // console.log(pathArray)
     if (pathArray.length === 0) {
-      return new Response(
-        JSON.stringify({
-          error: { message: 'No path to database entered', isError: true },
-        }),
-        errStatus
-      )
+      return {
+        error: { message: 'No path to database entered', isError: true },
+      }
     }
 
     let path = ''
@@ -99,7 +104,7 @@ const baseQuery = fetchBaseQuery({
       }
     })
 
-    console.log(path)
+    // console.log(path)
     if (pathArray.length % 2 !== 0) {
       isCollection = true
     }
@@ -110,31 +115,30 @@ const baseQuery = fetchBaseQuery({
           //** Check weather the request is a collection or a document */
           if (isCollection) {
             //** If the query is a collection, get the full collection from the firebase */
-            const querySnapshot: QuerySnapshot<unknown> = await getDocs(
-              collection(firestore, path)
-            )
+            const query = collection(firestore, path)
+            const querySnapshot: QuerySnapshot<unknown> = await getDocs(query)
 
             // console.log('Collection SnapShot.docs: ', querySnapshot.docs)
             //** Verify that the object exist */
             if (querySnapshot.empty) {
-              return new Response(
-                JSON.stringify({
-                  error: { message: 'collection is Empty', isError: true },
-                }),
-                errStatus
-              )
+              return {
+                error: { message: 'collection is Empty', isError: true },
+              }
             }
 
             //** extract the data from the snapshot object and put it into a new array */
             querySnapshot.forEach((doc) => {
               // doc.data() is never undefined for query doc snapshots
               const data = doc.data()
-              resObj.push({ data: data, id: doc.id.toString() })
+              // console.log('firebase data: ', data)
+              if (data) {
+                resObj.push({ id: doc.id.toString(), ...data })
+              }
               // console.log(doc.id, ' => ', doc.data())
             })
 
             // console.log(resObj)
-            return new Response(JSON.stringify({ data: resObj }), okStatus)
+            return { data: resObj }
           } else {
             //** If the query is a document, get the document from firebase */
             const snapshot: DocumentSnapshot<unknown> = await getDoc(
@@ -143,85 +147,74 @@ const baseQuery = fetchBaseQuery({
 
             //** Check if the document exist */
             if (!snapshot.exists()) {
-              return new Response(
-                JSON.stringify({
-                  error: { message: 'Document does not exist', isError: true },
-                }),
-                errStatus
-              )
+              return {
+                error: { message: 'Document does not exist', isError: true },
+              }
             }
 
             //** Add resObj to resObj array */
             resObj.push({
-              data: snapshot.data(),
               id: pathArray[pathArray.length - 1],
+              ...(snapshot.data() ?? null),
             })
 
             // console.log(resObj)
             //** Return the resObj wrapped in a Response object */
-            return new Response(JSON.stringify({ data: resObj }), okStatus)
+            return { data: resObj }
           }
 
         case 'POST':
           //** Verify that the path is a collection  */
           if (!isCollection) {
-            return new Response(
-              JSON.stringify({
-                error: { message: 'Path must be a collection', isError: true },
-              }),
-              errStatus
-            )
+            return {
+              error: { message: 'Path must be a collection', isError: true },
+            }
           }
 
           //** Verify that the body is not empty */
           if (!body) {
-            return new Response(
-              JSON.stringify({
-                error: { message: 'Body must not be empty', isError: true },
-              }),
-              errStatus
-            )
+            return {
+              error: { message: 'Body must not be empty', isError: true },
+            }
           }
+
+          // const postData = await streamToObject(body)
 
           //** Create a new document with the given BODY */
           const newDoc = await addDoc(collection(firestore, path), body)
-
+          // console.log(newDoc)
           //** Add resObj to the resObj array */
-          resObj.push({ data: newDoc, id: newDoc.id.toString() })
+          // resObj.push({ newDoc.id.toString() })
 
           //** Return the resObj wrapped in a Response object */
-          return new Response(JSON.stringify({ data: resObj }), okStatus)
+          return { data: 'success' } //resObj }
 
         case 'PATCH':
           //** Verify that the path is a document  */
           if (isCollection) {
-            return new Response(
-              JSON.stringify({
-                error: { message: 'Path must be a Document', isError: true },
-              }),
-              errStatus
-            )
+            return {
+              error: { message: 'Path must be a Document', isError: true },
+            }
           }
 
           //** Verify that the body is not empty */
           if (!body) {
-            return new Response(
-              JSON.stringify({
-                error: { message: 'Body must not be empty', isError: true },
-              }),
-              errStatus
-            )
+            return {
+              error: { message: 'Body must not be empty', isError: true },
+            }
           }
 
+          // const patchData = await streamToObject(body)
+
           //** Patch document with new data */
-          const updatedDoc = await updateDoc(doc(firestore, path), { ...body })
+          const updatedDoc = await updateDoc(doc(firestore, path), body)
 
           //** Add resObj to the resObj array and return it */
-          return new Response(
-            JSON.stringify({
+          return {
+            data: {
               message: `New Document created with id: ${updatedDoc}`,
-            })
-          )
+            },
+          }
 
         case 'DELETE':
           break
@@ -232,20 +225,12 @@ const baseQuery = fetchBaseQuery({
       console.log(error)
       return { error }
     }
-  },
-})
+  }
+  return result(arg)
+}
 
 export const apiSlice = createApi({
-  baseQuery,
-  // tagTypes: ['Shift', 'User'],
+  baseQuery: customBaseQuery,
+  tagTypes: ['Shift', 'User', 'House'],
   endpoints: () => ({}),
 })
-
-// export const { useGetHousesQuery } = apiSlice
-
-// getHouses: builder.query({
-//   query: (path) => ({
-//     url: `${path}`,
-//     method: 'GET',
-//   }),
-// }),
