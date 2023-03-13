@@ -49,7 +49,7 @@ const shiftHeadCells: HeadCell<
 ]
 
 const userHeadCells: HeadCell<
-  Shift & { [key in keyof Shift]: string | number }
+  User & { [key in keyof User]: string | number }
 >[] = [
   {
     id: 'email',
@@ -128,6 +128,7 @@ export const UnassignedTabContent = () => {
   ) => {
     // console.log('event: ', event, 'shift: ', shiftId)
     const shift = data?.entities[shiftId]
+
     setModalShift(shift)
     if (shift && shift.usersAssigned && shift.usersAssigned[0]) {
       setModalUser(users?.entities[shift.usersAssigned[0]])
@@ -154,7 +155,9 @@ export const UnassignedTabContent = () => {
 
       setShifts(
         data.ids?.filter(
-          (id: EntityId) => data.entities[id]?.assignedUser === undefined || data.entities[id]?.assignedUser?.length === 0
+          (id: EntityId) =>
+            data.entities[id]?.assignedUser === undefined ||
+            data.entities[id]?.assignedUser?.length === 0
         )
       )
     }
@@ -182,7 +185,6 @@ export const UnassignedTabContent = () => {
   } else {
     return (
       <>
-        {/* <ShiftAssignmentComponentCard day = "Monday" houseID = "EUC" shiftID = "7qHP4WiNTzU4d38nQDan"/> */}
         {/* <UnassignedShiftList /> */}
         <Select value={filterBy} onChange={handleFilterChange}>
           {filters.map((day) => (
@@ -237,6 +239,7 @@ export const UnassignedTabContent = () => {
                   <Item>{modalShift?.timeWindowDisplay}</Item>
                 </Grid>
                 <Grid textAlign="left" xs={12}>
+                  Assigned user:
                   <Item sx={{ textAlign: 'left', fontSize: 'large' }}>
                     {modalUser ? modalUser.firstName : `No user assigned`}
                   </Item>
@@ -261,6 +264,12 @@ export const UnassignedTabContent = () => {
             </Paper>
           </DialogContent>
         </Dialog>
+
+        <ShiftAssignmentComponentCard
+          day="Monday"
+          houseID="EUC"
+          shiftID="7qHP4WiNTzU4d38nQDan"
+        />
       </>
     )
   }
