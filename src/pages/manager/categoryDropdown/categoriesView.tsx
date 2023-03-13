@@ -17,7 +17,7 @@ import {
 } from '@mui/material'
 import Icon from '../../../assets/Icon'
 import AddIcon from '@mui/icons-material/Add';
-
+import { useGetHouseQuery } from '../../../store/apiSlices/houseApiSlice'
 import styles from './CategoriesView.module.css'
 import CategoryTable from '../../../components/ManagerComponents/CategoryTable/CategoryTable'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -31,6 +31,8 @@ const theme = createTheme({
     },
   },
 });
+
+
 
 type CategoriesViewProps = {
   houseID: string
@@ -47,6 +49,13 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
    * @returns CategoriesView
    */
 
+  const {
+    data: dataHouse,
+    isLoading
+  } = useGetHouseQuery('EUC')
+
+  // console.log("data", dataHouse, "is the Query loading:", isLoading, "Was the query successful:", 
+  // isSuccess, "is there an error:", isError,"error message:", error)
   // Retrieved house object
   const [house, setHouse] = useState<House>()
   // Stores whether the modal to create a new category is opened
@@ -54,14 +63,28 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
   // Stores the new category name
   const [newCategoryName, setNewCategoryName] = useState('')
 
+  const [houseInfo, setHouseInfo] = useState<string[] | undefined>(undefined)
+
   // Retrieves the house object given the houseID
   useEffect(() => {
-    const retrieveHouse = async () => {
-      const h = await getHouse(houseID)
-      setHouse(h)
-    }
-    retrieveHouse()
+    // const retrieveHouse = async () => {
+    //   const h = await getHouse(houseID)
+    //   setHouse(h)
+    // }
+    // retrieveHouse()
+   
+    //console.log("data", dataHouse)
   }, [houseID])
+  useEffect(() => {
+    if (dataHouse?.entities){
+      const dataOfHouse = Object.entries(dataHouse?.entities)[0][1]
+      if(dataOfHouse.categories){
+        setHouseInfo(Object.entries(dataOfHouse.categories))
+      }
+    
+    }
+    
+  }, [dataHouse])
 
   // Opens modal
   const openModal = () => {
@@ -94,6 +117,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     closeModal()
   }
   const buttonStyling = { backgroundColor: "#1B202D", borderRadius: 1, marginBottom: 2}
+
   return (
     <div className={styles.categoryViewContainer}>
       <ThemeProvider theme={theme}>
@@ -104,7 +128,15 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         <AddIcon sx={{fontSize: 19, marginLeft: .5, paddingBottom: .2}}/>
       </Button>
       </ThemeProvider>
-      <CategoryTable/>
+      {(!isLoading && houseInfo) ? 
+          <CategoryTable categoriesArray={houseInfo}/> : 
+        <div>
+          {(isLoading && houseInfo) ?
+          <h1>Loading...</h1>
+          : <h1>No categories Exist in this house, add one now!</h1> }
+        </div>
+      }
+      
       {isModalOpened && (
         <Dialog
           fullWidth
