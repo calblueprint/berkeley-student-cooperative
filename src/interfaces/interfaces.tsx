@@ -72,4 +72,5 @@ export interface HeadCell<
   isNumeric: boolean
   isSortable: boolean
   align: 'left' | 'center' | 'right' | 'justify' | 'inherit' | undefined
+  transformFn?: (value: T[keyof T]) => string
 }
