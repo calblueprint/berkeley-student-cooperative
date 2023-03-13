@@ -62,8 +62,8 @@ export default function SchedulePage() {
           </Tabs>
         </Box>
         <TabPanel value={currPage} index={0}>
-          {/* <UnassignedTabContent /> */}
-          <ReduxTesting />
+          <UnassignedTabContent />
+          {/* <ReduxTesting /> */}
         </TabPanel>
         <TabPanel value={currPage} index={1}>
           <ShiftSchedule />
