@@ -10,19 +10,48 @@ import { getCategories } from "../../../firebase/queries/house";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import styles from './CategoryTable.module.css'
-const CategoryTable = () => {
-    const [houseCategories, setHouseCategories] = useState<[string, Map<string,string>][] | undefined>(undefined)
-    
-    console.log("hey there.")
-    useEffect(() => {
+import { RootState } from "../../../store/store";
+import { selectShiftById } from "../../../store/apiSlices/shiftApiSlice";
+import { EntityId } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
+import { Shift } from "../../../types/schema";
+
+type ShiftNameRowProps = {
+    shiftID: string;
+}
+const ShiftNameRow: React.FC<ShiftNameRowProps> = ({
+    shiftID
+  }: ShiftNameRowProps) => {
+    // const CurrShift = (shiftID: EntityId) => {
+    //     useSelector(
+    //     (state: RootState) => 
+    //     selectShiftById('EUC')(state, shiftID)) as Shift
+    // }
+    console.log("hello")
+    const currShift = useSelector((state: RootState) => selectShiftById('EUC')(state, shiftID as EntityId) as Shift)
+    console.log("currShift", currShift, "value", shiftID)
+    return (
+
+
+        <TableRow >
+            <TableCell sx={{fontSize: 18, marginLeft: 28}} >{currShift?.name}</TableCell>
+        </TableRow> 
         
-        getCategories('EUC').then((category) => {
-            setHouseCategories(Object.entries(Object.fromEntries(category)))
-        }
-        )
-    }, [])
+    );
+};
+
+type CategoryTableProps = {
+    categoriesArray: string[]
+}
+const CategoryTable: React.FC<CategoryTableProps> = ({
+    categoriesArray,
+  }: CategoryTableProps) => {
+    const [houseCategories, setHouseCategories] = useState<string[] | undefined>(undefined)
     
- 
+    useEffect(() => {
+        setHouseCategories(categoriesArray)
+    }, [categoriesArray])
+    
     return (
     <div>
         {houseCategories?.map((category, index) => {
@@ -38,7 +67,7 @@ const CategoryTable = () => {
     );
 };
 type IndividualCategoryProps = {
-    category: [string, Map<string, string>]
+    category: any;
 }
 const IndividualCategory: React.FC<IndividualCategoryProps> = ({
     category,
@@ -52,7 +81,11 @@ const IndividualCategory: React.FC<IndividualCategoryProps> = ({
     }
     const shiftNumDisplay = {fontSize: 18, backgroundColor: '#EFEFEF', padding: 1, marginBottom:1, marginLeft: 1, borderRadius: 1}
 
-    const shiftItems = Object.entries(Object.fromEntries(category[1]));
+    const shiftItems = category[1];
+    
+//     const shiftObject = useSelector((state: RootState) =>
+//     selectShiftById(houseID)(state, shiftID as EntityId) as Shift
+//   )
     return (
         
         <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
@@ -69,12 +102,12 @@ const IndividualCategory: React.FC<IndividualCategoryProps> = ({
                 </TableHead>
                 <TableBody>
                 
-                    {isExpanded && shiftItems?.map((value, index) => {
+                    {isExpanded && shiftItems?.map((value) => {
                         return (
-                            <TableRow key={index}>
-                                <TableCell sx={{fontSize: 18, marginLeft: 28}} >{value[1]}</TableCell>
-                            </TableRow>   
+                            <ShiftNameRow shiftID={value} key={value}/> 
                         )
+                        
+                        
                     })}
                     
                 </TableBody>
@@ -85,5 +118,7 @@ const IndividualCategory: React.FC<IndividualCategoryProps> = ({
                 
     )
 }
+
+
 
 export default CategoryTable;
