@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   MenuItem,
   Select,
@@ -153,7 +154,7 @@ export const UnassignedTabContent = () => {
 
       setShifts(
         data.ids?.filter(
-          (id: EntityId) => data.entities[id]?.usersAssigned?.length === 0
+          (id: EntityId) => data.entities[id]?.assignedUser === undefined || data.entities[id]?.assignedUser?.length === 0
         )
       )
     }
@@ -163,7 +164,6 @@ export const UnassignedTabContent = () => {
   // the filtered shifts (filtered by day)
   useEffect(() => {
     // console.log('Changing filters')
-
     setDisplayShifts(
       filterBy === filters[0]
         ? shifts
