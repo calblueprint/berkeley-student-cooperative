@@ -125,12 +125,12 @@ export const addCategory = async (
   if (colSnap.exists()) {
     const promise: Promise<House> = parseHouse(colSnap)
     const house = await promise
-    var houseCategories = house.categories
+    const houseCategories = house.categories
 
     //checks if category already exists, {} is nested
     if (!houseCategories?.has(newCategory)) {
       // Nested maps -> object
-      let newMap = new Map<string, object>()
+      const newMap = new Map<string, object>()
       houseCategories.forEach((value, key) => {
         newMap.set(key, mapToObject(value))
       })
@@ -179,18 +179,22 @@ export const updateCategory = async (
   if (colSnap.exists()) {
     const promise: Promise<House> = parseHouse(colSnap)
     const house = await promise
-    var houseCategories = objectToMap(house.categories)
-
+    const houseCategories = (house.categories)
+    
     //checks if shift is a valid shift object
     if (shift.name && shift.shiftID && shift.category) {
-      //checks if category corresponding to shift param is already in the firebase
+      //checks if category corresponding to shift param is already in the firebase\
+      
       if (houseCategories?.has(shift.category)) {
-        const currCatMap = objectToMap(houseCategories.get(shift.category))
+        const currCatMap = houseCategories.get(shift.category)
+        console.log("currCatMap has this shift already:", currCatMap.has(shift.shiftID))
         //checks if shift already exists in the nested category map
-        if (!currCatMap.has(shift.shiftID)) {
+        
+        if (currCatMap && !currCatMap.has(shift.shiftID)) {
           //updates nested category map in firebase to include new shift
+          console.log("Inside for loop that chekcs currcatmap", (currCatMap  && !currCatMap.has(shift.shiftID)))
           currCatMap.set(shift.shiftID, shift.name)
-          houseCategories.set(shift.category, mapToObject(currCatMap))
+          houseCategories.set(shift.category, currCatMap)
 
           const data = {
             categories: mapToObject(houseCategories),
@@ -267,7 +271,7 @@ export const removeShiftFromCategory = async (
   if (colSnap.exists()) {
     const promise: Promise<House> = parseHouse(colSnap)
     const house = await promise
-    var houseCategories = objectToMap(house.categories)
+    const houseCategories = objectToMap(house.categories)
 
     //checks if shift is a valid shift object
     if (shift.name && shift.shiftID && shift.category) {
@@ -319,15 +323,19 @@ export const removeCategory = async (
   if (colSnap.exists()) {
     const promise: Promise<House> = parseHouse(colSnap)
     const house = await promise
-    var houseCategories = objectToMap(house.categories)
+    const houseCategories = house.categories
 
     //checks if category exists
+    console.log("houseCategories from FB", houseCategories)
+    console.log(oldCategory, "is in houseCategories:", houseCategories?.has(oldCategory))
     if (houseCategories?.has(oldCategory)) {
       //if the categories map it removes the entire map of oldCategory, containing everything inside it
       houseCategories.delete(oldCategory)
+      console.log("houseCategories before update", houseCategories)
       const data = {
-        categories: mapToObject(houseCategories),
+        categories: (houseCategories),
       }
+      console.log("data being sent to FB", data)
       await updateDoc(docRef, data)
     } else {
       console.log('The', oldCategory, ' category does not exist')
@@ -347,8 +355,8 @@ const parseHouse = async (doc: any) => {
   const categories = data.categories
   const schedule = data.schedule
   const userPINs = data.userPINs
-  let categMap = objectToMap(categories)
-  let newMap = new Map<string, Map<string, string>>()
+  const categMap = objectToMap(categories)
+  const newMap = new Map<string, Map<string, string>>()
   categMap.forEach((value, key) => {
     newMap.set(key, objectToMap(value))
   })
