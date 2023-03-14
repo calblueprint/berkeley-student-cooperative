@@ -8,8 +8,8 @@ import {
 import Image from 'next/image'
 import BscLogo from '../../assets/bsclogo.png'
 import styles from './Login.module.css'
-import { useContext, useEffect, useState } from 'react'
-import { useFirebaseAuth } from '../../firebase/queries/auth'
+import { useEffect, useState } from 'react'
+// import { useFirebaseAuth } from '../../firebase/queries/auth'
 import Layout from '../../components/Layout/Layout'
 import { useRouter } from 'next/router'
 import { useLoginMutation } from '../../store/apiSlices/authApiSlice'
@@ -27,30 +27,26 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   // const { signIn, authUser, register } = useFirebaseAuth()
-  const authUser: User = useSelector(selectCurrentUser)
+  const authUser = useSelector(selectCurrentUser) as User
 
   const [
     login,
     {
-      isLoading: loginLoading,
-      isSuccess: loginSuccess,
-      isError: loginError,
-      error: errorLoggingIn,
+      // isLoading: loginLoading,
+      // isSuccess: loginSuccess,
+      // isError: loginError,
+      // error: errorLoggingIn,
     },
   ] = useLoginMutation({})
 
   const login2 = async () => {
-    // tries to log in with given credentials
-    // if (email.length > 0 && password.length > 0) {
-    //   await signIn(email, password)
-    // }
-    // console.log('email: ', email, ' password: ', password)
-    login({ email, password })
+    await login({ email, password })
   }
 
   // pushes the router to the member/manager default page if the user is set in the context
   useEffect(() => {
-    if (authUser) {
+    if (authUser.id) {
+      console.log('------authUser: ', authUser)
       if (authUser.role == 'Member' || authUser.role == 'member') {
         router.push('/member/dashboard')
       } else {
@@ -63,7 +59,7 @@ export default function LoginPage() {
   const createAccount = () => {
     router.push('/createAccount')
   }
-  return authUser ? (
+  return authUser.id ? (
     <Layout />
   ) : (
     <div className={styles.login}>

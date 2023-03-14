@@ -71,7 +71,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         try {
           const result = await signOut(auth)
           console.log('logout result: ' + result)
-          return { data: result }
+          return { data: 'Logged Out' }
         } catch (error) {
           return { error }
         }

@@ -3,7 +3,10 @@ import styles from './Layout.module.css'
 import MemberNavbar from '../MemberComponents/Navbar/MemberNavbar'
 import Head from 'next/head'
 import ManagerNavbar from '../ManagerComponents/Navbar/ManagerNavbar'
-import { useUserContext } from '../../context/UserContext'
+// import { useUserContext } from '../../context/UserContext'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../store/slices/authSlice'
+import { User } from '../../types/schema'
 
 const Layout = ({ children, title }: any) => {
   /**
@@ -15,7 +18,8 @@ const Layout = ({ children, title }: any) => {
    * @returns container for layout of page
    */
 
-  const { authUser } = useUserContext()
+  // const { authUser } = useUserContext()
+  const authUser = useSelector(selectCurrentUser) as User
 
   return authUser.role == 'Member' || authUser.role == 'member' ? (
     <div className={styles.container}>

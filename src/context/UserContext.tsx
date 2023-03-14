@@ -55,11 +55,12 @@ export const AuthState = () => {
     console.log('AuthState has ran')
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // console.log('Auth state changed: ' + user)
+        console.log('Auth state changed: ' + user)
         await establishContext(user.uid)
 
         // console.log('Error: ', error)
       } else {
+        console.log('Auth not authorized')
         router.replace('/login')
       }
     })
