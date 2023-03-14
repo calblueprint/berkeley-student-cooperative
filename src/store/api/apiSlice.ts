@@ -1,5 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { firestore } from '../../firebase/clientApp'
+import { createApi } from '@reduxjs/toolkit/query/react'
+import { firestore, auth } from '../../firebase/clientApp'
+import { onAuthStateChanged } from 'firebase/auth'
 import {
   collection,
   doc,
@@ -84,6 +85,18 @@ const customBaseQuery: BaseQueryFn<
     // console.log('url: ', url)
     // console.log('data: ', body)
     // console.log('params: ', params)
+    let isAuthorized = false
+    await onAuthStateChanged(auth, (user) => {
+      if (user) {
+        isAuthorized = true
+      } else {
+        isAuthorized = false
+      }
+    })
+
+    if (!isAuthorized) {
+      return { error: 'not authorized' }
+    }
 
     const pathArray = url.split('/').filter((p: string) => p.length > 0)
     const resObj: unknown[] = []

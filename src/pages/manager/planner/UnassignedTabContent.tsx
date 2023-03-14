@@ -19,6 +19,9 @@ import { HeadCell, Shift, User } from '../../../interfaces/interfaces'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import { useSelector } from 'react-redux'
+import { selectCurrentHouse } from '../../../store/slices/authSlice'
+import { House } from '../../../types/schema'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -92,7 +95,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }))
 
 export const UnassignedTabContent = () => {
-  const { house } = useUserContext()
+  // const { house } = useUserContext()
+  const house = useSelector(selectCurrentHouse) as House
   const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
     house?.houseID
   )

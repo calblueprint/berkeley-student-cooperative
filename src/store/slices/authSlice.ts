@@ -4,8 +4,8 @@ import { RootState } from '../store'
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    currentHouse: null,
-    currentUser: null,
+    currentHouse: {},
+    currentUser: {},
   },
   reducers: {
     setCredentials: (state, action) => {
@@ -21,8 +21,8 @@ const authSlice = createSlice({
       state.currentUser = action.payload
     },
     logOut: (state) => {
-      state.currentUser = null
-      state.currentHouse = null
+      state.currentUser = {}
+      state.currentHouse = {}
     },
   },
 })
