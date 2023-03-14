@@ -140,4 +140,8 @@ const establishUserContext = async (userId: string) => {
   }
 }
 
-export const { useLoginMutation, useAuthLogOutMutation } = authApiSlice
+export const {
+  useLoginMutation,
+  useAuthLogOutMutation,
+  useEstablishContextMutation,
+} = authApiSlice
