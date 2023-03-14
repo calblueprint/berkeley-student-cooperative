@@ -36,6 +36,7 @@ type AvailableUsersTableProps = {
   day: string
   houseID: string
   shiftID: string
+  unselect: boolean
   handleAssignedUserId: (userId: string) => void
 }
 
@@ -93,6 +94,7 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
   houseID,
   shiftID,
   handleAssignedUserId,
+  unselect,
 }: AvailableUsersTableProps) => {
   /**
    * A modal that appears when a manager wants to assign people/unassign people from a shift.
@@ -167,6 +169,11 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
   useEffect(() => {
     handleAssignedUserId(assignedUserID)
   }, [assignedUserID, handleAssignedUserId])
+  useEffect(() => {
+    if (unselect) {
+      handleDeselectUser()
+    }
+  }, [unselect])
 
   useEffect(() => {
     // console.log('AssigneUserId: ', assignedUserID)
