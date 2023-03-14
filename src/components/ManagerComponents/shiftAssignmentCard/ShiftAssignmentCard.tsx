@@ -33,10 +33,6 @@ export const ShiftAssignmentCard = ({
   handleClose: () => void
   open: boolean
 }) => {
-  // const shift: Shift = useSelector(
-  //   (state: RootState) =>
-  //     selectShiftById('EUC')(state, shiftId as EntityId) as Shift
-  // )
   const [assignedUserId, setAssignedUserID] = useState<EntityId>('')
 
   const handleAssignedUserId = (userId: EntityId) => {
@@ -64,7 +60,7 @@ export const ShiftAssignmentCard = ({
           </DialogTitle>
           <DialogContent>
             <SelectedUserComponent
-              userId={shift.assignedUser}
+              userId={'ELKhW17Qo0O0t4Lb5nRFEherFNr2'}
               handleClick={() => console.log('CLICK')}
             />
             <AvailableUsersTable
