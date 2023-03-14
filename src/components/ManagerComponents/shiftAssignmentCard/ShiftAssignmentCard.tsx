@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Dialog, DialogContent, DialogTitle } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Stack } from '@mui/material'
 import { EntityId } from '@reduxjs/toolkit'
 import ShiftInfoHeader from '../shiftInfoHeader/ShiftInfoHeader'
 import styles from './ShiftAssignmentCard.module.css'
@@ -62,13 +62,15 @@ export const ShiftAssignmentCard = ({
             />
           </DialogTitle>
           <DialogContent>
-            <DisplayAssignedUser userId={assignedUserId} />
-            <AvailableUsersTable
-              day={selectedDay}
-              houseID={'EUC'}
-              shiftID={shiftId as string}
-              handleAssignedUserId={handleAssignedUserId}
-            />
+            <Stack spacing={2}>
+              <DisplayAssignedUser userId={assignedUserId} />
+              <AvailableUsersTable
+                day={selectedDay}
+                houseID={'EUC'}
+                shiftID={shiftId as string}
+                handleAssignedUserId={handleAssignedUserId}
+              />
+            </Stack>
           </DialogContent>
         </Dialog>
       </>
