@@ -1,9 +1,9 @@
 import { Close } from '@mui/icons-material'
 import { Button } from '@mui/material'
 
-const XButton = ({ handleClose }: { handleClose: () => void }) => {
+const XButton = ({ handleClick }: { handleClick: () => void }) => {
   return (
-    <Button onClick={() => handleClose()}>
+    <Button onClick={() => handleClick()}>
       <Close color="secondary" />
     </Button>
   )

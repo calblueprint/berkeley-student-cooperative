@@ -7,6 +7,7 @@ import { Shift, User } from '../../../types/schema'
 import { useSelector } from 'react-redux'
 import { selectShiftById } from '../../../store/apiSlices/shiftApiSlice'
 import { selectUserById } from '../../../store/apiSlices/userApiSlice'
+import SelectedUserComponent from '../selectedUserComponent/SelectedUserComponent'
 
 const DisplayAssignedUser = ({ userId }: { userId?: EntityId }) => {
   const user: User = useSelector(
@@ -54,7 +55,10 @@ export const ShiftAssignmentCard = ({
             />
           </DialogTitle>
           <DialogContent>
-            <DisplayAssignedUser userId={shift.assignedUser} />
+            <SelectedUserComponent
+              userId={shift.assignedUser}
+              handleClick={() => console.log('CLICK')}
+            />
           </DialogContent>
         </Dialog>
       </>
