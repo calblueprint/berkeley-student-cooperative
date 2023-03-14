@@ -27,7 +27,7 @@ const SelectedUserComponent = ({
 }) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Grid container>
+      <Grid container bgcolor={'#D1FAE5'}>
         <Grid xs={'auto'} md={'auto'} lg={'auto'}>
           <DisplayAssignedUser userId={userId} />
         </Grid>
