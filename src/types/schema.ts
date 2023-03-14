@@ -33,12 +33,13 @@ export type User = {
   // TODO: this should be removed since we are not tracking fines, we are tracking penatly hours
   totalFines?: number
   // Map of availabilities (day: time windows when they're free)
-  availabilities: { string: number[] }
+  availabilities: { day: number[] }[]
   // Map of preferences (taskID: (0/1/2 (higher number = greater preference)))
-  preferences: { string: number }
+  preferences: { taskID: number }[]
 
   //** new attributes below */
-
+  preference?: string
+  hoursUnassigned?: number
   // full name that gets displayed
   displayName?: string
   // The scheduled shifts that the user has been assigned
