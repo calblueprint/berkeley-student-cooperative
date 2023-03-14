@@ -10,18 +10,20 @@ export const ShiftAssignmentCard = ({
   shiftId,
   selectedDay,
   handleClose,
+  handleEditShift,
   open,
 }: {
   shiftId?: EntityId
   selectedDay: string
   handleClose: () => void
+  handleEditShift: (shiftId: string) => void
   open: boolean
 }) => {
   const [assignedUserId, setAssignedUserID] = useState<EntityId>('')
   const [unselect, setUnselect] = useState<boolean>(false)
 
   const handleAssignedUserId = (userId: EntityId) => {
-    console.log(userId)
+    // console.log(userId)
     setAssignedUserID(userId)
     setUnselect(false)
   }
@@ -58,6 +60,8 @@ export const ShiftAssignmentCard = ({
               houseID={'EUC'}
               shiftID={shiftId as string}
               handleAssignedUserId={handleAssignedUserId}
+              handleEditShift={handleEditShift}
+              handleClose={handleClose}
               unselect={unselect}
             />
           </DialogContent>
