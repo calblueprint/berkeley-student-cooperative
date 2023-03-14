@@ -1,12 +1,14 @@
+import { useState } from 'react'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 import { EntityId } from '@reduxjs/toolkit'
 import ShiftInfoHeader from '../shiftInfoHeader/ShiftInfoHeader'
 import styles from './ShiftAssignmentCard.module.css'
 import { RootState } from '../../../store/store'
-import { Shift, User } from '../../../types/schema'
+// import { Shift, User } from '../../../types/schema'
 import { useSelector } from 'react-redux'
-import { selectShiftById } from '../../../store/apiSlices/shiftApiSlice'
+// import { selectShiftById } from '../../../store/apiSlices/shiftApiSlice'
 import { selectUserById } from '../../../store/apiSlices/userApiSlice'
+import AvailableUsersTable from '../../../pages/AvailableUsersTable'
 
 const DisplayAssignedUser = ({ userId }: { userId?: EntityId }) => {
   const user: User = useSelector(
@@ -30,10 +32,16 @@ export const ShiftAssignmentCard = ({
   handleClose: () => void
   open: boolean
 }) => {
-  const shift: Shift = useSelector(
-    (state: RootState) =>
-      selectShiftById('EUC')(state, shiftId as EntityId) as Shift
-  )
+  // const shift: Shift = useSelector(
+  //   (state: RootState) =>
+  //     selectShiftById('EUC')(state, shiftId as EntityId) as Shift
+  // )
+  const [assignedUserId, setAssignedUserID] = useState<EntityId>('')
+
+  const handleAssignedUserId = (userId: EntityId) => {
+    console.log(userId)
+    setAssignedUserID(userId)
+  }
 
   let content = null
   if (open) {
@@ -54,7 +62,13 @@ export const ShiftAssignmentCard = ({
             />
           </DialogTitle>
           <DialogContent>
-            <DisplayAssignedUser userId={shift.assignedUser} />
+            <DisplayAssignedUser userId={assignedUserId} />
+            <AvailableUsersTable
+              day={selectedDay}
+              houseID={'EUC'}
+              shiftID={shiftId as string}
+              handleAssignedUserId={handleAssignedUserId}
+            />
           </DialogContent>
         </Dialog>
       </>
