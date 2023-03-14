@@ -20,7 +20,7 @@ function NewShiftCardTest({ shiftId }: { shiftId?: string }) {
   }
   return (
     <>
-      <Button fullWidth variant="outlined" onClick={handleOpen}>
+      <Button fullWidth variant="contained" onClick={handleOpen}>
         <Typography>Add Shift</Typography>
       </Button>
 

@@ -1,5 +1,8 @@
 import React from 'react'
-import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { Box, Stack, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from '@mui/material/FormControl'
+import Grid from '@mui/material/Unstable_Grid2'
 import { useEffect, useState } from 'react'
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { useUserContext } from '../../../context/UserContext'
@@ -8,6 +11,8 @@ import { Shift } from '../../../types/schema'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import { ShiftAssignmentCard } from '../../../components/ManagerComponents/shiftAssignmentCard/ShiftAssignmentCard'
+import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
+import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -57,6 +62,9 @@ export const UnassignedTabContent = () => {
   const [selectedShiftId, setSelectedShiftId] = useState<EntityId>()
   //** end Modal stuff */
 
+  const [openEditShift, setOpenEditShift] = useState<boolean>(false)
+  const [editShiftId, setEditShiftId] = useState<string>('')
+
   //** Table stuff */
   const [shifts, setShifts] = useState<EntityId[] | undefined>([])
   const [displayShifts, setDisplayShifts] = useState<EntityId[] | undefined>(
@@ -88,6 +96,12 @@ export const UnassignedTabContent = () => {
     setFilterBy(event.target.value)
   }
 
+  const handleEditShift = (shiftId: string) => {
+    setEditShiftId(shiftId)
+    setOpenEditShift(true)
+    handleClose()
+  }
+
   useEffect(() => {
     if (isSuccess && data) {
       setShifts(
@@ -103,16 +117,18 @@ export const UnassignedTabContent = () => {
   // runs when the component mounts and when filterBy or shifts changes
   // the filtered shifts (filtered by day)
   useEffect(() => {
-    // console.log('Changing filters')
-    setDisplayShifts(
-      filterBy === filters[0]
-        ? shifts
-        : shifts?.filter((shiftId) =>
-            data?.entities[shiftId]?.possibleDays
-              .map((day) => day.toLocaleLowerCase())
-              .includes(filterBy)
-          )
+    // console.log('Changing filters', data?.entities)
+    const newShifts = shifts?.filter((shiftId) =>
+      data?.entities[shiftId]?.possibleDays
+        .map((day) => {
+          // console.log('--day:  ', day.toLocaleLowerCase())
+          return day.toLocaleLowerCase()
+        })
+        .includes(filterBy)
     )
+
+    // console.log(newShifts)
+    setDisplayShifts(newShifts)
   }, [filterBy, shifts, data])
 
   if (isLoading) {
@@ -121,33 +137,59 @@ export const UnassignedTabContent = () => {
     return <div>Error</div>
   } else {
     return (
-      <>
-        <Select value={filterBy} onChange={handleFilterChange}>
-          {filters.map((day) => (
-            <MenuItem key={day} value={day}>
-              {day}
-            </MenuItem>
-          ))}
-        </Select>
-        <SortedTable
-          ids={displayShifts as EntityId[]}
-          entities={
-            data?.entities as Dictionary<
-              Shift & { [key in keyof Shift]: string | number }
+      <Box sx={{ flexGrow: 1 }}>
+        <Stack>
+          <Grid container>
+            <Grid xs />
+            <Grid
+              smOffset={'auto'}
+              mdOffset={'auto'}
+              lgOffset={'auto'}
+              bgcolor={'#fff'}
             >
-          }
-          headCells={shiftHeadCells}
-          isCheckable={false}
-          isSortable={true}
-          handleRowClick={handleRowClick}
-        />
-        <ShiftAssignmentCard
-          shiftId={selectedShiftId}
-          selectedDay={filterBy}
-          handleClose={handleClose}
-          open={open}
-        />
-      </>
+              <FormControl size="small">
+                {/* <InputLabel id="day-select-small">Day</InputLabel> */}
+                <Select value={filterBy} onChange={handleFilterChange}>
+                  {filters.map((day) => (
+                    <MenuItem key={day} value={day}>
+                      {day}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid smOffset={'auto'} mdOffset={'auto'} lgOffset={'auto'}>
+              <NewShiftCardTest />
+            </Grid>
+          </Grid>
+        </Stack>
+        <Stack>
+          <SortedTable
+            ids={displayShifts as EntityId[]}
+            entities={
+              data?.entities as Dictionary<
+                Shift & { [key in keyof Shift]: string | number }
+              >
+            }
+            headCells={shiftHeadCells}
+            isCheckable={false}
+            isSortable={true}
+            handleRowClick={handleRowClick}
+          />
+          <ShiftAssignmentCard
+            shiftId={selectedShiftId}
+            selectedDay={filterBy}
+            handleClose={handleClose}
+            handleEditShift={handleEditShift}
+            open={open}
+          />
+          <EditShiftCardTest
+            shiftId={editShiftId}
+            setOpen={setOpenEditShift}
+            open={openEditShift}
+          />
+        </Stack>
+      </Box>
     )
   }
 }
