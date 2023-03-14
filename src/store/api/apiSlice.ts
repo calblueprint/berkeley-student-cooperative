@@ -85,18 +85,14 @@ const customBaseQuery: BaseQueryFn<
     // console.log('url: ', url)
     // console.log('data: ', body)
     // console.log('params: ', params)
-    let isAuthorized = false
-    await onAuthStateChanged(auth, (user) => {
-      if (user) {
-        isAuthorized = true
-      } else {
-        isAuthorized = false
-      }
-    })
 
-    if (!isAuthorized) {
-      return { error: 'not authorized' }
-    }
+    // console.log('Checking permissions: ')
+    // if (auth.currentUser) {
+    //   console.log('Is authorized: ', auth.currentUser)
+    // } else {
+    //   console.log('Is anuthorized!!!')
+    //   return { error: 'not authorized' }
+    // }
 
     const pathArray = url.split('/').filter((p: string) => p.length > 0)
     const resObj: unknown[] = []
