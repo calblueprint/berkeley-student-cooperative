@@ -1,7 +1,7 @@
 import { Tabs, Tab, Box, Typography } from '@mui/material'
 import Layout from '../../../components/Layout/Layout'
 import { useState } from 'react'
-import CategoriesView from '../categoryDropdown/categoriesView'
+import CategoriesView from './categoryDropdown/categoriesView'
 import { useUserContext } from '../../../context/UserContext'
 import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
 import { UnassignedTabContent } from './UnassignedTabContent'

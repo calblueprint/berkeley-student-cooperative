@@ -1,6 +1,6 @@
-.categoryViewContainer {
+/* .categoryViewContainer {
   width: 100%;
-}
+} */
 
 .shiftBox {
   padding: 5%;
@@ -8,6 +8,14 @@
 
 .header {
   padding-bottom: 3%;
+}
+
+.newCategory {
+  float: right;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 20px;
+  margin: 20px;
 }
 
 .title {
