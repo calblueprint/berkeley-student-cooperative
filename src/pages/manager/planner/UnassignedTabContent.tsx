@@ -21,7 +21,7 @@ import { User, Shift } from '../../../types/schema'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
-import ShiftAssignmentComponentCard from '../../shiftAssignmentComponentCard'
+import { ShiftAssignmentCard } from '../../../components/ManagerComponents/shiftAssignmentCard/shiftAssignmentCard'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -86,13 +86,13 @@ const filters = [
   'sunday',
 ]
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}))
+// const Item = styled(Paper)(({ theme }) => ({
+//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+//   ...theme.typography.body2,
+//   padding: theme.spacing(1),
+//   textAlign: 'center',
+//   color: theme.palette.text.secondary,
+// }))
 
 export const UnassignedTabContent = () => {
   const { house } = useUserContext()
@@ -110,7 +110,8 @@ export const UnassignedTabContent = () => {
   //** Modal stuff */
   const [open, setOpen] = useState(false)
   //** State variables that pass the selected item's info from the table to the modal */
-  const [modalShift, setModalShift] = useState<Shift>()
+  const [selectedShiftId, setSelectedShiftId] = useState<EntityId>()
+  // const [modalShift, setModalShift] = useState<Shift>()
   const [modalUser, setModalUser] = useState<User>()
   //** end Modal stuff */
 
@@ -129,8 +130,8 @@ export const UnassignedTabContent = () => {
   ) => {
     // console.log('event: ', event, 'shift: ', shiftId)
     const shift = data?.entities[shiftId]
-
-    setModalShift(shift)
+    setSelectedShiftId(shiftId)
+    // setModalShift(shift)
     if (shift && shift.usersAssigned && shift.usersAssigned[0]) {
       setModalUser(users?.entities[shift.usersAssigned[0]])
     }
@@ -208,7 +209,13 @@ export const UnassignedTabContent = () => {
         />
         {/* Everything below is just to test the redux user api */}
         {/* When creating the actual card, it should be in it's own file that will get connecte here. */}
-        <Dialog
+        <ShiftAssignmentCard
+          shiftId={selectedShiftId}
+          selectedDay={filterBy}
+          handleClose={handleClose}
+          open={open}
+        />
+        {/* <Dialog
           fullWidth
           maxWidth="md"
           open={open}
@@ -264,13 +271,7 @@ export const UnassignedTabContent = () => {
               />
             </Paper>
           </DialogContent>
-        </Dialog>
-
-        <ShiftAssignmentComponentCard
-          day="Monday"
-          houseID="EUC"
-          shiftID="7qHP4WiNTzU4d38nQDan"
-        />
+        </Dialog> */}
       </>
     )
   }
