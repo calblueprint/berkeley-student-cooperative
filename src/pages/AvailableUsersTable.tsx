@@ -10,7 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import CloseIcon from '@mui/icons-material/Close'
-import { convertTimeWindowToTime, pluralizeHours } from '../firebase/helpers'
+// import { convertTimeWindowToTime, pluralizeHours } from '../firebase/helpers'
 import { sortPotentialUsers, findAvailableUsers } from '../firebase/helpers'
 import SortedTable from '../components/shared/tables/SortedTable'
 import { numericToStringPreference } from '../firebase/helpers'
@@ -32,10 +32,32 @@ import { Typography } from '@mui/material'
 // pass in something that's been selected
 // somehow need to refetch on update
 
-type ShiftAssignmentComponentCardProps = {
+type AvailableUsersTableProps = {
   day: string
   houseID: string
   shiftID: string
+  handleAssignedUserId: (userId: string) => void
+}
+
+const displayNameFn = (user: User) => {
+  if (!user) {
+    return ''
+  }
+  if (user.displayName) {
+    return user.displayName
+  }
+  return user.firstName + ' ' + user.lastName
+}
+
+const hoursAssignedFn = (user: User, shiftID: string | number) => {
+  if (!user) {
+    return ''
+  }
+  return numericToStringPreference(user, shiftID as string)
+}
+const preferenceFn = (user: User, hoursRequired: string | number) => {
+  const h = (hoursRequired as number) - user.hoursAssigned
+  return h.toString()
 }
 
 const headCells: HeadCell<User>[] = [
@@ -45,6 +67,7 @@ const headCells: HeadCell<User>[] = [
     label: 'Available Users',
     isSortable: false,
     align: 'left',
+    transformFn: displayNameFn,
   },
   {
     id: 'hoursUnassigned',
@@ -52,20 +75,25 @@ const headCells: HeadCell<User>[] = [
     label: 'Unassigned Hours',
     isSortable: true,
     align: 'left',
+    complexTransformFn: hoursAssignedFn,
   },
   {
-    id: 'preference',
+    id: 'preferences',
     isNumeric: false,
     label: 'Preference',
     isSortable: true,
     align: 'left',
+    complexTransformFn: preferenceFn,
   },
 ]
 
 // state doesn't work, no selected / update shift /user
-const ShiftAssignmentComponentCard: React.FC<
-  ShiftAssignmentComponentCardProps
-> = ({ day, houseID, shiftID }: ShiftAssignmentComponentCardProps) => {
+const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
+  day,
+  houseID,
+  shiftID,
+  handleAssignedUserId,
+}: AvailableUsersTableProps) => {
   /**
    * A modal that appears when a manager wants to assign people/unassign people from a shift.
    * Matches people to shifts based on availabilities.
@@ -76,7 +104,7 @@ const ShiftAssignmentComponentCard: React.FC<
    * @param day - The day that is selected when the manager is going through shifts on a day-by-day view
    * @param houseID - The ID of the house that the manager manages
    * @param shiftID - The ID of the shift that the manager has selected.
-   * @returns ShiftAssignmentComponentCard
+   * @returns AvailableUsersTable
    */
 
   // Store usersObject (access a user object from usersObject.entities[userID])
@@ -135,6 +163,10 @@ const ShiftAssignmentComponentCard: React.FC<
       sortAndAddFieldsToUsers(userIDs)
     }
   }, [isUsersSuccess])
+
+  useEffect(() => {
+    handleAssignedUserId(assignedUserID)
+  }, [assignedUserID, handleAssignedUserId])
 
   useEffect(() => {
     // console.log('AssigneUserId: ', assignedUserID)
@@ -315,8 +347,8 @@ const ShiftAssignmentComponentCard: React.FC<
   return (
     // <div className={styles.container}>
     <React.Fragment>
-      <Box padding={'normal'} marginTop={5}>
-        <Stack spacing={1}>
+      {/* <Box padding={'normal'} marginTop={5}> */}
+      {/* <Stack spacing={1}>
           {shiftObject ? <SelectedShiftDisplay shift={shiftObject} /> : null}
           {assignedUserID ? (
             <SelectedUserDisplay
@@ -324,85 +356,81 @@ const ShiftAssignmentComponentCard: React.FC<
               handleClose={handleDeselectUser}
             />
           ) : null}
-          {potentialWorkersID && displayEntities && (
-            <SortedTable
-              ids={potentialWorkersID as EntityId[]}
-              entities={
-                displayEntities as Dictionary<
-                  User & { [key in keyof User]: string | number }
-                >
-              }
-              headCells={headCells}
-              isCheckable={false}
-              isSortable={false}
-              disable={disableTable}
-              handleRowClick={updateAssignedUser}
-            />
-          )}
-        </Stack>
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={updateUserAndShiftObjects}
-        >
-          Save
-        </Button>
-      </Box>
+          {potentialWorkersID && displayEntities && ( */}
+      <SortedTable
+        ids={potentialWorkersID as EntityId[]}
+        entities={
+          displayEntities as Dictionary<
+            User & { [key in keyof User]: string | number }
+          >
+        }
+        headCells={headCells}
+        isCheckable={false}
+        isSortable={false}
+        disable={disableTable}
+        handleRowClick={updateAssignedUser}
+      />
+      {/* )}
+        </Stack> */}
+      <Button variant="contained" fullWidth onClick={updateUserAndShiftObjects}>
+        Save
+      </Button>
+      {/* </Box> */}
     </React.Fragment>
     // </div>
   )
 }
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}))
+// const Item = styled(Paper)(({ theme }) => ({
+//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+//   ...theme.typography.body2,
+//   padding: theme.spacing(1),
+//   textAlign: 'center',
+//   color: theme.palette.text.secondary,
+// }))
 
-const SelectedUserDisplay = ({ user, handleClose }) => {
-  console.log('User: ', user)
-  return user ? (
-    <Grid container border={'solid blue'} spacing={2}>
-      <Grid xs={4}>
-        <Item>{`Display Name: ${user?.displayName}`}</Item>
-      </Grid>
-      <Grid xs={3}>
-        <Item>{`Hours Unassigned: ${user?.hoursUnassigned}`}</Item>
-      </Grid>
-      <Grid xs={4}>
-        <Item>{`Preference: ${user?.preference}`}</Item>
-      </Grid>
-      <Grid xs={1}>
-        {/* <Item sx={{ alignContent: 'center' }}> */}
-        <Button onClick={handleClose} sx={{ alignContent: 'center' }}>
-          <CloseIcon />
-        </Button>
-        {/* </Item> */}
-      </Grid>
-    </Grid>
-  ) : null
-}
+// const SelectedUserDisplay = ({ user, handleClose }) => {
+//   console.log('User: ', user)
+//   return user ? (
+//     <Grid container border={'solid blue'} spacing={2}>
+//       <Grid xs={4}>
+//         <Item>{`Display Name: ${user?.displayName}`}</Item>
+//       </Grid>
+//       <Grid xs={3}>
+//         <Item>{`Hours Unassigned: ${user?.hoursUnassigned}`}</Item>
+//       </Grid>
+//       <Grid xs={4}>
+//         <Item>{`Preference: ${user?.preference}`}</Item>
+//       </Grid>
+//       <Grid xs={1}>
+//         {/* <Item sx={{ alignContent: 'center' }}> */}
+//         <Button onClick={handleClose} sx={{ alignContent: 'center' }}>
+//           <CloseIcon />
+//         </Button>
+//         {/* </Item> */}
+//       </Grid>
+//     </Grid>
+//   ) : null
+// }
 
-const SelectedShiftDisplay = ({ shift }) => {
-  console.log('Shift: ', shift)
-  // React.useEffect(() => {}, [shift])
-  return shift ? (
-    <Grid container spacing={2}>
-      <Grid xs={12}>
-        <Item>
-          <Typography variant="h2">{`Shift Name: ${shift.name}`}</Typography>
-        </Item>
-      </Grid>
-      <Grid xs={6}>
-        <Item>{`Time Window: ${shift.timeWindowDisplay}`}</Item>
-      </Grid>
-      <Grid xs={6}>
-        <Item>{`Value: ${shift.hours}`}</Item>
-      </Grid>
-    </Grid>
-  ) : null
-}
+// const SelectedShiftDisplay = ({ shift }) => {
+//   console.log('Shift: ', shift)
+//   // React.useEffect(() => {}, [shift])
+//   return shift ? (
+//     <Grid container spacing={2}>
+//       <Grid xs={12}>
+//         <Item>
+//           <Typography variant="h2">{`Shift Name: ${shift.name}`}</Typography>
+//         </Item>
+//       </Grid>
+//       <Grid xs={6}>
+//         <Item>{`Time Window: ${shift.timeWindowDisplay}`}</Item>
+//       </Grid>
+//       <Grid xs={6}>
+//         <Item>{`Value: ${shift.hours}`}</Item>
+//       </Grid>
+//     </Grid>
+//   ) : null
+// }
 
-export default ShiftAssignmentComponentCard
+export default AvailableUsersTable
