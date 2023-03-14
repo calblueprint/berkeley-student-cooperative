@@ -29,7 +29,7 @@ const ShiftInfoHeader = ({
         </Grid>
         {/* <Grid xs /> */}
         <Grid smOffset={'auto'} mdOffset={'auto'} lgOffset={'auto'}>
-          <XButton handleClose={handleClose} />
+          <XButton handleClick={handleClose} />
         </Grid>
       </Grid>
       <Grid container spacing={4}>
