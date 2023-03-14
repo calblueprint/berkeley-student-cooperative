@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
-import {
-  addCategory,
-  getHouse,
-} from '../../../firebase/queries/house'
-import { House } from '../../../types/schema'
-import CategoriesDropdown from './categoriesDropdown'
+import { addCategory, getHouse } from '../../../../firebase/queries/house'
+import { House } from '../../../../types/schema'
+// import CategoriesDropdown from './CategoriesDropdown'
 import Button from '@mui/material/Button'
 import {
   Dialog,
@@ -15,12 +12,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import Icon from '../../../assets/Icon'
-import AddIcon from '@mui/icons-material/Add';
-import { useGetHouseQuery } from '../../../store/apiSlices/houseApiSlice'
+import Icon from '../../../../assets/Icon'
+import AddIcon from '@mui/icons-material/Add'
+import { useGetHouseQuery } from '../../../../store/apiSlices/houseApiSlice'
 import styles from './CategoriesView.module.css'
-import CategoryTable from '../../../components/ManagerComponents/CategoryTable/CategoryTable'
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CategoryTable from '../../../../components/ManagerComponents/CategoryTable/CategoryTable'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 const theme = createTheme({
   palette: {
     primary: {
@@ -30,9 +27,7 @@ const theme = createTheme({
       main: '#FFFFFF',
     },
   },
-});
-
-
+})
 
 type CategoriesViewProps = {
   houseID: string
@@ -49,12 +44,9 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
    * @returns CategoriesView
    */
 
-  const {
-    data: dataHouse,
-    isLoading
-  } = useGetHouseQuery('EUC')
+  const { data: dataHouse, isLoading } = useGetHouseQuery('EUC')
 
-  // console.log("data", dataHouse, "is the Query loading:", isLoading, "Was the query successful:", 
+  // console.log("data", dataHouse, "is the Query loading:", isLoading, "Was the query successful:",
   // isSuccess, "is there an error:", isError,"error message:", error)
   // Retrieved house object
   const [house, setHouse] = useState<House>()
@@ -72,18 +64,15 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     //   setHouse(h)
     // }
     // retrieveHouse()
-   
     //console.log("data", dataHouse)
   }, [houseID])
   useEffect(() => {
-    if (dataHouse?.entities){
+    if (dataHouse?.entities) {
       const dataOfHouse = Object.entries(dataHouse?.entities)[0][1]
-      if(dataOfHouse.categories){
+      if (dataOfHouse.categories) {
         setHouseInfo(Object.entries(dataOfHouse.categories))
       }
-    
     }
-    
   }, [dataHouse])
 
   // Opens modal
@@ -97,10 +86,10 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     clearFields()
   }
 
-    // Clears fields
-    const clearFields = () => {
-      setNewCategoryName('')
-    }
+  // Clears fields
+  const clearFields = () => {
+    setNewCategoryName('')
+  }
 
   // Uploads the new category to Firebase if the category doesn't exist yet
   const uploadCategory = async () => {
@@ -116,27 +105,37 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     }
     closeModal()
   }
-  const buttonStyling = { backgroundColor: "#1B202D", borderRadius: 1, marginBottom: 2}
+  const buttonStyling = {
+    backgroundColor: '#1B202D',
+    borderRadius: 1,
+    marginBottom: 2,
+  }
 
   return (
     <div className={styles.categoryViewContainer}>
       <ThemeProvider theme={theme}>
-
-      
-      <Button onClick={openModal}  color='secondary' sx={ buttonStyling } className={styles.newCategory}>
-        New Category
-        <AddIcon sx={{fontSize: 19, marginLeft: .5, paddingBottom: .2}}/>
-      </Button>
+        <Button
+          onClick={openModal}
+          color="secondary"
+          sx={buttonStyling}
+          className={styles.newCategory}
+        >
+          New Category
+          <AddIcon sx={{ fontSize: 19, marginLeft: 0.5, paddingBottom: 0.2 }} />
+        </Button>
       </ThemeProvider>
-      {(!isLoading && houseInfo) ? 
-          <CategoryTable categoriesArray={houseInfo}/> : 
+      {!isLoading && houseInfo ? (
+        <CategoryTable categoriesArray={houseInfo} />
+      ) : (
         <div>
-          {(isLoading && houseInfo) ?
-          <h1>Loading...</h1>
-          : <h1>No categories Exist in this house, add one now!</h1> }
+          {isLoading && houseInfo ? (
+            <h1>Loading...</h1>
+          ) : (
+            <h1>No categories Exist in this house, add one now!</h1>
+          )}
         </div>
-      }
-      
+      )}
+
       {isModalOpened && (
         <Dialog
           fullWidth
@@ -145,7 +144,6 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
           onClose={closeModal}
           className={styles.dialog}
         >
-          
           <DialogContent>
             <div className={styles.shiftBox}>
               <div className={styles.header}>
