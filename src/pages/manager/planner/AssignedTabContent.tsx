@@ -45,7 +45,7 @@ const filters = [
   'sunday',
 ]
 
-export const UnassignedTabContent = () => {
+export const AssignedTabContent = () => {
   const { house } = useUserContext()
   const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
     house?.houseID
@@ -93,8 +93,8 @@ export const UnassignedTabContent = () => {
       setShifts(
         data.ids?.filter(
           (id: EntityId) =>
-            data.entities[id]?.assignedUser === undefined ||
-            data.entities[id]?.assignedUser?.length === 0
+            data.entities[id]?.assignedUser != undefined &&
+            data.entities[id]?.assignedUser != ''
         )
       )
     }
