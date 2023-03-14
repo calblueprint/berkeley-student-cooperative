@@ -1,18 +1,13 @@
 import { apiSlice } from '../api/apiSlice'
 import { firestore, auth } from '../../firebase/clientApp'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { collection, doc, getDoc } from 'firebase/firestore'
-import { User } from '../../types/schema'
-import { setCredentials } from '../slices/authSlice'
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
+import { User, House } from '../../types/schema'
+import { setCredentials, logOut } from '../slices/authSlice'
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
-      //   query: (credentials) => ({
-      //     url: '/auth',
-      //     method: 'POST',
-      //     body: { ...credentials },
-      //   }),
       async queryFn({ email, password }) {
         try {
           console.log('Email: ', email, ' Password: ', password)
@@ -28,29 +23,30 @@ export const authApiSlice = apiSlice.injectEndpoints({
           if (!userCredentials) {
             return { error: 'Wrong credentials' }
           }
-          const userID = userCredentials.user.uid
-          const docRef = doc(firestore, 'users', userID)
-          const docSnap = await getDoc(docRef)
-          if (!docSnap.exists()) {
-            return { error: 'No user with those credentials in the database' }
-          }
-          const user = docSnap.data()
-          user.id = docSnap.id.toString()
-          if (!user.id) {
-            return { error: 'User does not have attribute --id-' }
-          }
-          const houseDocRef = doc(firestore, 'houses', user.houseID)
-          const houseSnap = await getDoc(houseDocRef)
+          return await establishUserContext(userCredentials.user.uid)
+          // const userID = userCredentials.user.uid
+          // const docRef = doc(firestore, 'users', userID)
+          // const docSnap = await getDoc(docRef)
+          // if (!docSnap.exists()) {
+          //   return { error: 'No user with those credentials in the database' }
+          // }
+          // const user = docSnap.data() as User
+          // user.id = docSnap.id.toString()
+          // if (!user.id) {
+          //   return { error: 'User does not have attribute --id-' }
+          // }
+          // const houseDocRef = doc(firestore, 'houses', user.houseID)
+          // const houseSnap = await getDoc(houseDocRef)
 
-          if (!houseSnap.exists()) {
-            return { error: 'User not assigned to a valid house.' }
-          }
-          const house = houseSnap.data()
-          return { data: { user, house } }
-        } catch (e) {
+          // if (!houseSnap.exists()) {
+          //   return { error: 'User not assigned to a valid house.' }
+          // }
+          // const house = houseSnap.data() as House
+          // return { data: { user, house } }
+        } catch (error) {
           console.log('Error Logging In')
-          console.error(e)
-          throw e
+          console.error(error)
+          return { error }
         }
       },
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -58,32 +54,94 @@ export const authApiSlice = apiSlice.injectEndpoints({
           const result = await queryFulfilled
           console.log('Query Fulfilled: ', result)
           if (!result.data) {
-            return { error: 'No user and house found' }
+            console.log('User and House object are empty')
+            return
           }
           const { user, house } = result.data
           dispatch(setCredentials({ user, house }))
-          return { data: arg }
+          // return { data: arg }
         } catch (error) {
           console.log(error)
         }
       },
     }),
-    // sendLogout: builder.mutation({
-    //   query: () => ({
-    //     url: '/auth/logout',
-    //     method: 'POST',
-    //   }),
-    //   async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-    //     try {
-    //       await queryFulfilled
-    //       dispatch(logOut())
-    //       dispatch(apiSlice.util.resetApiState())
-    //     } catch (error) {
-    //       console.log(error)
-    //     }
-    //   },
-    // }),
+
+    authLogOut: builder.mutation({
+      async queryFn() {
+        try {
+          const result = await signOut(auth)
+          console.log('logout result: ' + result)
+          return { data: result }
+        } catch (error) {
+          return { error }
+        }
+      },
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(logOut())
+          dispatch(apiSlice.util.resetApiState())
+        } catch (error) {
+          console.log(error)
+        }
+      },
+    }),
+
+    establishContext: builder.mutation({
+      async queryFn(userId: string) {
+        return await establishUserContext(userId)
+      },
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled
+          console.log('Query Fulfilled: ', result)
+          if (!result.data) {
+            console.log('User and House object are empty')
+            return
+          }
+          const { user, house } = result.data
+          dispatch(setCredentials({ user, house }))
+          // return { data: arg }
+        } catch (error) {
+          console.log(error)
+        }
+      },
+    }),
   }),
 })
 
-export const { useLoginMutation } = authApiSlice
+const establishUserContext = async (userId: string) => {
+  try {
+    if (!userId) {
+      return { error: 'Wrong credentials' }
+    }
+    const userID = userId
+    const docRef = doc(firestore, 'users', userID)
+    const docSnap = await getDoc(docRef)
+    if (!docSnap.exists()) {
+      return { error: 'No user with those credentials in the database' }
+    }
+    const user = docSnap.data() as User
+    user.id = docSnap.id.toString()
+    if (!user.id) {
+      return { error: 'User does not have attribute --id-' }
+    }
+    const houseDocRef = doc(firestore, 'houses', user.houseID)
+    const houseSnap = await getDoc(houseDocRef)
+
+    if (!houseSnap.exists()) {
+      return { error: 'User not assigned to a valid house.' }
+    }
+    const house = houseSnap.data() as House
+
+    return { data: { user, house } }
+  } catch (error) {
+    return { error }
+  }
+}
+
+export const {
+  useLoginMutation,
+  useAuthLogOutMutation,
+  useEstablishContextMutation,
+} = authApiSlice
