@@ -1,20 +1,11 @@
-import { Box, Paper, styled, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { EntityId } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { selectShiftById } from '../../../store/apiSlices/shiftApiSlice'
 import { RootState } from '../../../store/store'
 import Grid from '@mui/material/Unstable_Grid2'
 import { Shift } from '../../../types/schema'
-import styles from './ShiftInfoHeader.module.css'
 import XButton from '../../shared/buttons/XButton'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}))
 
 const ShiftInfoHeader = ({
   shiftId,
@@ -41,8 +32,8 @@ const ShiftInfoHeader = ({
           <XButton handleClose={handleClose} />
         </Grid>
       </Grid>
-      <Grid container>
-        <Grid container xs={'auto'} md={'auto'} lg={'auto'} spacing={4}>
+      <Grid container spacing={4}>
+        <Grid container xs={'auto'} md={'auto'} lg={'auto'} spacing={2}>
           <Grid xs={'auto'} lg={'auto'}>
             <Typography fontFamily={'Inter'} color={'#ACACAC'}>
               Worth
@@ -54,7 +45,7 @@ const ShiftInfoHeader = ({
             </Typography>
           </Grid>
         </Grid>
-        <Grid container xs={'auto'} md={'auto'} lg={'auto'} spacing={4}>
+        <Grid container xs={'auto'} md={'auto'} lg={'auto'} spacing={2}>
           <Grid xs={'auto'} lg={'auto'}>
             <Typography fontFamily={'Inter'} color={'#ACACAC'}>
               Window
@@ -65,6 +56,21 @@ const ShiftInfoHeader = ({
               {selectedDay[0].toUpperCase() + selectedDay.slice(1)}{' '}
               {shift.timeWindowDisplay}
             </Typography>
+          </Grid>
+          <Grid xs={'auto'} md={'auto'} lg={'auto'}>
+            <Typography bgcolor={'#F3F3F3'}>
+              {shift.verificationBuffer} hour buffer
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container xs={'auto'} md={'auto'} lg={'auto'} spacing={2}>
+          <Grid xs={'auto'} lg={'auto'}>
+            <Typography fontFamily={'Inter'} color={'#ACACAC'}>
+              Also available on
+            </Typography>
+          </Grid>
+          <Grid smOffset={'auto'} mdOffset={'auto'} lgOffset={'auto'}>
+            <Typography>{shift.possibleDays.join(', ')}</Typography>
           </Grid>
         </Grid>
       </Grid>

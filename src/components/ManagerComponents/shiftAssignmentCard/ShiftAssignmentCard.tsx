@@ -1,21 +1,12 @@
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Typography,
-} from '@mui/material'
-import Close from '@mui/icons-material/Close'
+import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 import { EntityId } from '@reduxjs/toolkit'
-import ShiftInfoHeader from '../shiftInfoHeader/shiftInfoHeader'
+import ShiftInfoHeader from '../shiftInfoHeader/ShiftInfoHeader'
 import styles from './ShiftAssignmentCard.module.css'
 import { RootState } from '../../../store/store'
 import { Shift, User } from '../../../types/schema'
 import { useSelector } from 'react-redux'
 import { selectShiftById } from '../../../store/apiSlices/shiftApiSlice'
 import { selectUserById } from '../../../store/apiSlices/userApiSlice'
-import Paper from '@mui/material/Paper'
-import XButton from '../../shared/buttons/XButton'
 
 const DisplayAssignedUser = ({ userId }: { userId?: EntityId }) => {
   const user: User = useSelector(
