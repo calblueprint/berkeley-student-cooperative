@@ -78,7 +78,7 @@ const headCells: HeadCell<User>[] = [
     complexTransformFn: hoursAssignedFn,
   },
   {
-    id: 'preferences',
+    id: 'preference',
     isNumeric: false,
     label: 'Preference',
     isSortable: true,
