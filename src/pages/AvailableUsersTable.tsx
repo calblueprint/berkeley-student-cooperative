@@ -17,6 +17,7 @@ import {
 import { useSelector } from 'react-redux'
 import { RootState } from '../store/store'
 import { HeadCell } from '../interfaces/interfaces'
+import Grid from '@mui/material/Unstable_Grid2'
 
 // waiting on sorted table to only allow selecting 1 checkbox at a time
 // pass in something that's been selected
@@ -28,6 +29,8 @@ type AvailableUsersTableProps = {
   shiftID: string
   unselect: boolean
   handleAssignedUserId: (userId: string) => void
+  handleClose: () => void
+  handleEditShift: (shiftId: string) => void
 }
 
 const displayNameFn = (user: User) => {
@@ -84,6 +87,8 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
   houseID,
   shiftID,
   handleAssignedUserId,
+  handleEditShift,
+  handleClose,
   unselect,
 }: AvailableUsersTableProps) => {
   /**
@@ -111,7 +116,7 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
     updateShift,
     {
       // isLoading: isLoadingUpdateShift,
-      // isSuccess: isSuccessUpdateShift,
+      isSuccess: isSuccessUpdateShift,
       // isError: isErrorUpdateShift,
       // error: errorUpdateShift,
     },
@@ -121,7 +126,7 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
     updateUser,
     {
       // isLoading: isLoadingUpdateShift,
-      // isSuccess: isSuccessUpdateShift,
+      isSuccess: isSuccessUpdateUser,
       // isError: isErrorUpdateShift,
       // error: errorUpdateShift,
     },
@@ -147,6 +152,12 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
   const [disableTable, setDisableTable] = useState<boolean>(false)
 
   const hoursRequired = 5
+
+  useEffect(() => {
+    if (isSuccessUpdateShift && isSuccessUpdateUser) {
+      handleClose()
+    }
+  }, [isSuccessUpdateShift, isSuccessUpdateUser, handleClose])
 
   // On page load, retrieves the shift and sets the shift Object and also populates the potentialWorkers + selectedRows arrays
   useEffect(() => {
@@ -222,7 +233,14 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
       }
       worker.displayName = worker.firstName + ' ' + worker.lastName
       worker.preference = numericToStringPreference(worker, shiftID)
+      if (!worker.hoursAssigned) {
+        worker.hoursUnassigned = hoursRequired
+      } else if (worker.hoursAssigned < 0) {
+        worker.hoursAssigned = 0
+      }
+      // console.log(worker.hoursAssigned)
       worker.hoursUnassigned = hoursRequired - worker.hoursAssigned
+      // console.log(worker.hoursAssigned)
     }
     setDisplayEntities(newDictionary)
   }
@@ -356,9 +374,29 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
         disable={disableTable}
         handleRowClick={updateAssignedUser}
       />
-      <Button variant="contained" fullWidth onClick={updateUserAndShiftObjects}>
-        Save
-      </Button>
+      <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+        <Grid smOffset={9}>
+          {!assignedUserID && !shiftObject.assignedUser ? (
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => handleEditShift(shiftID)}
+            >
+              Edit Shift
+            </Button>
+          ) : null}
+        </Grid>
+        {/* <Grid xs /> */}
+        <Grid smOffset={'auto'} mdOffset={'auto'} lgOffset={'auto'}>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={updateUserAndShiftObjects}
+          >
+            Save
+          </Button>
+        </Grid>
+      </Grid>
     </React.Fragment>
   )
 }
