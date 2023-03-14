@@ -4,7 +4,7 @@ import { useState } from 'react'
 import CategoriesView from './categoryDropdown/CategoriesView'
 import { useUserContext } from '../../../context/UserContext'
 import { UnassignedTabContent } from './UnassignedTabContent'
-import ReduxTesting from './ReduxTesting'
+// import ReduxTesting from './ReduxTesting'
 import { AssignedTabContent } from './AssignedTabContent'
 
 interface TabPanelProps {
