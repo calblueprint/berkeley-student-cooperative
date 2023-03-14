@@ -1,16 +1,7 @@
 import React, { useState } from 'react'
-// import styles from '../styles/Home.module.css'
-import { styled } from '@mui/material/styles'
 import { User, Shift } from '../types/schema'
 import { useEffect } from 'react'
-
 import Button from '@mui/material/Button'
-import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Unstable_Grid2'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import CloseIcon from '@mui/icons-material/Close'
-// import { convertTimeWindowToTime, pluralizeHours } from '../firebase/helpers'
 import { sortPotentialUsers, findAvailableUsers } from '../firebase/helpers'
 import SortedTable from '../components/shared/tables/SortedTable'
 import { numericToStringPreference } from '../firebase/helpers'
@@ -26,7 +17,6 @@ import {
 import { useSelector } from 'react-redux'
 import { RootState } from '../store/store'
 import { HeadCell } from '../interfaces/interfaces'
-import { Typography } from '@mui/material'
 
 // waiting on sorted table to only allow selecting 1 checkbox at a time
 // pass in something that's been selected
@@ -352,18 +342,7 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
   }
 
   return (
-    // <div className={styles.container}>
     <React.Fragment>
-      {/* <Box padding={'normal'} marginTop={5}> */}
-      {/* <Stack spacing={1}>
-          {shiftObject ? <SelectedShiftDisplay shift={shiftObject} /> : null}
-          {assignedUserID ? (
-            <SelectedUserDisplay
-              user={displayEntities ? displayEntities[assignedUserID] : null}
-              handleClose={handleDeselectUser}
-            />
-          ) : null}
-          {potentialWorkersID && displayEntities && ( */}
       <SortedTable
         ids={potentialWorkersID as EntityId[]}
         entities={
@@ -377,67 +356,11 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
         disable={disableTable}
         handleRowClick={updateAssignedUser}
       />
-      {/* )}
-        </Stack> */}
       <Button variant="contained" fullWidth onClick={updateUserAndShiftObjects}>
         Save
       </Button>
-      {/* </Box> */}
     </React.Fragment>
-    // </div>
   )
 }
-
-// const Item = styled(Paper)(({ theme }) => ({
-//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   textAlign: 'center',
-//   color: theme.palette.text.secondary,
-// }))
-
-// const SelectedUserDisplay = ({ user, handleClose }) => {
-//   console.log('User: ', user)
-//   return user ? (
-//     <Grid container border={'solid blue'} spacing={2}>
-//       <Grid xs={4}>
-//         <Item>{`Display Name: ${user?.displayName}`}</Item>
-//       </Grid>
-//       <Grid xs={3}>
-//         <Item>{`Hours Unassigned: ${user?.hoursUnassigned}`}</Item>
-//       </Grid>
-//       <Grid xs={4}>
-//         <Item>{`Preference: ${user?.preference}`}</Item>
-//       </Grid>
-//       <Grid xs={1}>
-//         {/* <Item sx={{ alignContent: 'center' }}> */}
-//         <Button onClick={handleClose} sx={{ alignContent: 'center' }}>
-//           <CloseIcon />
-//         </Button>
-//         {/* </Item> */}
-//       </Grid>
-//     </Grid>
-//   ) : null
-// }
-
-// const SelectedShiftDisplay = ({ shift }) => {
-//   console.log('Shift: ', shift)
-//   // React.useEffect(() => {}, [shift])
-//   return shift ? (
-//     <Grid container spacing={2}>
-//       <Grid xs={12}>
-//         <Item>
-//           <Typography variant="h2">{`Shift Name: ${shift.name}`}</Typography>
-//         </Item>
-//       </Grid>
-//       <Grid xs={6}>
-//         <Item>{`Time Window: ${shift.timeWindowDisplay}`}</Item>
-//       </Grid>
-//       <Grid xs={6}>
-//         <Item>{`Value: ${shift.hours}`}</Item>
-//       </Grid>
-//     </Grid>
-//   ) : null
-// }
 
 export default AvailableUsersTable

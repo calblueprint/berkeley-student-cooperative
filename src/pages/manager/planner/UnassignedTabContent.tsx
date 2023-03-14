@@ -1,25 +1,11 @@
 import React from 'react'
-import {
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  // Dialog,
-  // DialogTitle,
-  // DialogContent,
-} from '@mui/material'
-// import Box from '@mui/material/Box'
-// import Paper from '@mui/material/Paper'
-// import Grid from '@mui/material/Unstable_Grid2'
-// import { styled } from '@mui/material/styles'
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useEffect, useState } from 'react'
-// import UnassignedShiftList from '../../../components/ManagerComponents/UnassignedShiftsList/UnassignedShiftsList'
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { useUserContext } from '../../../context/UserContext'
-// import { getAllShifts } from '../../../firebase/queries/shift'
 import { HeadCell } from '../../../interfaces/interfaces'
 import { Shift } from '../../../types/schema'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
-// import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import { ShiftAssignmentCard } from '../../../components/ManagerComponents/shiftAssignmentCard/ShiftAssignmentCard'
 
@@ -49,34 +35,7 @@ const shiftHeadCells: HeadCell<
   },
 ]
 
-// const userHeadCells: HeadCell<
-//   User & { [key in keyof User]: string | number }
-// >[] = [
-//   {
-//     id: 'email',
-//     isNumeric: false,
-//     label: 'Email',
-//     isSortable: true,
-//     align: 'left',
-//   },
-//   {
-//     id: 'hoursRequired',
-//     isNumeric: true,
-//     label: 'Hours Required',
-//     isSortable: true,
-//     align: 'left',
-//   },
-//   {
-//     id: 'hoursAssigned',
-//     isNumeric: true,
-//     label: 'Value',
-//     isSortable: true,
-//     align: 'left',
-//   },
-// ]
-
 const filters = [
-  // 'all',
   'monday',
   'tuesday',
   'wednesday',
@@ -86,33 +45,16 @@ const filters = [
   'sunday',
 ]
 
-// const Item = styled(Paper)(({ theme }) => ({
-//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   textAlign: 'center',
-//   color: theme.palette.text.secondary,
-// }))
-
 export const UnassignedTabContent = () => {
   const { house } = useUserContext()
   const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
     house?.houseID
   )
 
-  // const {
-  //   data: users,
-  //   // isLoading: isUsersLoading,
-  //   // isSuccess: isUsersSuccess,
-  //   // isError: isUsersError,
-  // } = useGetUsersQuery({})
-
   //** Modal stuff */
   const [open, setOpen] = useState(false)
   //** State variables that pass the selected item's info from the table to the modal */
   const [selectedShiftId, setSelectedShiftId] = useState<EntityId>()
-  // const [modalShift, setModalShift] = useState<Shift>()
-  // const [modalUser, setModalUser] = useState<User>()
   //** end Modal stuff */
 
   //** Table stuff */
@@ -129,12 +71,7 @@ export const UnassignedTabContent = () => {
     shiftId: EntityId
   ) => {
     // console.log('event: ', event, 'shift: ', shiftId)
-    // const shift = data?.entities[shiftId]
     setSelectedShiftId(shiftId)
-    // setModalShift(shift)
-    // if (shift && shift.usersAssigned && shift.usersAssigned[0]) {
-    //   setModalUser(users?.entities[shift.usersAssigned[0]])
-    // }
     handleOpen()
   }
 
@@ -153,8 +90,6 @@ export const UnassignedTabContent = () => {
 
   useEffect(() => {
     if (isSuccess && data) {
-      // setShifts(data.ids)
-
       setShifts(
         data.ids?.filter(
           (id: EntityId) =>
@@ -187,7 +122,6 @@ export const UnassignedTabContent = () => {
   } else {
     return (
       <>
-        {/* <UnassignedShiftList /> */}
         <Select value={filterBy} onChange={handleFilterChange}>
           {filters.map((day) => (
             <MenuItem key={day} value={day}>
@@ -207,9 +141,6 @@ export const UnassignedTabContent = () => {
           isSortable={true}
           handleRowClick={handleRowClick}
         />
-
-        {/* Everything below is just to test the redux user api */}
-        {/* When creating the actual card, it should be in it's own file that will get connecte here. */}
         <ShiftAssignmentCard
           shiftId={selectedShiftId}
           selectedDay={filterBy}
