@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 3%;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40.5417px;
+  line-height: 52px;
+}
+
+.title {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40.5417px;
+  line-height: 52px;
+}
+
+.close {
+  text-align: right;
+}
