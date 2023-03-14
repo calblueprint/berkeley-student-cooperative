@@ -5,6 +5,9 @@ import { defaultUser } from '../firebase/queries/user'
 import { defaultHouse } from '../firebase/queries/house'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../firebase/clientApp'
+import { useRouter } from 'next/router'
+import { useEstablishContextMutation } from '../store/apiSlices/authApiSlice'
+import { useEffect } from 'react'
 
 export const authUserContext = createContext({
   authUser: defaultUser, // added
@@ -45,15 +48,24 @@ export const AuthUserProvider = ({ children }: any) => {
 }
 
 export const AuthState = () => {
-  const monitorAuthState = async () => {
-    onAuthStateChanged(auth, (user) => {
+  const router = useRouter()
+  const [establishContext, {}] = useEstablishContextMutation()
+
+  useEffect(() => {
+    console.log('AuthState has ran')
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log('Auth state changed: ' + user)
+        // console.log('Auth state changed: ' + user)
+        await establishContext(user.uid)
+
+        // console.log('Error: ', error)
+      } else {
+        router.replace('/login')
       }
     })
-  }
+    return () => unsubscribe()
+  }, [])
 
-  monitorAuthState()
   return <React.Fragment></React.Fragment>
 }
 
