@@ -1,25 +1,13 @@
 import React from 'react'
-import {
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-} from '@mui/material'
-import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Unstable_Grid2'
-import { styled } from '@mui/material/styles'
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useEffect, useState } from 'react'
-// import UnassignedShiftList from '../../../components/ManagerComponents/UnassignedShiftsList/UnassignedShiftsList'
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { useUserContext } from '../../../context/UserContext'
-// import { getAllShifts } from '../../../firebase/queries/shift'
-import { HeadCell, Shift, User } from '../../../interfaces/interfaces'
+import { HeadCell } from '../../../interfaces/interfaces'
+import { Shift } from '../../../types/schema'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
-import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import { ShiftAssignmentCard } from '../../../components/ManagerComponents/shiftAssignmentCard/ShiftAssignmentCard'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -47,34 +35,7 @@ const shiftHeadCells: HeadCell<
   },
 ]
 
-const userHeadCells: HeadCell<
-  Shift & { [key in keyof Shift]: string | number }
->[] = [
-  {
-    id: 'email',
-    isNumeric: false,
-    label: 'Email',
-    isSortable: true,
-    align: 'left',
-  },
-  {
-    id: 'hoursRequired',
-    isNumeric: true,
-    label: 'Hours Required',
-    isSortable: true,
-    align: 'left',
-  },
-  {
-    id: 'hoursAssigned',
-    isNumeric: true,
-    label: 'Value',
-    isSortable: true,
-    align: 'left',
-  },
-]
-
 const filters = [
-  'all',
   'monday',
   'tuesday',
   'wednesday',
@@ -84,32 +45,16 @@ const filters = [
   'sunday',
 ]
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}))
-
 export const AssignedTabContent = () => {
   const { house } = useUserContext()
   const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
     house?.houseID
   )
 
-  const {
-    data: users,
-    // isLoading: isUsersLoading,
-    // isSuccess: isUsersSuccess,
-    // isError: isUsersError,
-  } = useGetUsersQuery({})
-
   //** Modal stuff */
   const [open, setOpen] = useState(false)
   //** State variables that pass the selected item's info from the table to the modal */
-  const [modalShift, setModalShift] = useState<Shift>()
-  const [modalUser, setModalUser] = useState<User>()
+  const [selectedShiftId, setSelectedShiftId] = useState<EntityId>()
   //** end Modal stuff */
 
   //** Table stuff */
@@ -126,12 +71,7 @@ export const AssignedTabContent = () => {
     shiftId: EntityId
   ) => {
     // console.log('event: ', event, 'shift: ', shiftId)
-    const shift = data?.entities[shiftId]
-    setModalShift(shift)
-    if (shift && shift.assignedUser) {
-      setModalShift(shift)
-      setModalUser(users?.entities[shift.assignedUser])
-    }
+    setSelectedShiftId(shiftId)
     handleOpen()
   }
 
@@ -150,8 +90,6 @@ export const AssignedTabContent = () => {
 
   useEffect(() => {
     if (isSuccess && data) {
-      // setShifts(data.ids)
-
       setShifts(
         data.ids?.filter(
           (id: EntityId) =>
@@ -166,7 +104,6 @@ export const AssignedTabContent = () => {
   // the filtered shifts (filtered by day)
   useEffect(() => {
     // console.log('Changing filters')
-
     setDisplayShifts(
       filterBy === filters[0]
         ? shifts
@@ -185,7 +122,6 @@ export const AssignedTabContent = () => {
   } else {
     return (
       <>
-        {/* <UnassignedShiftList /> */}
         <Select value={filterBy} onChange={handleFilterChange}>
           {filters.map((day) => (
             <MenuItem key={day} value={day}>
@@ -205,64 +141,12 @@ export const AssignedTabContent = () => {
           isSortable={true}
           handleRowClick={handleRowClick}
         />
-        {/* Everything below is just to test the redux user api */}
-        {/* When creating the actual card, it should be in it's own file that will get connecte here. */}
-        {/* <Dialog
-          fullWidth
-          maxWidth="md"
+        <ShiftAssignmentCard
+          shiftId={selectedShiftId}
+          selectedDay={filterBy}
+          handleClose={handleClose}
           open={open}
-          onClose={handleClose}
-          className="dialog"
-        >
-          <DialogTitle variant="h4" component="h2">
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={2}>
-                <Grid xs={12}>{modalShift?.name}</Grid>
-                <Grid xs={4}>
-                  <Item>{`${modalShift?.hours} Hours`}</Item>
-                </Grid>
-                <Grid xs={4}>
-                  <Item>
-                    {modalShift?.possibleDays.reduce(
-                      (previosValue, currentValue) => {
-                        if (previosValue === '') {
-                          return currentValue
-                        } else {
-                          return previosValue + ' , ' + currentValue
-                        }
-                      },
-                      ''
-                    )}
-                  </Item>
-                </Grid>
-                <Grid xs={4}>
-                  <Item>{modalShift?.timeWindowDisplay}</Item>
-                </Grid>
-                <Grid textAlign="left" xs={12}>
-                  <Item sx={{ textAlign: 'left', fontSize: 'large' }}>
-                    {modalUser ? modalUser.firstName : `No user assigned`}
-                  </Item>
-                </Grid>
-              </Grid>
-            </Box>
-          </DialogTitle>
-          <DialogContent>
-            <Paper>
-              <SortedTable
-                ids={users?.ids as EntityId[]}
-                entities={
-                  users?.entities as Dictionary<
-                    Shift & { [key in keyof Shift]: string | number }
-                  >
-                }
-                headCells={userHeadCells}
-                isCheckable={false}
-                isSortable={false}
-                handleRowClick={handleRowClick}
-              />
-            </Paper>
-          </DialogContent>
-        </Dialog> */}
+        />
       </>
     )
   }
