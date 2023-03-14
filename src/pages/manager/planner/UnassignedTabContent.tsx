@@ -12,6 +12,7 @@ import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import { ShiftAssignmentCard } from '../../../components/ManagerComponents/shiftAssignmentCard/ShiftAssignmentCard'
 import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
+import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -61,6 +62,9 @@ export const UnassignedTabContent = () => {
   const [selectedShiftId, setSelectedShiftId] = useState<EntityId>()
   //** end Modal stuff */
 
+  const [openEditShift, setOpenEditShift] = useState<boolean>(false)
+  const [editShiftId, setEditShiftId] = useState<string>('')
+
   //** Table stuff */
   const [shifts, setShifts] = useState<EntityId[] | undefined>([])
   const [displayShifts, setDisplayShifts] = useState<EntityId[] | undefined>(
@@ -90,6 +94,12 @@ export const UnassignedTabContent = () => {
   const handleFilterChange = (event: SelectChangeEvent) => {
     console.log(event.target.value)
     setFilterBy(event.target.value)
+  }
+
+  const handleEditShift = (shiftId: string) => {
+    setEditShiftId(shiftId)
+    setOpenEditShift(true)
+    handleClose()
   }
 
   useEffect(() => {
@@ -168,7 +178,13 @@ export const UnassignedTabContent = () => {
             shiftId={selectedShiftId}
             selectedDay={filterBy}
             handleClose={handleClose}
+            handleEditShift={handleEditShift}
             open={open}
+          />
+          <EditShiftCardTest
+            shiftId={editShiftId}
+            setOpen={setOpenEditShift}
+            open={openEditShift}
           />
         </Stack>
       </Box>
