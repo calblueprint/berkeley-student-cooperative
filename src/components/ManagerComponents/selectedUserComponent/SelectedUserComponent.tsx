@@ -29,8 +29,7 @@ const SelectedUserComponent = ({
     <Box sx={{ flexGrow: 1 }}>
       <Grid container>
         <Grid xs={'auto'} md={'auto'} lg={'auto'}>
-          {/* <DisplayAssignedUser userId={userId} /> */}
-          <Typography>STEVEN</Typography>
+          <DisplayAssignedUser userId={userId} />
         </Grid>
         <Grid smOffset={'auto'} mdOffset={'auto'} lgOffset={'auto'}>
           {userId ? <XButton handleClick={handleClick} /> : null}
