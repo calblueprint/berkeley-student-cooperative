@@ -36,7 +36,6 @@ const ShiftSchema = Yup.object({
 })
 
 const daysList = [
-  '',
   'Monday',
   'Tuesday',
   'Wednesday',

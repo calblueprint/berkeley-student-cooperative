@@ -117,16 +117,18 @@ export const UnassignedTabContent = () => {
   // runs when the component mounts and when filterBy or shifts changes
   // the filtered shifts (filtered by day)
   useEffect(() => {
-    // console.log('Changing filters')
-    setDisplayShifts(
-      filterBy === filters[0]
-        ? shifts
-        : shifts?.filter((shiftId) =>
-            data?.entities[shiftId]?.possibleDays
-              .map((day) => day.toLocaleLowerCase())
-              .includes(filterBy)
-          )
+    // console.log('Changing filters', data?.entities)
+    const newShifts = shifts?.filter((shiftId) =>
+      data?.entities[shiftId]?.possibleDays
+        .map((day) => {
+          // console.log('--day:  ', day.toLocaleLowerCase())
+          return day.toLocaleLowerCase()
+        })
+        .includes(filterBy)
     )
+
+    // console.log(newShifts)
+    setDisplayShifts(newShifts)
   }, [filterBy, shifts, data])
 
   if (isLoading) {
