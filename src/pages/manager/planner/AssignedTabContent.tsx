@@ -108,13 +108,11 @@ export const AssignedTabContent = () => {
   useEffect(() => {
     // console.log('Changing filters')
     setDisplayShifts(
-      filterBy === filters[0]
-        ? shifts
-        : shifts?.filter((shiftId) =>
-            data?.entities[shiftId]?.possibleDays
-              .map((day) => day.toLocaleLowerCase())
-              .includes(filterBy)
-          )
+      shifts?.filter((shiftId) =>
+        data?.entities[shiftId]?.possibleDays
+          .map((day) => day.toLocaleLowerCase())
+          .includes(filterBy)
+      )
     )
   }, [filterBy, shifts, data])
 
