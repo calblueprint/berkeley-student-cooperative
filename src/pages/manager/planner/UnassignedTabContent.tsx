@@ -16,7 +16,8 @@ import { useEffect, useState } from 'react'
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { useUserContext } from '../../../context/UserContext'
 // import { getAllShifts } from '../../../firebase/queries/shift'
-import { HeadCell, Shift, User } from '../../../interfaces/interfaces'
+import { HeadCell } from '../../../interfaces/interfaces'
+import { User, Shift } from '../../../types/schema'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
@@ -75,7 +76,7 @@ const userHeadCells: HeadCell<
 ]
 
 const filters = [
-  'all',
+  // 'all',
   'monday',
   'tuesday',
   'wednesday',
@@ -253,7 +254,7 @@ export const UnassignedTabContent = () => {
                 ids={users?.ids as EntityId[]}
                 entities={
                   users?.entities as Dictionary<
-                    Shift & { [key in keyof Shift]: string | number }
+                    User & { [key in keyof User]: string | number }
                   >
                 }
                 headCells={userHeadCells}
