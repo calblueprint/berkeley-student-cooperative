@@ -1,11 +1,11 @@
 import { Tabs, Tab, Box, Typography } from '@mui/material'
 import Layout from '../../../components/Layout/Layout'
 import { useState } from 'react'
-import CategoriesView from '../categoryDropdown/categoriesView'
+import CategoriesView from './categoryDropdown/CategoriesView'
 import { useUserContext } from '../../../context/UserContext'
-import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
-// import { UnassignedTabContent } from './UnassignedTabContent'
-import ReduxTesting from './ReduxTesting'
+import { UnassignedTabContent } from './UnassignedTabContent'
+// import ReduxTesting from './ReduxTesting'
+import { AssignedTabContent } from './AssignedTabContent'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -62,11 +62,11 @@ export default function SchedulePage() {
           </Tabs>
         </Box>
         <TabPanel value={currPage} index={0}>
-          {/* <UnassignedTabContent /> */}
-          <ReduxTesting />
+          <UnassignedTabContent />
+          {/* <ReduxTesting /> */}
         </TabPanel>
         <TabPanel value={currPage} index={1}>
-          <ShiftSchedule />
+          <AssignedTabContent />
         </TabPanel>
         <TabPanel value={currPage} index={2}>
           <CategoriesView houseID={authUser.houseID} />
