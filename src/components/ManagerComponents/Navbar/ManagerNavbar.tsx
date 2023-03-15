@@ -4,6 +4,13 @@ import { List, ListItem, ListItemText, Typography } from '@mui/material'
 import styles from './ManagerNavbar.module.css'
 import Icon from '../../../assets/Icon'
 import { useUserContext } from '../../../context/UserContext'
+import { useAuthLogOutMutation } from '../../../store/apiSlices/authApiSlice'
+import {
+  selectCurrentUser,
+  selectCurrentHouse,
+} from '../../../store/slices/authSlice'
+import { useSelector } from 'react-redux'
+import { User, House } from '../../../types/schema'
 
 const ManagerNavbar: React.FunctionComponent = () => {
   /**
@@ -14,24 +21,39 @@ const ManagerNavbar: React.FunctionComponent = () => {
    *
    */
   const router = useRouter()
-  const { authUser, signOutAuth } = useUserContext()
+  // const { authUser, signOutAuth } = useUserContext()
+  const [authLogOut, { isSuccess }] = useAuthLogOutMutation()
+  const authUser = useSelector(selectCurrentUser) as User
+  const authHouse = useSelector(selectCurrentHouse) as House
 
-  const userDetails = () => (
+  React.useEffect(() => {
+    console.log('authUser: ' + authUser)
+    console.log('authHouse: ' + authHouse)
+    if (isSuccess) {
+      console.log('logging out')
+      router.push('/login')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser, authHouse, isSuccess])
+
+  const userDetails = (
     // Renders user details - name and role
     <ListItem className={styles.item + ' ' + styles.userDetails}>
       <Icon type="navProfile" className={styles.icon} />
       <div>
         <Typography variant="subtitle1" color={'#FFFFFF'}>
-          {authUser.firstName} {authUser.lastName}
+          {authUser
+            ? `${authUser?.firstName} ${authUser?.lastName}`
+            : 'Manager'}
         </Typography>
         <Typography variant="subtitle1" color={'#FFFFFF'}>
-          {authUser.role}
+          {authUser ? `Role: ${authUser.role}` : 'House Manager'}
         </Typography>
       </div>
     </ListItem>
   )
 
-  const pages = () => (
+  const pages = (
     /**
      * Renders navigation bar buttons for 3 pages - schedule, planner, house
      *
@@ -99,7 +121,7 @@ const ManagerNavbar: React.FunctionComponent = () => {
     </List>
   )
 
-  const logout = () => (
+  const logout = (
     <div className={styles.logout}>
       <ListItem
         className={styles.item}
@@ -107,8 +129,7 @@ const ManagerNavbar: React.FunctionComponent = () => {
         key={'settings'}
         onClick={() => {
           // signout MUST happen before pushing the login page, or else there is an error cuz the user context tries to use an empty user
-          signOutAuth()
-          router.push('/login')
+          authLogOut({})
         }}
       >
         <Icon type="navLogout" />
@@ -127,9 +148,9 @@ const ManagerNavbar: React.FunctionComponent = () => {
 
   return (
     <div className={styles.container}>
-      {userDetails()}
-      {pages()}
-      {logout()}
+      {userDetails}
+      {pages}
+      {logout}
     </div>
   )
 }

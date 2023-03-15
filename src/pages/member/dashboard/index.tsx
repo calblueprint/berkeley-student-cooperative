@@ -5,8 +5,12 @@ import Layout from '../../../components/Layout/Layout'
 import AvailabilityInputModal from '../../../components/MemberComponents/AvailabilityEntry/AvailabilityInputModal'
 import { useUserContext } from '../../../context/UserContext'
 import ParseCSV from '../../ParseCsv/ParseCsv'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../../store/slices/authSlice'
+import { User } from '../../../types/schema'
 const Home: NextPage = () => {
-  const { authUser } = useUserContext()
+  // const { authUser } = useUserContext()
+  const authUser = useSelector(selectCurrentUser) as User
 
   return (
     <Layout>
