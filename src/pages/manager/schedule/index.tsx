@@ -1,6 +1,5 @@
 import { Box, Typography } from '@mui/material'
 import Layout from '../../../components/Layout/Layout'
-// import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
 
 export default function SchedulePage() {
   return (
@@ -11,7 +10,6 @@ export default function SchedulePage() {
       <Box sx={{ width: '100%' }}>
         <Typography color={'#000'}>Coming Soon!!!</Typography>
       </Box>
-      {/* <ShiftSchedule /> */}
     </Layout>
   )
 }
