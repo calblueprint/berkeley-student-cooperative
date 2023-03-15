@@ -5,9 +5,9 @@ import CategoriesView from './categoryDropdown/CategoriesView'
 import { UnassignedTabContent } from './UnassignedTabContent'
 // import ReduxTesting from './ReduxTesting'
 import { AssignedTabContent } from '../../../components/ManagerComponents/shiftAssignmentCard/AssignedTabContent'
-import { selectCurrentUser } from '../../../store/slices/authSlice'
-import { useSelector } from 'react-redux'
-import { User } from '../../../types/schema'
+// import { selectCurrentUser } from '../../../store/slices/authSlice'
+// import { useSelector } from 'react-redux'
+// import { User } from '../../../types/schema'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -43,7 +43,7 @@ export default function SchedulePage() {
    * Allows for navigation between unassigned shifts, assigned shifts, and the category view page. Used in the planner view.
    * @returns SchedulePage
    */
-  const authUser = useSelector(selectCurrentUser) as User
+  // const authUser = useSelector(selectCurrentUser) as User
 
   const [currPage, setCurrPage] = useState(0)
 
@@ -71,7 +71,7 @@ export default function SchedulePage() {
           <AssignedTabContent />
         </TabPanel>
         <TabPanel value={currPage} index={2}>
-          <CategoriesView houseID={authUser.houseID} />
+          <CategoriesView />
         </TabPanel>
       </Box>
     </Layout>

@@ -5,7 +5,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { useState, useEffect, Key } from 'react'
+import { useState, Key } from 'react'
 // import { getCategories } from '../../../firebase/queries/house'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
@@ -31,11 +31,11 @@ const ShiftNameRow: React.FC<ShiftNameRowProps> = ({
   //     (state: RootState) =>
   //     selectShiftById('EUC')(state, shiftID)) as Shift
   // }
-  console.log('hello')
+  // console.log('hello')
   const currShift = useSelector((state: RootState) =>
     selectShiftById('EUC')(state, shiftID as EntityId)
   ) as Shift
-  console.log('currShift', currShift, 'value', shiftID)
+  // console.log('currShift', currShift, 'value', shiftID)
   return (
     <TableRow>
       <TableCell sx={{ fontSize: 18, marginLeft: 28 }}>
@@ -45,17 +45,16 @@ const ShiftNameRow: React.FC<ShiftNameRowProps> = ({
   )
 }
 
-type CategoryTableProps = {
-  categoriesArray: string[]
-}
-const CategoryTable: React.FC<CategoryTableProps> = ({
-  categoriesArray,
-}: CategoryTableProps) => {
-  const [houseCategories, setHouseCategories] = useState<string[] | undefined>(
-    undefined
-  )
-
+const CategoryTable = ({
+  categories,
+}: {
+  categories: Record<string, string[]>
+}) => {
   const authUser = useSelector(selectCurrentUser) as User
+
+  // const [houseCategories, setHouseCategories] = useState<
+  //   Record<string, string[]> | undefined
+  // >(undefined)
 
   const {
     data: shiftsData,
@@ -64,9 +63,9 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
     isError,
   } = useGetShiftsQuery(authUser.houseID)
 
-  useEffect(() => {
-    setHouseCategories(categoriesArray)
-  }, [categoriesArray])
+  // useEffect(() => {
+  //   setHouseCategories(categories)
+  // }, [categories])
 
   if (isLoading) {
     return <div>Is Loding...</div>
@@ -75,14 +74,22 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
   } else if (isSuccess && shiftsData) {
     return (
       <div>
-        {houseCategories?.map((category, index) => {
+        {categories
+          ? Object.entries(categories).map((category, index) => (
+              <div key={index}>
+                <IndividualCategory category={category} />
+                <br />
+              </div>
+            ))
+          : null}
+        {/* {houseCategories?.map((category, index) => {
           return (
             <div key={index}>
               <IndividualCategory category={category} />
               <br />
             </div>
           )
-        })}
+        })} */}
       </div>
     )
   } else {
@@ -90,8 +97,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
   }
 }
 type IndividualCategoryProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  category: any
+  category: [string, string[]] //Record<string, string[]>
 }
 const IndividualCategory: React.FC<IndividualCategoryProps> = ({
   category,

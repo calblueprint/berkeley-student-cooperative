@@ -33,8 +33,8 @@ const customBaseQuery: BaseQueryFn<
     // params: object
   }) => {
     // console.log('method: ', method)
-    // console.log('url: ', url)
-    // console.log('data: ', body)
+    console.log('url: ', url)
+    console.log('body to Save: ', body)
     // console.log('params: ', params)
 
     const pathArray = url.split('/').filter((p: string) => p.length > 0)
@@ -184,7 +184,11 @@ const customBaseQuery: BaseQueryFn<
     const res = await result(
       arg as { url: string; method: string; body: object }
     )
-    return { data: res?.data }
+    if (res?.data) {
+      return { data: res?.data }
+    } else {
+      return { error: 'error ocurred' }
+    }
   } catch (error) {
     return { error }
   }

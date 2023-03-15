@@ -46,7 +46,7 @@ export default function LoginPage() {
   // pushes the router to the member/manager default page if the user is set in the context
   useEffect(() => {
     if (authUser.id) {
-      console.log('------authUser: ', authUser)
+      // console.log('------authUser: ', authUser)
       if (authUser.role == 'Member' || authUser.role == 'member') {
         router.push('/member/dashboard')
       } else {

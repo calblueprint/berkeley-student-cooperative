@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react'
-import { addCategory } from '../../../../firebase/queries/house'
-import { House } from '../../../../types/schema'
+// import { addCategory } from '../../../../firebase/queries/house'
+import { User } from '../../../../types/schema'
 // import CategoriesDropdown from './CategoriesDropdown'
 import Button from '@mui/material/Button'
 import { Dialog, DialogContent, TextField, Typography } from '@mui/material'
 import Icon from '../../../../assets/Icon'
 import AddIcon from '@mui/icons-material/Add'
-import { useGetHouseQuery } from '../../../../store/apiSlices/houseApiSlice'
+import {
+  useGetHouseQuery,
+  useUpdateHousesMutation,
+} from '../../../../store/apiSlices/houseApiSlice'
 import styles from './CategoriesView.module.css'
 import CategoryTable from '../../../../components/ManagerComponents/CategoryTable/CategoryTable'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../../../store/slices/authSlice'
 const theme = createTheme({
   palette: {
     primary: {
@@ -21,13 +26,11 @@ const theme = createTheme({
   },
 })
 
-type CategoriesViewProps = {
-  houseID: string
-}
+// type CategoriesViewProps = {
+//   houseID: string
+// }
 
-const CategoriesView: React.FC<CategoriesViewProps> = ({
-  houseID,
-}: CategoriesViewProps) => {
+const CategoriesView = () => {
   /**
    * Displays the shift categories in a house and provides the ability to add a new category.
    * Each shift category is a drop-down, such that when clicked, it displays all of the shifts under that category.
@@ -36,36 +39,36 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
    * @returns CategoriesView
    */
 
-  const { data: dataHouse, isLoading } = useGetHouseQuery('EUC')
+  const authUser = useSelector(selectCurrentUser) as User
+
+  const {
+    data: dataHouse,
+    isLoading: isHouseLoading,
+    isSuccess: isHouseSuccess,
+  } = useGetHouseQuery(authUser.houseID)
+
+  const [updateHouse, { isLoading: isUpdating, isSuccess: isUploaded }] =
+    useUpdateHousesMutation()
 
   // console.log("data", dataHouse, "is the Query loading:", isLoading, "Was the query successful:",
   // isSuccess, "is there an error:", isError,"error message:", error)
   // Retrieved house object
-  const [house, setHouse] = useState<House>()
+  // const [house, setHouse] = useState<House>()
   // Stores whether the modal to create a new category is opened
   const [isModalOpened, setIsModalOpened] = useState(false)
   // Stores the new category name
   const [newCategoryName, setNewCategoryName] = useState('')
 
-  const [houseInfo, setHouseInfo] = useState<string[] | undefined>(undefined)
+  const [houseCategoryObject, setHouseCategoryObject] = useState<
+    Record<string, string[]> | undefined
+  >(undefined)
 
-  // Retrieves the house object given the houseID
   useEffect(() => {
-    // const retrieveHouse = async () => {
-    //   const h = await getHouse(houseID)
-    //   setHouse(h)
-    // }
-    // retrieveHouse()
-    //console.log("data", dataHouse)
-  }, [houseID])
-  useEffect(() => {
-    if (dataHouse?.entities) {
-      const dataOfHouse = Object.entries(dataHouse?.entities)[0][1]
-      if (dataOfHouse?.categories) {
-        setHouseInfo(Object.entries(dataOfHouse.categories))
-      }
+    if (isHouseSuccess) {
+      console.log(dataHouse)
+      setHouseCategoryObject(dataHouse.entities[authUser.houseID]?.categories)
     }
-  }, [dataHouse])
+  }, [dataHouse, isHouseSuccess, authUser])
 
   // Opens modal
   const openModal = () => {
@@ -87,15 +90,35 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
   const uploadCategory = async () => {
     if (newCategoryName.length == 0) {
       console.log('Invalid Category Name length')
+      return
     }
-    if (house !== undefined && newCategoryName.length > 0) {
-      const successful = await addCategory(houseID, newCategoryName)
-      if (successful) {
-        house.categories.set(newCategoryName, new Map<string, string>())
-        setHouse(house)
+    if (houseCategoryObject && newCategoryName.length > 0) {
+      let categories
+
+      if (houseCategoryObject) {
+        categories = { ...houseCategoryObject, [newCategoryName]: [] }
+      } else {
+        categories = { [newCategoryName]: [] }
+      }
+      const house = { categories }
+      // console.log('[CategoriesView]:Categories Object: ', houseCategoryObject)
+      // console.log(
+      //   '[CategoriesView]:With new Category: ',
+      //   authUser.houseID,
+      //   house
+      // )
+      const data = { data: house, houseId: authUser.houseID }
+
+      try {
+        const payload = await updateHouse(data).unwrap()
+        console.log('fulfilled', payload)
+      } catch (error) {
+        console.error('rejected', error)
       }
     }
-    closeModal()
+    if (isUploaded) {
+      closeModal()
+    }
   }
   const buttonStyling = {
     backgroundColor: '#1B202D',
@@ -116,11 +139,11 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
           <AddIcon sx={{ fontSize: 19, marginLeft: 0.5, paddingBottom: 0.2 }} />
         </Button>
       </ThemeProvider>
-      {!isLoading && houseInfo ? (
-        <CategoryTable categoriesArray={houseInfo} />
+      {!isHouseLoading && houseCategoryObject ? (
+        <CategoryTable categories={houseCategoryObject} />
       ) : (
         <div>
-          {isLoading && houseInfo ? (
+          {isHouseLoading && houseCategoryObject ? (
             <h1>Loading...</h1>
           ) : (
             <h1>No categories Exist in this house, add one now!</h1>
@@ -164,7 +187,11 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                 />
               </div>
               <div>
-                <Button onClick={uploadCategory} className={styles.submit}>
+                <Button
+                  onClick={uploadCategory}
+                  className={styles.submit}
+                  disabled={isUpdating}
+                >
                   Save
                 </Button>
                 <Button onClick={clearFields} className={styles.clear}>
