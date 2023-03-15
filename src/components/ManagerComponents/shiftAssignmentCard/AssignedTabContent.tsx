@@ -3,14 +3,16 @@ import { Box, Stack, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useEffect, useState } from 'react'
-import SortedTable from '../../../components/shared/tables/SortedTable'
-import { useUserContext } from '../../../context/UserContext'
+import SortedTable from '../../shared/tables/SortedTable'
 import { HeadCell } from '../../../interfaces/interfaces'
-import { Shift } from '../../../types/schema'
+import { Shift, User } from '../../../types/schema'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
-import { ShiftAssignmentCard } from '../../../components/ManagerComponents/shiftAssignmentCard/ShiftAssignmentCard'
-import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
+import { ShiftAssignmentCard } from './ShiftAssignmentCard'
+import NewShiftCardTest from '../Shiftcard/NewShiftCardTest'
+import EditShiftCardTest from '../Shiftcard/EditShiftCardTest'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../../store/slices/authSlice'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -49,9 +51,10 @@ const filters = [
 ]
 
 export const AssignedTabContent = () => {
-  const { house } = useUserContext()
+  // const { house } = useUserContext()
+  const authUser = useSelector(selectCurrentUser) as User
   const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
-    house?.houseID
+    authUser.houseID
   )
 
   //** Modal stuff */
@@ -59,6 +62,9 @@ export const AssignedTabContent = () => {
   //** State variables that pass the selected item's info from the table to the modal */
   const [selectedShiftId, setSelectedShiftId] = useState<EntityId>()
   //** end Modal stuff */
+
+  const [openEditShift, setOpenEditShift] = useState<boolean>(false)
+  const [editShiftId, setEditShiftId] = useState<string>('')
 
   //** Table stuff */
   const [shifts, setShifts] = useState<EntityId[] | undefined>([])
@@ -89,6 +95,12 @@ export const AssignedTabContent = () => {
   const handleFilterChange = (event: SelectChangeEvent) => {
     console.log(event.target.value)
     setFilterBy(event.target.value)
+  }
+
+  const handleEditShift = (shiftId: string) => {
+    setEditShiftId(shiftId)
+    setOpenEditShift(true)
+    handleClose()
   }
 
   useEffect(() => {
@@ -165,7 +177,13 @@ export const AssignedTabContent = () => {
             shiftId={selectedShiftId}
             selectedDay={filterBy}
             handleClose={handleClose}
+            handleEditShift={handleEditShift}
             open={open}
+          />
+          <EditShiftCardTest
+            shiftId={editShiftId}
+            setOpen={setOpenEditShift}
+            open={openEditShift}
           />
         </Stack>
       </Box>

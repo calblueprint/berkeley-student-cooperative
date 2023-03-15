@@ -114,6 +114,7 @@ export type ScheduledShift = {
 }
 
 export type House = {
+  id: string
   houseID: string
   categories: { string: string[] }
   // TODO: remove members because we can simply use the firebase's .where() to filter through the users for a certain house

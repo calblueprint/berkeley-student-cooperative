@@ -5,8 +5,8 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { useState, useEffect } from 'react'
-import { getCategories } from '../../../firebase/queries/house'
+import { useState, Key } from 'react'
+// import { getCategories } from '../../../firebase/queries/house'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import styles from './CategoryTable.module.css'
@@ -17,7 +17,8 @@ import {
 } from '../../../store/apiSlices/shiftApiSlice'
 import { EntityId } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { Shift } from '../../../types/schema'
+import { Shift, User } from '../../../types/schema'
+import { selectCurrentUser } from '../../../store/slices/authSlice'
 
 type ShiftNameRowProps = {
   shiftID: string
@@ -30,11 +31,11 @@ const ShiftNameRow: React.FC<ShiftNameRowProps> = ({
   //     (state: RootState) =>
   //     selectShiftById('EUC')(state, shiftID)) as Shift
   // }
-  console.log('hello')
+  // console.log('hello')
   const currShift = useSelector((state: RootState) =>
     selectShiftById('EUC')(state, shiftID as EntityId)
   ) as Shift
-  console.log('currShift', currShift, 'value', shiftID)
+  // console.log('currShift', currShift, 'value', shiftID)
   return (
     <TableRow>
       <TableCell sx={{ fontSize: 18, marginLeft: 28 }}>
@@ -44,26 +45,27 @@ const ShiftNameRow: React.FC<ShiftNameRowProps> = ({
   )
 }
 
-type CategoryTableProps = {
-  categoriesArray: string[]
-}
-const CategoryTable: React.FC<CategoryTableProps> = ({
-  categoriesArray,
-}: CategoryTableProps) => {
-  const [houseCategories, setHouseCategories] = useState<string[] | undefined>(
-    undefined
-  )
+const CategoryTable = ({
+  categories,
+}: {
+  categories: Record<string, string[]>
+}) => {
+  const authUser = useSelector(selectCurrentUser) as User
+
+  // const [houseCategories, setHouseCategories] = useState<
+  //   Record<string, string[]> | undefined
+  // >(undefined)
 
   const {
     data: shiftsData,
     isLoading,
     isSuccess,
     isError,
-  } = useGetShiftsQuery('EUC')
+  } = useGetShiftsQuery(authUser.houseID)
 
-  useEffect(() => {
-    setHouseCategories(categoriesArray)
-  }, [categoriesArray])
+  // useEffect(() => {
+  //   setHouseCategories(categories)
+  // }, [categories])
 
   if (isLoading) {
     return <div>Is Loding...</div>
@@ -72,20 +74,30 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
   } else if (isSuccess && shiftsData) {
     return (
       <div>
-        {houseCategories?.map((category, index) => {
+        {categories
+          ? Object.entries(categories).map((category, index) => (
+              <div key={index}>
+                <IndividualCategory category={category} />
+                <br />
+              </div>
+            ))
+          : null}
+        {/* {houseCategories?.map((category, index) => {
           return (
             <div key={index}>
               <IndividualCategory category={category} />
               <br />
             </div>
           )
-        })}
+        })} */}
       </div>
     )
+  } else {
+    return <></>
   }
 }
 type IndividualCategoryProps = {
-  category: any
+  category: [string, string[]] //Record<string, string[]>
 }
 const IndividualCategory: React.FC<IndividualCategoryProps> = ({
   category,
@@ -144,8 +156,8 @@ const IndividualCategory: React.FC<IndividualCategoryProps> = ({
         </TableHead>
         <TableBody>
           {isExpanded &&
-            shiftItems?.map((value) => {
-              return <ShiftNameRow shiftID={value} key={value} />
+            shiftItems?.map((value: Key | null | undefined) => {
+              return <ShiftNameRow shiftID={value as string} key={value} />
             })}
         </TableBody>
       </Table>
