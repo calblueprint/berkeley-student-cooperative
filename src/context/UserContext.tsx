@@ -74,7 +74,7 @@ export const AuthState = ({ children }: any) => {
 
   useEffect(() => {
     console.log('[AuthState]: authUser: ', authUser)
-  }, [authUser])
+  }, [authUser, isSuccess])
 
   if (isLoading) {
     return <Box> Loading...</Box>
@@ -86,7 +86,7 @@ export const AuthState = ({ children }: any) => {
   } else {
     return (
       <>
-        <Box></Box>
+        <Box>{children}</Box>
         {/* <React.Fragment>{children}</React.Fragment> */}
       </>
     )

@@ -1,5 +1,5 @@
 import { createSelector, createEntityAdapter, EntityId } from '@reduxjs/toolkit'
-import { Shift as House } from '../../types/schema'
+import { House } from '../../types/schema'
 import { apiSlice } from '../api/apiSlice'
 import { RootState } from '../store'
 // import { formatMilitaryTime } from '../../utils/utils'
