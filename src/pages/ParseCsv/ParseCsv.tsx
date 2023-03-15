@@ -19,38 +19,41 @@ const ParseCSV = () => {
   const storage = getStorage()
 
   // Function that uploads a list of pre-approved emails to Firebase; also uploads the CSV to Firebase storage
-  const uploadRowsToFirebase = useCallback(async (
-    rowList: memberRow[],
-    //fileHolder: string
-  ) => {
-    let house = ''
-    for (let i = 0; i < rowList.length; i++) {
-      const row = rowList[i]
-      if (
-        row.house === undefined ||
-        row.lastName === undefined ||
-        row.firstName === undefined ||
-        row.email === undefined
-      ) {
-        console.log('Invalid data')
-        return
+  const uploadRowsToFirebase = useCallback(
+    async (
+      rowList: memberRow[]
+      //fileHolder: string
+    ) => {
+      let house = ''
+      for (let i = 0; i < rowList.length; i++) {
+        const row = rowList[i]
+        if (
+          row.house === undefined ||
+          row.lastName === undefined ||
+          row.firstName === undefined ||
+          row.email === undefined
+        ) {
+          console.log('Invalid data')
+          return
+        }
+        if (house === '') {
+          house = row.house
+        } else if (row.house !== house) {
+          console.log('Contains data from multiple houses')
+        }
       }
-      if (house === '') {
-        house = row.house
-      } else if (row.house !== house) {
-        console.log('Contains data from multiple houses')
+      for (let i = 0; i < rowList.length; i++) {
+        const row = rowList[i]
+        addRowOfCSV(row.email, row.firstName, row.lastName, row.house)
       }
-    }
-    for (let i = 0; i < rowList.length; i++) {
-      const row = rowList[i]
-      addRowOfCSV(row.email, row.firstName, row.lastName, row.house)
-    }
-    if (file !== null && file !== undefined) {
-      const storageRef = ref(storage, house)
-      uploadBytes(storageRef, file)
-      alert('Successful Upload')
-    }
-  }, [file, storage])
+      if (file !== null && file !== undefined) {
+        const storageRef = ref(storage, house)
+        uploadBytes(storageRef, file)
+        alert('Successful Upload')
+      }
+    },
+    [file, storage]
+  )
 
   //runs everyitme fileHolder updates
   useEffect(() => {
@@ -70,14 +73,10 @@ const ParseCSV = () => {
         complete: function () {
           //setUserArr(userHolder)
           uploadRowsToFirebase(userHolder)
-  
         },
       })
-      
     }
   }, [fileHolder, uploadRowsToFirebase])
-
-  
 
   /**
    * Updates fileHolder and userArr useStates.

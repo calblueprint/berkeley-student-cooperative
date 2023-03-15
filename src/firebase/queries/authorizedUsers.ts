@@ -1,10 +1,7 @@
 import { firestore } from '../clientApp'
 import {
   doc,
-  collection,
-  addDoc,
   getDoc,
-  deleteDoc,
   setDoc,
   DocumentData,
   QueryDocumentSnapshot,
@@ -12,7 +9,7 @@ import {
 } from 'firebase/firestore'
 import { RowOfCSV } from '../../types/schema'
 
-let collectionName = 'authorizedUsers'
+const collectionName = 'authorizedUsers'
 
 // Adds a row of the CSV to the Firebase under authorizedUsers; document id = email
 export const addRowOfCSV = async (
@@ -21,7 +18,7 @@ export const addRowOfCSV = async (
   lastName: string,
   houseID: string
 ) => {
-  let user = await getRowOfCSV(email)
+  const user = await getRowOfCSV(email)
   if (user !== null) {
     return
   }
