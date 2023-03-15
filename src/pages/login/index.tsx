@@ -57,7 +57,7 @@ export default function LoginPage() {
 
   // onClick handler that pushes the router to the create account page
   const createAccount = () => {
-    router.push('/createAccount')
+    // router.push('/createAccount')
   }
   return authUser.id ? (
     <Layout />

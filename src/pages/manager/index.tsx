@@ -2,8 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import Layout from '../../components/Layout/Layout'
-import SortedTable from '../../components/shared/tables/SortedTable'
-import { HeadCell } from '../../interfaces/interfaces'
+// import SortedTable from '../../components/shared/tables/SortedTable'
+// import { HeadCell } from '../../interfaces/interfaces'
 
 const Home: NextPage = () => {
   // const shiftHeadCells: HeadCell<Shift & { [key in keyof Shift]: string | number }>[] = [

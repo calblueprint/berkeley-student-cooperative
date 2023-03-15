@@ -47,8 +47,7 @@ const CategoriesView = () => {
     isSuccess: isHouseSuccess,
   } = useGetHouseQuery(authUser.houseID)
 
-  const [updateHouse, { isLoading: isUpdating, isSuccess: isUploaded }] =
-    useUpdateHousesMutation()
+  const [updateHouse, { isLoading: isUpdating }] = useUpdateHousesMutation()
 
   // console.log("data", dataHouse, "is the Query loading:", isLoading, "Was the query successful:",
   // isSuccess, "is there an error:", isError,"error message:", error)
@@ -116,9 +115,8 @@ const CategoriesView = () => {
         console.error('rejected', error)
       }
     }
-    if (isUploaded) {
-      closeModal()
-    }
+
+    closeModal()
   }
   const buttonStyling = {
     backgroundColor: '#1B202D',

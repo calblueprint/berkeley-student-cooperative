@@ -10,6 +10,9 @@ import {
   getRowOfCSV,
   updateRowOfCSV,
 } from '../../firebase/queries/authorizedUsers'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../store/slices/authSlice'
+import { User } from '../../types/schema'
 
 /**
  * Page that's used to create an account for a member that has never
@@ -25,7 +28,8 @@ const CreateAccountPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const { authUser, register } = useUserContext()
+  const { register } = useUserContext()
+  const authUser = useSelector(selectCurrentUser) as User
 
   const login = () => {
     router.push('/login')
@@ -63,7 +67,7 @@ const CreateAccountPage = () => {
       return
     }
     // Invalid if email not in CSV
-    let csvInformation = await getRowOfCSV(email)
+    const csvInformation = await getRowOfCSV(email)
     if (csvInformation === null) {
       console.log('Invalid email')
       return
@@ -94,7 +98,7 @@ const CreateAccountPage = () => {
         'member',
         password
       )
-      let newData = {
+      const newData = {
         accountCreated: true,
       }
       await updateRowOfCSV(email, newData)
