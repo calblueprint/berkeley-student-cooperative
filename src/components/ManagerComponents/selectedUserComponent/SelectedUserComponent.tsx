@@ -1,8 +1,12 @@
 import { Box, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { EntityId } from '@reduxjs/toolkit'
+// import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { selectUserById } from '../../../store/apiSlices/userApiSlice'
+import {
+  selectUserById,
+  useGetUsersQuery,
+} from '../../../store/apiSlices/userApiSlice'
 import { RootState } from '../../../store/store'
 import { User } from '../../../types/schema'
 import XButton from '../../shared/buttons/XButton'
@@ -11,7 +15,11 @@ const DisplayAssignedUser = ({ userId }: { userId?: EntityId }) => {
   const user: User = useSelector(
     (state: RootState) => selectUserById(state, userId as EntityId) as User
   )
-  if (userId) {
+  // useEffect(() => {
+  //   console.log('USEEFFECT', user)
+  // }, [user])
+
+  if (user) {
     return <Typography>{user?.firstName}</Typography>
   } else {
     return <Typography>No assigned user</Typography>
@@ -25,6 +33,7 @@ const SelectedUserComponent = ({
   userId?: EntityId
   handleClick: () => void
 }) => {
+  const {} = useGetUsersQuery({})
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container bgcolor={'#D1FAE5'}>
