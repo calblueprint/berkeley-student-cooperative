@@ -4,11 +4,13 @@ import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useEffect, useState } from 'react'
 import SortedTable from '../../../components/shared/tables/SortedTable'
-import { useUserContext } from '../../../context/UserContext'
+// import { useUserContext } from '../../../context/UserContext'
 import { HeadCell } from '../../../interfaces/interfaces'
-import { Shift } from '../../../types/schema'
+import { Shift, User } from '../../../types/schema'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../../store/slices/authSlice'
 import { ShiftAssignmentCard } from '../../../components/ManagerComponents/shiftAssignmentCard/ShiftAssignmentCard'
 import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
 import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
@@ -50,9 +52,9 @@ const filters = [
 ]
 
 export const UnassignedTabContent = () => {
-  const { house } = useUserContext()
-  const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
-    house?.houseID
+  const authUser = useSelector(selectCurrentUser) as User
+  const { data, isLoading, isSuccess, isError, error } = useGetShiftsQuery(
+    authUser.houseID
   )
 
   //** Modal stuff */
@@ -130,9 +132,14 @@ export const UnassignedTabContent = () => {
     setDisplayShifts(newShifts)
   }, [filterBy, shifts, data])
 
+  useEffect(() => {
+    console.log(authUser)
+  }, [authUser])
+
   if (isLoading) {
     return <div>Loading...</div>
   } else if (isError) {
+    console.log(error)
     return <div>Error</div>
   } else {
     return (

@@ -28,6 +28,11 @@ import { useUserContext } from '../../../context/UserContext'
 import ShiftCard from '../Shiftcard/Shiftcard'
 import AssignShiftcard from '../AssignShiftcard/AssignShiftcard'
 import styles from './ShiftSchedule.module.css'
+import { useSelector } from 'react-redux'
+import {
+  selectCurrentHouse,
+  selectCurrentUser,
+} from '../../../store/slices/authSlice'
 
 /**
  * @remarks
@@ -42,7 +47,9 @@ import styles from './ShiftSchedule.module.css'
  * 6. In schedule, store table entries in based on which day they're from.
  */
 export const ShiftSchedule = () => {
-  const { authUser, house } = useUserContext()
+  // const { authUser, house } = useUserContext()
+  const authUser = useSelector(selectCurrentUser)
+  const house = useSelector(selectCurrentHouse)
 
   /* MOST IMPORTANT:  Holds the row components that are loaded onto the table
   Each k: Days, value: List of corresponding components matching a given shift*/
