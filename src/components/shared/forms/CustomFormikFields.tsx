@@ -1,6 +1,6 @@
 import React from 'react'
 // import ReactDOM from 'react-dom'
-import { useField } from 'formik'
+import { FieldHookConfig, useField } from 'formik'
 import {
   TextField,
   Select,
@@ -10,11 +10,19 @@ import {
   MenuItem,
 } from '@mui/material'
 
-export const TextInput = ({ label, ...props }) => {
+export const TextInput = ({
+  name,
+  label,
+  ...props
+}: {
+  name: string
+  label: string
+}) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
   // which we can spread on <input>. We can use field meta to show an error
   // message if the field is invalid and it has been touched (i.e. visited)
-  const [field, meta] = useField(props)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [field, meta] = useField(props as string | FieldHookConfig<any>)
   const showError = meta.touched && !!meta.error
   // React.useEffect(() => {
   //   if (field) console.log('Fields: ', field)
@@ -25,6 +33,7 @@ export const TextInput = ({ label, ...props }) => {
     <>
       <TextField
         {...field}
+        name={name}
         label={label}
         error={showError}
         helperText={showError ? meta.error : ''}
@@ -37,8 +46,26 @@ export const TextInput = ({ label, ...props }) => {
   )
 }
 
-export const SelectInput = ({ label, labelid, id, ...props }) => {
-  const [field, meta] = useField({ ...props, type: 'select' })
+export const SelectInput = ({
+  name,
+  label,
+  labelid,
+  id,
+  multiselect,
+  options,
+  ...props
+}: {
+  name: string
+  label: string
+  labelid: string
+  id: string
+  multiselect: boolean
+  options: string[]
+}) => {
+  const [field, meta] = useField({ ...props, type: 'select' } as
+    | string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    | FieldHookConfig<any>)
 
   const showError = meta.touched && !!meta.error
 
@@ -53,14 +80,15 @@ export const SelectInput = ({ label, labelid, id, ...props }) => {
       <FormControl margin="dense" fullWidth error={showError}>
         <InputLabel id={labelid}>{label}</InputLabel>
         <Select
-          id={id || props.name}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          id={id || name}
           labelId={labelid}
           label={label}
           // {...props}
-          multiple={props.multiselect}
+          multiple={multiselect}
           {...field}
         >
-          {props.options.map((option) => (
+          {options.map((option) => (
             <MenuItem key={option} value={option}>
               {option}
             </MenuItem>
