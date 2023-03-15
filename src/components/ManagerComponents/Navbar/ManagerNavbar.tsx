@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { List, ListItem, ListItemText, Typography } from '@mui/material'
 import styles from './ManagerNavbar.module.css'
 import Icon from '../../../assets/Icon'
-import { useUserContext } from '../../../context/UserContext'
+// import { useUserContext } from '../../../context/UserContext'
 import { useAuthLogOutMutation } from '../../../store/apiSlices/authApiSlice'
 import {
   selectCurrentUser,

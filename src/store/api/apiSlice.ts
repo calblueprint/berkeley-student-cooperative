@@ -13,9 +13,13 @@ import {
 import type { BaseQueryFn } from '@reduxjs/toolkit/query'
 
 const customBaseQuery: BaseQueryFn<
-  unknown, // Args
-  unknown // Result
-> = (arg) => {
+  unknown,
+  unknown,
+  unknown,
+  object,
+  object
+> = async (arg) => {
+  // Args
   // console.log(arg)
   const result = async ({
     url,
@@ -176,7 +180,14 @@ const customBaseQuery: BaseQueryFn<
       return { error }
     }
   }
-  return result(arg as { url: string; method: string; body: object })
+  try {
+    const res = await result(
+      arg as { url: string; method: string; body: object }
+    )
+    return { data: res?.data }
+  } catch (error) {
+    return { error }
+  }
 }
 
 export const apiSlice = createApi({

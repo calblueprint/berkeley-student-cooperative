@@ -6,7 +6,7 @@
   2. Change how House is retrieved using new Danashi User Context. (Functional for now, plugging House context is a little buggy)
   3. styling
 */
-import { getUser } from '../../../firebase/queries/user'
+// import { getUser } from '../../../firebase/queries/user'
 import React, { useEffect, useState } from 'react'
 import {
   Table,
@@ -20,17 +20,17 @@ import { getHouse } from '../../../firebase/queries/house'
 import { Day } from '../../../types/schema'
 import { getNumVerified, getShift } from '../../../firebase/queries/shift'
 import { Shift } from '../../../types/schema'
-import { type } from 'os'
+// import { type } from 'os'
 import Select from 'react-select'
-import { firestoreAutoId, objectToMap } from '../../../firebase/helpers'
+// import { firestoreAutoId, objectToMap } from '../../../firebase/helpers'
 import Paper from '@mui/material/Paper'
-import { useUserContext } from '../../../context/UserContext'
-import ShiftCard from '../Shiftcard/Shiftcard'
+// import { useUserContext } from '../../../context/UserContext'
+// import ShiftCard from '../Shiftcard/Shiftcard'
 import AssignShiftcard from '../AssignShiftcard/AssignShiftcard'
 import styles from './ShiftSchedule.module.css'
 import { useSelector } from 'react-redux'
 import {
-  selectCurrentHouse,
+  // selectCurrentHouse,
   selectCurrentUser,
 } from '../../../store/slices/authSlice'
 
@@ -49,7 +49,7 @@ import {
 export const ShiftSchedule = () => {
   // const { authUser, house } = useUserContext()
   const authUser = useSelector(selectCurrentUser)
-  const house = useSelector(selectCurrentHouse)
+  // const house = useSelector(selectCurrentHouse)
 
   /* MOST IMPORTANT:  Holds the row components that are loaded onto the table
   Each k: Days, value: List of corresponding components matching a given shift*/
