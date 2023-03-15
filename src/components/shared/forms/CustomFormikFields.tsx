@@ -1,6 +1,6 @@
 import React from 'react'
 // import ReactDOM from 'react-dom'
-import { useField } from 'formik'
+import { FieldHookConfig, useField } from 'formik'
 import {
   TextField,
   Select,
@@ -10,7 +10,11 @@ import {
   MenuItem,
 } from '@mui/material'
 
-export const TextInput = ({ label, ...props }) => {
+type TextInputProps = {
+  label: string
+} & FieldHookConfig<string>
+
+export const TextInput = ({ label, ...props }: TextInputProps) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
   // which we can spread on <input>. We can use field meta to show an error
   // message if the field is invalid and it has been touched (i.e. visited)
@@ -37,7 +41,20 @@ export const TextInput = ({ label, ...props }) => {
   )
 }
 
-export const SelectInput = ({ label, labelid, id, ...props }) => {
+type SelectInputProps = {
+  label: string
+  labelid: string
+  id?: string
+  options: string[]
+  multiselect?: boolean
+} & FieldHookConfig<string>
+
+export const SelectInput = ({
+  label,
+  labelid,
+  id,
+  ...props
+}: SelectInputProps) => {
   const [field, meta] = useField({ ...props, type: 'select' })
 
   const showError = meta.touched && !!meta.error
@@ -70,27 +87,6 @@ export const SelectInput = ({ label, labelid, id, ...props }) => {
         <FormHelperText>{showError ? meta.error : ''}</FormHelperText>
       </FormControl>
     </>
-    // const contentUnLabel = (
-    //   <>
-    //     <FormControl {...props}>
-    //       <Select
-    //         // value={age}
-    //         // onChange={handleChange}
-    //         // displayEmpty
-    //         // inputProps={{ 'aria-label': 'Without label' }}
-    //         {...props}
-    //         {...field}
-    //       >
-    //         {props.options.map((option) => (
-    //           <MenuItem key={option} value={option}>
-    //             {option}
-    //           </MenuItem>
-    //         ))}
-    //       </Select>
-
-    //       <FormHelperText>{props?.helpertext}</FormHelperText>
-    //     </FormControl>
-    //   </>
   )
   return contentLabel
 }
