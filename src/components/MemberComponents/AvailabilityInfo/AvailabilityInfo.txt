@@ -17,7 +17,7 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
    * @param userID - ID of the member
    */
   const [user, setUser] = useState<User | null>()
-  let daysList = [
+  const daysList = [
     'Monday',
     'Tuesday',
     'Wednesday',
@@ -42,7 +42,7 @@ const AvailabilityInfo: React.FC<AvailabilityInfoProps> = ({
      *
      * @param day - the string for the day that the availabilities are being retrieved for
      */
-    let availabilities = user?.availabilities.get(day)
+    const availabilities = user?.availabilities.get(day)
     let parsedAvailabilities = ''
     if (availabilities) {
       for (let i = 0; i < availabilities.length; i += 2) {

@@ -2,15 +2,15 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from './Dashboard.module.css'
 import Layout from '../../../components/Layout/Layout'
-import AvailabilityInputModal from '../../../components/MemberComponents/AvailabilityEntry/AvailabilityInputModal'
-import { useUserContext } from '../../../context/UserContext'
-import ParseCSV from '../../ParseCsv/ParseCsv'
-import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '../../../store/slices/authSlice'
-import { User } from '../../../types/schema'
+// import AvailabilityInputModal from '../../../components/MemberComponents/AvailabilityEntry/AvailabilityInputModal'
+// import { useUserContext } from '../../../context/UserContext'
+// import ParseCSV from '../../ParseCsv/ParseCsv'
+// import { useSelector } from 'react-redux'
+// import { selectCurrentUser } from '../../../store/slices/authSlice'
+// import { User } from '../../../types/schema'
 const Home: NextPage = () => {
   // const { authUser } = useUserContext()
-  const authUser = useSelector(selectCurrentUser) as User
+  // const authUser = useSelector(selectCurrentUser) as User
 
   return (
     <Layout>
@@ -21,9 +21,9 @@ const Home: NextPage = () => {
         <main className={styles.main}>
           <h1 className={styles.title}>Members Dashboard</h1>
         </main>
-        <AvailabilityInputModal
+        {/* <AvailabilityInputModal
           userID={authUser.userID}
-        ></AvailabilityInputModal>
+        ></AvailabilityInputModal> */}
         <footer className={styles.footer}>
           <a href="#" rel="noopener noreferrer">
             Workshift App

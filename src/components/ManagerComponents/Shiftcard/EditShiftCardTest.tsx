@@ -1,9 +1,6 @@
 import React from 'react'
 import ShiftForm from './ShiftForm'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
-import { selectShiftsResult } from '../../../store/apiSlices/shiftApiSlice'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../store/store'
 
 function EditShiftCardTest({
   shiftId,
@@ -14,11 +11,6 @@ function EditShiftCardTest({
   setOpen: (value: React.SetStateAction<boolean>) => void
   open: boolean
 }) {
-  console
-    .log
-    // useSelector((state: RootState) => selectShiftsResult(state.api.queries))
-    () //console.log(state))) //selectShiftsResult(state)))
-
   React.useEffect(() => {
     // console.log(selectShiftsResult((state) => state))
   }, [])
