@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { getCategories, addCategory, removeCategory, updateCategory } from '../../../firebase/queries/house'
+import { getCategories, updateCategory } from '../../../firebase/queries/house'
 import {
   Typography,
   Table,
@@ -47,112 +47,111 @@ const PreferButton = () => {
 
 const MemberPreferences = () => {
   //array that holds the categories of particular house
-  const [houseCategories, setHouseCategories] = useState<string[][]>()
+  const [houseCategories] = useState<string[][]>()
   //const [preferID, setPreferID] = useState<string>()
 
-  const fakeShift: Shift = {
-    shiftID:"pickCat",
-    name: "Pick Up Tory",
-    description: "Folasade will pick up Tory from Jennifer",
-    possibleDays: ["Thursday"],
-    numOfPeople: 1,
-    timeWindow: [12, 14],
-    assignedDay: "Thursday",
-    hours: 2,
-    verification: false,
-    usersAssigned: [], 
-    timeWindowDisplay: "",
-    verificationBuffer: 1, 
-    category: "Pick Up Cat"
-  }
+  // const fakeShift: Shift = {
+  //   shiftID: 'pickCat',
+  //   name: 'Pick Up Tory',
+  //   description: 'Folasade will pick up Tory from Jennifer',
+  //   possibleDays: ['Thursday'],
+  //   numOfPeople: 1,
+  //   timeWindow: [12, 14],
+  //   assignedDay: 'Thursday',
+  //   hours: 2,
+  //   verification: false,
+  //   usersAssigned: [],
+  //   timeWindowDisplay: '',
+  //   verificationBuffer: 1,
+  //   category: 'Pick Up Cat',
+  // }
 
-  const fs2: Shift = {
-    shiftID:"DKFJALSDdkfjd",
-    name: "Drive Back to Berkeley",
-    description: "Folasade will drive up Tory from San Francisco",
-    possibleDays: ["Thursday"],
-    numOfPeople: 1,
-    timeWindow: [1600, 1800],
-    assignedDay: "Thursday",
-    hours: 1,
-    verification: false,
-    usersAssigned: [], 
-    timeWindowDisplay: "",
-    verificationBuffer: 1, 
-    category: "Pick Up Cat"
-  }
+  // const fs2: Shift = {
+  //   shiftID: 'DKFJALSDdkfjd',
+  //   name: 'Drive Back to Berkeley',
+  //   description: 'Folasade will drive up Tory from San Francisco',
+  //   possibleDays: ['Thursday'],
+  //   numOfPeople: 1,
+  //   timeWindow: [1600, 1800],
+  //   assignedDay: 'Thursday',
+  //   hours: 1,
+  //   verification: false,
+  //   usersAssigned: [],
+  //   timeWindowDisplay: '',
+  //   verificationBuffer: 1,
+  //   category: 'Pick Up Cat',
+  // }
 
-  const fs3: Shift = {
-    shiftID:"KLASKDJFAK",
-    name: "Get Tory Settled",
-    description: "Folasade will get Tory settled in",
-    possibleDays: ["Thursday, Friday, Saturday"],
-    numOfPeople: 1,
-    timeWindow: [1600, 1800],
-    assignedDay: "Friday",
-    hours: 12,
-    verification: false,
-    usersAssigned: [], 
-    timeWindowDisplay: "",
-    verificationBuffer: 1, 
-    category: "Pick Up Cat"
-  }
-  const fs4: Shift = {
-    shiftID:"DKJFALKSDJFLAKJ",
-    name: "Feed Tory",
-    description: "Folasade will feed Tory dinner",
-    possibleDays: ["Thursday, Friday, Saturday"],
-    numOfPeople: 1,
-    timeWindow: [1200, 1800],
-    assignedDay: "Thursday",
-    hours: 1,
-    verification: false,
-    usersAssigned: [], 
-    timeWindowDisplay: "",
-    verificationBuffer: 1, 
-    category: "Cooking"
-  }
-  const fs5: Shift = {
-    shiftID:"SKDFADSF",
-    name: "Tory's Laundry",
-    description: "Folasade will feed Tory dinner",
-    possibleDays: ["Thursday, Friday, Saturday"],
-    numOfPeople: 1,
-    timeWindow: [1200, 1800],
-    assignedDay: "Thursday",
-    hours: 1,
-    verification: false,
-    usersAssigned: [], 
-    timeWindowDisplay: "",
-    verificationBuffer: 1, 
-    category: "Laundry"
-  }
+  // const fs3: Shift = {
+  //   shiftID: 'KLASKDJFAK',
+  //   name: 'Get Tory Settled',
+  //   description: 'Folasade will get Tory settled in',
+  //   possibleDays: ['Thursday, Friday, Saturday'],
+  //   numOfPeople: 1,
+  //   timeWindow: [1600, 1800],
+  //   assignedDay: 'Friday',
+  //   hours: 12,
+  //   verification: false,
+  //   usersAssigned: [],
+  //   timeWindowDisplay: '',
+  //   verificationBuffer: 1,
+  //   category: 'Pick Up Cat',
+  // }
+  // const fs4: Shift = {
+  //   shiftID: 'DKJFALKSDJFLAKJ',
+  //   name: 'Feed Tory',
+  //   description: 'Folasade will feed Tory dinner',
+  //   possibleDays: ['Thursday, Friday, Saturday'],
+  //   numOfPeople: 1,
+  //   timeWindow: [1200, 1800],
+  //   assignedDay: 'Thursday',
+  //   hours: 1,
+  //   verification: false,
+  //   usersAssigned: [],
+  //   timeWindowDisplay: '',
+  //   verificationBuffer: 1,
+  //   category: 'Cooking',
+  // }
+  // const fs5: Shift = {
+  //   shiftID: 'SKDFADSF',
+  //   name: "Tory's Laundry",
+  //   description: 'Folasade will feed Tory dinner',
+  //   possibleDays: ['Thursday, Friday, Saturday'],
+  //   numOfPeople: 1,
+  //   timeWindow: [1200, 1800],
+  //   assignedDay: 'Thursday',
+  //   hours: 1,
+  //   verification: false,
+  //   usersAssigned: [],
+  //   timeWindowDisplay: '',
+  //   verificationBuffer: 1,
+  //   category: 'Laundry',
+  // }
   const fs22: Shift = {
-    shiftID:"DKFAJSDLKFJAS",
-    name: "Get Tory",
-    description: "Folasade will get Tory settled in",
-    possibleDays: ["Thursday, Friday, Saturday"],
+    shiftID: 'DKFAJSDLKFJAS',
+    name: 'Get Tory',
+    description: 'Folasade will get Tory settled in',
+    possibleDays: ['Thursday, Friday, Saturday'],
     numOfPeople: 1,
     timeWindow: [1600, 1800],
-    assignedDay: "Friday",
+    assignedDay: 'Friday',
     hours: 12,
     verification: false,
-    usersAssigned: [], 
-    timeWindowDisplay: "",
-    verificationBuffer: 1, 
-    category: "Pick Up Cat"
+    usersAssigned: [],
+    timeWindowDisplay: '',
+    verificationBuffer: 1,
+    category: 'Pick Up Cat',
   }
 
   //gets all categories from the backend
   //Euclid is hardcoded in so info appears, but will depend on user.
   useEffect(() => {
-    
     updateCategory('CLO', fs22).then(() => {
       getCategories('CLO').then((category) => {
-      //holds categories in houseCategories useState
-      //setHouseCategories(Object.entries(category))
-      console.log("CURRENT FIREBASE", category)
-    })
+        //holds categories in houseCategories useState
+        //setHouseCategories(Object.entries(category))
+        console.log('CURRENT FIREBASE', category)
+      })
     })
   }, [])
 
