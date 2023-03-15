@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, Stack, MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useEffect, useState } from 'react'
