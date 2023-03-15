@@ -17,7 +17,8 @@ import {
 } from '../../../store/apiSlices/shiftApiSlice'
 import { EntityId } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { Shift } from '../../../types/schema'
+import { Shift, User } from '../../../types/schema'
+import { selectCurrentUser } from '../../../store/slices/authSlice'
 
 type ShiftNameRowProps = {
   shiftID: string
@@ -54,12 +55,14 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
     undefined
   )
 
+  const authUser = useSelector(selectCurrentUser) as User
+
   const {
     data: shiftsData,
     isLoading,
     isSuccess,
     isError,
-  } = useGetShiftsQuery('EUC')
+  } = useGetShiftsQuery(authUser.houseID)
 
   useEffect(() => {
     setHouseCategories(categoriesArray)
