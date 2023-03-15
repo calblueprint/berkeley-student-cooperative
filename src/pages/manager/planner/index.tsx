@@ -3,7 +3,7 @@ import Layout from '../../../components/Layout/Layout'
 import { useState } from 'react'
 import CategoriesView from './categoryDropdown/CategoriesView'
 import { UnassignedTabContent } from './UnassignedTabContent'
-import ReduxTesting from '../../ReduxTesting'
+// import ReduxTesting from '../../ReduxTesting'
 import { AssignedTabContent } from '../../../components/ManagerComponents/shiftAssignmentCard/AssignedTabContent'
 // import { selectCurrentUser } from '../../../store/slices/authSlice'
 // import { useSelector } from 'react-redux'
@@ -65,7 +65,7 @@ export default function SchedulePage() {
         </Box>
         <TabPanel value={currPage} index={0}>
           <UnassignedTabContent />
-          <ReduxTesting />
+          {/* <ReduxTesting /> */}
         </TabPanel>
         <TabPanel value={currPage} index={1}>
           <AssignedTabContent />
