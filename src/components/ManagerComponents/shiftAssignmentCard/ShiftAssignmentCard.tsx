@@ -4,7 +4,7 @@ import { EntityId } from '@reduxjs/toolkit'
 import ShiftInfoHeader from '../shiftInfoHeader/ShiftInfoHeader'
 import styles from './ShiftAssignmentCard.module.css'
 import SelectedUserComponent from '../selectedUserComponent/SelectedUserComponent'
-import AvailableUsersTable from '../../../pages/AvailableUsersTable'
+import AvailableUsersTable from './AvailableUsersTable'
 
 export const ShiftAssignmentCard = ({
   shiftId,

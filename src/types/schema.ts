@@ -78,6 +78,7 @@ export type Shift = {
   hours: number
   // Number of hours since end time that you are allowed to verify a shift for
   verificationBuffer: number
+  verification: boolean
   // Users assigned to the shift
   // TODO: remove this because all shifts will have only one user
   usersAssigned?: string[]

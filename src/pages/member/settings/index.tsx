@@ -2,10 +2,9 @@ import { Box, Tab, Tabs, Typography } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Layout from '../../../components/Layout/Layout'
-// import AvailabilityInfo from '../../../components/MemberComponents/AvailabilityInfo/AvailabilityInfo'
-import SettingsInfo from '../../../components/MemberComponents/SettingsInfo/SettingsInfo'
-import TaskPreferenceInfo from '../../../components/MemberComponents/TaskPreferenceInfo/TaskPreferenceInfo'
-// import { useUserContext } from '../../../context/UserContext'
+// // import AvailabilityInfo from '../../../components/MemberComponents/AvailabilityInfo/AvailabilityInfo'
+// import SettingsInfo from '../../../components/MemberComponents/SettingsInfo/SettingsInfo'
+// import TaskPreferenceInfo from '../../../components/MemberComponents/TaskPreferenceInfo/TaskPreferenceInfo'
 import { selectCurrentUser } from '../../../store/slices/authSlice'
 import { User } from '../../../types/schema'
 // import styles from './Settings.module.css'
@@ -64,13 +63,13 @@ export default function SettingsPage() {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <SettingsInfo userID={authUser.userID} />
+          <Typography color={'#000'}>Coming Soon!!!</Typography>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {/* <AvailabilityInfo userID={authUser.userID} /> */}
+          <Typography color={'#000'}>Coming Soon!!!</Typography>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <TaskPreferenceInfo userID={authUser.userID} />
+          <Typography color={'#000'}>Coming Soon!!!</Typography>
         </TabPanel>
       </Box>
     </Layout>
