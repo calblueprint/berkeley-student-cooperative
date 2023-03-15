@@ -30,7 +30,7 @@ type AvailableUsersTableProps = {
   unselect: boolean
   handleAssignedUserId: (userId: string) => void
   handleClose: () => void
-  handleEditShift: (shiftId: string) => void
+  handleEditShift?: (shiftId: string) => void
 }
 
 const displayNameFn = (user: User) => {
@@ -380,7 +380,9 @@ const AvailableUsersTable: React.FC<AvailableUsersTableProps> = ({
             <Button
               variant="outlined"
               fullWidth
-              onClick={() => handleEditShift(shiftID)}
+              onClick={() =>
+                handleEditShift ? handleEditShift(shiftID) : null
+              }
             >
               Edit Shift
             </Button>
