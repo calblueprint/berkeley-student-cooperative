@@ -1,22 +1,25 @@
 import React, { useState } from 'react'
-import { User, Shift } from '../types/schema'
+import { User, Shift } from '../../../types/schema'
 import { useEffect } from 'react'
 import Button from '@mui/material/Button'
-import { sortPotentialUsers, findAvailableUsers } from '../firebase/helpers'
-import SortedTable from '../components/shared/tables/SortedTable'
-import { numericToStringPreference } from '../firebase/helpers'
+import {
+  sortPotentialUsers,
+  findAvailableUsers,
+} from '../../../firebase/helpers'
+import SortedTable from '../../shared/tables/SortedTable'
+import { numericToStringPreference } from '../../../firebase/helpers'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import {
   useGetUsersQuery,
   useUpdateUserMutation,
-} from '../store/apiSlices/userApiSlice'
+} from '../../../store/apiSlices/userApiSlice'
 import {
   selectShiftById,
   useUpdateShiftMutation,
-} from '../store/apiSlices/shiftApiSlice'
+} from '../../../store/apiSlices/shiftApiSlice'
 import { useSelector } from 'react-redux'
-import { RootState } from '../store/store'
-import { HeadCell } from '../interfaces/interfaces'
+import { RootState } from '../../../store/store'
+import { HeadCell } from '../../../interfaces/interfaces'
 import Grid from '@mui/material/Unstable_Grid2'
 
 // waiting on sorted table to only allow selecting 1 checkbox at a time
