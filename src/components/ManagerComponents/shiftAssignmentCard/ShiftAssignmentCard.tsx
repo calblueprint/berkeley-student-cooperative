@@ -16,7 +16,7 @@ export const ShiftAssignmentCard = ({
   shiftId?: EntityId
   selectedDay: string
   handleClose: () => void
-  handleEditShift: (shiftId: string) => void
+  handleEditShift?: (shiftId: string) => void
   open: boolean
 }) => {
   const [assignedUserId, setAssignedUserID] = useState<EntityId>('')
@@ -70,5 +70,6 @@ export const ShiftAssignmentCard = ({
     )
   }
 
+  // console.log('ASSIGNED USER: ' + assignedUserId)
   return content
 }
