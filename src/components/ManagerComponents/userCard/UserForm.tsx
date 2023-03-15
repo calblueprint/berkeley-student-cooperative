@@ -1,9 +1,8 @@
 import { Formik, Form, FormikHelpers, FormikValues } from 'formik'
 import { Stack, Button } from '@mui/material'
 
-import dayjs from 'dayjs'
 import * as Yup from 'yup'
-import { TextInput, SelectInput } from '../../shared/forms/CustomFormikFields'
+import { TextInput } from '../../shared/forms/CustomFormikFields' //, SelectInput
 import {
   selectUserById,
   useAddNewUserMutation,
@@ -35,23 +34,23 @@ const UserSchema = Yup.object({
   runningTotalPenatlyHours: Yup.number(),
 })
 
-const daysList = [
-  '',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-]
+// const daysList = [
+//   '',
+//   'Monday',
+//   'Tuesday',
+//   'Wednesday',
+//   'Thursday',
+//   'Friday',
+//   'Saturday',
+//   'Sunday',
+// ]
 
-const userCategories = [
-  'cook dinner',
-  'clean bathroom',
-  'wash dishes',
-  'clean basement',
-]
+// const userCategories = [
+//   'cook dinner',
+//   'clean bathroom',
+//   'wash dishes',
+//   'clean basement',
+// ]
 
 const emptyUser = {
   // Role of the user
@@ -133,7 +132,8 @@ const UserForm = ({
 
   const onSubmit = async (
     values: FormikValues,
-    formikBag: FormikHelpers<FormikValues>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formikBag: FormikHelpers<any>
   ) => {
     // console.log('Submiting UserForm: ', values)
     const { firstName, lastName, displayName, email } = values

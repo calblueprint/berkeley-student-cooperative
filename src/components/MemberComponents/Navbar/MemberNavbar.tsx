@@ -3,7 +3,14 @@ import { useRouter } from 'next/router'
 import { List, ListItem, ListItemText, Typography } from '@mui/material'
 import styles from './MemberNavbar.module.css'
 import Icon from '../../../assets/Icon'
-import { useUserContext } from '../../../context/UserContext'
+// import { useUserContext } from '../../../context/UserContext'
+import { useAuthLogOutMutation } from '../../../store/apiSlices/authApiSlice'
+import {
+  selectCurrentUser,
+  selectCurrentHouse,
+} from '../../../store/slices/authSlice'
+import { useSelector } from 'react-redux'
+import { User, House } from '../../../types/schema'
 
 const MemberNavbar: React.FunctionComponent = () => {
   /**
@@ -14,50 +21,44 @@ const MemberNavbar: React.FunctionComponent = () => {
    *
    */
   const router = useRouter()
-  const { authUser, signOutAuth } = useUserContext()
+  // const { authUser, signOutAuth } = useUserContext()
+  const [authLogOut, { isSuccess }] = useAuthLogOutMutation()
+  const authUser = useSelector(selectCurrentUser) as User
+  const authHouse = useSelector(selectCurrentHouse) as House
 
-  const userDetails = () => (
+  React.useEffect(() => {
+    console.log('authUser: ' + authUser)
+    console.log('authHouse: ' + authHouse)
+    if (isSuccess) {
+      console.log('logging out')
+      router.push('/login')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser, authHouse, isSuccess])
+
+  const userDetails = (
     // Renders user details - name and role
     <ListItem className={styles.item + ' ' + styles.userDetails}>
       <Icon type="navProfile" className={styles.icon} />
       <div>
         <Typography variant="subtitle1" color={'#FFFFFF'}>
-          {authUser.firstName} {authUser.lastName}
+          {authUser ? `${authUser?.firstName} ${authUser?.lastName}` : 'Member'}
         </Typography>
         <Typography variant="subtitle1" color={'#FFFFFF'}>
-          {authUser.role}
+          {authUser ? `Role: ${authUser.role}` : 'House Member'}
         </Typography>
       </div>
     </ListItem>
   )
 
-  const pages = () => (
+  const pages = (
     /**
-     * Renders navigation bar buttons for 4 pages - dashboard, schedule, house, settings
+     * Renders navigation bar buttons for 3 pages - schedule, planner, house
      *
-     * dashboard is the default page
+     * schedule is the default page
      * onClick handler pushes "/member/[page name]" to the url using router
      */
     <List className={styles.pages}>
-      <ListItem
-        button
-        key={'dashboard'}
-        onClick={() => {
-          router.push('/member/dashboard')
-        }}
-        className={
-          router.pathname == '/member/dashboard' ? styles.active : styles.item
-        }
-      >
-        <div className={styles.icon}>
-          <Icon type="navDashboard" />
-        </div>
-        <ListItemText
-          primaryTypographyProps={{ fontSize: '18px' }}
-          className={styles.itemText}
-          primary={'Dashboard'}
-        />
-      </ListItem>
       <ListItem
         button
         key={'schedule'}
@@ -79,6 +80,25 @@ const MemberNavbar: React.FunctionComponent = () => {
       </ListItem>
       <ListItem
         button
+        key={'planner'}
+        onClick={() => {
+          router.push('/member/planner')
+        }}
+        className={
+          router.pathname == '/member/planner' ? styles.active : styles.item
+        }
+      >
+        <div className={styles.icon}>
+          <Icon type="navPlanner" />
+        </div>
+        <ListItemText
+          primaryTypographyProps={{ fontSize: '18px' }}
+          className={styles.itemText}
+          primary={'Planner'}
+        />
+      </ListItem>
+      <ListItem
+        button
         key={'house'}
         onClick={() => {
           router.push('/member/house')
@@ -88,37 +108,18 @@ const MemberNavbar: React.FunctionComponent = () => {
         }
       >
         <div className={styles.icon}>
-          <Icon type="navHouse" />
+          <Icon type="navMembers" />
         </div>
         <ListItemText
           primaryTypographyProps={{ fontSize: '18px' }}
           className={styles.itemText}
-          primary={'House'}
-        />
-      </ListItem>
-      <ListItem
-        button
-        key={'settings'}
-        onClick={() => {
-          router.push('/member/settings')
-        }}
-        className={
-          router.pathname == '/member/settings' ? styles.active : styles.item
-        }
-      >
-        <div className={styles.icon}>
-          <Icon type="navSettings" />
-        </div>
-        <ListItemText
-          primaryTypographyProps={{ fontSize: '18px' }}
-          className={styles.itemText}
-          primary={'Settings'}
+          primary={'Members'}
         />
       </ListItem>
     </List>
   )
 
-  const logout = () => (
+  const logout = (
     <div className={styles.logout}>
       <ListItem
         className={styles.item}
@@ -126,8 +127,7 @@ const MemberNavbar: React.FunctionComponent = () => {
         key={'settings'}
         onClick={() => {
           // signout MUST happen before pushing the login page, or else there is an error cuz the user context tries to use an empty user
-          signOutAuth()
-          router.push('/login')
+          authLogOut({})
         }}
       >
         <Icon type="navLogout" />
@@ -146,9 +146,9 @@ const MemberNavbar: React.FunctionComponent = () => {
 
   return (
     <div className={styles.container}>
-      {userDetails()}
-      {pages()}
-      {logout()}
+      {userDetails}
+      {pages}
+      {logout}
     </div>
   )
 }

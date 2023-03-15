@@ -1,5 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
+// import { useSelector } from 'react-redux'
 import Layout from '../../../components/Layout/Layout'
 import { House, User } from '../../../types/schema'
 
