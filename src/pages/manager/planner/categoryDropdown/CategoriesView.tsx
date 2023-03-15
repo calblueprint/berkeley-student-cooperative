@@ -1,17 +1,9 @@
 import { useEffect, useState } from 'react'
-import { addCategory, getHouse } from '../../../../firebase/queries/house'
+import { addCategory } from '../../../../firebase/queries/house'
 import { House } from '../../../../types/schema'
 // import CategoriesDropdown from './CategoriesDropdown'
 import Button from '@mui/material/Button'
-import {
-  Dialog,
-  DialogContent,
-  Table,
-  TableBody,
-  TableContainer,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Dialog, DialogContent, TextField, Typography } from '@mui/material'
 import Icon from '../../../../assets/Icon'
 import AddIcon from '@mui/icons-material/Add'
 import { useGetHouseQuery } from '../../../../store/apiSlices/houseApiSlice'
@@ -69,7 +61,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
   useEffect(() => {
     if (dataHouse?.entities) {
       const dataOfHouse = Object.entries(dataHouse?.entities)[0][1]
-      if (dataOfHouse.categories) {
+      if (dataOfHouse?.categories) {
         setHouseInfo(Object.entries(dataOfHouse.categories))
       }
     }

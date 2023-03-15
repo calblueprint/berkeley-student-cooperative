@@ -5,8 +5,8 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { useState, useEffect } from 'react'
-import { getCategories } from '../../../firebase/queries/house'
+import { useState, useEffect, Key } from 'react'
+// import { getCategories } from '../../../firebase/queries/house'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import styles from './CategoryTable.module.css'
@@ -85,9 +85,12 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
         })}
       </div>
     )
+  } else {
+    return <></>
   }
 }
 type IndividualCategoryProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   category: any
 }
 const IndividualCategory: React.FC<IndividualCategoryProps> = ({
@@ -147,8 +150,8 @@ const IndividualCategory: React.FC<IndividualCategoryProps> = ({
         </TableHead>
         <TableBody>
           {isExpanded &&
-            shiftItems?.map((value) => {
-              return <ShiftNameRow shiftID={value} key={value} />
+            shiftItems?.map((value: Key | null | undefined) => {
+              return <ShiftNameRow shiftID={value as string} key={value} />
             })}
         </TableBody>
       </Table>
