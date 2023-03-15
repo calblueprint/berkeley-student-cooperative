@@ -2,20 +2,21 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import type { RootState } from '../../../store/store'
+import type { RootState } from '../store/store'
 import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment } from '../../../store/slices/counterSlice'
-import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
-import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
-import SortedTable from '../../../components/shared/tables/SortedTable'
-import { Shift } from '../../../types/schema'
-import { HeadCell } from '../../../interfaces/interfaces'
+import { decrement, increment } from '../store/slices/counterSlice'
+import { useGetShiftsQuery } from '../store/apiSlices/shiftApiSlice'
+import { useGetUsersQuery } from '../store/apiSlices/userApiSlice'
+import SortedTable from '../components/shared/tables/SortedTable'
+import { Shift } from '../types/schema'
+import { HeadCell } from '../interfaces/interfaces'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
-import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
-import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
-import NewUserCard from '../../../components/ManagerComponents/userCard/NewUserCard'
-import EditUserCard from '../../../components/ManagerComponents/userCard/EditUserCard'
-import { User } from '../../../types/schema'
+import NewShiftCardTest from '../components/ManagerComponents/Shiftcard/NewShiftCardTest'
+import EditShiftCardTest from '../components/ManagerComponents/Shiftcard/EditShiftCardTest'
+import NewUserCard from '../components/ManagerComponents/userCard/NewUserCard'
+import EditUserCard from '../components/ManagerComponents/userCard/EditUserCard'
+import { User } from '../types/schema'
+import { selectCurrentUser } from '../store/slices/authSlice'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -71,7 +72,8 @@ const userHeadCells: HeadCell<
 
 const Counter = () => {
   const count = useSelector((state: RootState) => state.counter.value)
-  const { data, isLoading } = useGetShiftsQuery('EUC')
+  const authUser = useSelector(selectCurrentUser) as User
+  const { data, isLoading } = useGetShiftsQuery(authUser.houseID)
   const dispatch = useDispatch()
 
   React.useEffect(() => {
@@ -105,13 +107,14 @@ const Counter = () => {
 }
 
 const ShiftTesting = () => {
+  const authUser = useSelector(selectCurrentUser) as User
   const {
     data: dataShifts,
     isLoading,
     isSuccess,
     isError,
     error,
-  } = useGetShiftsQuery('EUC')
+  } = useGetShiftsQuery(authUser.houseID)
 
   const [openCard, setOpenCard] = React.useState<boolean>(false)
   const [selectedShiftId, setSelectedShiftId] = React.useState<

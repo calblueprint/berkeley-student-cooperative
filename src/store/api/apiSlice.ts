@@ -1,6 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { firestore, auth } from '../../firebase/clientApp'
-import { onAuthStateChanged } from 'firebase/auth'
+import { firestore } from '../../firebase/clientApp'
 import {
   collection,
   doc,
@@ -12,58 +11,6 @@ import {
   DocumentSnapshot,
 } from 'firebase/firestore'
 import type { BaseQueryFn } from '@reduxjs/toolkit/query'
-
-// import { streamToObject } from '../../utils/utils'
-// import { Shift, User, House } from '../../types/schema'
-
-// type Arg = {
-//   url: string
-//   method: string
-//   data: object
-//   params: object
-// }
-
-// export type BaseQueryFn<
-//   Args = any,
-//   Result = unknown,
-//   Error = unknown,
-//   DefinitionExtraOptions = object,
-//   Meta = object
-// > = (
-//   args: Args,
-//   api: BaseQueryApi,
-//   extraOptions: DefinitionExtraOptions
-// ) => MaybePromise<QueryReturnValue<Result, Error, Meta>>
-
-// export interface BaseQueryApi {
-//   signal: AbortSignal
-//   abort: (reason?: string) => void
-//   dispatch: ThunkDispatch<any, any, any>
-//   getState: () => unknown
-//   extra: unknown
-//   endpoint: string
-//   type: 'query' | 'mutation'
-//   forced?: boolean
-// }
-
-// export type QueryReturnValue<T = unknown, E = unknown, M = unknown> =
-//   | {
-//       error: E
-//       data?: undefined
-//       meta?: M
-//     }
-//   | {
-//       error?: undefined
-//       data: T
-//       meta?: M
-//     }
-
-// type MyResponse =
-//   | Response
-//   | { data: Response; error?: undefined }
-//   | { error: unknown; data?: undefined }
-//   | null
-//   | undefined
 
 const customBaseQuery: BaseQueryFn<
   unknown, // Args
@@ -85,14 +32,6 @@ const customBaseQuery: BaseQueryFn<
     // console.log('url: ', url)
     // console.log('data: ', body)
     // console.log('params: ', params)
-
-    // console.log('Checking permissions: ')
-    // if (auth.currentUser) {
-    //   console.log('Is authorized: ', auth.currentUser)
-    // } else {
-    //   console.log('Is anuthorized!!!')
-    //   return { error: 'not authorized' }
-    // }
 
     const pathArray = url.split('/').filter((p: string) => p.length > 0)
     const resObj: unknown[] = []
@@ -124,6 +63,7 @@ const customBaseQuery: BaseQueryFn<
           //** Check weather the request is a collection or a document */
           if (isCollection) {
             //** If the query is a collection, get the full collection from the firebase */
+            console.log(path)
             const query = collection(firestore, path)
             const querySnapshot: QuerySnapshot<unknown> = await getDocs(query)
 
@@ -190,7 +130,8 @@ const customBaseQuery: BaseQueryFn<
           // const postData = await streamToObject(body)
 
           //** Create a new document with the given BODY */
-          const newDoc = await addDoc(collection(firestore, path), body)
+          // const newDoc =
+          await addDoc(collection(firestore, path), body)
           // console.log(newDoc)
           //** Add resObj to the resObj array */
           // resObj.push({ newDoc.id.toString() })
@@ -235,7 +176,7 @@ const customBaseQuery: BaseQueryFn<
       return { error }
     }
   }
-  return result(arg)
+  return result(arg as { url: string; method: string; body: object })
 }
 
 export const apiSlice = createApi({
