@@ -50,7 +50,7 @@ const filters = [
   'sunday',
 ]
 
-export const UnassignedTabContent = () => {
+const UnassignedTabContent = () => {
   const authUser = useSelector(selectCurrentUser) as User
   const { data, isLoading, isSuccess, isError, error } = useGetShiftsQuery(
     authUser.houseID
@@ -198,3 +198,5 @@ export const UnassignedTabContent = () => {
     )
   }
 }
+
+export default UnassignedTabContent

@@ -3,14 +3,14 @@ import { Box, Stack, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useEffect, useState } from 'react'
-import SortedTable from '../../shared/tables/SortedTable'
+import SortedTable from '../../../components/shared/tables/SortedTable'
 import { HeadCell } from '../../../interfaces/interfaces'
 import { Shift, User } from '../../../types/schema'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
-import { ShiftAssignmentCard } from './ShiftAssignmentCard'
-import NewShiftCardTest from '../Shiftcard/NewShiftCardTest'
-import EditShiftCardTest from '../Shiftcard/EditShiftCardTest'
+import { ShiftAssignmentCard } from '../../../components/ManagerComponents/shiftAssignmentCard/ShiftAssignmentCard'
+import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
+import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '../../../store/slices/authSlice'
 
@@ -50,7 +50,7 @@ const filters = [
   'sunday',
 ]
 
-export const AssignedTabContent = () => {
+const AssignedTabContent = () => {
   // const { house } = useUserContext()
   const authUser = useSelector(selectCurrentUser) as User
   const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
@@ -190,3 +190,5 @@ export const AssignedTabContent = () => {
     )
   }
 }
+
+export default AssignedTabContent
