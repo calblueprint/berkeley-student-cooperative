@@ -1,11 +1,13 @@
 import { Tabs, Tab, Box, Typography } from '@mui/material'
 import Layout from '../../../components/Layout/Layout'
 import { useState } from 'react'
-import CategoriesView from '../categoryDropdown/categoriesView'
-import { useUserContext } from '../../../context/UserContext'
-import ShiftSchedule from '../../../components/ManagerComponents/shiftSchedule/ShiftSchedule'
-import { UnassignedTabContent } from './UnassignedTabContent'
-import Testing from './Testing'
+import CategoriesView from './categoryDropdown/CategoriesView'
+import UnassignedTabContent from './UnassignedTabContent'
+// import ReduxTesting from '../../ReduxTesting'
+import AssignedTabContent from './AssignedTabContent'
+// import { selectCurrentUser } from '../../../store/slices/authSlice'
+// import { useSelector } from 'react-redux'
+// import { User } from '../../../types/schema'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -41,7 +43,7 @@ export default function SchedulePage() {
    * Allows for navigation between unassigned shifts, assigned shifts, and the category view page. Used in the planner view.
    * @returns SchedulePage
    */
-  const { authUser } = useUserContext()
+  // const authUser = useSelector(selectCurrentUser) as User
 
   const [currPage, setCurrPage] = useState(0)
 
@@ -63,13 +65,13 @@ export default function SchedulePage() {
         </Box>
         <TabPanel value={currPage} index={0}>
           <UnassignedTabContent />
-          <Testing />
+          {/* <ReduxTesting /> */}
         </TabPanel>
         <TabPanel value={currPage} index={1}>
-          <ShiftSchedule />
+          <AssignedTabContent />
         </TabPanel>
         <TabPanel value={currPage} index={2}>
-          <CategoriesView houseID={authUser.houseID} />
+          <CategoriesView />
         </TabPanel>
       </Box>
     </Layout>

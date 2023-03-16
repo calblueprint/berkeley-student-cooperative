@@ -86,6 +86,7 @@ export default function SortedTable<
   headCells,
   isCheckable,
   isSortable,
+  disable,
   handleRowClick,
 }: {
   ids: EntityId[]
@@ -93,6 +94,7 @@ export default function SortedTable<
   headCells: HeadCell<T>[]
   isCheckable: boolean
   isSortable: boolean
+  disable?: boolean
   handleRowClick?: (event: React.MouseEvent<unknown>, id: string) => void
 }) {
   // stores whether the order is ascending or descending
@@ -235,13 +237,18 @@ export default function SortedTable<
                 id={labelId}
                 scope="row"
                 align={cell.align}
+                sx={disable ? { backgroundColor: 'gray' } : {}}
               >
                 {row[cell.id]}
               </StyledTableCell>
             )
           } else {
             return (
-              <StyledTableCell key={uuid()} align={cell.align}>
+              <StyledTableCell
+                key={uuid()}
+                align={cell.align}
+                sx={disable ? { backgroundColor: 'gray' } : {}}
+              >
                 {row[cell.id]}
               </StyledTableCell>
             )
