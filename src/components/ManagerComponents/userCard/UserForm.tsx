@@ -2,7 +2,7 @@ import { Formik, Form, FormikHelpers, FormikValues } from 'formik'
 import { Stack, Button } from '@mui/material'
 
 import * as Yup from 'yup'
-import { TextInput } from '../../shared/forms/CustomFormikFields' //, SelectInput
+import { TextInput, SelectInput } from '../../shared/forms/CustomFormikFields' //, SelectInput
 import {
   selectUserById,
   useAddNewUserMutation,
@@ -14,6 +14,7 @@ import React from 'react'
 import { RootState } from '../../../store/store'
 import { EntityId } from '@reduxjs/toolkit'
 import { User } from '../../../types/schema'
+import { generatePinNumber } from '../../../firebase/helpers'
 // import { useUserContext } from '../../../context/UserContext'
 
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
@@ -34,23 +35,9 @@ const UserSchema = Yup.object({
   runningTotalPenatlyHours: Yup.number(),
 })
 
-// const daysList = [
-//   '',
-//   'Monday',
-//   'Tuesday',
-//   'Wednesday',
-//   'Thursday',
-//   'Friday',
-//   'Saturday',
-//   'Sunday',
-// ]
+const houseIDs = ['EUC', 'CLO']
 
-// const userCategories = [
-//   'cook dinner',
-//   'clean bathroom',
-//   'wash dishes',
-//   'clean basement',
-// ]
+const userRoles = ['member', 'manager']
 
 const emptyUser = {
   // Role of the user
@@ -100,6 +87,7 @@ const UserForm = ({
   setOpen: (value: React.SetStateAction<boolean>) => void
   userId?: string
   isNewUser: boolean
+  pinNumber?: number
 }) => {
   // const { authUser, house } = useUserContext()
   // const [currentUser, setCurrentUser] = React.useState(User)
@@ -136,7 +124,7 @@ const UserForm = ({
     formikBag: FormikHelpers<any>
   ) => {
     // console.log('Submiting UserForm: ', values)
-    const { firstName, lastName, displayName, email } = values
+    const { firstName, lastName, displayName, email, role, houseID } = values
 
     // console.log(dayjs('1900', 'HHmm').format('HHmm'))
     // const num = 1900
@@ -146,16 +134,21 @@ const UserForm = ({
     let result
 
     const data = { data: {}, houseId: '', userId: '' }
+    const pinNumber = generatePinNumber(5)
     data.data = {
       firstName,
       lastName,
       displayName,
       email,
+      role,
+      houseID,
+      pinNumber,
     }
-    data.houseId = 'EUC'
+    // data.houseId = 'EUC'
     data.userId = userId ? userId : ''
     // console.log('data: ', data)
     if (isNewUser || !userId) {
+      console.log('Adds user works')
       result = await addNewUser(data)
     } else {
       result = await updateUser(data)
@@ -166,6 +159,7 @@ const UserForm = ({
 
     formikBag.resetForm()
     setOpen(false)
+    console.log(data)
   }
 
   // React.useEffect(() => {
@@ -182,6 +176,7 @@ const UserForm = ({
           displayName: user ? user.displayName : emptyUser.displayName,
           email: user ? user.email : emptyUser.email,
           role: user ? user.role : emptyUser.role,
+          houseID: user ? user.houseID : emptyUser.houseID,
         }}
         onSubmit={onSubmit}
       >
@@ -191,6 +186,20 @@ const UserForm = ({
             <TextInput name="lastName" label="Last Name" />
             <TextInput name="displayName" label="Display Name" />
             <TextInput name="email" label="Email" />
+            <SelectInput
+              name="role"
+              label="Role"
+              labelid="role"
+              id="role"
+              options={userRoles}
+            />
+            <SelectInput
+              name="houseID"
+              label="House ID"
+              labelid="houseID"
+              id="houseID"
+              options={houseIDs}
+            />
 
             <Stack direction="row" alignItems="center" spacing={2}>
               <Button
