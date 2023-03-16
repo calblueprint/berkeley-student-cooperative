@@ -30,7 +30,7 @@ export const TextInput = ({ label, ...props }) => {
         helperText={showError ? meta.error : ''}
         variant="outlined"
         fullWidth
-        margin="normal"
+        margin="dense"
         // rows={4} //field.name.includes('description') ? 4 : 4}
       />
     </>

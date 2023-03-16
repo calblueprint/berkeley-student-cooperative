@@ -79,6 +79,7 @@ export type Shift = {
   verificationBuffer: number
   // Users assigned to the shift
   // TODO: remove this because all shifts will have only one user
+  verification: boolean
   usersAssigned?: string[]
   // Category of work that the shift belongs to
   category: string
