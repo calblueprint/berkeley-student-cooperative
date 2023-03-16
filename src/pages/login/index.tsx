@@ -8,10 +8,14 @@ import {
 import Image from 'next/image'
 import BscLogo from '../../assets/bsclogo.png'
 import styles from './Login.module.css'
-import { useContext, useEffect, useState } from 'react'
-import { useFirebaseAuth } from '../../firebase/queries/auth'
+import { useEffect, useState } from 'react'
+// import { useFirebaseAuth } from '../../firebase/queries/auth'
 import Layout from '../../components/Layout/Layout'
 import { useRouter } from 'next/router'
+import { useLoginMutation } from '../../store/apiSlices/authApiSlice'
+import { selectCurrentUser } from '../../store/slices/authSlice'
+import { useSelector } from 'react-redux'
+import { User } from '../../types/schema'
 
 export default function LoginPage() {
   /**
@@ -22,18 +26,27 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { signIn, authUser, register } = useFirebaseAuth()
+  // const { signIn, authUser, register } = useFirebaseAuth()
+  const authUser = useSelector(selectCurrentUser) as User
 
-  const login = async () => {
-    // tries to log in with given credentials
-    if (email.length > 0 && password.length > 0) {
-      await signIn(email, password)
-    }
+  const [
+    login,
+    {
+      // isLoading: loginLoading,
+      // isSuccess: loginSuccess,
+      // isError: loginError,
+      // error: errorLoggingIn,
+    },
+  ] = useLoginMutation({})
+
+  const login2 = async () => {
+    await login({ email, password })
   }
 
   // pushes the router to the member/manager default page if the user is set in the context
   useEffect(() => {
-    if (authUser.userID != '') {
+    if (authUser.id) {
+      // console.log('------authUser: ', authUser)
       if (authUser.role == 'Member' || authUser.role == 'member') {
         router.push('/member/dashboard')
       } else {
@@ -44,9 +57,9 @@ export default function LoginPage() {
 
   // onClick handler that pushes the router to the create account page
   const createAccount = () => {
-    router.push('/createAccount')
+    // router.push('/createAccount')
   }
-  return authUser.userID != '' ? (
+  return authUser.id ? (
     <Layout />
   ) : (
     <div className={styles.login}>
@@ -94,7 +107,7 @@ export default function LoginPage() {
               variant="contained"
               fullWidth
               disableElevation
-              onClick={login}
+              onClick={login2}
             >
               Login
             </Button>
