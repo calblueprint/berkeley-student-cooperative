@@ -1,0 +1,86 @@
+[debug] [2023-03-15T23:52:16.215Z] ----------------------------------------------------------------------
+[debug] [2023-03-15T23:52:16.216Z] Command:       /usr/local/lib/node_modules/firebase-tools/lib/bin/firebase.js /Users/gregoriiaaa/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy
+[debug] [2023-03-15T23:52:16.217Z] CLI Version:   11.24.1
+[debug] [2023-03-15T23:52:16.217Z] Platform:      darwin
+[debug] [2023-03-15T23:52:16.217Z] Node Version:  v16.16.0
+[debug] [2023-03-15T23:52:16.218Z] Time:          Wed Mar 15 2023 16:52:16 GMT-0700 (Pacific Daylight Time)
+[debug] [2023-03-15T23:52:16.218Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-15T23:52:16.224Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2023-03-15T23:52:16.313Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-15T23:52:16.314Z] > authorizing via signed-in user (gmillensifer@gmail.com)
+[debug] [2023-03-15T23:52:16.314Z] [iam] checking project berkeley-student-cooperative for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-03-15T23:52:16.315Z] > refreshing access token with scopes: []
+[debug] [2023-03-15T23:52:16.316Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-03-15T23:52:16.316Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-15T23:52:16.462Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2023-03-15T23:52:16.465Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2023-03-15T23:52:16.523Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-03-15T23:52:16.525Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-15T23:52:16.567Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions [none]
+[debug] [2023-03-15T23:52:16.568Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions x-goog-quota-user=projects/berkeley-student-cooperative
+[debug] [2023-03-15T23:52:16.568Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-15T23:52:16.753Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions 200
+[debug] [2023-03-15T23:52:16.757Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-15T23:52:16.758Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative [none]
+[debug] [2023-03-15T23:52:17.270Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative 200
+[debug] [2023-03-15T23:52:17.270Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative {"projectId":"berkeley-student-cooperative","projectNumber":"577482572781","displayName":"Berkeley Student Cooperative","name":"projects/berkeley-student-cooperative","resources":{"hostingSite":"berkeley-student-cooperative","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_94738e7b-c810-4049-9b58-0efdbeafbe65"}
+[debug] [2023-03-15T23:52:21.129Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites pageToken=&pageSize=10
+[debug] [2023-03-15T23:52:21.733Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites 200
+[debug] [2023-03-15T23:52:21.734Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites {"sites":[{"name":"projects/berkeley-student-cooperative/sites/berkeley-student-cooperative","defaultUrl":"https://berkeley-student-cooperative.web.app","appId":"1:577482572781:web:ead70c037cd651417f9de4","type":"DEFAULT_SITE"}]}
+[debug] [2023-03-15T23:52:21.734Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config [none]
+[debug] [2023-03-15T23:52:22.322Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config 200
+[debug] [2023-03-15T23:52:22.323Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config {"projectId":"berkeley-student-cooperative","appId":"1:577482572781:web:ead70c037cd651417f9de4","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central","apiKey":"AIzaSyB289W9cHJEQkj_9erTQKsj0HCcfzztHHU","authDomain":"berkeley-student-cooperative.firebaseapp.com","messagingSenderId":"577482572781","measurementId":"G-0T808S7VF3"}
+[debug] [2023-03-15T23:53:16.830Z] Error: Build optimization failed: found pages without a React Component as default export in 
+pages/supervisor/dummyFile
+pages/manager/planner/UnassignedTabContent
+
+See https://nextjs.org/docs/messages/page-without-valid-component for more info.
+
+    at /Users/gregoriiaaa/Desktop/bp-BSC/berkeley-student-cooperative/node_modules/next/dist/build/index.js:1208:29
+    at async Span.traceAsyncFn (/Users/gregoriiaaa/Desktop/bp-BSC/berkeley-student-cooperative/node_modules/next/dist/trace/trace.js:79:20)
+    at async build (/Users/gregoriiaaa/Desktop/bp-BSC/berkeley-student-cooperative/node_modules/next/dist/build/index.js:73:29)
+    at async build (/Users/gregoriiaaa/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/frameworks/next/index.js:55:5)
+    at async prepareFrameworks (/Users/gregoriiaaa/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/frameworks/index.js:261:108)
+    at async deploy (/Users/gregoriiaaa/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/deploy/index.js:53:13)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2023-03-16T00:01:03.351Z] ----------------------------------------------------------------------
+[debug] [2023-03-16T00:01:03.352Z] Command:       /usr/local/lib/node_modules/firebase-tools/lib/bin/firebase.js /Users/gregoriiaaa/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy
+[debug] [2023-03-16T00:01:03.352Z] CLI Version:   11.24.1
+[debug] [2023-03-16T00:01:03.352Z] Platform:      darwin
+[debug] [2023-03-16T00:01:03.352Z] Node Version:  v16.16.0
+[debug] [2023-03-16T00:01:03.356Z] Time:          Wed Mar 15 2023 17:01:03 GMT-0700 (Pacific Daylight Time)
+[debug] [2023-03-16T00:01:03.356Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-16T00:01:03.459Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-16T00:01:03.460Z] > authorizing via signed-in user (gmillensifer@gmail.com)
+[debug] [2023-03-16T00:01:03.461Z] [iam] checking project berkeley-student-cooperative for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-03-16T00:01:03.463Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions [none]
+[debug] [2023-03-16T00:01:03.464Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions x-goog-quota-user=projects/berkeley-student-cooperative
+[debug] [2023-03-16T00:01:03.465Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-16T00:01:03.908Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions 200
+[debug] [2023-03-16T00:01:03.911Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-16T00:01:03.914Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative [none]
+[debug] [2023-03-16T00:01:04.246Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative 200
+[debug] [2023-03-16T00:01:04.248Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative {"projectId":"berkeley-student-cooperative","projectNumber":"577482572781","displayName":"Berkeley Student Cooperative","name":"projects/berkeley-student-cooperative","resources":{"hostingSite":"berkeley-student-cooperative","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_94738e7b-c810-4049-9b58-0efdbeafbe65"}
+[debug] [2023-03-16T00:01:08.108Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites pageToken=&pageSize=10
+[debug] [2023-03-16T00:01:08.713Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites 200
+[debug] [2023-03-16T00:01:08.716Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites {"sites":[{"name":"projects/berkeley-student-cooperative/sites/berkeley-student-cooperative","defaultUrl":"https://berkeley-student-cooperative.web.app","appId":"1:577482572781:web:ead70c037cd651417f9de4","type":"DEFAULT_SITE"}]}
+[debug] [2023-03-16T00:01:08.717Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config [none]
+[debug] [2023-03-16T00:01:09.482Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config 200
+[debug] [2023-03-16T00:01:09.482Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config {"projectId":"berkeley-student-cooperative","appId":"1:577482572781:web:ead70c037cd651417f9de4","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central","apiKey":"AIzaSyB289W9cHJEQkj_9erTQKsj0HCcfzztHHU","authDomain":"berkeley-student-cooperative.firebaseapp.com","messagingSenderId":"577482572781","measurementId":"G-0T808S7VF3"}
+[debug] [2023-03-16T00:01:50.139Z] Error: Build optimization failed: found pages without a React Component as default export in 
+pages/manager/planner/UnassignedTabContent
+pages/manager/planner/AssignedTabContent
+
+See https://nextjs.org/docs/messages/page-without-valid-component for more info.
+
+    at /Users/gregoriiaaa/Desktop/bp-BSC/berkeley-student-cooperative/node_modules/next/dist/build/index.js:1208:29
+    at async Span.traceAsyncFn (/Users/gregoriiaaa/Desktop/bp-BSC/berkeley-student-cooperative/node_modules/next/dist/trace/trace.js:79:20)
+    at async build (/Users/gregoriiaaa/Desktop/bp-BSC/berkeley-student-cooperative/node_modules/next/dist/build/index.js:73:29)
+    at async build (/Users/gregoriiaaa/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/frameworks/next/index.js:55:5)
+    at async prepareFrameworks (/Users/gregoriiaaa/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/frameworks/index.js:261:108)
+    at async deploy (/Users/gregoriiaaa/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/deploy/index.js:53:13)
+[error] 
+[error] Error: An unexpected error has occurred.
