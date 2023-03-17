@@ -34,7 +34,7 @@ export const convertNumberToTime = (input: number): string => {
   if (input < 100) {
     input = 1200 + input
   }
-  let hour = Math.floor(input / 100) + ''
+  const hour = Math.floor(input / 100) + ''
   let minute = (input % 100) + ''
   if (input % 100 < 10) {
     minute = minute + '0'
@@ -44,8 +44,8 @@ export const convertNumberToTime = (input: number): string => {
 
 // Converts a time window into a numeric time window
 export const convertTimeWindowToTime = (start: number, end: number): string => {
-  let startPeriod = convertNumberToTime(start)
-  let endPeriod = convertNumberToTime(end)
+  const startPeriod = convertNumberToTime(start)
+  const endPeriod = convertNumberToTime(end)
   return startPeriod + ' - ' + endPeriod
 }
 
@@ -69,7 +69,7 @@ export const numericToStringPreference = (
   user: User,
   shiftID: string
 ): string => {
-  let numberToText = new Map<number, string>()
+  const numberToText = new Map<number, string>()
   numberToText.set(0, 'dislikes')
   numberToText.set(1, '')
   numberToText.set(2, 'prefers')

@@ -6,6 +6,7 @@ import SettingsInfo from '../../../components/MemberComponents/SettingsInfo/Sett
 import TaskPreferenceInfo from '../../../components/MemberComponents/TaskPreferenceInfo/TaskPreferenceInfo'
 import { useUserContext } from '../../../context/UserContext'
 import styles from './Settings.module.css'
+import AvailabilityTabContent from './AvailabilityTabContent'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -63,7 +64,7 @@ export default function SettingsPage() {
           <SettingsInfo userID={authUser.userID} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <AvailabilityInfo userID={authUser.userID} />
+          <AvailabilityTabContent />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <TaskPreferenceInfo userID={authUser.userID} />
