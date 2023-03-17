@@ -1,3 +1,4 @@
+import { Dictionary, EntityId } from '@reduxjs/toolkit'
 import { Shift, User } from '../types/schema'
 
 // Used to convert a map to an object uploadable to Firebase
@@ -73,8 +74,9 @@ export const numericToStringPreference = (
   numberToText.set(0, 'dislikes')
   numberToText.set(1, '')
   numberToText.set(2, 'prefers')
-  if (user.preferences.has(shiftID)) {
-    let numericalPreference = user.preferences.get(shiftID)
+  if (shiftID in user.preferences) {
+    let p: any = user.preferences;
+    let numericalPreference = p[shiftID];
     if (
       numericalPreference !== undefined &&
       numberToText.has(numericalPreference)
@@ -196,53 +198,52 @@ export const emailRegex = new RegExp(
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 )
 
-export const sortPotentialUsers = (potentialUsers: User[], shiftID: string) => {
-  potentialUsers.sort((user1, user2) => {
+export const sortPotentialUsers = (dict: Dictionary<User>, totalUsersInHouse: EntityId[], shiftID: string) => {
+  let sorted = totalUsersInHouse.sort((uid1, uid2) => {
+    let user1 = dict[uid1];
+    let user2 = dict[uid2];
     if (user1 === undefined || user2 === undefined) {
       return 0;
     }
     // First sort on hours assignable left (hoursRequired - hoursAssigned), prioritizing people with higher hours remaining (user2 - user1)
-    let user1HoursLeft = user1.hoursRequired - user1.hoursAssigned
-    let user2HoursLeft = user2.hoursRequired - user2.hoursAssigned
+    let user1HoursLeft = 5 - user1.hoursAssigned
+    let user2HoursLeft = 5 - user2.hoursAssigned
     let hoursWeekDiff: number = user2HoursLeft - user1HoursLeft
     if (hoursWeekDiff != 0) {
+      console.log(hoursWeekDiff);
       return hoursWeekDiff
     }
 
-    let user1Preferences = user1.preferences
-    let user2Preferences = user2.preferences
+    let user1Preferences:any = user1.preferences
+    let user2Preferences:any = user2.preferences
     // 1 if 1 is average
     let user1Pref = 1
     let user2Pref = 1
-    if (user1Preferences.has(shiftID)) {
-      let curr = user1Preferences.get(shiftID)
+    if (shiftID in user1Preferences) {
+      let curr = user1Preferences[shiftID];
       if (curr !== undefined) {
         user1Pref = curr
       }
     }
-    if (user2Preferences.has(shiftID)) {
-      let curr = user2Preferences.get(shiftID)
+    if (shiftID in user2Preferences) {
+      let curr = user2Preferences[shiftID];
       if (curr !== undefined) {
         user2Pref = curr
       }
     }
     // Second sort on preferences, prioritizing people with higher preferences (user2 - user1)
-    let prefDiff = user2Pref - user1Pref
-    if (prefDiff != 0) {
-      return prefDiff
-    }
-    // Third sort on hoursRemainingSemester, prioritizing people with higher hoursRemaining (user 2 - user1)
-    return user2.hoursRemainingSemester - user1.hoursRemainingSemester
+    return user2Pref - user1Pref
   })
+  return sorted;
 };
 
-export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: User[], shiftID: string, day: string) => {
+export const findAvailableUsers = (tempShiftObject: Shift, dict: Dictionary<User>, totalUsersInHouse: EntityId[], shiftID: string, day: string) => {
   const timeWindow = tempShiftObject.timeWindow
   const shiftStart = timeWindow[0]
   const shiftEnd = timeWindow[1]
   const numHours = tempShiftObject.hours
   const potentialUsers = []
-  
+  const ids = [];
   // Convert the hours of the shift into units of time. Assumes any non-whole hour numbers are 30 minute intervals.
   // ex. 1.5 -> converted to 130 (used for differences if someone is available between 1030 and 1200, they should be shown)
   const mult100 = Math.floor(numHours) * 100
@@ -251,21 +252,26 @@ export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: Us
     thirtyMin = 30
   }
   for (let i = 0; i < totalUsersInHouse.length; i++) {
-    const userObject = totalUsersInHouse[i]
+    const userObject = dict[totalUsersInHouse[i]];
+    if (userObject === undefined) {
+      continue;
+    }
     // if this user has already been assigned to this shift, display them regardless of hours
-    if (userObject.shiftsAssigned.includes(shiftID)) {
+    // console.log(shiftID in userObject.assignedScheduledShifts);
+    if (userObject.assignedScheduledShifts !== undefined && userObject.assignedScheduledShifts.includes(shiftID)) {
+      ids.push(totalUsersInHouse[i])
       potentialUsers.push(userObject)
       continue
     }
     // stores the number of hours that the user still has to complete
-    let assignableHours = userObject.hoursRequired - userObject.hoursAssigned
+    let assignableHours = 5 - userObject.hoursAssigned
     // if they have no hours left to complete, or their number of hours left to complete < the number of hours of the shift, continue
     if (assignableHours <= 0 || assignableHours < numHours) {
       continue
     }
-    const currAvailabilities = userObject.availabilities
-    if (currAvailabilities.has(day)) {
-      const perDayAvailability = currAvailabilities.get(day)
+    const currAvailabilities:any = userObject.availabilities
+    if (day in currAvailabilities) {
+      const perDayAvailability = currAvailabilities[day]
       if (perDayAvailability === undefined) {
         continue
       }
@@ -286,11 +292,12 @@ export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: Us
         let requiredEnd = Math.min(permEnd, shiftEnd)
         // If the calculated end time is <= required end time, then we can push and don't need to consider any more availabilities
         if (newEnd <= requiredEnd) {
+          ids.push(totalUsersInHouse[i])
           potentialUsers.push(userObject)
           break
         }
       }
     }
   }
-  return potentialUsers;
+  return ids;
 }

@@ -1,10 +1,10 @@
-import { Formik, Form, FormikHelpers, FormikValues } from 'formik'
+import { Formik, Form, FormikHelpers } from 'formik'
 import { Stack, Button } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
 
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import * as Yup from 'yup'
 import { TextInput, SelectInput } from '../../shared/forms/CustomFormikFields'
 import {
@@ -36,7 +36,6 @@ const ShiftSchema = Yup.object({
 })
 
 const daysList = [
-  '',
   'Monday',
   'Tuesday',
   'Wednesday',
@@ -100,8 +99,18 @@ const ShiftForm = ({
   )
 
   const onSubmit = async (
-    values: FormikValues,
-    formikBag: FormikHelpers<FormikValues>
+    values: {
+      name: string
+      category: string
+      hours: number
+      timeWindowStartTime: dayjs.Dayjs
+      timeWindowEndTime: dayjs.Dayjs
+      possibleDays: string[]
+      description: string
+      verificationBuffer: number
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formikBag: FormikHelpers<any>
   ) => {
     // console.log('Submiting ShiftForm: ', values)
     const {

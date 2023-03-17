@@ -1,11 +1,13 @@
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import Layout from '../../../components/Layout/Layout'
-import AvailabilityInfo from '../../../components/MemberComponents/AvailabilityInfo/AvailabilityInfo'
-import SettingsInfo from '../../../components/MemberComponents/SettingsInfo/SettingsInfo'
-import TaskPreferenceInfo from '../../../components/MemberComponents/TaskPreferenceInfo/TaskPreferenceInfo'
-import { useUserContext } from '../../../context/UserContext'
-import styles from './Settings.module.css'
+// // import AvailabilityInfo from '../../../components/MemberComponents/AvailabilityInfo/AvailabilityInfo'
+// import SettingsInfo from '../../../components/MemberComponents/SettingsInfo/SettingsInfo'
+// import TaskPreferenceInfo from '../../../components/MemberComponents/TaskPreferenceInfo/TaskPreferenceInfo'
+import { selectCurrentUser } from '../../../store/slices/authSlice'
+import { User } from '../../../types/schema'
+// import styles from './Settings.module.css'
 import AvailabilityTabContent from './AvailabilityTabContent'
 
 interface TabPanelProps {
@@ -42,7 +44,8 @@ function a11yProps(index: number) {
 }
 
 export default function SettingsPage() {
-  const { authUser } = useUserContext()
+  // const { authUser } = useUserContext()
+  const authUser = useSelector(selectCurrentUser) as User
   const [value, setValue] = React.useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -61,13 +64,13 @@ export default function SettingsPage() {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <SettingsInfo userID={authUser.userID} />
+          <Typography color={'#000'}>Coming Soon!!!</Typography>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <AvailabilityTabContent />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <TaskPreferenceInfo userID={authUser.userID} />
+          <Typography color={'#000'}>Coming Soon!!!</Typography>
         </TabPanel>
       </Box>
     </Layout>
