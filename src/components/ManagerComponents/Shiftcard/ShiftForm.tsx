@@ -18,24 +18,31 @@ import styles from './ShiftForm.module.css'
 //** Here, we are defining what kind of inputs we are expecting and attaching error msgs for when the input is not what we want. */
 const ShiftSchema = Yup.object({
   name: Yup.string()
+    .typeError('Must be a string')
     .required('Name is required')
     .min(1, 'Name must have at least 1 characters'),
   category: Yup.string().required('Category is required'),
   members: Yup.number()
-    .typeError('Number is required')
+    .typeError('Must be a number')
     .positive('Must be greater than zero')
     .integer()
     .required('Members is required'),
-  hours: Yup.number().required('Hours is required'),
+  hours: Yup.number()
+    .typeError('Must be a number')
+    .required('Hours is required'),
   possibleDays: Yup.array()
     .of(Yup.string())
     .required('Possible days is required')
     .min(1, 'Possible days is required'),
   timeWindowStartTime: Yup.string().required('Start time is required'),
   timeWindowEndTime: Yup.string().required('End time is required'),
-  verificationBuffer: Yup.number().required('Buffer hours is required'),
+  verificationBuffer: Yup.number()
+    .typeError('Must be a number')
+    .required('Buffer hours is required'),
   verification: Yup.string().required('Verification type is required'),
-  description: Yup.string().required('Description is required'),
+  description: Yup.string()
+    .typeError('Must be a string')
+    .required('Description is required'),
   assignedUser: Yup.string(),
 })
 
@@ -210,7 +217,6 @@ const ShiftForm = ({
     values: FormikValues,
     formikBag: FormikHelpers<FormikValues>
   ) => {
-    // console.log('Submiting ShiftForm: ', values)
     const {
       name,
       category,
@@ -223,17 +229,9 @@ const ShiftForm = ({
       description,
     } = values
 
-    // const startTime = Number(timeWindowStartTime.format('HHmm'))
-    // const endTime = Number(timeWindowEndTime.format('HHmm'))
-    console.log(timeWindowStartTime, parseTimeToNumber(timeWindowStartTime))
     const startTime = parseTimeToNumber(timeWindowStartTime)
     const endTime = parseTimeToNumber(timeWindowEndTime)
 
-    // console.log(dayjs('1900', 'HHmm').format('HHmm'))
-    // const num = 1900
-    // console.log(dayjs(num.toString(), 'HHmm'))
-
-    // const dayString = possibleDays.join('')
     let result
     const timeWindow = [startTime, endTime]
     const timeWindowDisplay = timeWindowStartTime + ' - ' + timeWindowEndTime
@@ -267,9 +265,6 @@ const ShiftForm = ({
     setOpen(false)
   }
 
-  // React.useEffect(() => {
-  //   console.log('This is the selected shift', shift)
-  // }, [shift])
   return (
     <>
       <Formik
@@ -290,24 +285,9 @@ const ShiftForm = ({
           timeWindowEndTime: shift
             ? parseTimefromNumber(shift.timeWindow[1])
             : emptyShift.timeWindowEndTime,
-          // timeWindowStartTime: shift
-          //   ? dayjs(shift.timeWindow[0].toString(), 'HHmm')
-          //   : emptyShift.timeWindowStartTime,
-          // timeWindowEndTime: shift
-          //   ? dayjs(shift.timeWindow[1].toString(), 'HHmm')
-          //   : emptyShift.timeWindowEndTime,
           verificationBuffer: shift
             ? shift.verificationBuffer
             : emptyShift.verificationBuffer,
-          // verification: {if (shift) {
-          //   if (shift.verification) {
-          //     return 'Verification required'
-          //   } else {
-          //     return 'No verification'
-          //   }
-          // } else {
-          //     return emptyShift.verification
-          //   }},
           verification: shift
             ? verifyToString(shift.verification)
             : emptyShift.verification,
@@ -315,7 +295,7 @@ const ShiftForm = ({
         }}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting}) => (
+        {({ isSubmitting }) => (
           <Form>
             <div className={styles.formField}>
               <Typography>Shift Name</Typography>
@@ -355,8 +335,6 @@ const ShiftForm = ({
               />
             </div>
             <div className={styles.flex}>
-              {/* <div className={styles.formField}> */}
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
               <div className={styles.formField}>
                 <Typography>Start Time</Typography>
                 <SelectInput
@@ -367,14 +345,6 @@ const ShiftForm = ({
                   options={timeWindows}
                   multiselect={false}
                 />
-                {/* <MobileTimePicker
-                    label=""
-                    minutesStep={30}
-                    value={values.timeWindowStartTime}
-                    onChange={(newValue) =>
-                      setFieldValue('timeWindowStartTime', newValue)
-                    }
-                  /> */}
               </div>
               <div className={styles.formField}>
                 <Typography>End Time</Typography>
@@ -386,17 +356,7 @@ const ShiftForm = ({
                   options={timeWindows}
                   multiselect={false}
                 />
-                {/* <MobileTimePicker
-                    label=""
-                    minutesStep={30}
-                    value={values.timeWindowEndTime}
-                    onChange={(newValue) => {
-                      setFieldValue('timeWindowEndTime', newValue)
-                    }}
-                  /> */}
               </div>
-              {/* </LocalizationProvider> */}
-              {/* </div> */}
               <div className={styles.formField}>
                 <Typography>Buffer Hours</Typography>
                 <TextInput name="verificationBuffer" label="" />
@@ -438,26 +398,6 @@ const ShiftForm = ({
                 Cancel
               </Button>
             </div>
-
-            {/* <Stack direction="row" alignItems="center" spacing={2}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                disabled={isSubmitting}
-              >
-                {isNewShift || !shiftId ? 'Submit' : 'Update'}
-              </Button>
-              <Button
-                fullWidth
-                variant="outlined"
-                color="primary"
-                onClick={() => setOpen(false)}
-              >
-                Cancel
-              </Button>
-            </Stack> */}
           </Form>
         )}
       </Formik>
