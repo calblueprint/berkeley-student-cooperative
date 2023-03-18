@@ -198,6 +198,14 @@ export const emailRegex = new RegExp(
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 )
 
+export const calculateHoursBetween = (start: number, end: number) => {
+  let numericalHours = Math.floor((end -  start) / 100)
+  if (end - start % 100 != 0) {
+    numericalHours += 0.5;
+  }
+  return pluralizeHours(numericalHours);
+}
+
 export const sortPotentialUsers = (dict: Dictionary<User>, totalUsersInHouse: EntityId[], shiftID: string) => {
   let sorted = totalUsersInHouse.sort((uid1, uid2) => {
     let user1 = dict[uid1];
