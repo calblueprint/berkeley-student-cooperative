@@ -79,6 +79,8 @@ export interface HeadCell<
   label: string
   isNumeric: boolean
   isSortable: boolean
+  isButton?: boolean
+  button?: React.FC
   align: 'left' | 'center' | 'right' | 'justify' | 'inherit' | undefined
   transformFn?: (value: T) => string
   complexTransformFn?: (a: T, b: string | number) => string

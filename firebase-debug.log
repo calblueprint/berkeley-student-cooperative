@@ -1,0 +1,178 @@
+[debug] [2023-03-16T08:20:58.886Z] ----------------------------------------------------------------------
+[debug] [2023-03-16T08:20:58.888Z] Command:       /usr/local/bin/firebase /Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy --only hosting
+[debug] [2023-03-16T08:20:58.888Z] CLI Version:   11.24.1
+[debug] [2023-03-16T08:20:58.888Z] Platform:      darwin
+[debug] [2023-03-16T08:20:58.888Z] Node Version:  v16.16.0
+[debug] [2023-03-16T08:20:58.890Z] Time:          Thu Mar 16 2023 01:20:58 GMT-0700 (Pacific Daylight Time)
+[debug] [2023-03-16T08:20:58.890Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-16T08:20:58.961Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-16T08:20:58.962Z] > authorizing via signed-in user (christianjc_09@berkeley.edu)
+[debug] [2023-03-16T08:20:58.962Z] [iam] checking project berkeley-student-cooperative for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-03-16T08:20:58.965Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions [none]
+[debug] [2023-03-16T08:20:58.965Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions x-goog-quota-user=projects/berkeley-student-cooperative
+[debug] [2023-03-16T08:20:58.965Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-16T08:21:00.113Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions 200
+[debug] [2023-03-16T08:21:00.113Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-16T08:21:00.114Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative [none]
+[debug] [2023-03-16T08:21:00.906Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative 200
+[debug] [2023-03-16T08:21:00.907Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative {"projectId":"berkeley-student-cooperative","projectNumber":"577482572781","displayName":"Berkeley Student Cooperative","name":"projects/berkeley-student-cooperative","resources":{"hostingSite":"berkeley-student-cooperative","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_6df16370-ea43-487b-8b65-0cb39c19c664"}
+[debug] [2023-03-16T08:21:05.298Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites pageToken=&pageSize=10
+[debug] [2023-03-16T08:21:08.915Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites 200
+[debug] [2023-03-16T08:21:08.916Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites {"sites":[{"name":"projects/berkeley-student-cooperative/sites/berkeley-student-cooperative","defaultUrl":"https://berkeley-student-cooperative.web.app","appId":"1:577482572781:web:ead70c037cd651417f9de4","type":"DEFAULT_SITE"}]}
+[debug] [2023-03-16T08:21:08.916Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config [none]
+[debug] [2023-03-16T08:21:09.640Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config 200
+[debug] [2023-03-16T08:21:09.641Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config {"projectId":"berkeley-student-cooperative","appId":"1:577482572781:web:ead70c037cd651417f9de4","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central","apiKey":"AIzaSyB289W9cHJEQkj_9erTQKsj0HCcfzztHHU","authDomain":"berkeley-student-cooperative.firebaseapp.com","messagingSenderId":"577482572781","measurementId":"G-0T808S7VF3"}
+[debug] [2023-03-16T08:22:33.543Z] Error: Command failed: npm i --omit dev --no-audit
+    at checkExecSyncError (node:child_process:828:11)
+    at Object.execSync (node:child_process:899:15)
+    at execSync (pkg/prelude/bootstrap.js:2115:30)
+    at prepareFrameworks (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/frameworks/index.js:372:42)
+    at async deploy (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/deploy/index.js:53:13)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2023-03-16T08:27:22.201Z] ----------------------------------------------------------------------
+[debug] [2023-03-16T08:27:22.203Z] Command:       /usr/local/bin/firebase /Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy --only hosting
+[debug] [2023-03-16T08:27:22.204Z] CLI Version:   11.24.1
+[debug] [2023-03-16T08:27:22.204Z] Platform:      darwin
+[debug] [2023-03-16T08:27:22.204Z] Node Version:  v16.16.0
+[debug] [2023-03-16T08:27:22.206Z] Time:          Thu Mar 16 2023 01:27:22 GMT-0700 (Pacific Daylight Time)
+[debug] [2023-03-16T08:27:22.207Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-16T08:27:22.267Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-16T08:27:22.268Z] > authorizing via signed-in user (christianjc_09@berkeley.edu)
+[debug] [2023-03-16T08:27:22.268Z] [iam] checking project berkeley-student-cooperative for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-03-16T08:27:22.270Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions [none]
+[debug] [2023-03-16T08:27:22.270Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions x-goog-quota-user=projects/berkeley-student-cooperative
+[debug] [2023-03-16T08:27:22.270Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-16T08:27:22.433Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions 200
+[debug] [2023-03-16T08:27:22.433Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-16T08:27:22.434Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative [none]
+[debug] [2023-03-16T08:27:23.229Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative 200
+[debug] [2023-03-16T08:27:23.229Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative {"projectId":"berkeley-student-cooperative","projectNumber":"577482572781","displayName":"Berkeley Student Cooperative","name":"projects/berkeley-student-cooperative","resources":{"hostingSite":"berkeley-student-cooperative","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_6df16370-ea43-487b-8b65-0cb39c19c664"}
+[debug] [2023-03-16T08:27:27.687Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites pageToken=&pageSize=10
+[debug] [2023-03-16T08:27:28.452Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites 200
+[debug] [2023-03-16T08:27:28.452Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites {"sites":[{"name":"projects/berkeley-student-cooperative/sites/berkeley-student-cooperative","defaultUrl":"https://berkeley-student-cooperative.web.app","appId":"1:577482572781:web:ead70c037cd651417f9de4","type":"DEFAULT_SITE"}]}
+[debug] [2023-03-16T08:27:28.453Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config [none]
+[debug] [2023-03-16T08:27:29.066Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config 200
+[debug] [2023-03-16T08:27:29.066Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config {"projectId":"berkeley-student-cooperative","appId":"1:577482572781:web:ead70c037cd651417f9de4","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central","apiKey":"AIzaSyB289W9cHJEQkj_9erTQKsj0HCcfzztHHU","authDomain":"berkeley-student-cooperative.firebaseapp.com","messagingSenderId":"577482572781","measurementId":"G-0T808S7VF3"}
+[debug] [2023-03-16T08:29:07.607Z] Error: Command failed: npm i --omit dev --no-audit
+    at checkExecSyncError (node:child_process:828:11)
+    at Object.execSync (node:child_process:899:15)
+    at execSync (pkg/prelude/bootstrap.js:2115:30)
+    at prepareFrameworks (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/frameworks/index.js:372:42)
+    at async deploy (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/deploy/index.js:53:13)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2023-03-16T08:35:59.691Z] ----------------------------------------------------------------------
+[debug] [2023-03-16T08:35:59.693Z] Command:       /usr/local/bin/firebase /Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy
+[debug] [2023-03-16T08:35:59.693Z] CLI Version:   11.24.1
+[debug] [2023-03-16T08:35:59.693Z] Platform:      darwin
+[debug] [2023-03-16T08:35:59.694Z] Node Version:  v16.16.0
+[debug] [2023-03-16T08:35:59.701Z] Time:          Thu Mar 16 2023 01:35:59 GMT-0700 (Pacific Daylight Time)
+[debug] [2023-03-16T08:35:59.701Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-16T08:35:59.763Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-16T08:35:59.763Z] > authorizing via signed-in user (christianjc_09@berkeley.edu)
+[debug] [2023-03-16T08:35:59.763Z] [iam] checking project berkeley-student-cooperative for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-03-16T08:35:59.765Z] > refreshing access token with scopes: []
+[debug] [2023-03-16T08:35:59.767Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-03-16T08:35:59.767Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-16T08:36:00.003Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-03-16T08:36:00.003Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-16T08:36:00.035Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions [none]
+[debug] [2023-03-16T08:36:00.035Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions x-goog-quota-user=projects/berkeley-student-cooperative
+[debug] [2023-03-16T08:36:00.035Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-16T08:36:00.161Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions 200
+[debug] [2023-03-16T08:36:00.161Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-16T08:36:00.162Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative [none]
+[debug] [2023-03-16T08:36:00.379Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative 200
+[debug] [2023-03-16T08:36:00.379Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative {"projectId":"berkeley-student-cooperative","projectNumber":"577482572781","displayName":"Berkeley Student Cooperative","name":"projects/berkeley-student-cooperative","resources":{"hostingSite":"berkeley-student-cooperative","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_6df16370-ea43-487b-8b65-0cb39c19c664"}
+[debug] [2023-03-16T08:36:05.057Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites pageToken=&pageSize=10
+[debug] [2023-03-16T08:36:05.580Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites 200
+[debug] [2023-03-16T08:36:05.581Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites {"sites":[{"name":"projects/berkeley-student-cooperative/sites/berkeley-student-cooperative","defaultUrl":"https://berkeley-student-cooperative.web.app","appId":"1:577482572781:web:ead70c037cd651417f9de4","type":"DEFAULT_SITE"}]}
+[debug] [2023-03-16T08:36:05.581Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config [none]
+[debug] [2023-03-16T08:36:06.156Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config 200
+[debug] [2023-03-16T08:36:06.156Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config {"projectId":"berkeley-student-cooperative","appId":"1:577482572781:web:ead70c037cd651417f9de4","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central","apiKey":"AIzaSyB289W9cHJEQkj_9erTQKsj0HCcfzztHHU","authDomain":"berkeley-student-cooperative.firebaseapp.com","messagingSenderId":"577482572781","measurementId":"G-0T808S7VF3"}
+[debug] [2023-03-16T08:37:33.901Z] Error: Command failed: npm i --omit dev --no-audit
+    at checkExecSyncError (node:child_process:828:11)
+    at Object.execSync (node:child_process:899:15)
+    at execSync (pkg/prelude/bootstrap.js:2115:30)
+    at prepareFrameworks (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/frameworks/index.js:372:42)
+    at async deploy (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/deploy/index.js:53:13)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2023-03-17T20:04:38.214Z] ----------------------------------------------------------------------
+[debug] [2023-03-17T20:04:38.216Z] Command:       /usr/local/bin/firebase /Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy --only hosting
+[debug] [2023-03-17T20:04:38.216Z] CLI Version:   11.24.1
+[debug] [2023-03-17T20:04:38.216Z] Platform:      darwin
+[debug] [2023-03-17T20:04:38.216Z] Node Version:  v16.16.0
+[debug] [2023-03-17T20:04:38.224Z] Time:          Fri Mar 17 2023 13:04:38 GMT-0700 (Pacific Daylight Time)
+[debug] [2023-03-17T20:04:38.224Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-17T20:04:38.227Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2023-03-17T20:04:38.310Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-17T20:04:38.310Z] > authorizing via signed-in user (christianjc_09@berkeley.edu)
+[debug] [2023-03-17T20:04:38.310Z] [iam] checking project berkeley-student-cooperative for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-03-17T20:04:38.311Z] > refreshing access token with scopes: []
+[debug] [2023-03-17T20:04:38.312Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-03-17T20:04:38.312Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-17T20:04:38.582Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2023-03-17T20:04:38.583Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2023-03-17T20:04:38.604Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-03-17T20:04:38.604Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-03-17T20:04:38.623Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions [none]
+[debug] [2023-03-17T20:04:38.623Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions x-goog-quota-user=projects/berkeley-student-cooperative
+[debug] [2023-03-17T20:04:38.623Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-17T20:04:38.808Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions 200
+[debug] [2023-03-17T20:04:38.808Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-17T20:04:38.809Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative [none]
+[debug] [2023-03-17T20:04:39.126Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative 200
+[debug] [2023-03-17T20:04:39.126Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative {"projectId":"berkeley-student-cooperative","projectNumber":"577482572781","displayName":"Berkeley Student Cooperative","name":"projects/berkeley-student-cooperative","resources":{"hostingSite":"berkeley-student-cooperative","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_a1ba0d0f-b9a8-4fa3-85f4-8541f144ce31"}
+[debug] [2023-03-17T20:04:43.832Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites pageToken=&pageSize=10
+[debug] [2023-03-17T20:04:44.380Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites 200
+[debug] [2023-03-17T20:04:44.380Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites {"sites":[{"name":"projects/berkeley-student-cooperative/sites/berkeley-student-cooperative","defaultUrl":"https://berkeley-student-cooperative.web.app","appId":"1:577482572781:web:ead70c037cd651417f9de4","type":"DEFAULT_SITE"}]}
+[debug] [2023-03-17T20:04:44.381Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config [none]
+[debug] [2023-03-17T20:04:44.847Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config 200
+[debug] [2023-03-17T20:04:44.847Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config {"projectId":"berkeley-student-cooperative","appId":"1:577482572781:web:ead70c037cd651417f9de4","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central","apiKey":"AIzaSyB289W9cHJEQkj_9erTQKsj0HCcfzztHHU","authDomain":"berkeley-student-cooperative.firebaseapp.com","messagingSenderId":"577482572781","measurementId":"G-0T808S7VF3"}
+[debug] [2023-03-17T20:06:20.234Z] Error: Command failed: npm i --omit dev --no-audit
+    at checkExecSyncError (node:child_process:828:11)
+    at Object.execSync (node:child_process:899:15)
+    at execSync (pkg/prelude/bootstrap.js:2115:30)
+    at prepareFrameworks (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/frameworks/index.js:372:42)
+    at async deploy (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/deploy/index.js:53:13)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2023-03-17T20:08:38.458Z] ----------------------------------------------------------------------
+[debug] [2023-03-17T20:08:38.459Z] Command:       /usr/local/bin/firebase /Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy --only hosting
+[debug] [2023-03-17T20:08:38.460Z] CLI Version:   11.24.1
+[debug] [2023-03-17T20:08:38.460Z] Platform:      darwin
+[debug] [2023-03-17T20:08:38.460Z] Node Version:  v16.16.0
+[debug] [2023-03-17T20:08:38.461Z] Time:          Fri Mar 17 2023 13:08:38 GMT-0700 (Pacific Daylight Time)
+[debug] [2023-03-17T20:08:38.461Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-17T20:08:38.527Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-17T20:08:38.527Z] > authorizing via signed-in user (christianjc_09@berkeley.edu)
+[debug] [2023-03-17T20:08:38.527Z] [iam] checking project berkeley-student-cooperative for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-03-17T20:08:38.529Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions [none]
+[debug] [2023-03-17T20:08:38.530Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions x-goog-quota-user=projects/berkeley-student-cooperative
+[debug] [2023-03-17T20:08:38.530Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-17T20:08:38.673Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions 200
+[debug] [2023-03-17T20:08:38.673Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/berkeley-student-cooperative:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-17T20:08:38.674Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative [none]
+[debug] [2023-03-17T20:08:39.265Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative 200
+[debug] [2023-03-17T20:08:39.265Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/berkeley-student-cooperative {"projectId":"berkeley-student-cooperative","projectNumber":"577482572781","displayName":"Berkeley Student Cooperative","name":"projects/berkeley-student-cooperative","resources":{"hostingSite":"berkeley-student-cooperative","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_a1ba0d0f-b9a8-4fa3-85f4-8541f144ce31"}
+[debug] [2023-03-17T20:08:43.118Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites pageToken=&pageSize=10
+[debug] [2023-03-17T20:08:43.740Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites 200
+[debug] [2023-03-17T20:08:43.741Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/berkeley-student-cooperative/sites {"sites":[{"name":"projects/berkeley-student-cooperative/sites/berkeley-student-cooperative","defaultUrl":"https://berkeley-student-cooperative.web.app","appId":"1:577482572781:web:ead70c037cd651417f9de4","type":"DEFAULT_SITE"}]}
+[debug] [2023-03-17T20:08:43.741Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config [none]
+[debug] [2023-03-17T20:08:44.283Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config 200
+[debug] [2023-03-17T20:08:44.283Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:577482572781:web:ead70c037cd651417f9de4/config {"projectId":"berkeley-student-cooperative","appId":"1:577482572781:web:ead70c037cd651417f9de4","storageBucket":"berkeley-student-cooperative.appspot.com","locationId":"us-central","apiKey":"AIzaSyB289W9cHJEQkj_9erTQKsj0HCcfzztHHU","authDomain":"berkeley-student-cooperative.firebaseapp.com","messagingSenderId":"577482572781","measurementId":"G-0T808S7VF3"}
+[debug] [2023-03-17T20:10:34.492Z] Error: Command failed: npm i --omit dev --no-audit
+    at checkExecSyncError (node:child_process:828:11)
+    at Object.execSync (node:child_process:899:15)
+    at execSync (pkg/prelude/bootstrap.js:2115:30)
+    at prepareFrameworks (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/frameworks/index.js:372:42)
+    at async deploy (/Users/cjc/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/deploy/index.js:53:13)
+[error] 
+[error] Error: An unexpected error has occurred.
