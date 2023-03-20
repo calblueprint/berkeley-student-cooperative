@@ -9,6 +9,7 @@ import {
 import { useState } from 'react'
 
 function NewShiftCardTest({ shiftId }: { shiftId?: string }) {
+  console.log(shiftId)
   const [open, setOpen] = useState(false)
   // const [shiftValues, setShiftValues] = useState(null)
   const handleClose = () => {
