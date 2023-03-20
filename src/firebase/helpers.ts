@@ -283,7 +283,7 @@ export const findAvailableUsers = (
       continue
     }
     const currAvailabilities: User['availabilities'] = userObject.availabilities
-    if (day in currAvailabilities) {
+    if (currAvailabilities && day in currAvailabilities) {
       const perDayAvailability = currAvailabilities[day]
       if (perDayAvailability === undefined) {
         continue
