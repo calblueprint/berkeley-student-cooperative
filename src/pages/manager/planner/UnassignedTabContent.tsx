@@ -37,6 +37,35 @@ const shiftHeadCells: HeadCell<
     label: 'Value',
     isSortable: true,
     align: 'left',
+<<<<<<< HEAD
+  },
+]
+
+const userHeadCells: HeadCell<
+  Shift & { [key in keyof Shift]: string | number }
+>[] = [
+  {
+    id: 'email',
+    isNumeric: false,
+    label: 'Email',
+    isSortable: true,
+    align: 'left',
+  },
+  {
+    id: 'hoursRequired',
+    isNumeric: true,
+    label: 'Hours Required',
+    isSortable: true,
+    align: 'left',
+  },
+  {
+    id: 'hoursAssigned',
+    isNumeric: true,
+    label: 'Value',
+    isSortable: true,
+    align: 'left',
+=======
+>>>>>>> 3304dd218d055e766ce5b32d47368969c8de4d32
   },
 ]
 
