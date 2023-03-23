@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import styles from './Layout.module.css'
 import MemberNavbar from '../MemberComponents/Navbar/MemberNavbar'
 import Head from 'next/head'
@@ -8,7 +8,12 @@ import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '../../store/slices/authSlice'
 import { User } from '../../types/schema'
 
-const Layout = ({ children, title }: any) => {
+type Props = {
+  children?: ReactNode
+  title?: string
+}
+
+const Layout = ({ children, title }: Props) => {
   /**
    * Layout component that formats each page to have the navbar alongisde all other components
    *
