@@ -9,3 +9,6 @@
 .numShifts{
     display: inline;
 }
+.unassignBtn{
+    float: right;
+}

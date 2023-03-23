@@ -5,6 +5,7 @@ import CategoriesView from './categoryDropdown/CategoriesView'
 import UnassignedTabContent from './UnassignedTabContent'
 // import ReduxTesting from '../../ReduxTesting'
 import AssignedTabContent from './AssignedTabContent'
+import ReduxTesting from '../../ReduxTesting'
 // import { selectCurrentUser } from '../../../store/slices/authSlice'
 // import { useSelector } from 'react-redux'
 // import { User } from '../../../types/schema'
@@ -72,6 +73,7 @@ export default function SchedulePage() {
         </TabPanel>
         <TabPanel value={currPage} index={2}>
           <CategoriesView />
+          <ReduxTesting/>
         </TabPanel>
       </Box>
     </Layout>
