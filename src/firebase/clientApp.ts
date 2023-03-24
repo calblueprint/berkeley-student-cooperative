@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { Analytics, getAnalytics } from 'firebase/analytics'
 import { Firestore, getFirestore } from 'firebase/firestore'
-import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth'
+import { Auth, getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

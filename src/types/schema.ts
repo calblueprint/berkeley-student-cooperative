@@ -33,9 +33,9 @@ export type User = {
   // TODO: this should be removed since we are not tracking fines, we are tracking penatly hours
   totalFines?: number
   // Map of availabilities (day: time windows when they're free)
-  availabilities: { day: number[] }[]
+  availabilities: Record<string, number[]>
   // Map of preferences (taskID: (0/1/2 (higher number = greater preference)))
-  preferences: { taskID: number }[]
+  preferences: Record<string, number>
 
   //** new attributes below */
   preference?: string
@@ -125,12 +125,12 @@ export type ScheduledShift = {
 export type House = {
   id: string
   houseID: string
-  categories: { string: string[] }
+  categories: Record<string, string[]> // { string: string[] }
   // TODO: remove members because we can simply use the firebase's .where() to filter through the users for a certain house
   members?: string[] | null
   address: string
-  schedule: { string: string[] }
-  userPINs: { string: string }
+  schedule: Record<string, string[]>
+  userPINs: Record<string, string>
 }
 
 export enum Day {

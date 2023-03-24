@@ -9,6 +9,7 @@ import {
 import { useState } from 'react'
 
 function NewUserCardTest({ userId }: { userId?: string }) {
+  console.log(userId)
   const [open, setOpen] = useState(false)
   // const [userValues, setUserValues] = useState(null)
   const handleClose = () => {
