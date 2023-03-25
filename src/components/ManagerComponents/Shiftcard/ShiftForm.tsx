@@ -1,4 +1,4 @@
-import { Formik, Form, FormikHelpers, FormikValues } from 'formik'
+import { Formik, Form, FormikHelpers } from 'formik'
 import { Stack, Button } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -12,14 +12,12 @@ import {
   useAddNewShiftMutation,
   useUpdateShiftMutation,
 } from '../../../store/apiSlices/shiftApiSlice'
-// import { getCategories } from '../../../firebase/queries/house'
 import { useSelector } from 'react-redux'
 import React from 'react'
 import { formatMilitaryTime } from '../../../utils/utils'
 import { RootState } from '../../../store/store'
 import { EntityId } from '@reduxjs/toolkit'
 import { Shift } from '../../../types/schema'
-// import { useUserContext } from '../../../context/UserContext'
 
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
 //** Here, we are defining what kind of inputs we are expecting and attaching error msgs for when the input is not what we want. */
@@ -38,7 +36,6 @@ const ShiftSchema = Yup.object({
 })
 
 const daysList = [
-  '',
   'Monday',
   'Tuesday',
   'Wednesday',
@@ -76,11 +73,6 @@ const ShiftForm = ({
   shiftId?: string
   isNewShift: boolean
 }) => {
-  // const { authUser, house } = useUserContext()
-  // const [currentShift, setCurrentShift] = React.useState(Shift)
-
-  // const shiftCategories = getCategories(house.houseID) //TODO: use redux api slice once implemented
-
   //* Get API helpers to create or update a shift
   const [
     addNewShift,
@@ -107,18 +99,18 @@ const ShiftForm = ({
   )
 
   const onSubmit = async (
-    values: FormikValues,
-    //  : {
-    //   name: string
-    //   category: string
-    //   hours: number
-    //   description: string
-    //   possibleDays: string[]
-    //   timeWindowStartTime: Dayjs
-    //   timeWindowEndTime: Dayjs
-    //   verificationBuffer: number
-    // },
-    formikBag: FormikHelpers<FormikValues>
+    values: {
+      name: string
+      category: string
+      hours: number
+      timeWindowStartTime: dayjs.Dayjs
+      timeWindowEndTime: dayjs.Dayjs
+      possibleDays: string[]
+      description: string
+      verificationBuffer: number
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formikBag: FormikHelpers<any>
   ) => {
     // console.log('Submiting ShiftForm: ', values)
     const {
@@ -184,10 +176,10 @@ const ShiftForm = ({
           category: shift ? shift.category : emptyShift.category,
           hours: shift ? shift.hours : emptyShift.hours,
           timeWindowStartTime: shift
-            ? dayjs(shift.timeWindow[0].toString(), 'HHmm') // TODO: convert military time to type TimePicker
+            ? dayjs(shift.timeWindow[0].toString(), 'HHmm')
             : emptyShift.timeWindowStartTime,
           timeWindowEndTime: shift
-            ? dayjs(shift.timeWindow[1].toString(), 'HHmm') // TODO: convert military time to type TimePicker
+            ? dayjs(shift.timeWindow[1].toString(), 'HHmm')
             : emptyShift.timeWindowEndTime,
           possibleDays: shift
             ? shift.possibleDays

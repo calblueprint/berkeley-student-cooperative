@@ -35,6 +35,24 @@ const UserSchema = Yup.object({
   newPassword: Yup.string(),
 })
 
+// const daysList = [
+//   '',
+//   'Monday',
+//   'Tuesday',
+//   'Wednesday',
+//   'Thursday',
+//   'Friday',
+//   'Saturday',
+//   'Sunday',
+// ]
+
+// const userCategories = [
+//   'cook dinner',
+//   'clean bathroom',
+//   'wash dishes',
+//   'clean basement',
+// ]
+
 const emptyUser = {
   // Role of the user
   role: '',
@@ -118,7 +136,8 @@ const UserForm = ({
 
   const onSubmit = async (
     values: FormikValues,
-    formikBag: FormikHelpers<FormikValues>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formikBag: FormikHelpers<any>
   ) => {
     const { firstName, lastName, email } = values
     let result

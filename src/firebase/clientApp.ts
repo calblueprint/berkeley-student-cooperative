@@ -25,6 +25,7 @@ if (firebaseConfig?.projectId) {
   // Access Firebase services using shorthand notation
   firestore = getFirestore(firebaseApp) // HOVER OVER GETFIREBASE FOR RETURN TYPE
   auth = getAuth(firebaseApp)
+  // connectAuthEmulator(auth, 'http://localhost:9099')
 }
 
 export { firestore, analytics, auth }

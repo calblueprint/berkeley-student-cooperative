@@ -1,8 +1,8 @@
 import { createSelector, createEntityAdapter, EntityId } from '@reduxjs/toolkit'
-import { Shift as House } from '../../types/schema'
+import { House } from '../../types/schema'
 import { apiSlice } from '../api/apiSlice'
 import { RootState } from '../store'
-import { formatMilitaryTime } from '../../utils/utils'
+// import { formatMilitaryTime } from '../../utils/utils'
 
 const housesAdapter = createEntityAdapter<House>({})
 
@@ -27,12 +27,6 @@ export const housesApiSlice = apiSlice.injectEndpoints({
         const loadedHouses = responseData.map((entity) => {
           // console.log('[loaddedShifts] entity: ', entity)
           entity.id = entity.id
-          if (!entity.timeWindowDisplay) {
-            entity.timeWindowDisplay =
-              formatMilitaryTime(entity.timeWindow[0]) +
-              ' - ' +
-              formatMilitaryTime(entity.timeWindow[1])
-          }
           return entity
         })
         console.debug(loadedHouses)

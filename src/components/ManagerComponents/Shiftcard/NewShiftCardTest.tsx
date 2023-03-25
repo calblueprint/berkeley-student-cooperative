@@ -9,6 +9,7 @@ import {
 import { useState } from 'react'
 
 function NewShiftCardTest({ shiftId }: { shiftId?: string }) {
+  console.log(shiftId)
   const [open, setOpen] = useState(false)
   // const [shiftValues, setShiftValues] = useState(null)
   const handleClose = () => {
@@ -20,7 +21,7 @@ function NewShiftCardTest({ shiftId }: { shiftId?: string }) {
   }
   return (
     <>
-      <Button fullWidth variant="outlined" onClick={handleOpen}>
+      <Button fullWidth variant="contained" onClick={handleOpen}>
         <Typography>Add Shift</Typography>
       </Button>
 

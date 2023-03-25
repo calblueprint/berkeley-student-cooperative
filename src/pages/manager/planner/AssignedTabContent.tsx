@@ -8,11 +8,11 @@ import { HeadCell } from '../../../interfaces/interfaces'
 import { Shift, User } from '../../../types/schema'
 import { useGetShiftsQuery } from '../../../store/apiSlices/shiftApiSlice'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
-import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '../../../store/slices/authSlice'
 import { ShiftAssignmentCard } from '../../../components/ManagerComponents/shiftAssignmentCard/ShiftAssignmentCard'
 import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
 import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../../store/slices/authSlice'
 
 const shiftHeadCells: HeadCell<
   Shift & { [key in keyof Shift]: string | number }
@@ -50,9 +50,10 @@ const filters = [
   'sunday',
 ]
 
-const UnassignedTabContent = () => {
+const AssignedTabContent = () => {
+  // const { house } = useUserContext()
   const authUser = useSelector(selectCurrentUser) as User
-  const { data, isLoading, isSuccess, isError, error } = useGetShiftsQuery(
+  const { data, isLoading, isSuccess, isError } = useGetShiftsQuery(
     authUser.houseID
   )
 
@@ -107,8 +108,8 @@ const UnassignedTabContent = () => {
       setShifts(
         data.ids?.filter(
           (id: EntityId) =>
-            data.entities[id]?.assignedUser === undefined ||
-            data.entities[id]?.assignedUser?.length === 0
+            data.entities[id]?.assignedUser != undefined &&
+            data.entities[id]?.assignedUser != ''
         )
       )
     }
@@ -117,28 +118,19 @@ const UnassignedTabContent = () => {
   // runs when the component mounts and when filterBy or shifts changes
   // the filtered shifts (filtered by day)
   useEffect(() => {
-    // console.log('Changing filters', data?.entities)
-    const newShifts = shifts?.filter((shiftId) =>
-      data?.entities[shiftId]?.possibleDays
-        .map((day) => {
-          // console.log('--day:  ', day.toLocaleLowerCase())
-          return day.toLocaleLowerCase()
-        })
-        .includes(filterBy)
+    // console.log('Changing filters')
+    setDisplayShifts(
+      shifts?.filter((shiftId) =>
+        data?.entities[shiftId]?.possibleDays
+          .map((day) => day.toLocaleLowerCase())
+          .includes(filterBy)
+      )
     )
-
-    // console.log(newShifts)
-    setDisplayShifts(newShifts)
   }, [filterBy, shifts, data])
-
-  useEffect(() => {
-    console.log(authUser)
-  }, [authUser])
 
   if (isLoading) {
     return <div>Loading...</div>
   } else if (isError) {
-    console.log(error)
     return <div>Error</div>
   } else {
     return (
@@ -199,4 +191,4 @@ const UnassignedTabContent = () => {
   }
 }
 
-export default UnassignedTabContent
+export default AssignedTabContent

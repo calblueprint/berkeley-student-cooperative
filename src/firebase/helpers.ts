@@ -1,18 +1,19 @@
+import { Dictionary, EntityId } from '@reduxjs/toolkit'
 import { Shift, User } from '../types/schema'
 
 // Used to convert a map to an object uploadable to Firebase
-export const mapToObject = (map: Map<any, any>): Object => {
-  return Object.fromEntries(Array.from(map.entries(), ([k, v]) => [k, v]))
-}
+// export const mapToObject = (map: Map<any, any>): Object => {
+//   return Object.fromEntries(Array.from(map.entries(), ([k, v]) => [k, v]))
+// }
 
 // Used to convert an object from Firebase back into a map (doesn't work for nested maps)
-export const objectToMap = (obj: Object): Map<any, any> => {
-  return new Map(Array.from(Object.entries(obj), ([k, v]) => [k, v]))
-}
+// export const objectToMap = (obj: Object): Map<any, any> => {
+//   return new Map(Array.from(Object.entries(obj), ([k, v]) => [k, v]))
+// }
 
-export const mapToJSON = (map: Map<any, any>): string => {
-  return JSON.stringify(mapToObject(map))
-}
+// export const mapToJSON = (map: Map<any, any>): string => {
+//   return JSON.stringify(mapToObject(map))
+// }
 
 // Generates a pin number for a user
 export const generatePinNumber = (numDigitsInPin: number) => {
@@ -34,7 +35,7 @@ export const convertNumberToTime = (input: number): string => {
   if (input < 100) {
     input = 1200 + input
   }
-  let hour = Math.floor(input / 100) + ''
+  const hour = Math.floor(input / 100) + ''
   let minute = (input % 100) + ''
   if (input % 100 < 10) {
     minute = minute + '0'
@@ -44,8 +45,8 @@ export const convertNumberToTime = (input: number): string => {
 
 // Converts a time window into a numeric time window
 export const convertTimeWindowToTime = (start: number, end: number): string => {
-  let startPeriod = convertNumberToTime(start)
-  let endPeriod = convertNumberToTime(end)
+  const startPeriod = convertNumberToTime(start)
+  const endPeriod = convertNumberToTime(end)
   return startPeriod + ' - ' + endPeriod
 }
 
@@ -69,17 +70,18 @@ export const numericToStringPreference = (
   user: User,
   shiftID: string
 ): string => {
-  let numberToText = new Map<number, string>()
+  const numberToText = new Map<number, string>()
   numberToText.set(0, 'dislikes')
   numberToText.set(1, '')
   numberToText.set(2, 'prefers')
-  if (user.preferences.has(shiftID)) {
-    let numericalPreference = user.preferences.get(shiftID)
+  if (shiftID in user.preferences) {
+    const p: User['preferences'] = user.preferences
+    const numericalPreference: number = p[shiftID]
     if (
       numericalPreference !== undefined &&
       numberToText.has(numericalPreference)
     ) {
-      let newPref = numberToText.get(numericalPreference)
+      const newPref = numberToText.get(numericalPreference)
       if (newPref !== undefined) {
         return newPref
       }
@@ -89,7 +91,7 @@ export const numericToStringPreference = (
 }
 
 const generateAllPossibleTimeWindows = () => {
-  let ret = []
+  const ret = []
   let i = 0
   ret.push(i)
   i += 30
@@ -126,10 +128,10 @@ export const days: string[] = [
  * @returns The map of availabilities of a user but the user's time windows have been merged together to be non-contiguous and non-overlapping. Repeated process for every day.
  */
 export const mergeMap = (map: Map<string, number[]>) => {
-  let tempMap = new Map<string, number[]>()
+  const tempMap = new Map<string, number[]>()
   map.forEach((value, key) => {
     let newList: number[] = []
-    let intervals = []
+    const intervals = []
     // Creates intervals
     for (let i = 0; i < value.length; i += 2) {
       intervals.push([value[i], value[i + 1]])
@@ -168,14 +170,14 @@ export const parseTime = (time: number) => {
   if (time > 1259) {
     time = time - 1200
   }
-  let timeString = String(time)
+  const timeString = String(time)
   let hours
   if (timeString.length > 3) {
     hours = timeString.slice(0, 2)
   } else {
     hours = timeString.slice(0, 1)
   }
-  let minutes = timeString.slice(-2)
+  const minutes = timeString.slice(-2)
   if (Number(minutes) > 0) {
     return hours + ':' + minutes + meridian
   }
@@ -196,53 +198,62 @@ export const emailRegex = new RegExp(
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 )
 
-export const sortPotentialUsers = (potentialUsers: User[], shiftID: string) => {
-  potentialUsers.sort((user1, user2) => {
+export const sortPotentialUsers = (
+  dict: Dictionary<User>,
+  totalUsersInHouse: EntityId[],
+  shiftID: string
+) => {
+  const sorted = totalUsersInHouse.sort((uid1, uid2) => {
+    const user1 = dict[uid1]
+    const user2 = dict[uid2]
     if (user1 === undefined || user2 === undefined) {
-      return 0;
+      return 0
     }
     // First sort on hours assignable left (hoursRequired - hoursAssigned), prioritizing people with higher hours remaining (user2 - user1)
-    let user1HoursLeft = user1.hoursRequired - user1.hoursAssigned
-    let user2HoursLeft = user2.hoursRequired - user2.hoursAssigned
-    let hoursWeekDiff: number = user2HoursLeft - user1HoursLeft
+    const user1HoursLeft = 5 - user1.hoursAssigned
+    const user2HoursLeft = 5 - user2.hoursAssigned
+    const hoursWeekDiff: number = user2HoursLeft - user1HoursLeft
     if (hoursWeekDiff != 0) {
+      console.log(hoursWeekDiff)
       return hoursWeekDiff
     }
 
-    let user1Preferences = user1.preferences
-    let user2Preferences = user2.preferences
+    const user1Preferences: User['preferences'] = user1.preferences
+    const user2Preferences: User['preferences'] = user2.preferences
     // 1 if 1 is average
     let user1Pref = 1
     let user2Pref = 1
-    if (user1Preferences.has(shiftID)) {
-      let curr = user1Preferences.get(shiftID)
+    if (shiftID in user1Preferences) {
+      const curr = user1Preferences[shiftID]
       if (curr !== undefined) {
         user1Pref = curr
       }
     }
-    if (user2Preferences.has(shiftID)) {
-      let curr = user2Preferences.get(shiftID)
+    if (shiftID in user2Preferences) {
+      const curr = user2Preferences[shiftID]
       if (curr !== undefined) {
         user2Pref = curr
       }
     }
     // Second sort on preferences, prioritizing people with higher preferences (user2 - user1)
-    let prefDiff = user2Pref - user1Pref
-    if (prefDiff != 0) {
-      return prefDiff
-    }
-    // Third sort on hoursRemainingSemester, prioritizing people with higher hoursRemaining (user 2 - user1)
-    return user2.hoursRemainingSemester - user1.hoursRemainingSemester
+    return user2Pref - user1Pref
   })
-};
+  return sorted
+}
 
-export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: User[], shiftID: string, day: string) => {
+export const findAvailableUsers = (
+  tempShiftObject: Shift,
+  dict: Dictionary<User>,
+  totalUsersInHouse: EntityId[],
+  shiftID: string,
+  day: string
+) => {
   const timeWindow = tempShiftObject.timeWindow
   const shiftStart = timeWindow[0]
   const shiftEnd = timeWindow[1]
   const numHours = tempShiftObject.hours
   const potentialUsers = []
-  
+  const ids = []
   // Convert the hours of the shift into units of time. Assumes any non-whole hour numbers are 30 minute intervals.
   // ex. 1.5 -> converted to 130 (used for differences if someone is available between 1030 and 1200, they should be shown)
   const mult100 = Math.floor(numHours) * 100
@@ -251,28 +262,36 @@ export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: Us
     thirtyMin = 30
   }
   for (let i = 0; i < totalUsersInHouse.length; i++) {
-    const userObject = totalUsersInHouse[i]
+    const userObject = dict[totalUsersInHouse[i]]
+    if (userObject === undefined) {
+      continue
+    }
     // if this user has already been assigned to this shift, display them regardless of hours
-    if (userObject.shiftsAssigned.includes(shiftID)) {
+    // console.log(shiftID in userObject.assignedScheduledShifts);
+    if (
+      userObject.assignedScheduledShifts !== undefined &&
+      userObject.assignedScheduledShifts.includes(shiftID)
+    ) {
+      ids.push(totalUsersInHouse[i])
       potentialUsers.push(userObject)
       continue
     }
     // stores the number of hours that the user still has to complete
-    let assignableHours = userObject.hoursRequired - userObject.hoursAssigned
+    const assignableHours = 5 - userObject.hoursAssigned
     // if they have no hours left to complete, or their number of hours left to complete < the number of hours of the shift, continue
     if (assignableHours <= 0 || assignableHours < numHours) {
       continue
     }
-    const currAvailabilities = userObject.availabilities
-    if (currAvailabilities.has(day)) {
-      const perDayAvailability = currAvailabilities.get(day)
+    const currAvailabilities: User['availabilities'] = userObject.availabilities
+    if (currAvailabilities && day in currAvailabilities) {
+      const perDayAvailability = currAvailabilities[day]
       if (perDayAvailability === undefined) {
         continue
       }
       // iterate thru every pair of availabilities
       for (let j = 0; j < perDayAvailability.length; j += 2) {
         let currStart = perDayAvailability[j]
-        let permEnd = perDayAvailability[j + 1]
+        const permEnd = perDayAvailability[j + 1]
         // The end of this availability window is < the time it takes for the shift to start
         if (permEnd < shiftStart) {
           continue
@@ -281,16 +300,17 @@ export const findAvailableUsers = (tempShiftObject: Shift, totalUsersInHouse: Us
         currStart = Math.max(currStart, shiftStart)
         // The end time given the current start
         // 1030 + 100 + 30 -> 1160 (still <= 1200) (still works)
-        let newEnd = currStart + mult100 + thirtyMin
+        const newEnd = currStart + mult100 + thirtyMin
         // The required end will either be the end of the shift or the end of their availabikity
-        let requiredEnd = Math.min(permEnd, shiftEnd)
+        const requiredEnd = Math.min(permEnd, shiftEnd)
         // If the calculated end time is <= required end time, then we can push and don't need to consider any more availabilities
         if (newEnd <= requiredEnd) {
+          ids.push(totalUsersInHouse[i])
           potentialUsers.push(userObject)
           break
         }
       }
     }
   }
-  return potentialUsers;
+  return ids
 }
