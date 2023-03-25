@@ -5,7 +5,7 @@ import AvailabilityInfo from '../../../components/MemberComponents/AvailabilityI
 import SettingsInfo from '../../../components/MemberComponents/SettingsInfo/SettingsInfo'
 import TaskPreferenceInfo from '../../../components/MemberComponents/TaskPreferenceInfo/TaskPreferenceInfo'
 import { useUserContext } from '../../../context/UserContext'
-import styles from './Settings.module.css'
+// import styles from './Settings.module.css'
 
 interface TabPanelProps {
   children?: React.ReactNode

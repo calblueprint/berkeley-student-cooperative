@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
-import EditMemberInfoCard from '../../../components/ManagerComponents/EditMemberInfoCard/EditMemberInfoCard'
+import EditUserCard from '../../../components/shared/userCard/EditUserCard'
 import SortedTable from '../../../components/shared/tables/SortedTable'
 import { HeadCell } from '../../../interfaces/interfaces'
 import { useGetUsersQuery } from '../../../store/apiSlices/userApiSlice'
@@ -121,11 +121,7 @@ export const MembersTableContent = () => {
           isSortable={false}
           handleRowClick={handleRowClick}
         />
-        <EditMemberInfoCard
-          memberID={modalMemberID}
-          open={open}
-          setOpen={setOpen}
-        />
+        <EditUserCard userId={modalMemberID} open={open} setOpen={setOpen} editType='Information'/>
       </>
     )
   }

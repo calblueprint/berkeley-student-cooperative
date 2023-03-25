@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
 
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import * as Yup from 'yup'
 import { TextInput, SelectInput } from '../../shared/forms/CustomFormikFields'
 import {
@@ -203,6 +203,7 @@ const ShiftForm = ({
       >
         {({ isSubmitting, values, setFieldValue }) => (
           <Form>
+            
             <TextInput name="name" label="Shift Name" />
 
             <SelectInput

@@ -13,8 +13,8 @@ import { HeadCell } from '../../../interfaces/interfaces'
 import { EntityId, Dictionary } from '@reduxjs/toolkit'
 import NewShiftCardTest from '../../../components/ManagerComponents/Shiftcard/NewShiftCardTest'
 import EditShiftCardTest from '../../../components/ManagerComponents/Shiftcard/EditShiftCardTest'
-import NewUserCard from '../../../components/ManagerComponents/userCard/NewUserCard'
-import EditUserCard from '../../../components/ManagerComponents/userCard/EditUserCard'
+import NewUserCard from '../../../components/shared/userCard/NewUserCard'
+import EditUserCard from '../../../components/shared/userCard/EditUserCard'
 import { User } from '../../../types/schema'
 
 const shiftHeadCells: HeadCell<
