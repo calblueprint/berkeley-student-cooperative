@@ -1,58 +1,63 @@
 import { Button, Card, CardContent, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
-import { getHouse } from '../../../firebase/queries/house'
-import { getUser, updateUser } from '../../../firebase/queries/user'
+
+import { updateUser } from '../../../firebase/queries/user'
 import { generatePinNumber } from '../../../firebase/helpers'
 import { House, User } from '../../../types/schema'
 import styles from './SettingsInfo.module.css'
 import { lightButton } from '../../../assets/StyleGuide'
 // import { useSelector } from 'react-redux'
 import EditUserCard from '../../shared/userCard/EditUserCard'
+import { selectCurrentUser } from '../../../store/slices/authSlice'
+import { useSelector } from 'react-redux'
+import { useUpdateUserMutation } from '../../../store/apiSlices/userApiSlice'
 
-type SettingsInfoProps = {
-  userID: string
-}
+// type SettingsInfoProps = {
+//   userID: string
+// }
 
-const SettingsInfo: React.FC<SettingsInfoProps> = ({
-  userID,
-}: SettingsInfoProps) => {
+const SettingsInfo = () => {
   /**
    * Returns a card component to display a member's personal information in the settings page
    *
    * @param userID - ID of the member
    */
-  const [user, setUser] = useState<User | null>()
-  const [house, setHouse] = useState<House | null>()
+  // const [user, setUser] = useState<User | null>()
+  // const [house, setHouse] = useState<House | null>()
   const [editing, setEditing] = useState<boolean>(false)
   const [editType, setEditType] = useState<string | undefined>()
 
-  const [name, setName] = useState<string | null>()
-  const [email, setEmail] = useState<string | null>()
+  // const [name, setName] = useState<string | null>()
+  // const [email, setEmail] = useState<string | null>()
   const [pin, setPin] = useState<number | null>()
   const star = '*'
 
-  // const authUser = useSelector(selectCurrentUser) as User
-  useEffect(() => {
-    // retrieves user from context
-    const getData = async () => {
-      const currUser = await getUser(userID)
-      setUser(currUser)
-    }
-    getData()
-  }, [userID])
+  const user = useSelector(selectCurrentUser) as User
+  const [updateUser, { isLoading, isSuccess, isError, error }] =
+    useUpdateUserMutation()
 
-  useEffect(() => {
-    setName(user?.firstName + ' ' + user?.lastName)
-    setEmail(user?.email)
-    setPin(user?.pinNumber)
-    const getData = async () => {
-      if (user) {
-        const currHouse = await getHouse(user.houseID)
-        setHouse(currHouse)
-      }
-    }
-    getData()
-  }, [user])
+
+  // useEffect(() => {
+  //   // retrieves user from context
+  //   const getData = async () => {
+  //     const currUser = await getUser(userID)
+  //     setUser(currUser)
+  //   }
+  //   getData()
+  // }, [userID])
+
+  // useEffect(() => {
+  //   setName(user?.firstName + ' ' + user?.lastName)
+  //   setEmail(user?.email)
+  //   setPin(user?.pinNumber)
+  //   const getData = async () => {
+  //     if (user) {
+  //       const currHouse = await getHouse(user.houseID)
+  //       setHouse(currHouse)
+  //     }
+  //   }
+  //   getData()
+  // }, [user])
 
   const handleOpenName = () => {
     setEditType('Name')
@@ -76,14 +81,15 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
       pinNumber: newPin,
     }
     if (user) {
-      await updateUser(user.userID, newData)
+      const data = {data:{}, userId: userId}
+      await updateUser(data)
     }
   }
 
-  return user && house ? (
+  return user && user.houseID ? (
     <div className={styles.content}>
       <EditUserCard
-        userId={userID}
+        userId={user.userID}
         open={editing}
         setOpen={setEditing}
         editType={editType}
@@ -96,7 +102,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
             </Typography>
             <div className={styles.flex}>
               <Typography className={styles.bodyText} variant="body1">
-                {name}
+                {user.displayName}
               </Typography>
               <div className={styles.edit}>
                 <Button sx={lightButton} onClick={handleOpenName}>
@@ -110,7 +116,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
             </Typography>
             <div className={styles.flex}>
               <Typography className={styles.bodyText} variant="body1">
-                {email}
+                {user.email}
               </Typography>
               <div className={styles.edit}>
                 <Button onClick={handleOpenEmail} sx={lightButton}>
@@ -127,10 +133,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({
                 {star.repeat(10)}
               </Typography>
               <div className={styles.edit}>
-                <Button
-                  onClick={handleOpenPassword}
-                  sx={lightButton}
-                >
+                <Button onClick={handleOpenPassword} sx={lightButton}>
                   Edit
                 </Button>
               </div>
