@@ -1,0 +1,45 @@
+.shiftBox {
+    padding: 5%;
+  }
+  
+  .header {
+    padding-bottom: 3%;
+  }
+  
+  .title {
+    padding-bottom: 5%;
+    float: left;
+    display: block;
+  }
+  
+  .close {
+    float: right;
+    padding-bottom: 5%;
+    display: block;
+  }
+  
+  .formField {
+    width: 100%;
+    padding-bottom: 3%;
+    /* padding-right: 3%; */
+    float: left;
+  }
+  
+  .flex {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 3%;
+  }
+  
+  .submit {
+    float: right;
+    margin-bottom: 10px;
+    /* padding-right: 3%; */
+  }
+  
+  .clear {
+    float: left;
+    margin-bottom: 10px;
+  }
+  

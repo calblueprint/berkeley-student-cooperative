@@ -1,20 +1,19 @@
 import { Formik, Form, FormikHelpers, FormikValues } from 'formik'
-import { Stack, Button } from '@mui/material'
-
+import { Button, Typography } from '@mui/material'
 import * as Yup from 'yup'
-import { TextInput } from '../../shared/forms/CustomFormikFields' //, SelectInput
+import { TextInput } from '../forms/CustomFormikFields'
 import {
   selectUserById,
   useAddNewUserMutation,
   useUpdateUserMutation,
 } from '../../../store/apiSlices/userApiSlice'
-// import { getCategories } from '../../../firebase/queries/house'
 import { useSelector } from 'react-redux'
 import React from 'react'
 import { RootState } from '../../../store/store'
 import { EntityId } from '@reduxjs/toolkit'
 import { User } from '../../../types/schema'
-// import { useUserContext } from '../../../context/UserContext'
+import { darkButton } from '../../../assets/StyleGuide'
+import styles from './UserForm.module.css'
 
 //** Yup allows us to define a schema, transform a value to match, and/or assert the shape of an existing value. */
 //** Here, we are defining what kind of inputs we are expecting and attaching error msgs for when the input is not what we want. */
@@ -32,6 +31,8 @@ const UserSchema = Yup.object({
   weekPenaltyHours: Yup.number(),
   runningTotalMissedHours: Yup.number(),
   runningTotalPenatlyHours: Yup.number(),
+  currentPassword: Yup.string(),
+  newPassword: Yup.string(),
 })
 
 // const daysList = [
@@ -96,10 +97,12 @@ const UserForm = ({
   setOpen,
   userId,
   isNewUser,
+  editType,
 }: {
   setOpen: (value: React.SetStateAction<boolean>) => void
   userId?: string
   isNewUser: boolean
+  editType?: string
 }) => {
   // const { authUser, house } = useUserContext()
   // const [currentUser, setCurrentUser] = React.useState(User)
@@ -129,21 +132,16 @@ const UserForm = ({
   const user: User = useSelector(
     (state: RootState) => selectUserById(state, userId as EntityId) as User
   )
+  console.log(userId, user)
 
   const onSubmit = async (
     values: FormikValues,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formikBag: FormikHelpers<any>
   ) => {
-    // console.log('Submiting UserForm: ', values)
-    const { firstName, lastName, displayName, email } = values
-
-    // console.log(dayjs('1900', 'HHmm').format('HHmm'))
-    // const num = 1900
-    // console.log(dayjs(num.toString(), 'HHmm'))
-
-    // const dayString = possibleDays.join('')
+    const { firstName, lastName, email } = values
     let result
+    const displayName = firstName + ' ' + lastName
 
     const data = { data: {}, houseId: '', userId: '' }
     data.data = {
@@ -168,10 +166,6 @@ const UserForm = ({
     setOpen(false)
   }
 
-  // React.useEffect(() => {
-  //   console.log('This is the selected user', user)
-  // }, [user])
-
   return (
     <>
       <Formik
@@ -182,35 +176,58 @@ const UserForm = ({
           displayName: user ? user.displayName : emptyUser.displayName,
           email: user ? user.email : emptyUser.email,
           role: user ? user.role : emptyUser.role,
+          currentPassword: '',
+          newPassword: '',
+          confirmNewPassword: '',
         }}
         onSubmit={onSubmit}
       >
         {({ isSubmitting }) => (
           <Form>
-            <TextInput name="firstName" label="First Name" />
-            <TextInput name="lastName" label="Last Name" />
-            <TextInput name="displayName" label="Display Name" />
-            <TextInput name="email" label="Email" />
-
-            <Stack direction="row" alignItems="center" spacing={2}>
+            {editType === 'Name' || editType === 'Information' ? (
+              <div className={styles.flex}>
+                <div className={styles.formField}>
+                  <Typography>First Name</Typography>
+                  <TextInput name="firstName" label="" />
+                </div>
+                <div className={styles.formField}>
+                  <Typography>Last Name</Typography>
+                  <TextInput name="lastName" label="" />
+                </div>
+              </div>
+            ) : (
+              <div />
+            )}
+            {editType === 'Email' || editType === 'Information' ? (
+              <div className={styles.formField}>
+                <Typography>Email</Typography>
+                <TextInput name="email" label="" />
+              </div>
+            ) : (
+              <div />
+            )}
+            {editType === 'Password' ? (
+              <div className={styles.formField}>
+                <Typography>Current Password</Typography>
+                <TextInput name="currentPassword" label="" />
+                <Typography>New Password</Typography>
+                <TextInput name="newPassword" label="" />
+                <Typography>Confirm New Password</Typography>
+                <TextInput name="confirmNewPassword" label="" />
+              </div>
+            ) : (
+              <div />
+            )}
+            <div className={styles.submit}>
               <Button
                 type="submit"
-                fullWidth
-                variant="contained"
+                sx={darkButton}
                 color="primary"
                 disabled={isSubmitting}
               >
-                {isNewUser || !userId ? 'Submit' : 'Update'}
+                Save
               </Button>
-              <Button
-                fullWidth
-                variant="outlined"
-                color="primary"
-                onClick={() => setOpen(false)}
-              >
-                Cancel
-              </Button>
-            </Stack>
+            </div>
           </Form>
         )}
       </Formik>

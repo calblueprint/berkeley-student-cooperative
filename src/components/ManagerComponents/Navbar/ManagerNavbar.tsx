@@ -101,12 +101,12 @@ const ManagerNavbar: React.FunctionComponent = () => {
       </ListItem>
       <ListItem
         button
-        key={'house'}
+        key={'members'}
         onClick={() => {
-          router.push('/manager/house')
+          router.push('/manager/members')
         }}
         className={
-          router.pathname == '/manager/house' ? styles.active : styles.item
+          router.pathname == '/manager/members' ? styles.active : styles.item
         }
       >
         <div className={styles.icon}>

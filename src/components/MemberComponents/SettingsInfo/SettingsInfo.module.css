@@ -1,0 +1,48 @@
+.content {
+  margin: 2%;
+  width: 80%;
+}
+
+.card {
+  margin: 2% 5% 5% 5%;
+}
+
+.body {
+  color: #797979;
+  padding-bottom: 20px;
+}
+
+.bodyTitle {
+  color: #000000;
+  padding: 20px 0px 10px 0px;
+}
+
+.textField {
+  color: #898989;
+}
+
+.bodyText {
+  line-height: 40px;
+}
+
+.flex {
+  display: flex;
+  gap: 3%;
+  justify-content: space-between;
+
+}
+
+.edit {
+  float: right;
+}
+
+.line {
+  height: 1px;
+  border: none;
+  background-color: #dfdfdf;
+}
+
+.save {
+  float: right;
+  padding: 10px 0px 20px 0px;
+}

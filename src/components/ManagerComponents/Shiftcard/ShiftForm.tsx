@@ -195,6 +195,7 @@ const ShiftForm = ({
       >
         {({ isSubmitting, values, setFieldValue }) => (
           <Form>
+            
             <TextInput name="name" label="Shift Name" />
 
             <SelectInput
